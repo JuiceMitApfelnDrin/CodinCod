@@ -7,7 +7,7 @@ import { Button } from "@chakra-ui/react";
 import { AvatarButton } from "../components/Buttons/AvatarButton";
 
 const Index = () => (
-  <Container bg="black" height="100vh">
+  <Container height="100vh">
     <Header>
       <Button>IconDing</Button>
       <AvatarButton name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />

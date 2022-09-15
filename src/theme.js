@@ -11,11 +11,9 @@ const breakpoints = createBreakpoints({
 });
 
 const theme = extendTheme({
+  config: { initialColorMode: "dark", useSystemColorMode: false },
   semanticTokens: {
     colors: {
-      text: {
-        default: "#ade3b8",
-      },
       heroGradientStart: {
         default: "#7928CA",
       },
