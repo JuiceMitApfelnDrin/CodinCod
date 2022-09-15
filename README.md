@@ -1,1 +1,1 @@
-# We are cloning CodinGame KEKW
+# We are creating GameCodin KEKW
