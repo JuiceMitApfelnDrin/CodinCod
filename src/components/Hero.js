@@ -1,17 +1,17 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading } from "@chakra-ui/react";
 
-export const Hero = ({ title }: { title: string }) => (
+export const Hero = ({ title }) => (
   <Flex
     justifyContent="center"
     alignItems="center"
-    height="100vh"
+    height="90vh"
     bgGradient="linear(to-l, heroGradientStart, heroGradientEnd)"
     bgClip="text"
   >
     <Heading fontSize="6vw">{title}</Heading>
   </Flex>
-)
+);
 
 Hero.defaultProps = {
-  title: 'GameCodin',
-}
+  title: "GameCodin",
+};

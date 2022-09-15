@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -19,12 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/Buttons/AvatarButton.js", "src/components/Container.js", "src/components/Footer.js", "src/components/Header.js", "src/components/Hero.js", "src/components/Main.js", "src/pages/_app.js", "src/pages/_document.js", "src/pages/index.js", "src/theme.js"],
+  "exclude": ["node_modules"]
 }

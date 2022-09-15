@@ -1,6 +1,6 @@
-import { Flex, FlexProps } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
-export const Container = (props: FlexProps) => (
+export const Container = (props) => (
   <Flex
     direction="column"
     alignItems="center"
