@@ -2,7 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
-  Flex,
+  Container,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -15,7 +15,7 @@ import {
   SliderThumb,
   SliderTrack,
   Switch,
-  VStack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
@@ -50,105 +50,107 @@ const Index = () => {
     { value: "Reverse", description: "hey there, looking mighty handsome" },
   ];
 
+
   return (
-    <GeneralLayout>
-      <VStack height="100vh" spacing="2rem">
-        <Heading
-          bgGradient="linear(to-l, heroGradientStart, heroGradientEnd)"
-          bgClip="text"
-          as="h1"
-          size="4xl"
-          pt="2rem"
-        >
-          Host a new game
-        </Heading>
-        <FormControl>
-          <FormLabel color="white">Public</FormLabel>
-          <Switch defaultChecked colorScheme="pink" />
-        </FormControl>
+    <GeneralLayout spacing="2rem" mx={marginContainer}>
+      <Heading
+        bgGradient="linear(to-l, heroGradientStart, heroGradientEnd)"
+        bgClip="text"
+        as="h1"
+        size="4xl"
+        pt="2rem"
+      >
+        Host a new game
+      </Heading>
+      <FormControl>
+        <FormLabel color="white">Public</FormLabel>
+        <Switch defaultChecked colorScheme="pink" />
+      </FormControl>
 
-        <FormControl>
-          <FormLabel color="white">Difficulty</FormLabel>
-          <Select color="white">
-            {difficulties.map((option, index) => (
-              <option key={index}>{option}</option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel color="white">Modes</FormLabel>
-          {modes.map((mode) => (
-            <>
-              <Checkbox checked={mode.selected} defaultChecked>
-                {mode.value}
-              </Checkbox>
-              <FormHelperText>{mode.description}</FormHelperText>
-            </>
+      <FormControl>
+        <FormLabel color="white">Difficulty</FormLabel>
+        <Select color="white">
+          {difficulties.map((option, index) => (
+            <option key={index}>{option}</option>
           ))}
-        </FormControl>
+        </Select>
+      </FormControl>
 
-        <FormControl>
-          <FormLabel color="white">Time control</FormLabel>
-          <Slider
-            onChange={(val) => setSliderValue(val)}
-            defaultValue={15}
-            min={5}
-            max={60}
-            step={5}
-            my="2rem"
+      <FormControl>
+        <FormLabel color="white">Modes</FormLabel>
+        {modes.map((mode) => (
+          <>
+            <Checkbox checked={mode.selected} defaultChecked>
+              {mode.value}
+            </Checkbox>
+            <FormHelperText>{mode.description}</FormHelperText>
+          </>
+        ))}
+      </FormControl>
+
+      <FormControl>
+        <FormLabel color="white">Time control</FormLabel>
+        <Slider
+          onChange={(val) => setSliderValue(val)}
+          defaultValue={15}
+          min={5}
+          max={60}
+          step={5}
+          my="2rem"
+        >
+          <SliderMark value={5} {...labelStyles}>
+            5
+          </SliderMark>
+          <SliderMark value={15} {...labelStyles}>
+            15
+          </SliderMark>
+          <SliderMark value={30} {...labelStyles}>
+            30
+          </SliderMark>
+          <SliderMark value={45} {...labelStyles}>
+            45
+          </SliderMark>
+          <SliderMark value={60} {...labelStyles}>
+            60
+          </SliderMark>
+          <SliderMark
+            value={sliderValue}
+            textAlign="center"
+            bg="gray.500"
+            borderRadius="full"
+            color="white"
+            mt="-10"
+            ml="-5"
+            w="7rem"
           >
-            <SliderMark value={5} {...labelStyles}>
-              5
-            </SliderMark>
-            <SliderMark value={15} {...labelStyles}>
-              15
-            </SliderMark>
-            <SliderMark value={30} {...labelStyles}>
-              30
-            </SliderMark>
-            <SliderMark value={45} {...labelStyles}>
-              45
-            </SliderMark>
-            <SliderMark value={60} {...labelStyles}>
-              60
-            </SliderMark>
-            <SliderMark
-              value={sliderValue}
-              textAlign="center"
-              bg="gray.500"
-              borderRadius="full"
-              color="white"
-              mt="-10"
-              ml="-5"
-              w="7rem"
-            >
-              {sliderValue} minutes
-            </SliderMark>
-            <SliderTrack bg="red.100">
-              <Box position="relative" right={10} />
-              <SliderFilledTrack bg="gray.500" />
-            </SliderTrack>
-            <SliderThumb boxSize={6} />
-          </Slider>
-        </FormControl>
+            {sliderValue} minutes
+          </SliderMark>
+          <SliderTrack bg="red.100">
+            <Box position="relative" right={10} />
+            <SliderFilledTrack bg="gray.500" />
+          </SliderTrack>
+          <SliderThumb boxSize={6} />
+        </Slider>
+      </FormControl>
 
-        <FormControl>
-          <FormLabel color="white">Programming languages</FormLabel>
-          {/* TODO: make this a list of checkboxes instead of this thing, if no option is selected, assume all */}
-          <Select color="white">
-            {typeValues.map(i=>i.language).sort().map((option, index) => (
+      <FormControl>
+        <FormLabel color="white">Programming languages</FormLabel>
+        {/* TODO: make this a list of checkboxes instead of this thing, if no option is selected, assume all */}
+        <Select color="white">
+          {typeValues
+            .map((i) => i.language)
+            .sort()
+            .map((option, index) => (
               <option key={index}>{option}</option>
             ))}
-          </Select>
-        </FormControl>
-        <HStack spacing="2rem">
-          <Button type="reset">reset</Button>
-          <Button bg="teal" type="submit">
-            Host new game
-          </Button>
-        </HStack>
-      </VStack>
+        </Select>
+      </FormControl>
+      <HStack spacing="2rem">
+        <Button type="reset">reset</Button>
+        <Button bg="teal" type="submit">
+          Host new game
+        </Button>
+      </HStack>
     </GeneralLayout>
   );
 };
