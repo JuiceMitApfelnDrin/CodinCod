@@ -2,8 +2,6 @@ import {
   Avatar,
   Menu,
   MenuButton,
-  MenuDivider,
-  MenuGroup,
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
