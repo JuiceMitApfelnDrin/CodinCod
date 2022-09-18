@@ -52,7 +52,7 @@ const Index = () => {
 
 
   return (
-    <GeneralLayout spacing="2rem" mx={marginContainer}>
+    <GeneralLayout spacing="2rem">
       <Heading
         bgGradient="linear(to-l, heroGradientStart, heroGradientEnd)"
         bgClip="text"
