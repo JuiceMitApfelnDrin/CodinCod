@@ -1,25 +1,29 @@
 import {
   Box,
+  Button,
+  Checkbox,
   Flex,
   FormControl,
   FormHelperText,
   FormLabel,
+  HStack,
   Heading,
-  Input,
   Select,
   Slider,
   SliderFilledTrack,
   SliderMark,
   SliderThumb,
   SliderTrack,
+  Switch,
   VStack,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
 import GeneralLayout from "layouts/GeneralLayout";
-import { useState } from "react";
 
 const Index = () => {
   const [sliderValue, setSliderValue] = useState(15);
+  const [typeValues, setTypeValues] = useState([]);
 
   const labelStyles = {
     mt: "2",
@@ -27,9 +31,28 @@ const Index = () => {
     fontSize: "sm",
   };
 
+  const fetchLanguages = async () => {
+    fetch("https://emkc.org/api/v2/piston/runtimes").then((res) =>
+      res.json().then((items) => {
+        setTypeValues(items);
+      })
+    );
+  };
+
+  useEffect(() => {
+    fetchLanguages();
+  }, []);
+
+  const difficulties = ["Random", "Easy", "Hard", "Average"];
+  const modes = [
+    { value: "Shortest", description: "hey there, looking mighty handsome" },
+    { value: "Fastest", description: "hey there, looking mighty handsome" },
+    { value: "Reverse", description: "hey there, looking mighty handsome" },
+  ];
+
   return (
     <GeneralLayout>
-      <VStack height="100vh">
+      <VStack height="100vh" spacing="2rem">
         <Heading
           bgGradient="linear(to-l, heroGradientStart, heroGradientEnd)"
           bgClip="text"
@@ -40,48 +63,91 @@ const Index = () => {
           Host a new game
         </Heading>
         <FormControl>
-          <FormLabel color="white">Type</FormLabel>
-          <Select color="white" />
-          <FormHelperText color="white">
-            We'll never share your email. :kappa:
-          </FormHelperText>
+          <FormLabel color="white">Public</FormLabel>
+          <Switch defaultChecked colorScheme="pink" />
         </FormControl>
-        <Slider
-          onChange={(val) => setSliderValue(val)}
-          defaultValue={15}
-          min={5}
-          max={60}
-          step={5}
-        >
-          <SliderMark value={5} {...labelStyles}>
-            5min
-          </SliderMark>
-          <SliderMark value={15} {...labelStyles}>
-            15min
-          </SliderMark>
-          <SliderMark value={30} {...labelStyles}>
-            30min
-          </SliderMark>
-          <SliderMark value={60} {...labelStyles}>
-            1hour
-          </SliderMark>
-          <SliderMark
-            value={sliderValue}
-            textAlign="center"
-            bg="blue.500"
-            color="white"
-            mt="-10"
-            ml="-5"
-            w="12"
+
+        <FormControl>
+          <FormLabel color="white">Difficulty</FormLabel>
+          <Select color="white">
+            {difficulties.map((option, index) => (
+              <option key={index}>{option}</option>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel color="white">Modes</FormLabel>
+          {modes.map((mode) => (
+            <>
+              <Checkbox checked={mode.selected} defaultChecked>
+                {mode.value}
+              </Checkbox>
+              <FormHelperText>{mode.description}</FormHelperText>
+            </>
+          ))}
+        </FormControl>
+
+        <FormControl>
+          <FormLabel color="white">Time control</FormLabel>
+          <Slider
+            onChange={(val) => setSliderValue(val)}
+            defaultValue={15}
+            min={5}
+            max={60}
+            step={5}
+            my="2rem"
           >
-            {sliderValue} minutes
-          </SliderMark>
-          <SliderTrack bg="red.100">
-            <Box position="relative" right={10} />
-            <SliderFilledTrack bg="tomato" />
-          </SliderTrack>
-          <SliderThumb boxSize={6} />
-        </Slider>
+            <SliderMark value={5} {...labelStyles}>
+              5
+            </SliderMark>
+            <SliderMark value={15} {...labelStyles}>
+              15
+            </SliderMark>
+            <SliderMark value={30} {...labelStyles}>
+              30
+            </SliderMark>
+            <SliderMark value={45} {...labelStyles}>
+              45
+            </SliderMark>
+            <SliderMark value={60} {...labelStyles}>
+              60
+            </SliderMark>
+            <SliderMark
+              value={sliderValue}
+              textAlign="center"
+              bg="gray.500"
+              borderRadius="full"
+              color="white"
+              mt="-10"
+              ml="-5"
+              w="7rem"
+            >
+              {sliderValue} minutes
+            </SliderMark>
+            <SliderTrack bg="red.100">
+              <Box position="relative" right={10} />
+              <SliderFilledTrack bg="gray.500" />
+            </SliderTrack>
+            <SliderThumb boxSize={6} />
+          </Slider>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel color="white">Programming languages</FormLabel>
+          {/* TODO: make this a list of checkboxes instead of this thing, if no option is selected, assume all */}
+          <Select color="white">
+            {typeValues.map((option, index) => (
+              <option key={index}>{option.language}</option>
+            ))}
+          </Select>
+        </FormControl>
+        <HStack spacing="2rem">
+          <Button type="reset">reset</Button>
+          <Button bg="teal" type="submit">
+            Host new game
+          </Button>
+        </HStack>
       </VStack>
     </GeneralLayout>
   );
