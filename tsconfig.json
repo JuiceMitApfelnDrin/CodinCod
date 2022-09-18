@@ -13,22 +13,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": "src"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/components/Header/partials/ProfileMenu.js",
-    "src/components/Container.js",
-    "src/components/Footer.js",
-    "src/components/Header/Header.js",
-    "src/components/Hero.js",
-    "src/components/Main.js",
-    "src/pages/_app.js",
-    "src/pages/_document.js",
-    "src/pages/index.js",
-    "src/theme.js"
-  ],
+  "include": ["next-env.d.ts", "**/*.js", "**/*.jsx"],
   "exclude": ["node_modules"]
 }
