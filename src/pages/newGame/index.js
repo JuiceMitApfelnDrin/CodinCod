@@ -137,8 +137,8 @@ const Index = () => {
           <FormLabel color="white">Programming languages</FormLabel>
           {/* TODO: make this a list of checkboxes instead of this thing, if no option is selected, assume all */}
           <Select color="white">
-            {typeValues.map((option, index) => (
-              <option key={index}>{option.language}</option>
+            {typeValues.map(i=>i.language).sort().map((option, index) => (
+              <option key={index}>{option}</option>
             ))}
           </Select>
         </FormControl>

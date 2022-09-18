@@ -18,7 +18,7 @@ export const Header = () => (
     bg="black"
     height="7vh"
   >
-    <HStack>
+    <HStack spacing="1rem">
       <Link href={urls.HOME}>GameCodin</Link>
       <HeaderItem
         label="Play"
