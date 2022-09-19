@@ -25,7 +25,7 @@ yarn install && yarn dev
 git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git && cd ./GameCodin && npm install -g yarn && yarn install && yarn dev
 ```
 
-If it fails, run these 1 by 1:
+If it fails, run these lines 1 by 1:
 ```bash
 git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git
 cd ./GameCodin 
