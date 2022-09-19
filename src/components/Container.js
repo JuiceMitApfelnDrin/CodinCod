@@ -5,6 +5,7 @@ export const Container = (props) => (
     direction="column"
     alignItems="center"
     justifyContent="flex-start"
+    minHeight="100vh"
     color="white"
     transition="all 0.15s ease-out"
     {...props}

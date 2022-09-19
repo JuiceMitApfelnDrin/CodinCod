@@ -1,7 +1,9 @@
 import { Flex, HStack } from "@chakra-ui/react";
 
+import { BellIcon } from "@chakra-ui/icons";
 import HeaderItem from "./partials/HeaderItem";
 import Link from "next/link";
+import { NotificationMenu } from "./partials/NotificationMenu";
 import { ProfileMenu } from "./partials/ProfileMenu";
 import { SearchInput } from "components/Input/SearchInput";
 import urls from "utils/constants/urls";
@@ -30,8 +32,8 @@ export const Header = () => (
       <HeaderItem
         label="Community"
         options={[
-          { href: "/leaderboard", label: "Leaderboard" },
-          { href: "/forum", label: "Forum" },
+          { href: urls.LEADERBOARD, label: "Leaderboard" },
+          { href: urls.FORUM, label: "Forum" },
           { href: urls.BLOG, label: "Blog" },
         ]}
       />
@@ -39,6 +41,9 @@ export const Header = () => (
     <div>
       <SearchInput onChange={(e) => console.log(e.target.value)} />
     </div>
-    <ProfileMenu name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
+    <HStack spacing="2rem">
+      <NotificationMenu />
+      <ProfileMenu name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
+    </HStack>
   </Flex>
 );

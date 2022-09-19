@@ -1,4 +1,4 @@
-import { Button, Flex, HStack } from "@chakra-ui/react";
+import { Button, HStack } from "@chakra-ui/react";
 
 import Link from "next/link";
 import externalUrls from "utils/constants/externalUrls";
