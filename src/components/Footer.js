@@ -13,6 +13,7 @@ export const Footer = () => (
     py="1rem"
     bg="black"
     spacing="1rem"
+    height="7vh"
   >
     <Link
       as="a"
