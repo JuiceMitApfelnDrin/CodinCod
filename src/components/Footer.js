@@ -1,7 +1,7 @@
 import { Button, HStack } from "@chakra-ui/react";
 
 import Link from "next/link";
-import externalUrls from "utils/constants/externalUrls";
+import externalUrls from "constants/externalUrls";
 
 export const Footer = () => (
   <HStack

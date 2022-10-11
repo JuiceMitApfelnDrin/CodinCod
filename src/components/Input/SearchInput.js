@@ -1,5 +1,6 @@
-import { Search2Icon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputRightAddon } from "@chakra-ui/react";
+
+import { Search2Icon } from "@chakra-ui/icons";
 
 export const SearchInput = (props) => (
   <InputGroup>

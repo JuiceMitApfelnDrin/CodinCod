@@ -1,6 +1,6 @@
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
-import urls from "utils/constants/urls";
+import urls from "constants/urls";
 
 const profileMenuOptions = [
   { icon: "", label: "Profile", href: urls.PROFILE },
