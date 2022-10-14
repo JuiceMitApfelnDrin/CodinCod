@@ -16,7 +16,7 @@ import {
   SliderTrack,
   Switch,
 } from "@chakra-ui/react";
-import { difficulties, types } from "constants/puzzle";
+import { DIFFICULTIES, TYPES } from "constants/puzzle";
 import { useEffect, useState } from "react";
 
 import GeneralLayout from "layouts/GeneralLayout";
@@ -69,7 +69,7 @@ const Index = () => {
         <FormControl>
           <FormLabel color="white">Difficulty</FormLabel>
           <Select color="white">
-            {difficulties.map((option, index) => (
+            {DIFFICULTIES.map((option, index) => (
               <option key={index}>{option.display}</option>
             ))}
           </Select>
@@ -77,7 +77,7 @@ const Index = () => {
 
         <FormControl>
           <FormLabel color="white">Modes</FormLabel>
-          {types.map((mode) => (
+          {TYPES.map((mode) => (
             <>
               <Checkbox checked={mode.selected} defaultChecked>
                 {mode.display}

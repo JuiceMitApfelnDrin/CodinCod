@@ -1,26 +1,40 @@
 import { Flex, HStack } from "@chakra-ui/react";
+import { useCallback, useContext, useState } from "react";
 
 import HeaderItem from "./partials/HeaderItem";
 import Link from "next/link";
 import { NotificationMenu } from "./partials/NotificationMenu";
 import { ProfileMenu } from "./partials/ProfileMenu";
-import { SearchInput } from "components/Input/SearchInput";
+import { SearchInput } from "components/Header/partials/SearchInput";
+import URLS from "constants/urls";
+import { UserContext } from "providers/UserProvider";
+import axios from "axios";
 import debounce from "lodash.debounce";
-import urls from "constants/urls";
-import { useState } from "react";
 
 export const Header = () => {
-  const [username, setUsername] = useState("");
+  const [searchedUsername, setSearchedUsername] = useState("");
+  const [searchedUsers, setSearchedUsers] = useState([]);
+  const { id: loggedInUserId, username, avatar } = useContext(UserContext);
 
-  /* FIXME:
-  - fetch users by username and display them 
-  - then make them clickable and navigatable
-  */
-  const fetchUsersWithUsername = debounce(async (value) => {
-    let response = null;
-    if (value)
-      response = await fetch("http://localhost:8080/users?username=" + value);
-  }, 500);
+  const fetchUsersWithUsername = useCallback(
+    debounce((value) => {
+      if (value) {
+        axios
+          .get(process.env.NEXT_PUBLIC_BACKEND_URL + "users?username=" + value)
+          .then(({ data: usersByUsername }) =>
+            setSearchedUsers(usersByUsername)
+          );
+      }
+    }, 750),
+    []
+  );
+
+  const profileMenuOptions = [
+    { icon: "", label: "Profile", href: URLS.PROFILE + loggedInUserId },
+    { icon: "", label: "Inbox", href: URLS.INBOX },
+    { icon: "", label: "Preferences", href: URLS.PREFERENCES },
+    { icon: "", label: "Sign out", href: URLS.SIGN_OUT },
+  ];
 
   return (
     <Flex
@@ -35,7 +49,7 @@ export const Header = () => {
       height="7vh"
     >
       <HStack spacing="1rem">
-        <Link href={urls.HOME}>GameCodin</Link>
+        <Link href={URLS.HOME}>GameCodin</Link>
         <HeaderItem
           label="Play"
           options={[{ href: "/newGame", label: "Host a game" }]}
@@ -43,24 +57,29 @@ export const Header = () => {
         <HeaderItem
           label="Community"
           options={[
-            { href: urls.LEADERBOARD, label: "Leaderboard" },
-            { href: urls.FORUM, label: "Forum" },
-            { href: urls.BLOG, label: "Blog" },
+            { href: URLS.LEADERBOARD, label: "Leaderboard" },
+            { href: URLS.FORUM, label: "Forum" },
+            { href: URLS.BLOG, label: "Blog" },
           ]}
         />
       </HStack>
       <div>
         <SearchInput
-          value={username}
+          value={searchedUsername}
           onChange={(e) => {
             fetchUsersWithUsername(e.target.value);
-            setUsername(e.target.value);
+            setSearchedUsername(e.target.value);
           }}
+          list={searchedUsers}
         />
       </div>
       <HStack spacing="2rem">
         <NotificationMenu />
-        <ProfileMenu name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
+        <ProfileMenu
+          name={username}
+          src={avatar}
+          menuOptions={profileMenuOptions}
+        />
       </HStack>
     </Flex>
   );

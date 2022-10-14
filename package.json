@@ -11,6 +11,8 @@
     "@chakra-ui/theme-tools": "^2.0.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.9.0",
+    "@heroicons/react": "^2.0.12",
+    "axios": "^1.1.2",
     "framer-motion": "^6.3.0",
     "lodash.debounce": "^4.0.8",
     "next": "latest",

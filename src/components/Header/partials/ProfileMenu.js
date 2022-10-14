@@ -1,15 +1,6 @@
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
-import urls from "constants/urls";
-
-const profileMenuOptions = [
-  { icon: "", label: "Profile", href: urls.PROFILE },
-  { icon: "", label: "Inbox", href: urls.INBOX },
-  { icon: "", label: "Preferences", href: urls.PREFERENCES },
-  { icon: "", label: "Sign out", href: urls.SIGN_OUT },
-];
-
-export const ProfileMenu = ({ name, src }) => {
+export const ProfileMenu = ({ name, src, menuOptions }) => {
   return (
     <Menu>
       <MenuButton
@@ -24,7 +15,7 @@ export const ProfileMenu = ({ name, src }) => {
         <Avatar name={name} src={src} />
       </MenuButton>
       <MenuList>
-        {profileMenuOptions.map((option) => (
+        {menuOptions.map((option) => (
           <MenuItem key={option.label} as={"a"} href={option.href}>
             {option.label}
           </MenuItem>

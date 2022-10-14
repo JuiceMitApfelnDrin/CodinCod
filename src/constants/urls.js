@@ -1,17 +1,17 @@
-const urls = {
-  // header urls
+const URLS = {
+  // header URLS
   HOME: "/",
-  PROFILE: "/profile",
-  INBOX: "/inbox",
-  SIGNOUT: "/signout",
+  PROFILE: "/profile/",
+  INBOX: "/inbox/",
+  SIGNOUT: "/signout/",
 
-  // community urls
-  BLOG: "/community/blog",
-  FORUM: "/community/forum",
-  LEADERBOARD: "/community/leaderboard",
+  // community URLS
+  BLOG: "/community/blog/",
+  FORUM: "/community/forum/",
+  LEADERBOARD: "/community/leaderboard/",
 
-  // account urls
-  PREFERENCES: "/account/preferences",
+  // account URLS
+  PREFERENCES: "/account/preferences/",
 };
 
-export default urls;
+export default URLS;
