@@ -1,7 +1,7 @@
 import { Button, HStack } from "@chakra-ui/react";
 
+import EXTERNAL_URLS from "constants/externalUrls";
 import Link from "next/link";
-import externalUrls from "utils/constants/externalUrls";
 
 export const Footer = () => (
   <HStack
@@ -17,7 +17,7 @@ export const Footer = () => (
   >
     <Link
       as="a"
-      href={externalUrls.GITHUB}
+      href={EXTERNAL_URLS.GITHUB}
       target="_blank"
       rel="noreferrer noopener"
     >
@@ -35,7 +35,7 @@ export const Footer = () => (
     </Link>
     <Link
       as="a"
-      href={externalUrls.DISCORD}
+      href={EXTERNAL_URLS.DISCORD}
       target="_blank"
       rel="noreferrer noopener"
     >

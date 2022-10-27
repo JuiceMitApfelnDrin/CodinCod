@@ -15,11 +15,12 @@ import {
   SliderThumb,
   SliderTrack,
   Switch,
-  useBreakpointValue,
 } from "@chakra-ui/react";
+import { DIFFICULTIES, TYPES } from "constants/puzzle";
 import { useEffect, useState } from "react";
 
 import GeneralLayout from "layouts/GeneralLayout";
+import axios from "axios";
 
 const Index = () => {
   const [sliderValue, setSliderValue] = useState(15);
@@ -39,11 +40,16 @@ const Index = () => {
     );
   };
 
+  const sendToApiDingPls = () => {
+    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "game/create", {
+      testingDing: "hey",
+    });
+  };
+
   useEffect(() => {
     fetchLanguages();
   }, []);
 
-  const difficulties = ["Random", "Easy", "Hard", "Average"];
   const modes = [
     { value: "Shortest", description: "hey there, looking mighty handsome" },
     { value: "Fastest", description: "hey there, looking mighty handsome" },
@@ -70,20 +76,24 @@ const Index = () => {
         <FormControl>
           <FormLabel color="white">Difficulty</FormLabel>
           <Select color="white">
-            {difficulties.map((option, index) => (
-              <option key={index}>{option}</option>
+            {DIFFICULTIES.map((option, index) => (
+              <option key={index}>{option.display}</option>
             ))}
           </Select>
         </FormControl>
 
         <FormControl>
           <FormLabel color="white">Modes</FormLabel>
-          {modes.map((mode) => (
+          {TYPES.map((mode) => (
             <>
               <Checkbox checked={mode.selected} defaultChecked>
-                {mode.value}
+                {mode.display}
               </Checkbox>
-              <FormHelperText>{mode.description}</FormHelperText>
+              <FormHelperText>
+                {/* TODO: create a translation file / a way to translate things ding with descriptions (currently only english, but future proofing) */}
+                {mode.description ||
+                  "hey random description => being worked on KEKW"}
+              </FormHelperText>
             </>
           ))}
         </FormControl>
@@ -147,7 +157,7 @@ const Index = () => {
         </FormControl>
         <HStack spacing="2rem">
           <Button type="reset">reset</Button>
-          <Button bg="teal" type="submit">
+          <Button bg="teal" type="submit" onClick={() => sendToApiDingPls()}>
             Host new game
           </Button>
         </HStack>

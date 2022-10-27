@@ -1,8 +1,12 @@
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
 import { BellIcon } from "@chakra-ui/icons";
+import { UserContext } from "providers/UserProvider";
+import { useContext } from "react";
 
 export const NotificationMenu = () => {
+  const { notifications } = useContext(UserContext);
+
   return (
     <Menu>
       <MenuButton
@@ -17,11 +21,9 @@ export const NotificationMenu = () => {
         <BellIcon w={6} h={6} />
       </MenuButton>
       <MenuList>
-        <MenuItem>Notification 1</MenuItem>
-        <MenuItem>Notification 2</MenuItem>
-        <MenuItem>Notification 3</MenuItem>
-        <MenuItem>Notification 4</MenuItem>
-        <MenuItem>Notification 5</MenuItem>
+        {notifications.map((notification, index) => {
+          return <MenuItem key={index}>{notification.text}</MenuItem>;
+        })}
       </MenuList>
     </Menu>
   );
