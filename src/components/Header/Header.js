@@ -6,7 +6,7 @@ import Link from "next/link";
 import { NotificationMenu } from "./partials/NotificationMenu";
 import { ProfileMenu } from "./partials/ProfileMenu";
 import { SearchInput } from "components/Header/partials/SearchInput";
-import URLS from "constants/urls";
+import { URLS } from "constants/urls";
 import { UserContext } from "providers/UserProvider";
 import axios from "axios";
 import debounce from "lodash.debounce";

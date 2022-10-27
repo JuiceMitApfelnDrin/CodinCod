@@ -8,9 +8,7 @@ import {
 import {
   Avatar,
   Box,
-  Button,
   ButtonGroup,
-  Container,
   HStack,
   Heading,
   IconButton,
@@ -38,14 +36,12 @@ const Index = () => {
       <HStack w="85%">
         <VStack
           gap="1rem"
-          width="35%"
-          p="1rem"
           bg="black"
           border="2px"
           borderRadius="6.9"
           borderColor="gray.600"
-          py="8"
-          mx="4"
+          p="8"
+          m="8"
         >
           <Avatar name={username} src={avatar} width="10rem" height="10rem" />
 
@@ -90,9 +86,18 @@ const Index = () => {
               })}
           </VStack>
         </VStack>
-        <Box flexGrow="1">
-          <div>this is a profile with {id}</div>
-        </Box>
+        <VStack
+          w="full"
+          gap="1rem"
+          bg="black"
+          border="2px"
+          borderRadius="6.9"
+          borderColor="gray.600"
+          p="8"
+          m="8"
+        >
+          <Box>this is a profile with {id}</Box>
+        </VStack>
       </HStack>
     </GeneralLayout>
   );

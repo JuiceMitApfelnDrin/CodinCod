@@ -3,7 +3,7 @@ import GeneralLayout from "layouts/GeneralLayout";
 const Index = () => {
   return (
     <GeneralLayout>
-      <div>Singout soon to be :prayge:</div>
+      <div>Thanks for you visit :peepowave:</div>
     </GeneralLayout>
   );
 };

@@ -20,6 +20,7 @@ import { DIFFICULTIES, TYPES } from "constants/puzzle";
 import { useEffect, useState } from "react";
 
 import GeneralLayout from "layouts/GeneralLayout";
+import axios from "axios";
 
 const Index = () => {
   const [sliderValue, setSliderValue] = useState(15);
@@ -37,6 +38,12 @@ const Index = () => {
         setTypeValues(items);
       })
     );
+  };
+
+  const sendToApiDingPls = () => {
+    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "game/create", {
+      testingDing: "hey",
+    });
   };
 
   useEffect(() => {
@@ -150,7 +157,7 @@ const Index = () => {
         </FormControl>
         <HStack spacing="2rem">
           <Button type="reset">reset</Button>
-          <Button bg="teal" type="submit">
+          <Button bg="teal" type="submit" onClick={() => sendToApiDingPls()}>
             Host new game
           </Button>
         </HStack>
