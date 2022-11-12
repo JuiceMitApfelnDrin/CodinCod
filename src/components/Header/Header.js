@@ -1,3 +1,4 @@
+import { BACKEND_URLS, URLS } from "constants/urls";
 import { Flex, HStack } from "@chakra-ui/react";
 import { useCallback, useContext, useState } from "react";
 
@@ -6,7 +7,6 @@ import Link from "next/link";
 import { NotificationMenu } from "./partials/NotificationMenu";
 import { ProfileMenu } from "./partials/ProfileMenu";
 import { SearchInput } from "components/Header/partials/SearchInput";
-import { URLS } from "constants/urls";
 import { UserContext } from "providers/UserProvider";
 import axios from "axios";
 import debounce from "lodash.debounce";
@@ -20,9 +20,9 @@ export const Header = () => {
     debounce((value) => {
       if (value) {
         axios
-          .get(process.env.NEXT_PUBLIC_BACKEND_URL + "users?username=" + value)
-          .then(({ data: usersByUsername }) =>
-            setSearchedUsers(usersByUsername)
+          .get(BACKEND_URLS.USERS_BY_NICKNAME + value)
+          .then(({ data: USERS_BY_SUBSTRING_IN_NICKNAME }) =>
+            setSearchedUsers(USERS_BY_SUBSTRING_IN_NICKNAME)
           );
       }
     }, 750),

@@ -20,15 +20,16 @@ export const SearchInput = ({ value, onChange, list = [] }) => {
     ref: ref,
     handler: () => setShowList(false),
   });
-
+  console.log(list);
   return (
     <Box ref={ref}>
       <InputGroup>
         <Input
           placeholder="Search"
           value={value}
+          onFocus={() => setShowList(true)}
           onChange={(e) => {
-            setShowList(true);
+            setShowList(!!e.target.value);
             onChange(e);
           }}
         />
@@ -45,8 +46,8 @@ export const SearchInput = ({ value, onChange, list = [] }) => {
         >
           {list.map((val) => {
             return (
-              <>
-                <Link href={URLS.PROFILE + val.id}>
+              <Box>
+                <Link href={URLS.PROFILE + (val.id || val._id)}>
                   <Box
                     as="span"
                     _hover={{
@@ -69,11 +70,11 @@ export const SearchInput = ({ value, onChange, list = [] }) => {
                 alt="Fluffybuns the destroyer"
                 mr="12px"
               /> */}
-                    {val.username}
+                    {val.nickname}
                   </Box>
                 </Link>
                 <Divider />
-              </>
+              </Box>
             );
           })}
         </Box>

@@ -27,6 +27,7 @@ const HeaderItem = ({ label, options }) => {
       >
         {label}
       </MenuButton>
+      {/* TODO:  Add better open and close support to the dropdownmenu */}
       <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
         {options.map((option) => (
           <MenuItem key={option.label} as={"a"} href={option.href}>
