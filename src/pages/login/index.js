@@ -15,7 +15,6 @@ const Index = () => {
       <Formik
         initialValues={{ nickname: "", email: "", password: "" }}
         onSubmit={async (values) => {
-          console.log(values);
           // FIXME: form doesn't work yet
 
           return axios

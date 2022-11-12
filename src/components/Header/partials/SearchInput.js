@@ -20,7 +20,7 @@ export const SearchInput = ({ value, onChange, list = [] }) => {
     ref: ref,
     handler: () => setShowList(false),
   });
-  console.log(list);
+
   return (
     <Box ref={ref}>
       <InputGroup>
@@ -59,7 +59,6 @@ export const SearchInput = ({ value, onChange, list = [] }) => {
                     py="0.5rem"
                     onClick={() => {
                       setShowList(false);
-                      console.log("hey");
                     }}
                   >
                     {/* TODO: when users have profile pictures add their profile picture before their name */}
