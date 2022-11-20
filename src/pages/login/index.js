@@ -1,5 +1,14 @@
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  HStack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { BACKEND_URLS, URLS } from "constants/urls";
-import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 
 import { Formik } from "formik";
 import GeneralLayout from "layouts/GeneralLayout";
@@ -14,16 +23,19 @@ const Index = () => {
 
       <Formik
         initialValues={{ nickname: "", email: "", password: "" }}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { setSubmitting, setFieldError }) => {
           // FIXME: form doesn't work yet
 
           return axios
-            .post(BACKEND_URLS.LOGN, JSON.stringify(values))
+            .post(BACKEND_URLS.LOGIN, JSON.stringify(values))
             .then((res) => {
               console.log(res);
             })
-            .catch((ding) => {
-              console.log(ding);
+            .catch(({ response }) => {
+              setFieldError("general", response.data);
+            })
+            .finally(() => {
+              setSubmitting(false);
             });
         }}
       >
@@ -57,6 +69,14 @@ const Index = () => {
                 touched={touched}
                 values={values}
               />
+
+              {errors.general && (
+                <Alert status={ALERT_OPTIONS.ERROR}>
+                  <AlertIcon />
+                  <AlertTitle>An error occurred</AlertTitle>
+                  <AlertDescription>{errors.general}</AlertDescription>
+                </Alert>
+              )}
 
               <HStack gap={2}>
                 <Button as="a" href={URLS.REGISTER}>

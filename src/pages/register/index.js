@@ -1,5 +1,14 @@
-import { Button, Text, VStack } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
+import { ALERT_OPTIONS } from "constants/alert";
 import { BACKEND_URLS } from "constants/urls";
 import { Email } from "components/form/Email";
 import { Formik } from "formik";
@@ -34,16 +43,17 @@ const Index = () => {
           }
           return errors;
         }}
-        onSubmit={async (values) => {
-          // FIXME: form doesn't work yet
-
+        onSubmit={async (values, { setSubmitting, setFieldError }) => {
           return axios
             .post(BACKEND_URLS.REGISTER, JSON.stringify(values))
             .then((res) => {
               console.log(res);
             })
-            .catch((ding) => {
-              console.log(ding);
+            .catch(({ response }) => {
+              setFieldError("general", response.data);
+            })
+            .finally(() => {
+              setSubmitting(false);
             });
         }}
       >
@@ -87,6 +97,15 @@ const Index = () => {
                 touched={touched}
                 values={values}
               />
+
+              {/* FIXME: find a better way to handle backend errors */}
+              {errors.general && (
+                <Alert status={ALERT_OPTIONS.ERROR}>
+                  <AlertIcon />
+                  <AlertTitle>An error occurred</AlertTitle>
+                  <AlertDescription>{errors.general}</AlertDescription>
+                </Alert>
+              )}
 
               <Button
                 background="blue.700"
