@@ -16,7 +16,7 @@ import {
   SliderTrack,
   Switch,
 } from "@chakra-ui/react";
-import { DIFFICULTIES, TYPES } from "constants/puzzle";
+import { DIFFICULTIES, TYPES } from "utils/constants/puzzle";
 import { useEffect, useState } from "react";
 
 import GeneralLayout from "layouts/GeneralLayout";

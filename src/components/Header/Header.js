@@ -1,4 +1,4 @@
-import { BACKEND_URLS, URLS } from "constants/urls";
+import { BACKEND_URLS, URLS } from "utils/constants/urls";
 import { Flex, HStack } from "@chakra-ui/react";
 import { useCallback, useContext, useState } from "react";
 

@@ -1,6 +1,6 @@
 import { createContext, useMemo } from "react";
 
-import EXTERNAL_URLS from "constants/externalUrls";
+import EXTERNAL_URLS from "utils/constants/externalUrls";
 
 export const UserContext = createContext({});
 

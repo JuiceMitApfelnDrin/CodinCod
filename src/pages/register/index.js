@@ -7,9 +7,10 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { BACKEND_URLS, URLS } from "utils/constants/urls";
+import { Router, useRouter } from "next/router";
 
-import { ALERT_OPTIONS } from "constants/alert";
-import { BACKEND_URLS } from "constants/urls";
+import { ALERT_OPTIONS } from "utils/constants/alert";
 import { Email } from "components/form/Email";
 import { Formik } from "formik";
 import GeneralLayout from "layouts/GeneralLayout";
@@ -19,6 +20,8 @@ import axios from "axios";
 import { validate } from "email-validator";
 
 const Index = () => {
+  const router = useRouter();
+
   return (
     <GeneralLayout>
       <Text fontSize="3xl">Welcome to the club</Text>
@@ -47,7 +50,8 @@ const Index = () => {
           return axios
             .post(BACKEND_URLS.REGISTER, JSON.stringify(values))
             .then((res) => {
-              console.log(res);
+              // FIXME: redirect to home if the user is logged in
+              // else redirect to login
             })
             .catch(({ response }) => {
               setFieldError("general", response.data);

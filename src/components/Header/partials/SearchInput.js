@@ -9,7 +9,7 @@ import React, { useState } from "react";
 
 import Link from "next/link";
 import { Search2Icon } from "@chakra-ui/icons";
-import { URLS } from "constants/urls";
+import { URLS } from "utils/constants/urls";
 import { useOutsideClick } from "@chakra-ui/react";
 
 export const SearchInput = ({ value, onChange, list = [] }) => {

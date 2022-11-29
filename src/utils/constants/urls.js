@@ -19,6 +19,9 @@ export const URLS = {
 
   // account URLS
   PREFERENCES: "/account/preferences/",
+
+  // clash URLS
+  CLASH: "/clash/",
 };
 
 /*
