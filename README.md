@@ -1,4 +1,4 @@
-# Knowledge base
+# Knowledge base<!-- omit from toc -->
 
 This repo exists to:
 
@@ -6,9 +6,13 @@ This repo exists to:
 2. create a general shared understanding;
 3. improve teamwork.
 
-## Table of contents
+## Table of contents<!-- omit from toc -->
 
-[toc]
+- [Codebase](#codebase)
+  - [CodingCod](#codingcod)
+    - [User stories](#user-stories)
+    - [Front-end](#front-end)
+    - [Back-end](#back-end)
 
 ## Codebase
 
