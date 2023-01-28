@@ -1,4 +1,4 @@
-# As an player (JustCarpinThemDiems):
+# As a player (JustCarpinThemDiems):
 
 <!-- currently not actually in use yet -->
 
