@@ -9,29 +9,29 @@ This repo exists to:
 ## Table of contents<!-- omit from toc -->
 
 - [Codebase](#codebase)
-  - [CodingCod](#codingcod)
+  - [CodinCod](#codincod)
     - [User stories](#user-stories)
     - [Front-end](#front-end)
     - [Back-end](#back-end)
 
 ## Codebase
 
-### CodingCod
+### CodinCod
 
 #### User stories
 
 Different scenarios that we want to support, for all the types of users.
 
-For more information on what user stories are or on how to write them [Visit this README.md](./codebase/CodingCod/user-stories/README.md).
+For more information on what user stories are or on how to write them [Visit this README.md](./codebase/CodinCod/user-stories/README.md).
 
 Current user types:
 
-- [player](./codebase/CodingCod/user-stories/player.md);
+- [player](./codebase/CodinCod/user-stories/player.md);
 
 #### Front-end
 
-Front-end specific information about CodingCod.
+Front-end specific information about CodinCod.
 
 #### Back-end
 
-Back-end specific information about CodingCod.
+Back-end specific information about CodinCod.
