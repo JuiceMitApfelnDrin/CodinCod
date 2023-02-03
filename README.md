@@ -37,7 +37,6 @@ Front-end specific information about CodinCod.
 
 Back-end specific information about CodinCod.
 
-
 ## Ideas / To-do:
 
 - ranking system?
@@ -45,8 +44,14 @@ Back-end specific information about CodinCod.
 - ranked games
   - all people are in a game since the start
 - unranked games?
+
   - 1 man games (only 1 person when the game started)
   - private games
   - late joiners (when a game is already in progress, anyone who joins late can't get ranking)
 
 - weekly events (2 times / day? or once a day every but rotating schedule?)
+- CO-OP mode
+- create game with a preselected puzzle
+- block users
+- global chat / general chat
+- message other users
