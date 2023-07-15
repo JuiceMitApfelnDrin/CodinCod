@@ -16,7 +16,7 @@
 </script>
 
 <header>
-	<Navbar let:hidden let:toggle color="form">
+	<Navbar let:hidden let:toggle navClass="bg-secondary-500 dark:bg-secondary-900">
 		<NavBrand href="/">
 			<!-- <img src="/images/flowbite-svelte-icon-logo.svg" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo" /> -->
 			<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">

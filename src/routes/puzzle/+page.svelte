@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MonacoEditor from '$components/MonacoEditor.svelte';
-	import { Heading } from 'flowbite-svelte';
+	import { Button, Heading } from 'flowbite-svelte';
 	import SvelteMarkdown from 'svelte-markdown';
 
 	const src = `
@@ -23,4 +23,8 @@ This is a description paragraph.
 	<h1>Title of puzzle</h1>
 	<SvelteMarkdown source={src} />
 	<MonacoEditor />
+
+	<div>
+		<Button>submit</Button>
+	</div>
 </div>
