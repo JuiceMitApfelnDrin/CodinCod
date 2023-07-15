@@ -16,7 +16,7 @@ By definition the users can contribute to this website in many shapes and forms.
 
 ### Experienced Web-developer?
 
-#### run these
+#### run one of these
 
 ```bash
 git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git && cd ./GameCodin
