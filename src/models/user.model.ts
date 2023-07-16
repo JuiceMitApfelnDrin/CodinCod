@@ -3,6 +3,7 @@ import type { Submission } from './submission.model';
 
 export type User = {
 	username: string;
+	avaterUrl: string;
 	bio: string;
 
 	// TODO: array of user_ids? probably have to change it out to something else than string later

@@ -11,8 +11,8 @@
 		DropdownHeader,
 		DropdownDivider
 	} from 'flowbite-svelte';
-	import pfpPlaceholder from '$assets/pfp-placeholder.jpeg';
 	import { urls } from '$config/routes';
+	import { userObject } from '$routes/profile/mockprofiledata';
 </script>
 
 <header>
@@ -32,13 +32,12 @@
 			<NavLi href={urls.root} active={true}>Home</NavLi>
 
 			<div class="flex items-center md:order-2">
-				<Avatar id="avatar-menu" src={pfpPlaceholder} />
+				<Avatar id="avatar-menu" src={userObject.avaterUrl} />
 				<NavHamburger on:click={toggle} class1="w-full md:flex md:w-auto md:order-1" />
 			</div>
 			<Dropdown placement="bottom" triggeredBy="#avatar-menu">
 				<DropdownHeader>
-					<span class="block text-sm">Juice MitApfelnDrin</span>
-					<span class="block truncate text-sm font-medium">juicemitapfelndrin@gmail.com</span>
+					<span class="block text-sm">{userObject.username}</span>
 				</DropdownHeader>
 				<DropdownItem><NavLi href={urls.profile}>Profile</NavLi></DropdownItem>
 				<DropdownItem><NavLi href={urls.settings}>Settings</NavLi></DropdownItem>

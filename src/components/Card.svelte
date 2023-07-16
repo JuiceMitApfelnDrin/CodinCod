@@ -4,7 +4,7 @@
 </script>
 
 <Card
-	class="bg-primary-400 dark:bg-primary-800 dark:border-primary-200 border-primary-700 {cardClass}"
+	class="dark:text-primary-100 dark:bg-black dark:border-primary-500 border-primary-700 {cardClass}"
 >
 	<slot />
 </Card>
