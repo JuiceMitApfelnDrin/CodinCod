@@ -11,7 +11,7 @@
 <div
 	class="mx-auto container flex flex-col items-center xl:items-start xl:flex-row gap-10 pt-10 px-10"
 >
-	<Card cardClass="flex gap-5">
+	<Card>
 		<div class="flex w-full justify-center">
 			<Avatar size="lg" src={userObject.avaterUrl} />
 		</div>

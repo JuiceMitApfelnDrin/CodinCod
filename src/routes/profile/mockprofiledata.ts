@@ -4,7 +4,7 @@ const currentDateDing = new Date();
 
 export const userObject: User = {
 	// a username preferably like discords or twitters?
-	username: 'reeveng',
+	username: 'juicemitapfelndrin',
 
 	avaterUrl: pfpPlaceholder,
 

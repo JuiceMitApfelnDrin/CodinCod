@@ -39,7 +39,7 @@
 		"@popperjs/core": "^2.11.8",
 		"flowbite": "^1.6.6",
 		"flowbite-svelte": "^0.38.2",
-		"monaco-editor": "^0.39.0",
-		"svelte-markdown": "^0.2.3"
+		"markdown-it": "^13.0.1",
+		"monaco-editor": "^0.39.0"
 	}
 }

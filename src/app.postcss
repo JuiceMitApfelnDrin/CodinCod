@@ -31,20 +31,22 @@ p {
 	@apply text-base leading-normal;
 }
 
-ul,
-ol {
-	@apply pl-6 list-inside;
+.button {
+	@apply bg-primary-200 border-primary-400 text-primary-900 px-2 py-1 rounded-md border shadow-xl;
 }
 
-ol {
-	@apply list-decimal;
+.dark .button {
+	@apply bg-primary-800 border-primary-400 text-primary-50;
 }
 
-ul {
-	@apply list-disc;
+.button:hover {
+	@apply bg-primary-400 border-primary-600;
 }
 
-header ul,
-header ol {
-	@apply list-none p-0;
+.dark .button:hover {
+	@apply bg-primary-600 border-primary-200;
+}
+
+ul.tabs {
+	@apply flex gap-2;
 }

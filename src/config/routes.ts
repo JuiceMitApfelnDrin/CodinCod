@@ -3,6 +3,5 @@ export const urls = {
 	settings: '/settings',
 	signOut: '/sign-out',
 	root: '/',
-	puzzle: '/puzzle',
-
+	puzzle: '/puzzle'
 };

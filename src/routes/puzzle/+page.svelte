@@ -1,30 +1,55 @@
 <script lang="ts">
+	import Instructions from '$components/Instructions.svelte';
+	import Markdown from '$components/Markdown.svelte';
 	import MonacoEditor from '$components/MonacoEditor.svelte';
-	import { Button, Heading } from 'flowbite-svelte';
-	import SvelteMarkdown from 'svelte-markdown';
+	import Tests from '$components/Tests.svelte';
+	import { puzzle } from './mockpuzzledata';
 
-	const src = `
-This is a description paragraph.
+	function runTests(e: MouseEvent): void {
+		throw new Error('Function not implemented.');
+	}
+	function submit(e: MouseEvent): void {
+		throw new Error('Function not implemented.');
+	}
 
-* This is a list
-* With two items
-  1. And a sublist
-  2. That is ordered
-    - With another
-    - Sublist inside
-	3. xdd
+	const tabs = {
+		instructions: 'instructions',
+		tests: 'test'
+	};
 
-| And this is | A table |
-|-------------|---------|
-| With two    | columns |`;
+	// type PuzzleTabs = "instructions" | "test";
+
+	let currentTab = tabs.instructions;
 </script>
 
-<div class="flex flex-col container m-auto gap-4 pt-5">
-	<h1>Title of puzzle</h1>
-	<SvelteMarkdown source={src} />
-	<MonacoEditor />
+<div class="flex flex-col container m-auto pt-5">
+	<div class="flex flex-col md:flex-row gap-5">
+		<div class="w-full">
+			<ul class="tabs">
+				{#each Object.values(tabs) as tab}
+					<li>
+						<button class="button" on:click={() => (currentTab = tab)}>{tab}</button>
+					</li>
+				{/each}
+			</ul>
 
-	<div>
-		<Button>submit</Button>
+			{#if currentTab === tabs.instructions}
+				<Instructions {puzzle} />
+			{:else if currentTab === tabs.tests}
+				<Tests validators={puzzle.validators} />
+			{/if}
+		</div>
+
+		<!-- TODO: make the 2 here adjustable in size -->
+
+		<div class="flex flex-col gap-5 w-full">
+			<MonacoEditor />
+
+			<!-- not sure if the run tests and the submit will remain here, but put them here for now -->
+			<div class="flex flex-row gap-5">
+				<!-- <button on:click={runTests}>run tests</button>
+				<button on:click={submit}>submit</button> -->
+			</div>
+		</div>
 	</div>
 </div>
