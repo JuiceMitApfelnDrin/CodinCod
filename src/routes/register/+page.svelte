@@ -12,7 +12,7 @@
 		/>
 	</div>
 	<div class="flex flex-col">
-		<label for="email"> Email </label>
+		<label for="email">Email</label>
 		<input
 			id="email"
 			name="email"
@@ -23,7 +23,7 @@
 		/>
 	</div>
 	<div class="flex flex-col">
-		<label for="password"> Password </label>
+		<label for="password">Password</label>
 		<input
 			id="password"
 			name="password"

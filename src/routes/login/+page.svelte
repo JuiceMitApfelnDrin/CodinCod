@@ -24,17 +24,17 @@
 	let password = 'password';
 </script>
 
-<h1>hi there, you can login here to your favorite site!</h1>
+<form on:submit={login} class="flex flex-col items-center gap-5 m-5">
+	<h1>Login and enjoy CodinCod!</h1>
 
-<form>
 	<div class="flex flex-col">
 		<label class="sr-only" for="username">username</label>
-		<input id="username" bind:value={username} placeholder="username" required />
+		<input type="text" id="username" bind:value={username} placeholder="username" required />
 	</div>
 	<div class="flex flex-col">
 		<label class="sr-only" for="password">password</label>
 		<input type="password" id="password" bind:value={password} placeholder="password" required />
 	</div>
 
-	<button class="button" type="submit" on:click={login}>login!</button>
+	<button class="button" type="submit">login!</button>
 </form>

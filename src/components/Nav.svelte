@@ -2,6 +2,8 @@
 	import { NavBrand, NavHamburger, Dropdown } from 'flowbite-svelte';
 	import { urls } from '$config/routes';
 	import { userObject } from '$routes/profile/mockprofiledata';
+	import Dialog from './Dialog.svelte';
+
 </script>
 
 <header>
@@ -27,6 +29,11 @@
 				/>
 				<!-- <NavHamburger on:click={toggle} class1="w-full md:flex md:w-auto md:order-1" /> -->
 			</button>
+
+			<Dialog>
+
+			</Dialog>
+
 			<Dropdown placement="bottom" triggeredBy="#avatar-menu">
 				<p class="text-sm block">
 					{userObject.username}
