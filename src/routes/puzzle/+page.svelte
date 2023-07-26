@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Instructions from '$components/Instructions.svelte';
-	import Markdown from '$components/Markdown.svelte';
 	import MonacoEditor from '$components/MonacoEditor.svelte';
 	import Tests from '$components/Tests.svelte';
 	import { puzzle } from './mockpuzzledata';
@@ -16,8 +15,6 @@
 		instructions: 'instructions',
 		tests: 'test'
 	};
-
-	// type PuzzleTabs = "instructions" | "test";
 
 	let currentTab = tabs.instructions;
 </script>
@@ -47,8 +44,8 @@
 
 			<!-- not sure if the run tests and the submit will remain here, but put them here for now -->
 			<div class="flex flex-row gap-5">
-				<!-- <button on:click={runTests}>run tests</button>
-				<button on:click={submit}>submit</button> -->
+				<button class="button" on:click={runTests}>run tests</button>
+				<button class="button" on:click={submit}>submit</button>
 			</div>
 		</div>
 	</div>

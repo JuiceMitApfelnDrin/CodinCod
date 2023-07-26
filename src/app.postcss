@@ -32,10 +32,12 @@ p {
 }
 
 .button {
-	@apply bg-primary-200 border-primary-400 text-primary-900 px-2 py-1 rounded-md border shadow-xl;
+	box-shadow: 0.2rem 0.2rem #000;
+	@apply bg-primary-200 border-primary-400 text-primary-900 px-2 py-1 rounded-md border;
 }
 
 .dark .button {
+	box-shadow: 0.2rem 0.2rem #bbb;
 	@apply bg-primary-800 border-primary-400 text-primary-50;
 }
 
@@ -49,4 +51,8 @@ p {
 
 ul.tabs {
 	@apply flex gap-2;
+}
+
+.dark input {
+	@apply bg-black;
 }
