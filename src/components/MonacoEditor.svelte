@@ -64,6 +64,7 @@
 
 <style>
 	.ding {
-		height: 50vh;
+		height: 500px;
+		widows: 500px;
 	}
 </style>

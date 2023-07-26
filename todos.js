@@ -5,8 +5,7 @@
 */
 
 // TODO: create a way to interact with the backend
-// TODO: setup translations
-// TODO: add editor to the project
+// TODO: get rid of flowbite => will do that during this week (juice)
 
 /*
  ----------------------------------
@@ -17,3 +16,4 @@
 // TODO: create generic form fields => inputs, inputlists, ...
 // TODO: add description of URLS to constants when translations are setup
 // TODO: add description of puzzle types to constants when translations are setup
+// TODO: setup translations
