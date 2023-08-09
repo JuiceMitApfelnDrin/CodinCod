@@ -1,0 +1,189 @@
+{
+  "main": {
+    "id": "c2b573396bb93b9d",
+    "type": "split",
+    "children": [
+      {
+        "id": "26eb9742a50689b4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2a13a2620a0efa16",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "f5134f7dd290bd83",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "features/README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "16d96d8a7f94bcfc",
+    "type": "split",
+    "children": [
+      {
+        "id": "6d12ecdda42c38cf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b9d5b7bc3805e011",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "f0b5e9bfb7bd5def",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "c2a29069a5d26d13",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ef282c9a49d67e40",
+    "type": "split",
+    "children": [
+      {
+        "id": "1adf7f31502e317f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2a691445f95b7dbe",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "features/README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "b7ee824f4b71d005",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "features/README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "5baffb3df93f8471",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "eb818f848477a164",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "features/README.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "f5134f7dd290bd83",
+  "lastOpenFiles": [
+    "CodinCod/front-end/README.md",
+    "CodinCod/back-end/README.md",
+    "CodinCod/front-end",
+    "CodinCod/back-end",
+    "CodinCod/README.md",
+    "CodinCod",
+    "codebase/CodinCod/back-end/README.md",
+    "codebase/CodinCod/README.md",
+    "README.md",
+    "features/README.md",
+    "features/Community challenges.md",
+    "features/Custom games.md",
+    "features/Untitled.canvas",
+    "features/User blocking.md",
+    "features/Single player.md",
+    "features/Reporting.md",
+    "features/Private messages.md",
+    "features/General chat.md",
+    "features/Events.md",
+    "features/Co-op games.md",
+    "features/Ranked games.md",
+    "features/Private games.md",
+    "features",
+    "suggestions"
+  ]
+}
