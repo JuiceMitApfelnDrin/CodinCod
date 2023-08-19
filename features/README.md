@@ -12,3 +12,7 @@ Importance of features (top more important and currently being worked on):
 - [ ] User blocking
 - [ ] Co-op games
 - [ ] Private messages
+
+Far down the pipeline:
+
+- [ ] Streamer / streaming integration
