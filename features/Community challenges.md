@@ -4,7 +4,7 @@
 
 **Related Challenges**: Enable foldered challenges, where users can propose follow-up challenges building on the previous one's solutions.
 
-**Moderation and Review**: Introduce a moderation process to review and approve community challenge submissions to ensure quality and relevance.
+**Moderation and Review**: Introduce a moderation process to review and approve community challenge submissions to ensure quality and relevance. Should also include a feedback mechanism, so the creator knows what to change about the rejected puzzle.
 
 **Prizes and Rewards**: Offer incentives for users who propose particularly engaging or innovative community challenges. Provide digital rewards, platform currency, or special recognition.
 

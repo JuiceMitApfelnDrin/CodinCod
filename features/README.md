@@ -1,3 +1,7 @@
+Some assumptions that can be made:
+
+1. the solutions of users will always be viewable through the eventual solution viewer on a users profile.
+
 Importance of features (top more important and currently being worked on):
 
 - [ ] Single player games
@@ -10,9 +14,14 @@ Importance of features (top more important and currently being worked on):
 - [ ] Reporting
 - [ ] Events
 - [ ] User blocking
-- [ ] Co-op games
+- [ ] Co-op games / Collaborative Puzzles
 - [ ] Private messages
 
 Far down the pipeline:
 
+- [ ] Solution tab on user profiles
+- [ ] Daily Challenges
 - [ ] Streamer / streaming integration
+- [ ] Community Forums and Discussions
+- [ ] Tutorials and Learning Paths
+- [ ] Mobile App
