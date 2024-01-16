@@ -25,3 +25,4 @@ Far down the pipeline:
 - [ ] Community Forums and Discussions
 - [ ] Tutorials and Learning Paths
 - [ ] Mobile App
+- [ ] Puzzle must be solved with a certain time/space complexity? (shouldn't be mandatory tho, fun is our first and foremost importance)

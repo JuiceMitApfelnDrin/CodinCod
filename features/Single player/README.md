@@ -2,7 +2,7 @@
 
 Implement an option for players to engage in solo coding challenges or puzzles, providing a platform for individual skill development and practice.
 
-**Diverse Challenge Library**: Curate a comprehensive collection of coding challenges, puzzles, and projects for users to choose from.
+**Diverse Challenge Library**: Curate a comprehensive collection of coding challenges, puzzles, and "projects" for users to choose from.
 
 **Difficulty levels**: Include challenges of varying difficulty levels, covering different programming languages, algorithms, data structures, and application domains.
 

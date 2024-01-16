@@ -1,7 +1,7 @@
 **Assumptions:**
 
 1. **Code of Conduct:** All contributors are expected to adhere to a clear and comprehensive code of conduct that promotes respectful and inclusive behaviour within the platform.
-3. **Positive Intent:** Contributors are assumed to have positive intentions, aiming to enhance the learning and collaborative experience for all users.
+2. **Positive Intent:** Contributors are assumed to have positive intentions, aiming to enhance the learning and collaborative experience for all users.
 3. **Privacy Respect:** Contributors respect the privacy settings of other users. Content marked as private are not shared or discussed without explicit permission.
 4. **Non-Discrimination:** Contributors will not discriminate or engage in any form of harassment based on factors like race, gender, religion, or skill level.
 
