@@ -22,6 +22,7 @@ kanban-plugin: basic
 ## Tasks
 
 - [ ] [[features/Single player/README]]
+- [ ] [[Solving a puzzle]]
 
 
 ## In Progress

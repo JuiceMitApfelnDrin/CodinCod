@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "features/Single player/Create a puzzle.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "features/Single player/Create a puzzle.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "features/Single player/Create a puzzle.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "features/Single player/Create a puzzle.md"
+                "file": "README.md"
               }
             }
           }
@@ -148,9 +148,9 @@
   },
   "active": "f648e53bbd43793a",
   "lastOpenFiles": [
-    "features/Single player/Solving a puzzle.md",
     "Kanban board.md",
     "features/Single player/Create a puzzle.md",
+    "features/Single player/Solving a puzzle.md",
     "CodinCod/front-end/README.md",
     "features/Single player/README.md",
     "features/README.md",
