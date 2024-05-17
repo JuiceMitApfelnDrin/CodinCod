@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { urls } from '../lib/config/routes';
+	import { urls } from "../lib/config/routes";
 
-	let hi = 'wassup';
+	let hi = "wassup";
 </script>
 
 <div class="container mx-auto">

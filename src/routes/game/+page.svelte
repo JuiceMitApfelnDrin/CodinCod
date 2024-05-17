@@ -1,25 +1,25 @@
 <script lang="ts">
-	import Instructions from '../../lib/components/instructions.svelte';
-	import MonacoEditor from '../../lib/components/monacoEditor.svelte';
-	import Tests from '../../lib/components/tests.svelte';
+	import Instructions from "../../lib/components/instructions.svelte";
+	import MonacoEditor from "../../lib/components/monacoEditor.svelte";
+	import Tests from "../../lib/components/tests.svelte";
 
 	function runTests(e: MouseEvent): void {
-		throw new Error('Function not implemented.');
+		throw new Error("Function not implemented.");
 	}
 	function submit(e: MouseEvent): void {
-		throw new Error('Function not implemented.');
+		throw new Error("Function not implemented.");
 	}
 
 	const tabs = {
-		instructions: 'instructions',
-		tests: 'test'
+		instructions: "instructions",
+		tests: "test"
 	};
 
 	let currentTab = tabs.instructions;
 </script>
 
-<div class="flex flex-col container m-auto pt-5">
-	<div class="flex flex-col md:flex-row gap-5">
+<div class="container m-auto flex flex-col pt-5">
+	<div class="flex flex-col gap-5 md:flex-row">
 		<div class="w-full">
 			<ul class="tabs">
 				{#each Object.values(tabs) as tab}
@@ -38,7 +38,7 @@
 
 		<!-- TODO: make the 2 here adjustable in size -->
 
-		<div class="flex flex-col gap-5 w-full">
+		<div class="flex w-full flex-col gap-5">
 			<MonacoEditor />
 
 			<!-- not sure if the run tests and the submit will remain here, but put them here for now -->

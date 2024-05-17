@@ -1,13 +1,13 @@
-import { BACKEND_URL } from '$env/static/private';
+import { BACKEND_URL } from "$env/static/private";
 
-const login = 'login';
-const register = 'register';
-const puzzles = 'puzzles';
-const puzzle_by_id = 'puzzles/:id';
-const profile = 'profile';
-const users = 'users';
-const user_by_id = 'users/:id';
-const account = 'account';
+const login = "login";
+const register = "register";
+const puzzles = "puzzles";
+const puzzle_by_id = "puzzles/:id";
+const profile = "profile";
+const users = "users";
+const user_by_id = "users/:id";
+const account = "account";
 
 export const backend_routes = {
 	login,

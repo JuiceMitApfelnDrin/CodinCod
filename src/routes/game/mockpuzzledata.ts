@@ -1,4 +1,4 @@
-import type { Puzzle } from '../../lib/models/puzzle.model';
+import type { Puzzle } from "../../lib/models/puzzle.model";
 
 const testMarkdownParsing =
 	`
@@ -21,24 +21,24 @@ This is a description paragraph.
 
 export const puzzle: Puzzle = {
 	_id: "random id that doesn't matter one bit",
-	author_id: 'juicemitapfelndrin',
-	constraints: 'N lines',
+	author_id: "juicemitapfelndrin",
+	constraints: "N lines",
 	statement:
 		'Print numbers from 1 to N, but if the number is divisible by F, print "Fizz", and if the number is divisible by B print "Buzz". If it is divisible by both print "FizzBuzz".' +
 		testMarkdownParsing,
-	title: 'FizzBuzz',
+	title: "FizzBuzz",
 	validators: [
 		{
-			input: '7 2 3',
-			output: '1\nFizz\nBuzz\nFizz\n5\nFizzBuzz\n7'
+			input: "7 2 3",
+			output: "1\nFizz\nBuzz\nFizz\n5\nFizzBuzz\n7"
 		},
 		{
-			input: '3 1 1',
-			output: 'FizzBuzz\nFizzBuzz\nFizzBuzz'
+			input: "3 1 1",
+			output: "FizzBuzz\nFizzBuzz\nFizzBuzz"
 		},
 		{
-			input: '10 11 12',
-			output: '1\n2\n3\n4\n5\n6\n7\n8\n9\n10'
+			input: "10 11 12",
+			output: "1\n2\n3\n4\n5\n6\n7\n8\n9\n10"
 		}
 	]
 };

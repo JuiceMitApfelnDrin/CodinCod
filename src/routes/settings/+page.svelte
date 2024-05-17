@@ -1,8 +1,8 @@
 <script lang="ts">
-	let hi = 'wassup';
+	let hi = "wassup";
 </script>
 
-<div class="mx-auto container">
+<div class="container mx-auto">
 	Settings page salutes you!
 	{hi}
 </div>

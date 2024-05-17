@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Submission } from '@/models/submission.model';
-	import { calculatePercentage } from '@/utils/calculatePercentage';
+	import type { Submission } from "@/models/submission.model";
+	import { calculatePercentage } from "@/utils/calculatePercentage";
 
 	export let solvedPuzzles: Submission[] = [];
 
@@ -36,9 +36,9 @@
 	const dayIndexToFormattedDate = (index: number): string => {
 		const date = new Date();
 		return new Date(date.setDate(date.getDate() - index)).toLocaleString(undefined, {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
+			year: "numeric",
+			month: "long",
+			day: "numeric"
 		});
 	};
 
@@ -55,7 +55,7 @@
 		const date = new Date();
 		return new Date(date.setDate(date.getDate() - index))
 			.toLocaleDateString(undefined, {
-				weekday: 'short'
+				weekday: "short"
 			})
 			.toUpperCase();
 	});

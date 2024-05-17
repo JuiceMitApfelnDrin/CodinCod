@@ -1,7 +1,7 @@
 <script lang="ts">
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import * as Avatar from '$lib/components/ui/avatar';
-	import { urls } from '@/config/routes';
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+	import * as Avatar from "$lib/components/ui/avatar";
+	import { urls } from "@/config/routes";
 </script>
 
 <header>

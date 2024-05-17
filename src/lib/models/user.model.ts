@@ -1,5 +1,5 @@
-import type { Puzzle } from './puzzle.model';
-import type { Submission } from './submission.model';
+import type { Puzzle } from "./puzzle.model";
+import type { Submission } from "./submission.model";
 
 export type User = {
 	username: string;

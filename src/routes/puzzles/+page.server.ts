@@ -1,4 +1,4 @@
-import { backend_routes, buildBackendUrl } from '@/config/backend.js';
+import { backend_routes, buildBackendUrl } from "@/config/backend.js";
 
 export async function load({ fetch }) {
 	const url = buildBackendUrl(backend_routes.puzzles);

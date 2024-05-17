@@ -4,8 +4,8 @@ export type Validator = {
 	output: string;
 };
 
-export type Type = 1 | 2 | 3
-export type Difficulty = 1 | 2 | 3 | 4 | 5
+export type Type = 1 | 2 | 3;
+export type Difficulty = 1 | 2 | 3 | 4 | 5;
 
 export type Puzzle = {
 	id: string;
@@ -14,8 +14,8 @@ export type Puzzle = {
 	constraints: string;
 	author_id: string;
 	validators: Validator[];
-	types: Type[]
-	difficulty: Difficulty
-	updated_at: Date
-	created_at: Date
+	types: Type[];
+	difficulty: Difficulty;
+	updated_at: Date;
+	created_at: Date;
 };

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import LoggedInNav from './loggedInNav.svelte';
-	import LoggedOutNav from './loggedOutNav.svelte';
+	import LoggedInNav from "./loggedInNav.svelte";
+	import LoggedOutNav from "./loggedOutNav.svelte";
 
 	const loggedIn = true;
 </script>
