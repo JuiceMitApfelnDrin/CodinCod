@@ -1,32 +1,24 @@
 <script lang="ts">
-	import Card from '$components/Card.svelte';
-	import ContributionGraph from '$components/CalendarHeatmap.svelte';
-	import { getLastSegment } from '$utils/getLastSegment';
-	import { Icon, Link } from 'svelte-hero-icons';
-	import { userObject } from './mockprofiledata';
+	import Container from "@/components/container.svelte";
+	import ContributionGraph from "../../lib/features/profile/components/calendarHeatmap.svelte";
+	// import { getLastSegment } from '$utils/getLastSegment';
 
-	import { Avatar } from 'flowbite-svelte';
+	export let data;
 </script>
 
-<div
-	class="mx-auto container flex flex-col items-center xl:items-start xl:flex-row gap-10 pt-10 px-10"
->
-	<Card>
-		<div class="flex w-full justify-center">
-			<Avatar size="lg" src={userObject.avaterUrl} />
-		</div>
+<Container class="items-center gap-10 px-10 pt-10 xl:flex-row xl:items-start">
+	<!-- create a link component? where based on a part of the string, it renders the right component -->
 
-		<h1 class="flex w-full justify-center">{userObject.username}</h1>
+	<!-- <Card>
+		<H1 class="flex w-full justify-center">{data.nickname}</H1>
 
-		<p>{userObject.bio}</p>
+		<p>{data.profile.bio}</p>
 
 		<div>
 			<ul class="list-none">
-				<!-- create a link component? where based on a part of the string, it renders the right component -->
 
-				{#each userObject.links as link}
+				{#each data.profile.links as link}
 					<li class="flex flex-row gap-2">
-						<Icon src={Link} class="w-6 h-6" />
 						<a class="hover:underline" href={link}>
 							{getLastSegment(link)}
 						</a>
@@ -34,8 +26,8 @@
 				{/each}
 			</ul>
 		</div>
-	</Card>
+	</Card> -->
 	<!-- The profile page salutes you! Show a github like overview of when a user solved puzzles! -->
 
-	<ContributionGraph solvedPuzzles={userObject.solved_puzzles} />
-</div>
+	<ContributionGraph solvedPuzzles={data.activity.submissions} />
+</Container>

@@ -1,6 +1,5 @@
 <script lang="ts">
-	import '../app.postcss';
-	import Nav from '$components/Nav.svelte';
+	import Nav from '@/components/nav/nav.svelte';
 
 	import { onMount } from 'svelte';
 
@@ -20,6 +19,6 @@
 
 <Nav />
 
-<div class="min-h-screen dark:bg-primary-900 dark:text-primary-100">
+<div class="dark:bg-primary-900 dark:text-primary-100 min-h-screen">
 	<slot />
 </div>

@@ -1,54 +1,38 @@
-# CodinCod
+# create-svelte
 
-There are several sites on the web like leetcode, codingame, codewars...
-But several of them lack essential features people might want in them.
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
-That's why we are here, coming to the rescue, creating an opensource code-puzzle platform where users are at the center!
-By definition the users can contribute to this website in many shapes and forms.
+## Creating a project
 
-## Install
-
-### Prerequisites
-
-- install the LTS (long term service) of [Node.Js](https://nodejs.org/en/)
-- an IDE e.g.: [Visual Studio Code (vscode)](https://code.visualstudio.com/)
-- [git](https://git-scm.com/)
-
-### Experienced Web-developer?
-
-#### run one of these
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
-git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git && cd ./GameCodin
-pnpm i && pnpm dev
+# create a new project in the current directory
+npm create svelte@latest
+
+# create a new project in my-app
+npm create svelte@latest my-app
 ```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
-git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git && cd ./GameCodin
-yarn && yarn dev
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
 ```
+
+## Building
+
+To create a production version of your app:
 
 ```bash
-git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git && cd ./GameCodin
-npm install && npm run dev
+npm run build
 ```
 
-### Completely new to Web-development?
+You can preview the production build with `npm run preview`.
 
-#### run this
-
-```bash
-git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git && cd ./GameCodin && npm install -g pnpm && pnpm i && pnpm dev
-```
-
-If it fails, run these lines 1 by 1:
-
-```bash
-git clone https://github.com/JuiceMitApfelnDrin/GameCodin.git
-cd ./GameCodin
-npm install -g pnpm
-pnpm i
-pnpm dev
-```
-
-If it still fails contact someone in the discord!
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

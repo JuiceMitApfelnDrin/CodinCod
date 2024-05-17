@@ -1,5 +1,5 @@
-<form action="/api/register" method="post" class="flex flex-col items-center gap-5 m-5">
-	<h1>Register a new CodinCod account</h1>
+<form action="/api/register" method="post" class="m-5 flex flex-col items-center gap-5">
+	<H1>Register a new Codin Cod account</H1>
 	<div class="flex flex-col">
 		<label for="username"> Nickname </label>
 		<input

@@ -1,0 +1,19 @@
+{
+  "name": "mock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "json-server --watch ./db.json",
+    "updateDb": "ts-node fakerGenerator.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/node": "^20.12.7",
+    "json-server": "1.0.0-alpha.23",
+    "ts-node": "^10.9.2"
+  }
+}

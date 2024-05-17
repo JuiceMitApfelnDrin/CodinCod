@@ -4,7 +4,6 @@
  ----------------------------------
 */
 
-// TODO: get rid of flowbite => will do that during this week (juice)
 // TODO: setup puzzle calls and submit a first puzzle?
 // TODO: create a dropdown component? since they might be useful and would look nice for showing dings in nav
 

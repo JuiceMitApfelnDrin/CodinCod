@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { urls } from '$config/routes';
-	import { Button, NavLi } from 'flowbite-svelte';
+	import { urls } from '../lib/config/routes';
 
 	let hi = 'wassup';
 </script>
 
-<div class="mx-auto container">
-	<a href={urls.puzzle}>Puzzle</a>
+<div class="container mx-auto">
+	<a href={urls.puzzles}>Puzzles</a>
 	hi there, {hi}
 </div>
