@@ -17,7 +17,19 @@ export const urls = {
 
 	// user profile
 	user_profile: "/profile",
-	user_profile_by_id: "/profile/:id"
+	user_profile_by_id: "/profile/:id",
+
+	// play game
+	play: "/",
+
+	// learn
+	learn: "/learn",
+
+	// community
+	forum: "/forum",
+	friends: "/friends",
+	players: "/players",
+	blog: "/blog"
 };
 
 interface Params {

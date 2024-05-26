@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Container from "@/components/container.svelte";
-	import ContributionGraph from "../../lib/features/profile/components/calendarHeatmap.svelte";
+	import ContributionGraph from "../../lib/features/profile/components/calendar-heatmap.svelte";
 	// import { getLastSegment } from '$utils/getLastSegment';
 
 	export let data;
