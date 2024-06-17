@@ -1,7 +1,5 @@
 <script lang="ts">
-	import Instructions from "../../lib/components/instructions.svelte";
-	import MonacoEditor from "../../lib/components/monacoEditor.svelte";
-	import Tests from "../../lib/components/tests.svelte";
+	import Codemirror from "@/features/game/components/codemirror.svelte";
 
 	function runTests(e: MouseEvent): void {
 		throw new Error("Function not implemented.");
@@ -39,7 +37,7 @@
 		<!-- TODO: make the 2 here adjustable in size -->
 
 		<div class="flex w-full flex-col gap-5">
-			<MonacoEditor />
+			<Codemirror />
 
 			<!-- not sure if the run tests and the submit will remain here, but put them here for now -->
 			<div class="flex flex-row gap-5">

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import Container from "@/components/container.svelte";
+	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import { urls, buildLocalUrl } from "@/config/routes";

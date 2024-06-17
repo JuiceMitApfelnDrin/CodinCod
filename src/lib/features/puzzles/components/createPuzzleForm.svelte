@@ -18,7 +18,7 @@
 	const { form: formData, enhance } = form;
 </script>
 
-<form method="POST" use:enhance>
+<form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Title</Form.Label>

@@ -1,10 +1,12 @@
 <script lang="ts">
-	import type { Validator } from "../models/puzzle.model";
+	import H1 from "@/components/typography/h1.svelte";
+	import type { Validator } from "../../../models/puzzle.model";
 
 	export let validators: Validator[];
 </script>
 
 <H1>Test results</H1>
+
 {#if validators.length > 0}
 	<table>
 		<tr>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Container from "@/components/container.svelte";
+	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import { urls } from "@/config/routes.js";
 	import { Button } from "@/components/ui/button";
