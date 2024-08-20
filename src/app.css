@@ -72,7 +72,20 @@
 	* {
 		@apply border-border;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
+}
+
+a {
+	@apply text-blue-600 underline decoration-blue-600 transition-colors duration-300;
+}
+
+a:hover {
+	@apply text-blue-800 decoration-blue-800;
+}
+
+a:focus {
+	@apply outline-none ring-2 ring-blue-400;
 }

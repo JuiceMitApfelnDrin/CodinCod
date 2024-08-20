@@ -1,20 +1,32 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import Nav from "@/components/nav/nav.svelte";
+	import { localStorageKeys, themeOptions } from "@/config/local-storage";
 
-	import { onMount } from "svelte";
+	// in case ever needed
+	// function handleSwitchDarkMode() {
+	// 	darkMode = !darkMode;
 
-	// // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-	onMount(() => {
+	// 	localStorage.setItem("theme", darkMode ? "dark" : "light");
+
+	// 	darkMode
+	// 		? document.documentElement.classList.add("dark")
+	// 		: document.documentElement.classList.remove("dark");
+	// }
+
+	if (browser) {
 		if (
-			localStorage.getItem("color-theme") === "dark" ||
-			(!("color-theme" in localStorage) &&
+			localStorage.theme === themeOptions.DARK ||
+			(!(localStorageKeys.THEME in localStorage) &&
 				window.matchMedia("(prefers-color-scheme: dark)").matches)
 		) {
-			document.documentElement.classList.add("dark");
+			document.documentElement.classList.add(themeOptions.DARK);
+			localStorage.setItem(localStorageKeys.THEME, themeOptions.DARK);
 		} else {
-			document.documentElement.classList.remove("dark");
+			document.documentElement.classList.remove(themeOptions.DARK);
+			localStorage.setItem(localStorageKeys.THEME, themeOptions.LIGHT);
 		}
-	});
+	}
 </script>
 
 <Nav />

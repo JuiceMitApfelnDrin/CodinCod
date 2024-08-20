@@ -1,11 +1,10 @@
 <script lang="ts">
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import EditPuzzleForm from "@/features/puzzles/components/editPuzzleForm.svelte";
+	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 
 	export let data;
 	const { form: formData } = data;
-	const { puzzle } = data;
 </script>
 
 <Container class="gap-4">

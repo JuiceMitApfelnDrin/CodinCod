@@ -1,39 +1,16 @@
-<form action="/api/register" method="post" class="m-5 flex flex-col items-center gap-5">
-	<H1>Register a new Codin Cod account</H1>
-	<div class="flex flex-col">
-		<label for="username"> Nickname </label>
-		<input
-			id="username"
-			name="nickname"
-			type="text"
-			placeholder="Choose a name"
-			minlength="3"
-			required
-		/>
-	</div>
-	<div class="flex flex-col">
-		<label for="email">Email</label>
-		<input
-			id="email"
-			name="email"
-			type="email"
-			placeholder="Enter your email address"
-			autocomplete="email"
-			required
-		/>
-	</div>
-	<div class="flex flex-col">
-		<label for="password">Password</label>
-		<input
-			id="password"
-			name="password"
-			type="password"
-			minlength="8"
-			autocomplete="new-password"
-			placeholder="hunter2"
-			required
-		/>
-	</div>
+<script lang="ts">
+	import Container from "@/components/ui/container/container.svelte";
+	import H1 from "@/components/typography/h1.svelte";
+	import RegisterForm from "@/features/register/components/register-form.svelte";
+	import P from "@/components/typography/p.svelte";
 
-	<input type="submit" value="Register" class="button" />
-</form>
+	export let data;
+</script>
+
+<Container>
+	<H1>Register</H1>
+
+	<P>Welcome to CodinCod!<br />Let's begin the adventure</P>
+
+	<RegisterForm data={data.form}></RegisterForm>
+</Container>
