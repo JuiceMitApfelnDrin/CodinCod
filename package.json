@@ -1,0 +1,33 @@
+{
+	"version": "0.0.1",
+	"description": "",
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"name": "types",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"type": "module",
+	"module": "",
+	"scripts": {
+		"build": "tsc",
+		"type-check": "tsc",
+		"lint": "npx eslint .",
+		"lint:fix": "npm run lint -- --fix",
+		"prettier": "npx prettier . --check",
+		"prettier:fix": "npm run prettier -- --write",
+		"format": "npm run prettier:fix && npm run lint:fix"
+	},
+	"dependencies": {
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"globals": "^15.8.0",
+		"@eslint/js": "^9.7.0",
+		"@tsconfig/recommended": "^1.0.7",
+		"typescript": "^5.5.4",
+		"eslint": "9.x",
+		"eslint-config-prettier": "^9.1.0",
+		"prettier": "3.3.3"
+	}
+}
