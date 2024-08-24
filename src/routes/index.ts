@@ -5,13 +5,13 @@ import { promises } from "fs";
 import { userEntitySchema } from "types";
 
 export default async function indexRoutes(fastify: FastifyInstance) {
-	fastify.get("/", async function (_request: FastifyRequest, reply: FastifyReply) {
-		const { readFile } = promises;
+	// fastify.get("/", async function (_request: FastifyRequest, reply: FastifyReply) {
+	// 	const { readFile } = promises;
 
-		const indexHtmlPath = resolve(__dirname, "../../static/index.html");
-		const indexHtmlContent = await readFile(indexHtmlPath);
-		reply.header("Content-Type", "text/html; charset=utf-8").send(indexHtmlContent);
-	});
+	// 	const indexHtmlPath = resolve(__dirname, "../../static/index.html");
+	// 	const indexHtmlContent = await readFile(indexHtmlPath);
+	// 	reply.header("Content-Type", "text/html; charset=utf-8").send(indexHtmlContent);
+	// });
 
 	/**
 	 * temporary call

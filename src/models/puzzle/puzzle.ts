@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { PUZZLE, USER, VALIDATOR, SUBMISSION, METRICS } from "../../utils/constants/model.js";
+import { PUZZLE, USER, METRICS } from "../../utils/constants/model.js";
 import { DifficultyEnum, PuzzleEntity, VisibilityEnum } from "types";
+import solutionSchema from "./solution.js";
+import validatorSchema from "./validator.js";
 
 interface PuzzleDocument
 	extends Document,
@@ -33,12 +35,7 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		required: true, // Ensure every puzzle has an author
 		type: mongoose.Schema.Types.ObjectId
 	},
-	validators: [
-		{
-			ref: VALIDATOR,
-			type: mongoose.Schema.Types.ObjectId
-		}
-	],
+	validators: [validatorSchema],
 	difficulty: {
 		enum: Object.values(DifficultyEnum),
 		default: DifficultyEnum.INTERMEDIATE,
@@ -60,8 +57,7 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		type: Date
 	},
 	solution: {
-		ref: SUBMISSION,
-		type: mongoose.Schema.Types.ObjectId
+		type: solutionSchema
 	},
 	puzzleMetrics: {
 		ref: METRICS,

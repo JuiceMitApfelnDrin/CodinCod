@@ -31,12 +31,18 @@ export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
 			const { id } = request.params;
 			const parseResult = puzzleEntitySchema.omit({ authorId: true }).safeParse(request.body);
 
+			console.log(request.body);
+
 			if (!parseResult.success) {
+				console.log(parseResult.error.errors);
+
 				return reply.status(400).send({ error: parseResult.error.errors });
 			}
 
 			const user: JwtPayload = request.user as JwtPayload;
 			const userId = user.userId;
+
+			console.log(userId);
 
 			try {
 				const puzzle = await Puzzle.findById(id);
@@ -48,12 +54,13 @@ export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
 				if (puzzle.authorId.toString() !== userId) {
 					return reply.status(403).send({ error: "Not authorized to edit this puzzle" });
 				}
-
+				console.log(puzzle);
 				Object.assign(puzzle, parseResult.data);
 				await puzzle.save();
 
 				return reply.send(puzzle);
 			} catch (error) {
+				console.log(error);
 				return reply.status(500).send({ error: "Failed to update puzzle" });
 			}
 		}
