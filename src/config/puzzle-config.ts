@@ -8,6 +8,6 @@ export const PUZZLE_CONFIG = {
 	maxStatementLength: 2048,
 
 	// constraints
-	minConstraintsLength: 16,
+	minConstraintsLength: 1,
 	maxConstraintsLength: 256
 };

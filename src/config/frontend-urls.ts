@@ -11,6 +11,7 @@ export const frontendUrls = {
 	PUZZLE_BY_ID: "/puzzles/:id",
 	PUZZLE_CREATE: "/puzzles/create",
 	PUZZLE_BY_ID_EDIT: "/puzzles/:id/edit",
+	PUZZLE_BY_ID_PLAY: "/puzzles/:id/play",
 
 	// personal account settings
 	SETTINGS: "/settings",
