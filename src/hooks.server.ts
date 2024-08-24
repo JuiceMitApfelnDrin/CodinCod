@@ -1,8 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
-import type { JwtPayload } from 'types';
 
-const unProtectedRoutes = ['/', '/sign-in', '/sign-up'];
+const unProtectedRoutes = ['/', '/login', '/register'];
 const JWT_SECRET = import.meta.env.VITE_JWT_SECRET;
 
 console.log(JWT_SECRET)

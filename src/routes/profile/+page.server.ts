@@ -1,7 +1,8 @@
-import { backend_routes, buildBackendUrl } from "@/config/backend";
+import { buildBackendUrl } from "@/config/backend";
+import { backendUrls } from "types";
 
 export async function load({ fetch }) {
-	const url = buildBackendUrl(backend_routes.account);
+	const url = buildBackendUrl(backendUrls.ACCOUNT);
 
 	const res = await fetch(url);
 	const data = await res.json();

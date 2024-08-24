@@ -1,7 +1,7 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "../$types";
-import { frontendUrls, POST, puzzleEntitySchema } from "types";
+import { backendUrls, frontendUrls, POST, puzzleEntitySchema } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildLocalUrl } from "@/config/routes";
@@ -23,7 +23,7 @@ export const actions = {
 
 		const cookie = request.headers.get("cookie") || "";
 
-		const result = await fetchWithAuthenticationCookie(buildBackendUrl("puzzle"), {
+		const result = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.PUZZLE), {
 			credentials: "include",
 			method: POST,
 			headers: {

@@ -17,7 +17,7 @@ export async function load({ fetch, params }) {
 
 	const puzzle: PuzzleEntity = await response.json();
 
-	const validate = await superValidate(puzzle, zod(puzzleEntitySchema));
+	const validate = await superValidate(puzzle, zod(puzzleEntitySchema.omit({ authorId: true, createdAt: true, updatedAt: true })));
 
 	return {
 		form: validate
@@ -27,7 +27,6 @@ export async function load({ fetch, params }) {
 export const actions = {
 	default: async ({ request, params }) => {
 		const form = await superValidate(request, zod(puzzleEntitySchema));
-		console.log(form);
 
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
@@ -51,8 +50,6 @@ export const actions = {
 			body: JSON.stringify(body),
 			credentials: "include"
 		});
-
-		console.log(response);
 
 		if (!response.ok) {
 			return fail(response.status, { form, error: "Failed to update the puzzle." });

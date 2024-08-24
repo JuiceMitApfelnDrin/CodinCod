@@ -13,8 +13,7 @@
 	const { puzzle } = data;
 
 	const editUrl = buildLocalUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: $page.params.id });
-
-	console.log(puzzle);
+	const playUrl = buildLocalUrl(frontendUrls.PUZZLE_BY_ID_PLAY, { id: $page.params.id });
 </script>
 
 <Container class="flex flex-col gap-2">
@@ -24,14 +23,19 @@
 	<P>puzzle was created on: {puzzle.createdAt}, and last update happened on: {puzzle.updatedAt}</P>
 
 	<a href={editUrl}>Edit puzzle</a>
+	<a href={playUrl}>Play puzzle</a>
 
-	<H2>Statement</H2>
-	<P>
-		{puzzle.statement}
-	</P>
+	{#if puzzle.statement}
+		<H2>Statement</H2>
+		<P>
+			{puzzle.statement}
+		</P>
+	{/if}
 
-	<H2>Constraints</H2>
-	<P>
-		{puzzle.constraints}
-	</P>
+	{#if puzzle.constraints}
+		<H2>Constraints</H2>
+		<P>
+			{puzzle.constraints}
+		</P>
+	{/if}
 </Container>

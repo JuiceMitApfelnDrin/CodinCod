@@ -5,7 +5,7 @@
 </script>
 
 <header>
-	<nav class="bg-secondary-500 dark:bg-secondary-900 p-4">
+	<nav class="bg-secondary-500 dark:bg-secondary-900 py-4 pb-4">
 		<div class="container mx-auto flex flex-row flex-wrap items-center gap-4">
 			<a href={frontendUrls.ROOT}>
 				<span class="self-center whitespace-nowrap text-xl font-semibold">Codin Cod</span>
