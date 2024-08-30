@@ -1,3 +1,5 @@
+# Project overview
+
 Introducing our exciting coding puzzle platform! It's a place where people of all skill levels can learn, practice, and have fun with programming and solving problems. Our platform mixes cool coding challenges with a friendly community, so you're always learning and growing.
 
 **What's Cool About Our Platform**:
