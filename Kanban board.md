@@ -18,26 +18,22 @@ kanban-plugin: basic
 - [ ] [[streaming integration]]
 - [ ] [[User blocking]]
 
-
 ## Tasks
 
 - [ ] [[features/Single player/README]]
-- [ ] [[Solving a puzzle]]
-
 
 ## In Progress
 
-- [ ] [[Create a puzzle]]
-
+- [ ] [[Solving a puzzle]]
 
 ## Finito
 
-
-
-
+- [x] [[Create a puzzle]]
 
 %% kanban:settings
+
 ```
 {"kanban-plugin":"basic"}
 ```
+
 %%

@@ -1,4 +1,4 @@
-# Knowledge base
+# CodinCod project overview
 
 This repo exists to:
 
