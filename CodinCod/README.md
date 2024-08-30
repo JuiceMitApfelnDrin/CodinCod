@@ -16,3 +16,11 @@ Introducing our exciting coding puzzle platform! It's a place where people of al
 - **By Developers, For Developers**: Our platform is open to everyone. Developers worldwide can help make it better and more fun. You can even check out the code yourself!
 
 Our goal is to spark your curiosity, give you super skills, and make coding an adventure. Whether you're new to coding or a pro, our platform is your place to explore, learn, and have a blast!
+
+## Goal
+
+Creating the best possible website to solve puzzles on.
+We achieve this goal when:
+
+- The UI feels intuitive, you should know where to go, even though you never visited the page before, it should feel comfortable.
+- The website is performant, no unnecessary bloat-ware, only what's necessary to offer a fun and nice environment.
