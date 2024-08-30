@@ -19,15 +19,16 @@
 		"format": "npm run prettier:fix && npm run lint:fix"
 	},
 	"dependencies": {
+		"types": "file:",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"globals": "^15.8.0",
 		"@eslint/js": "^9.7.0",
 		"@tsconfig/recommended": "^1.0.7",
-		"typescript": "^5.5.4",
 		"eslint": "9.x",
 		"eslint-config-prettier": "^9.1.0",
-		"prettier": "3.3.3"
+		"globals": "^15.8.0",
+		"prettier": "3.3.3",
+		"typescript": "^5.5.4"
 	}
 }
