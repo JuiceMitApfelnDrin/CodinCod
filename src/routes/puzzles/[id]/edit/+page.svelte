@@ -6,7 +6,7 @@
 	export let data;
 </script>
 
-<Container class="gap-4">
+<Container class="h-full gap-4">
 	<H1>Edit your puzzle</H1>
 
 	<EditPuzzleForm {data}></EditPuzzleForm>

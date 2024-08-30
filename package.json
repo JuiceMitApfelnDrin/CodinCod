@@ -28,6 +28,8 @@
 	"type": "module",
 	"dependencies": {
 		"@codemirror/lang-javascript": "^6.2.2",
+		"@codemirror/lang-python": "^6.1.6",
+		"@codemirror/theme-one-dark": "^6.1.2",
 		"@tsconfig/recommended": "^1.0.7",
 		"@types/eslint": "^8.56.0",
 		"@types/jsonwebtoken": "^9.0.6",

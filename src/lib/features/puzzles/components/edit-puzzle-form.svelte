@@ -9,16 +9,14 @@
 	import { POST, puzzleEntitySchema } from "types";
 	import { page } from "$app/stores";
 	import * as Select from "$lib/components/ui/select";
-
-	// TODO: put this somewhere central and create a place where all languages can co-exist :prayge:
-	const languages = [
-		{ value: "js", label: "JavaScript" },
-		{ value: "ts", label: "Typescript" },
-		{ value: "py", label: "Python" },
-		{ value: "rb", label: "Ruby" },
-		{ value: "php", label: "PHP" },
-		{ value: "c#", label: "C-Sharp" }
-	];
+	import {
+		DEFAULT_LANGUAGE,
+		languageKeys,
+		languages,
+		languageToLabelMap,
+		type Language,
+		type LanguageLabel
+	} from "@/config/languages";
 
 	export let data;
 
@@ -40,10 +38,12 @@
 			if (!$form.validators) {
 				$form.validators = [];
 			}
+
 			$form.validators.push({
 				input: "",
 				output: ""
 			});
+
 			return $form;
 		});
 	}
@@ -73,6 +73,18 @@
 	// });
 
 	let { form: formData, message, enhance } = form;
+
+	let selectedLanguage: { label: LanguageLabel; value: Language };
+
+	$: selectedLanguage = $formData.solution.language
+		? {
+				label: languageToLabelMap[$formData.solution.language as keyof typeof languageToLabelMap], // Ensure it's a valid key
+				value: $formData.language
+			}
+		: {
+				label: languageToLabelMap[DEFAULT_LANGUAGE as keyof typeof languageToLabelMap], // Ensure it's a valid key
+				value: DEFAULT_LANGUAGE
+			};
 </script>
 
 {#if $message}
@@ -155,21 +167,26 @@
 
 		<Form.Field {form} name="solution.language">
 			<Form.Control let:attrs>
-				<Select.Root portal={null} {...attrs}>
-					<Select.Trigger class="w-[180px]">
+				<Select.Root
+					selected={selectedLanguage}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.solution.language = v.value;
+						}
+					}}
+				>
+					<Select.Trigger class="w-[180px]" {...attrs}>
 						<Select.Value placeholder="Select a language" />
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
 							<Select.Label class="text-lg">Language</Select.Label>
 							{#each languages as language}
-								<Select.Item value={language.value} label={language.label}
-									>{language.label}</Select.Item
-								>
+								<Select.Item value={language} label={languageToLabelMap[language]} />
 							{/each}
 						</Select.Group>
 					</Select.Content>
-					<Select.Input bind:value={$formData.solution.language} />
+					<Select.Input bind:value={$formData.solution.language} name={attrs.name} />
 				</Select.Root>
 			</Form.Control>
 			<Form.Description
