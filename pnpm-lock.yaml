@@ -216,6 +216,9 @@ importers:
 
   libs/types:
     dependencies:
+      types:
+        specifier: 'file:'
+        version: 'link:'
       zod:
         specifier: ^3.23.8
         version: 3.23.8
