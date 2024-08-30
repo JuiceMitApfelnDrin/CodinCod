@@ -1,0 +1,12 @@
+[submodule "docs"]
+	path = docs
+	url = https://github.com/JuiceMitApfelnDrin/KnowledgeBase
+[submodule "libs/frontend"]
+	path = libs/frontend
+	url = https://github.com/JuiceMitApfelnDrin/CodinCodFrontend
+[submodule "libs/backend"]
+	path = libs/backend
+	url = https://github.com/JuiceMitApfelnDrin/CodinCodBackend
+[submodule "libs/types"]
+	path = libs/types
+	url = https://github.com/JuiceMitApfelnDrin/CodinCodTypes
