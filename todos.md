@@ -2,7 +2,7 @@
 
 ## Major
 
-<!--  -->
+- make libs/types a package that can be imported through npm or alike
 
 ## Minor
 
