@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "0262bb5429bb13f9",
+        "id": "d334cb19bd9f30c0",
         "type": "tabs",
         "children": [
           {
-            "id": "f648e53bbd43793a",
+            "id": "9c10d2e6e9b9d513",
             "type": "leaf",
             "state": {
               "type": "kanban",
@@ -144,21 +144,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f648e53bbd43793a",
+  "active": "9c10d2e6e9b9d513",
   "lastOpenFiles": [
-    "README.md",
+    "Creating challenges guidelines.md",
+    "features/Community challenges.md",
     "Kanban board.md",
+    "README.md",
     "features/Single player/Create a puzzle.md",
     "features/Single player/Solving a puzzle.md",
     "CodinCod/front-end/README.md",
     "features/Single player/README.md",
     "features/README.md",
-    "Creating challenges guidelines.md",
     "features/Untitled.md",
     "features/Single player",
     "features/Single.md",
     "Untitled.md",
-    "features/Community challenges.md",
     "features/Custom games.md",
     "Untitled.canvas",
     "features/Events.md",
