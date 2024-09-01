@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import Fastify from "fastify";
-import dbConnectorPlugin from "./plugins/config/db-connector.js";
 import cors from "./plugins/config/cors.js";
 import jwt from "./plugins/config/jwt.js";
 import fastifyFormbody from "@fastify/formbody";
@@ -11,6 +10,8 @@ import mongooseConnector from "./plugins/config/mongoose.js";
 import router from "./router.js";
 import { schemas } from "./config/schema.js";
 import fastifyCookie from "@fastify/cookie";
+import swagger from "./plugins/config/swagger.js";
+import swaggerUi from "./plugins/config/swagger-ui.js";
 
 const server = Fastify({
 	logger: true // Boolean(process.env.NODE_ENV !== "development")
@@ -28,7 +29,10 @@ server.register(fastifyCookie, {
 });
 
 server.register(cors);
+server.register(swagger);
 server.register(jwt);
+server.register(swaggerUi);
+
 // server.register(dbConnectorPlugin);
 server.register(fastifyFormbody);
 server.register(mongooseConnector);
