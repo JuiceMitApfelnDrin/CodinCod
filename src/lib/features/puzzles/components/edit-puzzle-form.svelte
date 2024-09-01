@@ -6,17 +6,15 @@
 	import Input from "@/components/ui/input/input.svelte";
 	import InlineCode from "@/components/typography/inlineCode.svelte";
 	import Button from "@/components/ui/button/button.svelte";
-	import { POST, puzzleEntitySchema } from "types";
-	import { page } from "$app/stores";
-	import * as Select from "$lib/components/ui/select";
 	import {
 		DEFAULT_LANGUAGE,
-		languageKeys,
-		languages,
-		languageToLabelMap,
-		type Language,
+		languageLabels,
+		POST,
+		puzzleEntitySchema,
 		type LanguageLabel
-	} from "@/config/languages";
+	} from "types";
+	import { page } from "$app/stores";
+	import * as Select from "$lib/components/ui/select";
 
 	export let data;
 
@@ -74,15 +72,15 @@
 
 	let { form: formData, message, enhance } = form;
 
-	let selectedLanguage: { label: LanguageLabel; value: Language };
+	let selectedLanguage: { label: LanguageLabel; value: LanguageLabel };
 
 	$: selectedLanguage = $formData.solution.language
 		? {
-				label: languageToLabelMap[$formData.solution.language as keyof typeof languageToLabelMap], // Ensure it's a valid key
+				label: $formData.language,
 				value: $formData.language
 			}
 		: {
-				label: languageToLabelMap[DEFAULT_LANGUAGE as keyof typeof languageToLabelMap], // Ensure it's a valid key
+				label: $formData.language,
 				value: DEFAULT_LANGUAGE
 			};
 </script>
@@ -181,8 +179,8 @@
 					<Select.Content>
 						<Select.Group>
 							<Select.Label class="text-lg">Language</Select.Label>
-							{#each languages as language}
-								<Select.Item value={language} label={languageToLabelMap[language]} />
+							{#each languageLabels as language}
+								<Select.Item value={language} label={language} />
 							{/each}
 						</Select.Group>
 					</Select.Content>

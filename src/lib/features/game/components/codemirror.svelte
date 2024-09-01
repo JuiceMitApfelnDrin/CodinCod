@@ -5,25 +5,25 @@
 	// import { html } from "@codemirror/lang-html";
 	// import { css } from "@codemirror/lang-css";
 	import { oneDark } from "@codemirror/theme-one-dark";
-	import { DEFAULT_LANGUAGE, languageKeys, type Language } from "@/config/languages";
+	import { DEFAULT_LANGUAGE, type LanguageLabel } from "types";
 
 	export let value = "";
-	export let language: Language = DEFAULT_LANGUAGE;
+	export let language = DEFAULT_LANGUAGE;
 
 	let lang;
 
-	$: lang = languageFunction();
+	$: lang = codeMirrorLanguageSupport(language);
 
-	function languageFunction() {
+	function codeMirrorLanguageSupport(language: LanguageLabel) {
 		switch (language) {
-			case languageKeys.js:
+			case "javascript":
 				return javascript();
-			case languageKeys.ts:
+			case "typescript":
 				return javascript({ typescript: true });
-			case languageKeys.py:
+			case "python":
 				return python();
 			default:
-				return javascript();
+				return null;
 		}
 	}
 </script>
