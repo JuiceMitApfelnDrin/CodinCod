@@ -18,7 +18,7 @@ export const actions = {
 		const form = await superValidate(request, zod(puzzleEntitySchema));
 
 		if (!form.valid) {
-			return fail(400, { form });
+			fail(400, { form });
 		}
 
 		const cookie = request.headers.get("cookie") || "";
@@ -36,7 +36,7 @@ export const actions = {
 		const data = await result.json();
 
 		if (!result.ok) {
-			return fail(400, { form, message: data.message });
+			fail(400, { form, message: data.message });
 		}
 
 		const editPuzzleUrl = buildLocalUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: data._id });

@@ -1,5 +1,5 @@
 import { buildBackendUrl } from '@/config/backend.js';
-import { fail } from '@sveltejs/kit';
+import { fail, error } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { backendUrls, POST, submissionSchema, type PuzzleEntity } from 'types';
@@ -12,15 +12,15 @@ export async function load({ fetch, params }) {
         const response = await fetch(url);
 
         if (!response.ok) {
-            return fail(response.status, { error: "Failed to fetch the puzzle." });
+            error(response.status, "Failed to fetch the puzzle.");
         }
 
         const puzzle: PuzzleEntity = await response.json();
 
         return { puzzle };
 
-    } catch (error) {
-        return fail(500, { error: "Server error occurred." });
+    } catch (err) {
+        error(500, "Server error occurred while attempting to fetch the puzzle.");
     }
 }
 
@@ -33,7 +33,7 @@ export const actions = {
 
         if (!form.valid) {
             // Again, return { form } and things will just work.
-            return fail(400, { form });
+            fail(400, { form });
         }
 
         const id = params.id;
@@ -55,7 +55,7 @@ export const actions = {
         // });
 
         // if (!response.ok) {
-        //     return fail(response.status, { form, error: "Failed to update the puzzle." });
+        //     fail(response.status, { form, error: "Failed to update the puzzle." });
         // }
 
         // Display a success status message

@@ -16,7 +16,7 @@ export const actions = {
 		const form = await superValidate(request, zod(loginSchema));
 
 		if (!form.valid) {
-			return fail(400, { form });
+			fail(400, { form });
 		}
 
 		const result = await login(form.data.identifier, form.data.password);
@@ -24,7 +24,7 @@ export const actions = {
 		const data = await result.json();
 
 		if (!result.ok) {
-			return fail(400, { form, message: data.message });
+			fail(400, { form, message: data.message });
 		}
 
 		// TODO: fix the cookie not being saved after this point, problem with svelte-kit most likely

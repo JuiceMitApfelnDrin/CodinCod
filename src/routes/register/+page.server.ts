@@ -17,7 +17,7 @@ export const actions = {
 		const form = await superValidate(request, zod(registerFormSchema));
 
 		if (!form.valid) {
-			return fail(400, { form });
+			fail(400, { form });
 		}
 
 		const result = await fetch(buildBackendUrl("register"), {
@@ -31,7 +31,7 @@ export const actions = {
 		const data = await result.json();
 
 		if (!result.ok) {
-			return fail(400, { form, message: data.message });
+			fail(400, { form, message: data.message });
 		}
 
 		throw redirect(302, frontendUrls.SIGN_IN);

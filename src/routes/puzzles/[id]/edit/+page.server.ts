@@ -12,7 +12,7 @@ export async function load({ fetch, params }) {
 	const response = await fetch(url);
 
 	if (!response.ok) {
-		return fail(response.status, { error: "Failed to fetch the puzzle." });
+		fail(response.status, { error: "Failed to fetch the puzzle." });
 	}
 
 	const puzzle: PuzzleEntity = await response.json();
@@ -30,7 +30,7 @@ export const actions = {
 
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
-			return fail(400, { form });
+			fail(400, { form });
 		}
 
 		const id = params.id;
@@ -52,7 +52,7 @@ export const actions = {
 		});
 
 		if (!response.ok) {
-			return fail(response.status, { form, error: "Failed to update the puzzle." });
+			fail(response.status, { form, error: "Failed to update the puzzle." });
 		}
 
 		// Display a success status message
