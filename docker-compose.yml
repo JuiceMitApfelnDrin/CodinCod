@@ -1,0 +1,10 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${CODINCOD_MONGODB_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${CODINCOD_MONGODB_PASSWORD}"
+      MONGO_INITDB_DATABASE: codincod
+    ports:
+      - "27017:27017"
