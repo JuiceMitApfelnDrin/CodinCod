@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { pistonExecuteResponseSchema } from "../piston/execute-response.js";
 
 export const validatorEntitySchema = z.object({
 	input: z.string(),
@@ -10,6 +11,7 @@ export const validatorEntitySchema = z.object({
 	updatedAt: z
 		.date()
 		.default(() => new Date())
-		.optional()
+		.optional(),
+	testResult: pistonExecuteResponseSchema.optional()
 });
 export type ValidatorEntity = z.infer<typeof validatorEntitySchema>;

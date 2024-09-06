@@ -1,34 +1,34 @@
 import { z } from "zod";
 
 export const supportedLanguages = {
-    python: {
-        language: "python",
-        version: "3.12.0"
-    },
-    javascript: {
-        language: "deno-js",
-        version: "1.32.3"
-    },
-    typescript: {
-        language: "typescript",
-        version: "5.0.3"
-    },
-    "basic.net": {
-        language: "basic.net",
-        version: "5.0.201"
-    },
-    "fsharp.net": {
-        language: "fsharp.net",
-        version: "5.0.201"
-    },
-    "csharp.net": {
-        language: "csharp.net",
-        version: "5.0.201"
-    },
-    ruby: {
-        language: "ruby",
-        version: "3.0.1"
-    }
+	python: {
+		language: "python",
+		version: "3.12.0"
+	},
+	javascript: {
+		language: "deno-js",
+		version: "1.32.3"
+	},
+	typescript: {
+		language: "typescript",
+		version: "5.0.3"
+	},
+	"basic.net": {
+		language: "basic.net",
+		version: "5.0.201"
+	},
+	"fsharp.net": {
+		language: "fsharp.net",
+		version: "5.0.201"
+	},
+	"csharp.net": {
+		language: "csharp.net",
+		version: "5.0.201"
+	},
+	ruby: {
+		language: "ruby",
+		version: "3.0.1"
+	}
 } as const;
 
 export type LanguageLabel = keyof typeof supportedLanguages;

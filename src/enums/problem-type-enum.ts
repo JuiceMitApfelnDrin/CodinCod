@@ -4,4 +4,4 @@
 export const ProblemTypeEnum = {
 	PUZZLE: "puzzle",
 	USER: "user"
-};
+} as const;

@@ -7,4 +7,4 @@ export const TagEnum = {
 	MATH: "math",
 	GRAPH_THEORY: "graph_theory",
 	DYNAMIC_PROGRAMMING: "dynamic_programming"
-};
+} as const;

@@ -13,4 +13,4 @@ export const VisibilityEnum = {
 	APPROVED: "approved",
 	INACTIVE: "inactive",
 	ARCHIVED: "archived"
-};
+} as const;

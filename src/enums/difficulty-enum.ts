@@ -3,4 +3,4 @@ export const DifficultyEnum = {
 	INTERMEDIATE: "intermediate",
 	ADVANCED: "advanced",
 	EXPERT: "expert"
-};
+} as const;
