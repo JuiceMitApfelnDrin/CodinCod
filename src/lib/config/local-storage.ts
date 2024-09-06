@@ -1,10 +1,9 @@
 export const localStorageKeys = {
-    THEME: "theme",
-    EMAIL: "email",
-    
-}
+	THEME: "theme",
+	EMAIL: "email"
+};
 
 export const themeOptions = {
-    DARK: "dark",
-    LIGHT: "light"
-}
+	DARK: "dark",
+	LIGHT: "light"
+};

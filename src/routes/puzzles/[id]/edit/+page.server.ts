@@ -17,7 +17,10 @@ export async function load({ fetch, params }) {
 
 	const puzzle: PuzzleEntity = await response.json();
 
-	const validate = await superValidate(puzzle, zod(puzzleEntitySchema.omit({ authorId: true, createdAt: true, updatedAt: true })));
+	const validate = await superValidate(
+		puzzle,
+		zod(puzzleEntitySchema.omit({ authorId: true, createdAt: true, updatedAt: true }))
+	);
 
 	return {
 		form: validate

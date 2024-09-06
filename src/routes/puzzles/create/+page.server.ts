@@ -8,7 +8,7 @@ import { buildLocalUrl } from "@/config/routes";
 import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie";
 
 export const load: PageServerLoad = async () => {
-	const form = await superValidate(zod(puzzleEntitySchema));
+	const form = await superValidate(zod(puzzleEntitySchema.pick({ title: true })));
 
 	return { form };
 };

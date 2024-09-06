@@ -1,46 +1,47 @@
-import { redirect } from '@sveltejs/kit';
-import jwt from 'jsonwebtoken';
+import { redirect } from "@sveltejs/kit";
+import jwt from "jsonwebtoken";
+import { frontendUrls } from "types";
 
-const unProtectedRoutes = ['/', '/login', '/register'];
+const unProtectedRoutes = [frontendUrls.ROOT, frontendUrls.REGISTER, frontendUrls.LOGIN];
 const JWT_SECRET = import.meta.env.VITE_JWT_SECRET;
 
-console.log(JWT_SECRET)
+console.log(JWT_SECRET);
 
 export const handle = async ({ event, resolve }) => {
-    const token = event.cookies.get('token');
-    let currentUser = null;
+	const token = event.cookies.get("token");
+	let currentUser = null;
 
-    if (token) {
-        try {
-            currentUser = jwt.verify(token, JWT_SECRET);
-        } catch (err) {
-            console.error('Invalid JWT:', err);
-            if (!unProtectedRoutes.includes(event.url.pathname)) {
-                throw redirect(303, '/');
-            }
-        }
-    } else {
-        if (!unProtectedRoutes.includes(event.url.pathname)) {
-            throw redirect(303, '/');
-        }
-    }
+	if (token) {
+		try {
+			currentUser = jwt.verify(token, JWT_SECRET);
+		} catch (err) {
+			console.error("Invalid JWT:", err);
+			if (!unProtectedRoutes.includes(event.url.pathname)) {
+				throw redirect(303, frontendUrls.LOGIN);
+			}
+		}
+	} else {
+		if (!unProtectedRoutes.includes(event.url.pathname)) {
+			throw redirect(303, frontendUrls.LOGIN);
+		}
+	}
 
-    if (currentUser) {
-        event.locals.user = {
-            isAuthenticated: true,
-            username: currentUser.username,
-            userId: currentUser.userId
-        };
-    } else {
-        event.locals.user = {
-            isAuthenticated: false
-        };
-    }
+	if (currentUser) {
+		event.locals.user = {
+			isAuthenticated: true,
+			username: currentUser.username,
+			userId: currentUser.userId
+		};
+	} else {
+		event.locals.user = {
+			isAuthenticated: false
+		};
+	}
 
-    const query = event.url.searchParams.get('signout');
-    if (Boolean(query) === true) {
-        event.cookies.delete('token', { path: '/' });
-    }
+	const query = event.url.searchParams.get("signout");
+	if (Boolean(query) === true) {
+		event.cookies.delete("token", { path: "/" });
+	}
 
-    return resolve(event);
+	return resolve(event);
 };

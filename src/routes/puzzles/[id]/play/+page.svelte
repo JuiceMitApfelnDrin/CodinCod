@@ -3,28 +3,24 @@
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
-	import Error from "@/components/error/error.svelte";
 	import { buildBackendUrl } from "@/config/backend.js";
-	import {
-		backendUrls,
-		DEFAULT_LANGUAGE,
-		languageLabels,
-		POST,
-		type LanguageLabel,
-		type ValidatorEntity
-	} from "types";
+	import { backendUrls, DEFAULT_LANGUAGE, languageLabels, POST, type LanguageLabel } from "types";
 	import * as Select from "$lib/components/ui/select";
 	import Button from "@/components/ui/button/button.svelte";
+	import { page } from "$app/stores";
+	import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie.js";
+
+	let puzzleId = $page.params.id;
 
 	export let data;
 
-	const puzzle = data.puzzle;
+	let puzzle = data.puzzle;
 
-	let code = "";
+	let code: string = "";
 	let language: LanguageLabel = DEFAULT_LANGUAGE;
 
-	async function executeCode(testInput: string) {
-		const res = await fetch(buildBackendUrl(backendUrls.EXECUTE), {
+	async function executeCode(itemInlist: number, testInput: string) {
+		const response = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.EXECUTE), {
 			method: POST,
 			headers: {
 				"Content-Type": "application/json"
@@ -35,8 +31,30 @@
 				testInput
 			})
 		});
+		const testResult = await response.json();
 
-		console.log({ unjsonifiedresult: await res.json() });
+		const validator = puzzle.validators?.[itemInlist];
+
+		if (validator) {
+			validator.testResult = testResult;
+		}
+
+		// necessary since svelte has a weird way to do reactivity, you have to set the object that changed again, this ensures that
+		puzzle = puzzle;
+	}
+
+	async function submitCode() {
+		const response = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION), {
+			method: POST,
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				code,
+				language,
+				puzzleId
+			})
+		});
 	}
 
 	$: console.log(language);
@@ -81,12 +99,12 @@
 	<CodeMirror {language} bind:value={code} />
 
 	<div class="flex flex-row justify-end gap-2">
-		<Button>Submit code</Button>
+		<Button on:click={submitCode}>Submit code</Button>
 	</div>
 
 	{#if puzzle.validators}
 		<ul>
-			{#each puzzle.validators as validator}
+			{#each puzzle.validators as validator, index}
 				<li>
 					<pre>
 						{validator.input}
@@ -94,7 +112,17 @@
 					<pre>
 						{validator.output}
 					</pre>
-					<Button on:click={() => executeCode(validator.input)}>Run code</Button>
+					<Button on:click={() => executeCode(index, validator.input)}>Run code</Button>
+
+					{#if validator.testResult}
+						<p>Lastest result:</p>
+						output:
+						<pre>{validator.testResult?.run.output}</pre>
+						stdout:
+						<pre>{validator.testResult?.run.stdout}</pre>
+						stderr:
+						<pre>{validator.testResult?.run.stderr}</pre>
+					{/if}
 				</li>
 			{/each}
 		</ul>
