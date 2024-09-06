@@ -93,12 +93,7 @@ export default async function submissionController(fastify: FastifyInstance) {
 			);
 
 			const matchCount = pistonExecutionResponses.filter((res) => res.isMatch).length;
-			console.log(
-				puzzle.validators.length,
-				matchCount,
-				SubmissionResultEnum.SUCCESS,
-				SubmissionResultEnum.ERROR
-			);
+
 			try {
 				const submissionData: SubmissionEntity = {
 					...parseResult.data,
