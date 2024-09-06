@@ -8,10 +8,14 @@ Written in node-js, with fastify.
 
 ```bash
 PORT=8888
-MONGO_URI=mongodb://localhost:27017/mydatabase
+MONGO_URI=mongodb://codincod-dev:hunter2@localhost:27017
 JWT_SECRET=your_jwt_secret_here
 JWT_EXPIRY=7d
 NODE_ENV=development
+PISTON_URI=http://localhost:2000
+# These are only used when running mongo with `docker compose`, they should match user and password in MONGO_URI
+CODINCOD_MONGODB_USERNAME=codincod-dev
+CODINCOD_MONGODB_PASSWORD=hunter2
 ```
 
 What they mean and where to get them?
@@ -23,34 +27,23 @@ What they mean and where to get them?
 
 ### Setup
 
-1. In case you only want to run the backend, clone it:
+1. Make sure you have set up the project following [the installation instructions for the parent project](../README.md)
+
+2. Install dependencies using [`pnpm`](https://github.com/pnpm/pnpm) (`npm` does NOT work because it does not support workspace dependencies which we use for the [`types`](https://github.com/JuiceMitApfelnDrin/CodinCodTypes) package)
 
     ```bash
-    git clone https://github.com/JuiceMitApfelnDrin/CodinCodBackend
-    ```
-
-2. Fill in the environment variables
-3. Install dependencies, **only need to run one of these 3**
-
-    ```bash
-
-    # use npm if you don't know what you're doing!
-    npm install
-
-    # or for pnpm
     pnpm install
-
-    # or for yarn
-    yarn install
     ```
 
-4. Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+3. Fill in the environment variables and make sure you have MongoDB running at `MONGO_URI`. While developing you may use `docker compose up` to start up mongo locally.
+
+4. Start a development server:
 
     ```bash
-    npm run dev
+    pnpm run dev
 
     # or start the server and open the app in a new browser tab
-    npm run dev -- --open
+    pnpm run dev -- --open
     ```
 
 ## Code compilation
