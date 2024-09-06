@@ -3,6 +3,7 @@ export const baseRoute = "/api/v1";
 export const backendUrls = {
 	ROOT: "/",
 	REGISTER: `${baseRoute}/register`,
+	CHECK_USERNAME: `${baseRoute}/check-username/:username`,
 	LOGIN: `${baseRoute}/login`,
 	USER: `${baseRoute}/user`,
 	ACCOUNT: `${baseRoute}/account`,
