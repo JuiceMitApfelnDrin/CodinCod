@@ -4,7 +4,7 @@ import { registerFormSchema } from "@/features/register/config/register-form-sch
 import type { PageServerLoad } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
-import { frontendUrls, POST } from "types";
+import { backendUrls, frontendUrls, POST } from "types";
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(registerFormSchema));
@@ -20,7 +20,7 @@ export const actions = {
 			fail(400, { form });
 		}
 
-		const result = await fetch(buildBackendUrl("register"), {
+		const result = await fetch(buildBackendUrl(backendUrls.REGISTER), {
 			method: POST,
 			headers: {
 				"Content-Type": "application/json"
