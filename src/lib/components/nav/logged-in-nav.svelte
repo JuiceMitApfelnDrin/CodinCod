@@ -1,26 +1,25 @@
 <script lang="ts">
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
-
-	import { urls } from "@/config/routes";
+	import { frontendUrls } from "types";
 </script>
 
 <header>
-	<nav class="bg-secondary-500 dark:bg-secondary-900 p-4">
+	<nav class="bg-secondary-500 dark:bg-secondary-900 py-4 pb-4">
 		<div class="container mx-auto flex flex-row flex-wrap items-center gap-4">
-			<a href={urls.root}>
+			<a href={frontendUrls.ROOT}>
 				<span class="self-center whitespace-nowrap text-xl font-semibold">Codin Cod</span>
 			</a>
 
 			<ul class="mx-auto flex flex-row gap-4">
 				<li>
-					<a href={urls.play}>Play</a>
+					<a href={frontendUrls.PLAY}>Play</a>
 				</li>
 				<li>
-					<a href={urls.puzzles}>Puzzles</a>
+					<a href={frontendUrls.PUZZLES}>Puzzles</a>
 				</li>
 				<li>
-					<a href={urls.learn}>Learn</a>
+					<a href={frontendUrls.LEARN}>Learn</a>
 				</li>
 			</ul>
 
@@ -35,7 +34,7 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>My Account</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item><a href={urls.user_profile}>Profile</a></DropdownMenu.Item>
+						<DropdownMenu.Item><a href={frontendUrls.USER_PROFILE}>Profile</a></DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>

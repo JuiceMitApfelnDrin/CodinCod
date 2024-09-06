@@ -1,10 +1,14 @@
-import { backend_routes, buildBackendUrl } from "@/config/backend.js";
+import { buildBackendUrl } from "@/config/backend.js";
+import { backendUrls, type PaginatedQueryResponse } from "types";
 
-export async function load({ fetch }) {
-	const url = buildBackendUrl(backend_routes.puzzles);
+export async function load({ fetch, url }) {
+	const apiUrl = buildBackendUrl(backendUrls.PUZZLE);
+	const apiUrlWithQueryParams = new URL(apiUrl);
 
-	const res = await fetch(url);
-	const puzzles = await res.json();
+	apiUrlWithQueryParams.search = url.search;
 
-	return { puzzles };
+	const res = await fetch(apiUrlWithQueryParams);
+	const paginatedPuzzles: PaginatedQueryResponse = await res.json();
+
+	return { ...paginatedPuzzles };
 }

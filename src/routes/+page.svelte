@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Container from "@/components/ui/container/container.svelte";
-	import { urls } from "../lib/config/routes";
 	import P from "@/components/typography/p.svelte";
 	import H1 from "@/components/typography/h1.svelte";
+	import { frontendUrls } from "types";
 
 	let hi = "wassup";
 </script>
@@ -10,7 +10,7 @@
 <Container>
 	<H1>Discover</H1>
 
-	<a href={urls.puzzles}>Puzzles</a>
+	<a href={frontendUrls.PUZZLES}>Puzzles</a>
 	hi there, {hi}
 
 	<P>

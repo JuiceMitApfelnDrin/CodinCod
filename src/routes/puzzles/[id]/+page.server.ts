@@ -1,7 +1,9 @@
-import { backend_routes, buildBackendUrl } from "@/config/backend.js";
+import { buildBackendUrl } from "@/config/backend.js";
+import { backendUrls } from "types";
 
 export async function load({ fetch, params }) {
-	const url = buildBackendUrl(backend_routes.puzzle_by_id, { id: params.id });
+	const id = params.id;
+	const url = buildBackendUrl(backendUrls.PUZZLE_DETAIL, { id });
 
 	const res = await fetch(url);
 	const puzzle = await res.json();

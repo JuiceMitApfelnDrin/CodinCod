@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Submission } from "@/models/submission.model";
-	import { calculatePercentage } from "@/utils/calculatePercentage";
+	import { calculatePercentage } from "@/utils/calculate-percentage";
 
 	export let solvedPuzzles: Submission[] = [];
 

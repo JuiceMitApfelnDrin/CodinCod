@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import { flyAndScale } from "@/utils/flyAndScale";
+	import { flyAndScale } from "@/utils/fly-and-scale";
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
 
 	type $$Props = DropdownMenuPrimitive.ContentProps;

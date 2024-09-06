@@ -4,7 +4,6 @@ export type Validator = {
 	output: string;
 };
 
-export type Language = "javascript" | "typescript";
 export type Type = 1 | 2 | 3;
 export type Difficulty = 1 | 2 | 3 | 4 | 5;
 
