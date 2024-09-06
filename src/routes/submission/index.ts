@@ -1,59 +1,130 @@
 import { FastifyInstance } from "fastify";
+import {
+	JwtPayload,
+	LanguageLabel,
+	PistonExecuteResponse,
+	PuzzleEntity,
+	SubmissionEntity,
+	submissionEntitySchema,
+	supportedLanguages
+} from "types";
+import authenticated from "../../plugins/middelware/authenticated.js";
+import Submission from "../../models/submission/submission.js";
+import Puzzle from "../../models/puzzle/puzzle.js";
+import { SubmissionResultEnum } from "types/dist/enums/submission-result-enum.js";
+import { isValidationError } from "../../utils/functions/is-validation-error.js";
+
+type SubmissionParams = {
+	Body: {
+		code: string;
+		language: LanguageLabel;
+		puzzleId: string;
+	};
+};
 
 export default async function submissionController(fastify: FastifyInstance) {
-	// CRUD operations for submissions
-	// fastify.route({
-	// 	handler: async (request, reply) => {
-	// 		const { id } = request.params;
-	// 		try {
-	// 			switch (request.method) {
-	// 				case GET: {
-	// 					if (id) {
-	// 						const submission = await Submission.findById(id).populate("user_id puzzle_id");
-	// 						if (!submission) {
-	// 							return reply.status(404).send({ message: "Submission not found" });
-	// 						}
-	// 						reply.send(submission);
-	// 					} else {
-	// 						const submissions = await Submission.find().populate("user_id puzzle_id");
-	// 						reply.send(submissions);
-	// 					}
-	// 					break;
-	// 				}
-	// 				case POST: {
-	// 					const { user_id, puzzle_id, code, result } = request.body;
-	// 					const submission = new Submission({
-	// 						code,
-	// 						puzzle_id,
-	// 						result,
-	// 						user_id
-	// 					});
-	// 					await submission.save();
-	// 					reply.send(submission);
-	// 					break;
-	// 				}
-	// 				case PUT: {
-	// 					const updatedSubmission = await Submission.findByIdAndUpdate(id, request.body, {
-	// 						new: true
-	// 					});
-	// 					reply.send(updatedSubmission);
-	// 					break;
-	// 				}
-	// 				case DELETE: {
-	// 					await Submission.findByIdAndDelete(id);
-	// 					reply.send({ message: "Submission deleted" });
-	// 					break;
-	// 				}
-	// 				default: {
-	// 					reply.status(500).send({ message: "Unable to process this request" });
-	// 				}
-	// 			}
-	// 		} catch (error) {
-	// 			reply.status(500).send(error);
-	// 		}
-	// 	},
-	// 	method: [GET, POST, PUT, DELETE],
-	// 	onRequest : [fastify.authenticate],
-	// 	url: "/:id?"
-	// });
+	fastify.post<SubmissionParams>(
+		"/",
+		{
+			onRequest: authenticated
+		},
+		async (request, reply) => {
+			const parseResult = submissionEntitySchema
+				.pick({ code: true, puzzleId: true })
+				.safeParse(request.body);
+
+			if (!parseResult.success) {
+				return reply.status(400).send({ error: parseResult.error.errors });
+			}
+
+			/**
+			 * assume for now the JwtPayload fields exist, because you need to be authenticated to get here
+			 * and you should to be authenticated to create a submission
+			 * TODO: fix type issue
+			 */
+			const user: JwtPayload = request.user as JwtPayload;
+			const userId = user.userId;
+
+			// unpacking body
+			const { language, puzzleId, code } = request.body;
+
+			// retrieve test cases
+			const puzzle: PuzzleEntity | null = await Puzzle.findById(puzzleId);
+
+			if (!puzzle) {
+				return reply.send({
+					error: `Puzzle with id (${puzzleId}) couldn't be found.`
+				});
+			}
+
+			// prepare the execution of tests
+			const executionLanguageDetails = supportedLanguages[language];
+
+			// foreach test case, execute the code and see the result, compare to test-case expected output
+			if (!puzzle.validators) {
+				return reply.send({
+					// TODO: improve this text
+					error: "This puzzle isn't finished, it should have test cases / validators"
+				});
+			}
+
+			const pistonExecutionRequests = puzzle.validators.map((validator) => {
+				return {
+					language: executionLanguageDetails.language,
+					version: executionLanguageDetails.version,
+					files: [{ content: code }],
+					stdin: validator.input,
+					expectedOutput: validator.output
+				};
+			});
+
+			const pistonExecutionResponses = await Promise.all(
+				pistonExecutionRequests.map(async (request) => {
+					const response: PistonExecuteResponse = await fastify.piston(request);
+
+					return {
+						response,
+						stdin: request.stdin,
+						isMatch:
+							response.run.output.trim() === request.expectedOutput.trim() ||
+							request.expectedOutput.trim() === response.run.stdout.trim()
+					};
+				})
+			);
+
+			const matchCount = pistonExecutionResponses.filter((res) => res.isMatch).length;
+			console.log(
+				puzzle.validators.length,
+				matchCount,
+				SubmissionResultEnum.SUCCESS,
+				SubmissionResultEnum.ERROR
+			);
+			try {
+				const submissionData: SubmissionEntity = {
+					...parseResult.data,
+					userId: userId,
+					createdAt: new Date(),
+					languageVersion: executionLanguageDetails.version,
+					result:
+						puzzle.validators.length === matchCount
+							? SubmissionResultEnum.SUCCESS
+							: SubmissionResultEnum.ERROR,
+					language: executionLanguageDetails.language
+				};
+
+				const submission = new Submission(submissionData);
+				await submission.save();
+
+				return reply.status(201).send(submission);
+			} catch (error) {
+				request.log.error("Error saving submission:", error);
+
+				if (isValidationError(error)) {
+					return reply.status(400).send({ error: "Validation failed", details: error.errors });
+				}
+
+				return reply.status(500).send({ error: "Failed to create submission" });
+			}
+		}
+	);
 }

@@ -1,15 +1,12 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, ObjectId } from "mongoose";
 import { PUZZLE, USER, METRICS } from "../../utils/constants/model.js";
 import { DifficultyEnum, PuzzleEntity, VisibilityEnum } from "types";
 import solutionSchema from "./solution.js";
 import validatorSchema from "./validator.js";
 
-interface PuzzleDocument
-	extends Document,
-		Omit<PuzzleEntity, "authorId" | "validators" | "solution" | "_id"> {
-	authorId: mongoose.Types.ObjectId;
-	validators: mongoose.Types.ObjectId[];
-	solution?: mongoose.Types.ObjectId;
+interface PuzzleDocument extends Document, Omit<PuzzleEntity, "authorId" | "solution" | "_id"> {
+	authorId: ObjectId;
+	solution?: ObjectId;
 }
 
 /**

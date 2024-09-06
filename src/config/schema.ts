@@ -12,14 +12,18 @@ import {
 	identifierSchema,
 	userEntitySchema,
 	visibilitySchema,
-	submissionSchema,
+	submissionEntitySchema,
 	loginResponseSchema,
 	registerResponseSchema,
 	tokenSchema,
 	messageSchema,
 	jwtPayloadSchema,
 	paginatedQuerySchema,
-	paginatedQueryResponseSchema
+	paginatedQueryResponseSchema,
+	pistonFileSchema,
+	pistonExecuteRequestSchema,
+	pistonExecuteResponseSchema,
+	submissionResultSchema
 } from "types";
 
 export const { schemas, $ref } = buildJsonSchemas({
@@ -35,12 +39,16 @@ export const { schemas, $ref } = buildJsonSchemas({
 	identifierSchema,
 	userEntitySchema,
 	visibilitySchema,
-	submissionSchema,
+	submissionEntitySchema,
 	loginResponseSchema,
 	registerResponseSchema,
 	tokenSchema,
 	messageSchema,
 	jwtPayloadSchema,
 	paginatedQuerySchema,
-	paginatedQueryResponseSchema
+	paginatedQueryResponseSchema,
+	pistonFileSchema,
+	pistonExecuteRequestSchema,
+	pistonExecuteResponseSchema,
+	submissionResultSchema
 });

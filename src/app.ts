@@ -12,6 +12,7 @@ import { schemas } from "./config/schema.js";
 import fastifyCookie from "@fastify/cookie";
 import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
+import piston from "./plugins/decorators/piston.js";
 
 const server = Fastify({
 	logger: true // Boolean(process.env.NODE_ENV !== "development")
@@ -36,6 +37,7 @@ server.register(swaggerUi);
 // server.register(dbConnectorPlugin);
 server.register(fastifyFormbody);
 server.register(mongooseConnector);
+server.register(piston);
 
 // register custom plugins
 

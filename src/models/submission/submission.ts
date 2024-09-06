@@ -1,7 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
+import { SubmissionEntity } from "types";
 
-const submissionSchema = new mongoose.Schema({
+interface SubmissionDocument extends Document, Omit<SubmissionEntity, "puzzleId" | "userId"> {
+	puzzleId: ObjectId;
+	userId: ObjectId;
+}
+
+const submissionSchema = new Schema<SubmissionDocument>({
 	code: {
 		required: true,
 		type: String
@@ -26,5 +32,5 @@ const submissionSchema = new mongoose.Schema({
 	}
 });
 
-const Submission = mongoose.model(SUBMISSION, submissionSchema);
+const Submission = mongoose.model<SubmissionDocument>(SUBMISSION, submissionSchema);
 export default Submission;
