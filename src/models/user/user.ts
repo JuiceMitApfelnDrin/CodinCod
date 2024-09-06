@@ -5,6 +5,33 @@ import { USER } from "../../utils/constants/model.js";
 
 interface UserDocument extends Document, UserEntity {}
 
+const profileSchema = new Schema({
+	picture: {
+		type: String,
+		required: false,
+		trim: true
+	},
+	bio: {
+		type: String,
+		required: false,
+		trim: true
+	},
+	location: {
+		type: String,
+		required: false,
+		trim: true
+	},
+	socials: {
+		required: false,
+		type: [
+			{
+				type: String,
+				trim: true
+			}
+		]
+	}
+});
+
 const userSchema = new Schema<UserDocument>({
 	createdAt: {
 		default: Date.now,
@@ -31,6 +58,10 @@ const userSchema = new Schema<UserDocument>({
 		trim: true,
 		type: String,
 		unique: true
+	},
+	profile: {
+		type: profileSchema,
+		required: false
 	}
 });
 

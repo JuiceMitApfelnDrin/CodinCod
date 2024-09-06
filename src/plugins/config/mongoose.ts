@@ -17,7 +17,7 @@ export default async function mongooseConnector(fastify: FastifyInstance) {
 			fastify.log.error({ actor: "MongoDB" }, "disconnected");
 		});
 	} catch (error) {
-		fastify.log.error("MongoDB connection error:", error);
+		fastify.log.error(`MongoDB connection error (${error})`);
 		process.exit(1);
 	}
 
