@@ -24,14 +24,12 @@ export const userEntitySchema = z.object({
 			`Password must be at least ${PASSWORD_CONFIG.minPasswordLength} characters long`
 		),
 	email: z.string().email("Invalid email address"),
-	profile: z
-		.object({
+	profile: z.object({
 			picture: z.ostring(),
 			bio: z.ostring(),
 			location: z.ostring(),
-			socials: z.array(z.string()).optional()
-		})
-		.optional(),
+			socials: z.array(z.string()).nonempty().optional()
+	}).optional(),
 	createdAt: z.date().optional(),
 	updatedAt: z.date().optional()
 });
