@@ -6,7 +6,9 @@ export const load = async (event) => {
 	const unProtectedRoutes: string[] = [
 		frontendUrls.ROOT,
 		frontendUrls.REGISTER,
-		frontendUrls.LOGIN
+		frontendUrls.LOGIN,
+		frontendUrls.LEARN,
+		frontendUrls.PUZZLES
 	];
 
 	const token = event.cookies.get("token");
