@@ -4,7 +4,7 @@ import type { PageServerLoad } from "../$types";
 import { backendUrls, frontendUrls, POST, puzzleEntitySchema } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
-import { buildLocalUrl } from "@/config/routes";
+import { buildFrontendUrl } from "@/config/frontend";
 import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie";
 
 export const load: PageServerLoad = async () => {
@@ -39,7 +39,8 @@ export const actions = {
 			fail(400, { form, message: data.message });
 		}
 
-		const editPuzzleUrl = buildLocalUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: data._id });
+		const editPuzzleUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: data._id });
+
 		throw redirect(302, editPuzzleUrl);
 	}
 };

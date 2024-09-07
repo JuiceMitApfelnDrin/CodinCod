@@ -5,11 +5,10 @@
 	import P from "@/components/typography/p.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
 	import { frontendUrls } from "types";
-	import { buildLocalUrl } from "@/config/routes.js";
+	import { buildFrontendUrl } from "@/config/frontend.js";
 
 	export let data;
 
-	let currentPage = 1;
 	const { items, totalItems, totalPages, page } = data;
 </script>
 
@@ -22,7 +21,7 @@
 	<Ul>
 		{#each items as puzzle}
 			<li>
-				<a href={buildLocalUrl(frontendUrls.PUZZLE_BY_ID, { id: puzzle._id })}>{puzzle.title}</a>
+				<a href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: puzzle._id })}>{puzzle.title}</a>
 			</li>
 		{/each}
 	</Ul>

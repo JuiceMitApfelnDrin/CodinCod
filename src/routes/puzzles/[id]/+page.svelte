@@ -2,8 +2,7 @@
 	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import Button from "@/components/ui/button/button.svelte";
-	import { buildLocalUrl } from "@/config/routes";
+	import { buildFrontendUrl } from "@/config/frontend.js";
 	import { frontendUrls } from "types";
 	import P from "@/components/typography/p.svelte";
 	import H2 from "@/components/typography/h2.svelte";
@@ -12,8 +11,8 @@
 
 	const { puzzle } = data;
 
-	const editUrl = buildLocalUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: $page.params.id });
-	const playUrl = buildLocalUrl(frontendUrls.PUZZLE_BY_ID_PLAY, { id: $page.params.id });
+	const editUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: $page.params.id });
+	const playUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_PLAY, { id: $page.params.id });
 </script>
 
 <Container class="flex flex-col gap-2">

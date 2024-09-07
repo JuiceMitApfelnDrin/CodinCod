@@ -1,8 +1,10 @@
+import type { FrontendUrl } from "types";
+
 interface Params {
 	[key: string]: string | number;
 }
 
-export function buildLocalUrl(path: string, params: Params = {}) {
+export function buildFrontendUrl(path: FrontendUrl, params: Params = {}) {
 	let url = `${path}`;
 
 	if (params) {
