@@ -56,8 +56,6 @@
 			})
 		});
 	}
-
-	$: console.log(language);
 </script>
 
 <!-- {#if puzzle} -->

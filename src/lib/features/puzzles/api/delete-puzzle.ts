@@ -13,8 +13,6 @@ export async function deletePuzzle(id: string) {
 		}
 	);
 
-	console.log(response);
-
 	if (response.ok) {
 		goto(frontendUrls.PUZZLES);
 	} else {
