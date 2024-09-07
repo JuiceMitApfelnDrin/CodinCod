@@ -18,3 +18,5 @@ export const backendUrls = {
 	SUBMISSION: `${baseRoute}/submission`,
 	REPORT: `${baseRoute}/report`
 } as const;
+
+export type BackendUrl = typeof backendUrls[keyof typeof backendUrls];
