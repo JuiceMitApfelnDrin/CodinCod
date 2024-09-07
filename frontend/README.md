@@ -14,6 +14,7 @@ What they mean and where to get them?
 <!-- TODO: create a better title or something for this section -->
 
 - `VITE_BACKEND_URL`: the link to a codin-cod backend
+- `VITE_JWT_SECRET`: the same value as in the backend, used for decoding the json-web-token
 
 ### Setup
 
