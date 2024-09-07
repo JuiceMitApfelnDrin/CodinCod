@@ -34,3 +34,5 @@ export const frontendUrls = {
 	PLAYERS: "/players",
 	BLOG: "/blog"
 } as const;
+
+export type FrontendUrl = (typeof frontendUrls)[keyof typeof frontendUrls];
