@@ -1,25 +1,4 @@
-const login = "login";
-const register = "register";
-const puzzle = "puzzle";
-const puzzle_by_id = "puzzles/:id";
-const profile = "profile";
-const users = "users";
-const user_by_id = "users/:id";
-const account = "account";
-
-/**
- * TODO: remove this eventually with the values from types
- */
-export const backend_routes = {
-	login,
-	register,
-	puzzle_by_id,
-	puzzle,
-	profile,
-	users,
-	user_by_id,
-	account
-};
+import { type BackendUrl } from "types";
 
 interface Params {
 	[key: string]: string | number;
@@ -35,7 +14,7 @@ interface Params {
  * @param params
  * @returns the desired url
  */
-export function buildBackendUrl(path: string, params: Params = {}) {
+export function buildBackendUrl(path: BackendUrl, params: Params = {}) {
 	let url = `${import.meta.env.VITE_BACKEND_URL}${path}`;
 
 	if (params) {
