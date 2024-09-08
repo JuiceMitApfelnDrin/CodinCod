@@ -1,29 +1,18 @@
 <script lang="ts">
-	import { localStorageKeys, themeOptions } from "@/config/local-storage";
 	import Toggle from "../ui/toggle/toggle.svelte";
 	import Moon from "lucide-svelte/icons/moon";
 	import Sun from "lucide-svelte/icons/sun";
-	import { theme } from "../../../stores";
-
-	let isDark = $theme === themeOptions.DARK;
-
-	function switchTheme() {
-		if (isDark) {
-			theme.set(themeOptions.LIGHT);
-		} else {
-			theme.set(themeOptions.DARK);
-		}
-	}
+	import { isDarkTheme, toggleDarkTheme } from "../../../stores";
 </script>
 
 <Toggle
-	aria-label={`Change to ${isDark ? "light mode" : "dark mode"}`}
-	bind:pressed={isDark}
-	on:click={switchTheme}
+	aria-label={`Change to ${$isDarkTheme ? "light mode" : "dark mode"}`}
+	pressed={$isDarkTheme}
+	on:click={toggleDarkTheme}
 >
-	Current theme: {#if isDark}
+	Current theme: {#if $isDarkTheme}
 		<Moon aria-label="dark mode" />
 	{:else}
-		<Sun aria-label="ligth mode" />
+		<Sun aria-label="light mode" />
 	{/if}
 </Toggle>
