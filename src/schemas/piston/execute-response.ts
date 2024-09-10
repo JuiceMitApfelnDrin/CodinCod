@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { puzzleResultSchema } from "./puzzle-result.js";
 
 export const pistonExecuteResponseSchema = z.object({
 	language: z.string(),
@@ -8,7 +9,8 @@ export const pistonExecuteResponseSchema = z.object({
 		output: z.string(),
 		stderr: z.string(),
 		stdout: z.string(),
-		code: z.number().optional()
+		code: z.number().optional(),
+		result: puzzleResultSchema.optional()
 	}),
 	compile: z
 		.object({
@@ -16,7 +18,8 @@ export const pistonExecuteResponseSchema = z.object({
 			output: z.string(),
 			stderr: z.string(),
 			stdout: z.string(),
-			code: z.number().optional()
+			code: z.number().optional(),
+			// result: puzzleResultSchema.optional()
 		})
 		.optional()
 });

@@ -1,13 +1,14 @@
 import { z } from "zod";
-import { submissionResultSchema } from "./submission-result.js";
+import { puzzleResultSchema } from "../piston/puzzle-result.js";
+import { acceptedDateSchema } from "../../enums/accepted-date.js";
 
 export const submissionEntitySchema = z.object({
 	code: z.string(),
 	language: z.string(),
 	languageVersion: z.string(),
-	createdAt: z.date().default(() => new Date()),
+	createdAt: acceptedDateSchema.default(() => new Date()),
 	puzzleId: z.string(),
-	result: submissionResultSchema,
+	result: puzzleResultSchema,
 	userId: z.string()
 });
 export type SubmissionEntity = z.infer<typeof submissionEntitySchema>;

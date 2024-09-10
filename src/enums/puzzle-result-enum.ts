@@ -1,4 +1,4 @@
-export const SubmissionResultEnum = {
+export const PuzzleResultEnum = {
 	ERROR: "error",
 	SUCCESS: "success",
 	UNKNOWN: "unknown"

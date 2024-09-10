@@ -12,6 +12,6 @@ export const validatorEntitySchema = z.object({
 		.date()
 		.default(() => new Date())
 		.optional(),
-	testResult: pistonExecuteResponseSchema.optional()
+	testResult: pistonExecuteResponseSchema.pick({ compile: true, run: true }).optional()
 });
 export type ValidatorEntity = z.infer<typeof validatorEntitySchema>;

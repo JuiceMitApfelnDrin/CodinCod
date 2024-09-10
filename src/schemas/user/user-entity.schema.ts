@@ -1,6 +1,7 @@
 import z from "zod";
 import { USERNAME_CONFIG } from "../../config/username-config.js";
 import { PASSWORD_CONFIG } from "../../config/password-config.js";
+import { acceptedDateSchema } from "../../enums/accepted-date.js";
 
 export const userEntitySchema = z.object({
 	username: z
@@ -32,7 +33,7 @@ export const userEntitySchema = z.object({
 			socials: z.array(z.string()).nonempty().optional()
 		})
 		.optional(),
-	createdAt: z.date().optional(),
-	updatedAt: z.date().optional()
+	createdAt: acceptedDateSchema.optional(),
+	updatedAt: acceptedDateSchema.optional()
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;
