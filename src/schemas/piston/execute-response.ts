@@ -18,7 +18,7 @@ export const pistonExecuteResponseSchema = z.object({
 			output: z.string(),
 			stderr: z.string(),
 			stdout: z.string(),
-			code: z.number().optional(),
+			code: z.number().optional()
 			// result: puzzleResultSchema.optional()
 		})
 		.optional()
