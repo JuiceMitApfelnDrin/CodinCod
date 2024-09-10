@@ -1,0 +1,32 @@
+volumes:
+  backend-node-modules:
+  frontend-node-modules:
+  mongo-data:
+  pnpm-cache:
+  types-dist:
+  types-node-modules:
+
+services:
+  types:
+    extends:
+      file: libs/types/docker-compose.yml
+      service: types
+
+  mongo:
+    extends:
+      file: libs/backend/docker-compose.yml
+      service: mongo
+
+  backend:
+    extends:
+      file: libs/backend/docker-compose.yml
+      service: backend
+    depends_on:
+      - mongo
+
+  frontend:
+    extends:
+      file: libs/frontend/docker-compose.yml
+      service: frontend
+    depends_on:
+      - backend
