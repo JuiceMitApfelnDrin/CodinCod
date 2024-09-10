@@ -1,19 +1,23 @@
 import { browser } from "$app/environment";
 import { localStorageKeys, themeOptions, type ThemeOption } from "@/config/local-storage";
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 
-export const theme = writable<ThemeOption>();
+const theme = writable<ThemeOption>();
+export const isDarkTheme = derived(theme, currentTheme => currentTheme === themeOptions.DARK);
+export const toggleDarkTheme = () => theme.update(oldValue => oldValue === themeOptions.DARK ? themeOptions.LIGHT : themeOptions.DARK)
 
 if (browser) {
-    theme.subscribe((newTheme) => {
-        const isDarkTheme = newTheme === themeOptions.DARK;
+    const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const storedTheme = localStorage.getItem(localStorageKeys.THEME) as ThemeOption | null;
+    const preferredTheme = prefersDarkTheme ? themeOptions.DARK : themeOptions.LIGHT;
+    theme.set(storedTheme ?? preferredTheme)
 
-        if (isDarkTheme) {
+    theme.subscribe((newTheme) => {
+        if (newTheme === themeOptions.DARK) {
             document.documentElement.classList.add(themeOptions.DARK);
-            localStorage.setItem(localStorageKeys.THEME, themeOptions.DARK);
         } else {
             document.documentElement.classList.remove(themeOptions.DARK);
-            localStorage.setItem(localStorageKeys.THEME, themeOptions.LIGHT);
         }
+        localStorage.setItem(localStorageKeys.THEME, newTheme);
     });
 }
