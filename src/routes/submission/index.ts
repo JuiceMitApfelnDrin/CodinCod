@@ -11,7 +11,7 @@ import {
 import authenticated from "../../plugins/middelware/authenticated.js";
 import Submission from "../../models/submission/submission.js";
 import Puzzle from "../../models/puzzle/puzzle.js";
-import { SubmissionResultEnum } from "types/dist/enums/submission-result-enum.js";
+import { PuzzleResultEnum } from "types/dist/enums/puzzle-result-enum.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
 
 type SubmissionParams = {
@@ -102,8 +102,8 @@ export default async function submissionController(fastify: FastifyInstance) {
 					languageVersion: executionLanguageDetails.version,
 					result:
 						puzzle.validators.length === matchCount
-							? SubmissionResultEnum.SUCCESS
-							: SubmissionResultEnum.ERROR,
+							? PuzzleResultEnum.SUCCESS
+							: PuzzleResultEnum.ERROR,
 					language: executionLanguageDetails.language
 				};
 
