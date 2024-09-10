@@ -4,11 +4,25 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
 	import { buildBackendUrl } from "@/config/backend.js";
-	import { backendUrls, DEFAULT_LANGUAGE, languageLabels, POST, type LanguageLabel } from "types";
+	import {
+		backendUrls,
+		DEFAULT_LANGUAGE,
+		frontendUrls,
+		isUserDto,
+		languageLabels,
+		POST,
+		type LanguageLabel
+	} from "types";
 	import * as Select from "$lib/components/ui/select";
 	import Button from "@/components/ui/button/button.svelte";
 	import { page } from "$app/stores";
 	import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie.js";
+	import { formattedDateYearMonthDay } from "@/utils/date-functions.js";
+	import * as Accordion from "$lib/components/ui/accordion";
+	import { cn } from "@/utils/cn.js";
+	import { calculatePuzzleResultColor } from "@/utils/calculate-puzzle-result-color.js";
+	import { buildFrontendUrl } from "@/config/frontend";
+	import Separator from "@/components/ui/separator/separator.svelte";
 
 	let puzzleId = $page.params.id;
 
@@ -19,7 +33,7 @@
 	let code: string = "";
 	let language: LanguageLabel = DEFAULT_LANGUAGE;
 
-	async function executeCode(itemInlist: number, testInput: string) {
+	async function executeCode(itemInlist: number, testInput: string, testOutput: string) {
 		const response = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.EXECUTE), {
 			method: POST,
 			headers: {
@@ -28,7 +42,8 @@
 			body: JSON.stringify({
 				language,
 				code,
-				testInput
+				testInput,
+				testOutput
 			})
 		});
 		const testResult = await response.json();
@@ -56,6 +71,18 @@
 			})
 		});
 	}
+
+	async function runAllTests() {
+		if (puzzle.validators) {
+			puzzle.validators.forEach((validator, index) => {
+				executeCode(index, validator.input, validator.output);
+			});
+		}
+	}
+
+	// needed to open the item by default
+	let statementAccordion = "statement";
+	let constraintsAccordion = "constraints";
 </script>
 
 <!-- {#if puzzle} -->
@@ -63,14 +90,58 @@
 	<H1>
 		{puzzle.title}
 	</H1>
-	<P>puzzle was created on: {puzzle.createdAt}, and last update happened on: {puzzle.updatedAt}</P>
 
-	<P>
-		{puzzle.constraints}
-	</P>
-	<P>
-		{puzzle.statement}
-	</P>
+	<dl class="flex flex-col gap-1 text-xs text-gray-400 lg:flex-row dark:text-gray-600">
+		{#if isUserDto(puzzle.authorId)}
+			<dt class="font-semibold">Created by</dt>
+			<dd>
+				{#if puzzle.authorId._id}
+					<!-- TODO: on hover, show the user info https://www.shadcn-svelte.com/docs/components/hover-card -->
+					<a
+						href={buildFrontendUrl(frontendUrls.USER_PROFILE_BY_ID, {
+							id: puzzle.authorId._id
+						})}
+					>
+						{puzzle.authorId.username}
+					</a>
+				{:else}
+					{puzzle.authorId.username}
+				{/if}
+			</dd>
+		{/if}
+
+		<Separator orientation="vertical" />
+
+		<dt class="font-semibold">Created on</dt>
+		<dd>
+			{formattedDateYearMonthDay(puzzle.createdAt)}
+		</dd>
+
+		{#if puzzle.updatedAt !== puzzle.createdAt}
+			<Separator orientation="vertical" />
+
+			<dt class="font-semibold">Updated on</dt>
+			<dd>
+				{formattedDateYearMonthDay(puzzle.updatedAt)}
+			</dd>
+		{/if}
+	</dl>
+
+	<div class="mb-8">
+		<Accordion.Root bind:value={statementAccordion}>
+			<Accordion.Item value="statement">
+				<Accordion.Trigger><h2>Statement</h2></Accordion.Trigger>
+				<Accordion.Content class="pl-4">{puzzle.statement}</Accordion.Content>
+			</Accordion.Item>
+		</Accordion.Root>
+
+		<Accordion.Root bind:value={constraintsAccordion}>
+			<Accordion.Item value="constraints">
+				<Accordion.Trigger><h2>Constraints</h2></Accordion.Trigger>
+				<Accordion.Content class="pl-4">{puzzle.constraints}</Accordion.Content>
+			</Accordion.Item>
+		</Accordion.Root>
+	</div>
 
 	<Select.Root
 		selected={{ value: language, label: language }}
@@ -97,20 +168,25 @@
 	<CodeMirror {language} bind:value={code} />
 
 	<div class="flex flex-row justify-end gap-2">
+		{#if puzzle.validators}
+			<Button on:click={runAllTests}>Run all tests</Button>
+		{/if}
 		<Button on:click={submitCode}>Submit code</Button>
 	</div>
 
 	{#if puzzle.validators}
 		<ul>
 			{#each puzzle.validators as validator, index}
-				<li>
+				<li class={cn(calculatePuzzleResultColor(validator.testResult?.run.result))}>
 					<pre>
-						{validator.input}
+						{validator.input.trim()}
 					</pre>
 					<pre>
 						{validator.output}
 					</pre>
-					<Button on:click={() => executeCode(index, validator.input)}>Run code</Button>
+					<Button on:click={() => executeCode(index, validator.input, validator.output)}
+						>Run code</Button
+					>
 
 					{#if validator.testResult}
 						<p>Lastest result:</p>
@@ -126,6 +202,12 @@
 		</ul>
 	{/if}
 </Container>
+
 <!-- {:else}
 	<Error status={data.status} message={data.data.error}></Error>
 {/if} -->
+
+<style>
+	dl dt + dd {
+	}
+</style>

@@ -6,6 +6,8 @@
 	import Pagination from "@/components/nav/pagination.svelte";
 	import { frontendUrls } from "types";
 	import { buildFrontendUrl } from "@/config/frontend.js";
+	import Button from "@/components/ui/button/button.svelte";
+	import Input from "@/components/ui/input/input.svelte";
 
 	export let data;
 
@@ -15,9 +17,15 @@
 <Container>
 	<H1>Puzzles</H1>
 
-	<a href={frontendUrls.PUZZLE_CREATE}>Create a new puzzles</a>
+	<P class="gap-2 md:flex">
+		<Button href={frontendUrls.PUZZLE_CREATE}>Create a new puzzles</Button>
 
-	<P>Puzzles found {totalItems}:</P>
+		<!-- wip, search should come here: -->
+		<!-- <Input placeholder="Search through puzzles" /> -->
+	</P>
+	<P>
+		Puzzles found {totalItems}:
+	</P>
 	<Ul>
 		{#each items as puzzle}
 			<li>
