@@ -2,22 +2,14 @@
 
 ## Setup
 
-1. Install dependencies, **only need to run one of these 3**
+1. Install dependencies
 
-    ```bash
+   ```bash
+   pnpm install
+   ```
 
-    # use npm if you don't know what you're doing!
-    npm install
+2. Once you've created a project and installed dependencies with `pnpm install`, build a package:
 
-    # or for pnpm
-    pnpm install
-
-    # or for yarn
-    yarn install
-    ```
-
-2. Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), build a package:
-
-    ```bash
-    npm run build
-    ```
+   ```bash
+   pnpm run build
+   ```
