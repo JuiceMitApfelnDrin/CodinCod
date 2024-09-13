@@ -1,0 +1,55 @@
+name: Format and Lint Code
+
+on:
+  push:
+    branches:
+      - '**'  # Trigger on all branches
+
+jobs:
+  format-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch full history to allow branch creation
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Or your project's Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prettier and Lint Fix
+        run: |
+          npm run prettier:fix
+          npm run lint:fix
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code || echo "Changes detected" > changes_detected.txt
+
+      - name: Create a new branch if changes exist
+        if: success() && steps.check_changes.outputs.changes_detected
+        run: |
+          # Generate a new branch name based on the current branch and timestamp
+          BRANCH_NAME="format-lint-fix-$(date +%s)"
+          git checkout -b $BRANCH_NAME
+          git add .
+          git commit -m "chore: format and lint fixes"
+          git push origin $BRANCH_NAME
+
+      - name: Create Pull Request
+        if: success() && steps.check_changes.outputs.changes_detected
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.create_branch.outputs.BRANCH_NAME }}
+          base: ${{ github.ref_name }}  # This references the current branch
+          title: "chore: format and lint fixes"
+          body: "This PR contains formatting and linting fixes automatically generated."
+          labels: "automated PR, linting, formatting"
