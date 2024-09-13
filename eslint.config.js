@@ -26,6 +26,7 @@ export default [
 			"no-unused-vars": "off",
 			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
 			yoda: "error"
-		}
+		},
+		plugins: [, "sort-destructure-keys"]
 	}
 ];
