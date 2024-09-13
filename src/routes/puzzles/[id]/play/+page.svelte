@@ -2,7 +2,6 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import P from "@/components/typography/p.svelte";
 	import { buildBackendUrl } from "@/config/backend.js";
 	import {
 		backendUrls,
@@ -35,16 +34,16 @@
 
 	async function executeCode(itemInlist: number, testInput: string, testOutput: string) {
 		const response = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.EXECUTE), {
-			method: POST,
+			body: JSON.stringify({
+				code,
+				language,
+				testInput,
+				testOutput
+			}),
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({
-				language,
-				code,
-				testInput,
-				testOutput
-			})
+			method: POST
 		});
 		const testResult = await response.json();
 
@@ -59,16 +58,16 @@
 	}
 
 	async function submitCode() {
-		const response = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION), {
-			method: POST,
-			headers: {
-				"Content-Type": "application/json"
-			},
+		await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION), {
 			body: JSON.stringify({
 				code,
 				language,
 				puzzleId
-			})
+			}),
+			headers: {
+				"Content-Type": "application/json"
+			},
+			method: POST
 		});
 	}
 
@@ -144,7 +143,7 @@
 	</div>
 
 	<Select.Root
-		selected={{ value: language, label: language }}
+		selected={{ label: language, value: language }}
 		onSelectedChange={(v) => {
 			if (v) {
 				language = v.value;

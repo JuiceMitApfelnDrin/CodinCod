@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
 	import { DEFAULT_PAGE } from "types";
 
 	export let currentPage: number;

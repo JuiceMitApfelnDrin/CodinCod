@@ -21,11 +21,11 @@ export const actions = {
 		}
 
 		const result = await fetch(buildBackendUrl(backendUrls.REGISTER), {
-			method: POST,
+			body: JSON.stringify(form.data),
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(form.data)
+			method: POST
 		});
 
 		const data = await result.json();

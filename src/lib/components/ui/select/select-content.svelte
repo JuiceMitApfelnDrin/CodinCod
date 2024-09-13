@@ -12,9 +12,9 @@
 	export let inTransitionConfig: $$Props["inTransitionConfig"] = undefined;
 	export let outTransition: $$Props["outTransition"] = scale;
 	export let outTransitionConfig: $$Props["outTransitionConfig"] = {
-		start: 0.95,
+		duration: 50,
 		opacity: 0,
-		duration: 50
+		start: 0.95
 	};
 
 	let className: $$Props["class"] = undefined;

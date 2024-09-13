@@ -12,7 +12,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ cookies, request }) => {
 		const form = await superValidate(request, zod(loginSchema));
 
 		if (!form.valid) {
@@ -38,10 +38,10 @@ export const actions = {
 
 			// Set the cookie using SvelteKit's cookies API
 			cookies.set(name, value, {
-				path: "/", // Set the appropriate path
 				httpOnly: true, // Adjust as necessary
-				secure: true, // Adjust as necessary
-				sameSite: "strict" // Adjust as necessary
+				path: "/", // Set the appropriate path
+				sameSite: "strict", // Adjust as necessary
+				secure: true // Adjust as necessary
 			});
 		}
 

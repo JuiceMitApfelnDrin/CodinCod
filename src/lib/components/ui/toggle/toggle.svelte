@@ -4,8 +4,8 @@
 	import { cn } from "@/utils/cn.js";
 
 	type $$Props = TogglePrimitive.Props & {
-		variant?: Variant;
 		size?: Size;
+		variant?: Variant;
 	};
 	type $$Events = TogglePrimitive.Events;
 
@@ -18,7 +18,7 @@
 
 <TogglePrimitive.Root
 	bind:pressed
-	class={cn(toggleVariants({ variant, size, className }))}
+	class={cn(toggleVariants({ className, size, variant }))}
 	{...$$restProps}
 	on:click
 >

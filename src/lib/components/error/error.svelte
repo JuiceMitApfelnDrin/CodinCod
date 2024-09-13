@@ -8,16 +8,16 @@
 
 	type ErrorTypeDefaultInfo = { header: string; description: string };
 	const errorMap: Record<number, ErrorTypeDefaultInfo> = {
-		404: { header: "Page Not Found", description: "The page you are looking for does not exist." },
+		403: { description: "You don't have permission to access this page.", header: "Forbidden" },
+		404: { description: "The page you are looking for does not exist.", header: "Page Not Found" },
 		500: {
-			header: "Internal Server Error",
-			description: "An unexpected error occurred on the server."
-		},
-		403: { header: "Forbidden", description: "You don't have permission to access this page." }
+			description: "An unexpected error occurred on the server.",
+			header: "Internal Server Error"
+		}
 	};
 
 	// Fallback for unknown status codes
-	const defaultError = { header: "Unknown Error", description: "An unexpected error occurred." };
+	const defaultError = { description: "An unexpected error occurred.", header: "Unknown Error" };
 
 	const errorInfo = errorMap[status] ?? defaultError;
 </script>

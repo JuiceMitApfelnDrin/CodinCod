@@ -11,7 +11,7 @@
 		validators: zodClient(puzzleEntitySchema.pick({ title: true }))
 	});
 
-	const { form: formData, enhance } = form;
+	const { enhance, form: formData } = form;
 </script>
 
 <form method={POST} use:enhance class="flex flex-col gap-4">

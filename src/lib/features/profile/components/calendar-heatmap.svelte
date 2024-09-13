@@ -36,9 +36,9 @@
 	const dayIndexToFormattedDate = (index: number): string => {
 		const date = new Date();
 		return new Date(date.setDate(date.getDate() - index)).toLocaleString(undefined, {
-			year: "numeric",
+			day: "numeric",
 			month: "long",
-			day: "numeric"
+			year: "numeric"
 		});
 	};
 

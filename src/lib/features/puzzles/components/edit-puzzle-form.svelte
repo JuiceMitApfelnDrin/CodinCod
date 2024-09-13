@@ -19,16 +19,16 @@
 	export let data;
 
 	const form = superForm(data.form, {
+		dataType: "json",
+		multipleSubmits: "allow",
+		resetForm: false,
 		validators: zodClient(
 			puzzleEntitySchema.omit({
 				authorId: true,
 				createdAt: true,
 				updatedAt: true
 			})
-		),
-		dataType: "json",
-		multipleSubmits: "allow",
-		resetForm: false
+		)
 	});
 
 	function addValidator() {
@@ -70,7 +70,7 @@
 	// 	console.log("User ID:", userId);
 	// });
 
-	let { form: formData, message, enhance } = form;
+	let { enhance, form: formData, message } = form;
 
 	let selectedLanguage: { label: LanguageLabel; value: LanguageLabel };
 
@@ -129,7 +129,7 @@
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Validators</Form.Label>
 			{#if $formData.validators}
-				{#each $formData.validators as validator, index}
+				{#each $formData.validators as _, index}
 					<div class="my-4 flex items-center gap-2">
 						<Input {...attrs} bind:value={$formData.validators[index].input} placeholder="Input" />
 						<Input

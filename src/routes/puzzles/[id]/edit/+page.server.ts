@@ -4,6 +4,7 @@ import { buildBackendUrl } from "@/config/backend";
 import { backendUrls, PUT, puzzleEntitySchema, type PuzzleEntity } from "types";
 import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
+import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie.js";
 
 export async function load({ fetch, params }) {
 	const id = params.id;
@@ -28,7 +29,7 @@ export async function load({ fetch, params }) {
 }
 
 export const actions = {
-	default: async ({ request, params }) => {
+	default: async ({ params, request }) => {
 		const form = await superValidate(request, zod(puzzleEntitySchema));
 
 		if (!form.valid) {
@@ -44,18 +45,17 @@ export const actions = {
 
 		// Update puzzle data to backend
 		const updateUrl = buildBackendUrl(backendUrls.PUZZLE_DETAIL, { id });
-		const response = await fetch(updateUrl, {
-			method: PUT,
-			headers: {
-				Cookie: cookie,
-				"Content-Type": "application/json"
-			},
+		const response = await fetchWithAuthenticationCookie(updateUrl, {
 			body: JSON.stringify(body),
-			credentials: "include"
+			headers: {
+				"Content-Type": "application/json",
+				Cookie: cookie
+			},
+			method: PUT
 		});
 
 		if (!response.ok) {
-			fail(response.status, { form, error: "Failed to update the puzzle." });
+			fail(response.status, { error: "Failed to update the puzzle.", form });
 		}
 
 		// Display a success status message

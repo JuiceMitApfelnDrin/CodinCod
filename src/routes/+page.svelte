@@ -2,8 +2,6 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import P from "@/components/typography/p.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-
-	let hi = "wassup";
 </script>
 
 <Container>

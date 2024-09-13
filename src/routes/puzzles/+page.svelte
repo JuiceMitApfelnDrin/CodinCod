@@ -7,11 +7,10 @@
 	import { frontendUrls } from "types";
 	import { buildFrontendUrl } from "@/config/frontend.js";
 	import Button from "@/components/ui/button/button.svelte";
-	import Input from "@/components/ui/input/input.svelte";
 
 	export let data;
 
-	const { items, totalItems, totalPages, page } = data;
+	const { items, page, totalItems, totalPages } = data;
 </script>
 
 <Container>

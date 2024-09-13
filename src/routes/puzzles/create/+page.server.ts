@@ -14,7 +14,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ request }) => {
 		const form = await superValidate(request, zod(puzzleEntitySchema));
 
 		if (!form.valid) {
@@ -24,13 +24,12 @@ export const actions = {
 		const cookie = request.headers.get("cookie") || "";
 
 		const result = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.PUZZLE), {
-			credentials: "include",
-			method: POST,
+			body: JSON.stringify(form.data),
 			headers: {
-				Cookie: cookie,
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
+				Cookie: cookie
 			},
-			body: JSON.stringify(form.data)
+			method: POST
 		});
 
 		const data = await result.json();

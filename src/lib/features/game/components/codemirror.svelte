@@ -18,10 +18,10 @@
 		switch (language) {
 			case "javascript":
 				return javascript();
-			case "typescript":
-				return javascript({ typescript: true });
 			case "python":
 				return python();
+			case "typescript":
+				return javascript({ typescript: true });
 			default:
 				return null;
 		}
@@ -34,9 +34,9 @@
 	theme={oneDark}
 	styles={{
 		".cm-editor": {
-			height: "100%",
-			display: "flex"
+			display: "flex",
+			height: "100%"
 		},
-		".cm-scroller, .cm-gutters": { minHeight: "300px", overflow: "auto", height: "70vh" }
+		".cm-scroller, .cm-gutters": { height: "70vh", minHeight: "300px", overflow: "auto" }
 	}}
 />
