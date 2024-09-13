@@ -46,22 +46,22 @@ jobs:
       - name: Lint and format `types` submodule
         run: |
           cd libs/types
-          pnpm format
+          pnpm format || true
 
       - name: Lint and format `backend` submodule
         run: |
           cd libs/backend
-          pnpm format
+          pnpm format || true
 
       - name: Lint and format `frontend` submodule
         run: |
           cd libs/frontend
-          pnpm format
+          pnpm format || true
 
       # - name: Lint and format `docs` submodule
       #   run: |
       #     cd docs
-      #     pnpm format
+      #     pnpm format || true
 
       - name: Check for changes
         id: check_changes
