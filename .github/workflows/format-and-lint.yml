@@ -21,6 +21,16 @@ jobs:
         with:
           node-version: "20" # Or your project's Node.js version
 
+      - name: Cache pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            **/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - name: Install pnpm
         run: |
           npm install -g pnpm
