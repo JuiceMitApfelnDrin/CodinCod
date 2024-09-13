@@ -19,6 +19,7 @@
 		"format": "npm run prettier:fix && npm run lint:fix"
 	},
 	"dependencies": {
+		"eslint-plugin-sort-destructure-keys": "^2.0.0",
 		"types": "file:",
 		"zod": "^3.23.8"
 	},
