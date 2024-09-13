@@ -4,7 +4,7 @@
 
 # Backend
 
-Written in node-js, with fastify.
+Written in [Node-js](https://nodejs.org/en), with [Fastify](https://fastify.dev/).
 
 ## Getting started
 
@@ -22,7 +22,7 @@ CODINCOD_MONGODB_USERNAME=codincod-dev
 CODINCOD_MONGODB_PASSWORD=hunter2
 ```
 
-What they mean and where to get them?
+#### What they mean and where to get them?
 <!-- TODO: create a better title or something for this section -->
 
 - `PORT`: when you start the server, it will occupy a port, through which you can access the backend, don't choose the same port for your frontend

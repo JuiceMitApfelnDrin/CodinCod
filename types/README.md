@@ -4,7 +4,9 @@
 
 # Types
 
-## Setup
+## Getting started
+
+### Setup
 
 1. Install dependencies
 
