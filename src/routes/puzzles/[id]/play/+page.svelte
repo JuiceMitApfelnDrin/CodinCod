@@ -91,7 +91,7 @@
 		{puzzle.title}
 	</H1>
 
-	<dl class="flex flex-col gap-1 text-xs text-gray-400 lg:flex-row dark:text-gray-600">
+	<dl class="flex flex-col gap-1 text-xs text-gray-400 dark:text-gray-600 lg:flex-row">
 		{#if isUserDto(puzzle.authorId)}
 			<dt class="font-semibold">Created by</dt>
 			<dd>

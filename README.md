@@ -15,6 +15,7 @@ VITE_BACKEND_URL=http://localhost:3000
 ```
 
 What they mean and where to get them?
+
 <!-- TODO: create a better title or something for this section -->
 
 - `VITE_BACKEND_URL`: the link to a codin-cod backend
@@ -24,26 +25,27 @@ What they mean and where to get them?
 
 1. In case you only want to run the frontend, clone it:
 
-    ```bash
-    git clone https://github.com/JuiceMitApfelnDrin/CodinCodFrontend
-    ```
+   ```bash
+   git clone https://github.com/JuiceMitApfelnDrin/CodinCodFrontend
+   ```
 
 2. Fill in the environment variables
 3. Install dependencies, **only need to run one of these 3**
 
-    ```bash
-    pnpm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
 4. Once you've created a project and installed dependencies with `pnpm install`, start a development server:
 
-    ```bash
-    pnpm dev
-    ```
+   ```bash
+   pnpm dev
+   ```
 
 ## Editor
 
 <!-- - https://github.com/microsoft/monaco-editor -->
+
 - <https://github.com/codemirror/codemirror5>
 <!-- - https://github.com/ajaxorg/ace -->
 
@@ -57,6 +59,6 @@ pnpm build
 
 You can preview the production build with `pnpm preview`.
 
-<!-- 
-    To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment. 
+<!--
+    To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 -->
