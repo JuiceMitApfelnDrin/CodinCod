@@ -10,7 +10,7 @@ module.exports = {
 	parser: "@typescript-eslint/parser",
 	plugins: ["@typescript-eslint", "sort-destructure-keys"],
 	parserOptions: {
-		sourceType: "module",
+		sourceType: "commonjs",
 		ecmaVersion: 2020,
 		extraFileExtensions: [".svelte"]
 	},
