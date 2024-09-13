@@ -20,13 +20,16 @@ jobs:
         with:
           node-version: '16'  # Or your project's Node.js version
 
+      - name: Install pnpm
+        run: |
+          npm install -g pnpm
+
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Run Prettier and Lint Fix
         run: |
-          npm run prettier:fix
-          npm run lint:fix
+          pnpm format
 
       - name: Check for changes
         id: check_changes
