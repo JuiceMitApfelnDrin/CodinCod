@@ -1,0 +1,84 @@
+name: Format and Lint Code
+
+on:
+  push:
+    branches:
+      - "**" # Trigger on all branches
+
+jobs:
+  lint-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch full history to allow branch creation
+          submodules: "true" # Checkout submodules if needed
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20" # Or your project's Node.js version
+
+      - name: Install pnpm
+        run: |
+          npm install -g pnpm
+
+      - name: Install dependencies for all submodules
+        run: |
+          # Install dependencies for each submodule
+          cd libs/types && pnpm install
+          cd ../backend && pnpm install
+          cd ../frontend && pnpm install
+          cd ../../docs && pnpm install
+
+      - name: Lint and format `types` submodule
+        run: |
+          cd libs/types
+          pnpm run lint
+          pnpm run format
+
+      - name: Lint and format `backend` submodule
+        run: |
+          cd libs/backend
+          pnpm run lint
+          pnpm run format
+
+      - name: Lint and format `frontend` submodule
+        run: |
+          cd libs/frontend
+          pnpm run lint
+          pnpm run format
+
+      - name: Lint and format `docs` submodule
+        run: |
+          cd docs
+          pnpm run lint
+          pnpm run format
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code || echo "Changes detected" > changes_detected.txt
+
+      - name: Create a new branch if changes exist
+        if: success() && steps.check_changes.outputs.changes_detected
+        run: |
+          # Generate a new branch name based on the current branch and timestamp
+          BRANCH_NAME="format-lint-fix-$(date +%s)"
+          git checkout -b $BRANCH_NAME
+          git add .
+          git commit -m "chore: format and lint fixes"
+          git push origin $BRANCH_NAME
+
+      - name: Create Pull Request
+        if: success() && steps.check_changes.outputs.changes_detected
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }} # This references the newly created branch
+          base: ${{ github.ref_name }} # This references the current branch
+          title: "chore: format and lint fixes"
+          body: "This PR contains formatting and linting fixes automatically generated."
+          labels: "automated PR, linting, formatting"
