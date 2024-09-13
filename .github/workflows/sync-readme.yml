@@ -6,6 +6,7 @@ on:
       - 'frontend/README.md'
       - 'backend/README.md'
       - 'types/README.md'
+      - 'README.md'
 
 jobs:
   sync-readmes:
@@ -23,6 +24,9 @@ jobs:
           - name: types
             path: types/README.md
             target_repo: JuiceMitApfelnDrin/CodinCodTypes
+          - name: codincod
+            path: README.md
+            target_repo: JuiceMitApfelnDrin/CodinCod
 
     steps:
     - name: Checkout the docs repository
