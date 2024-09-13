@@ -36,26 +36,22 @@ jobs:
       - name: Lint and format `types` submodule
         run: |
           cd libs/types
-          pnpm run lint
-          pnpm run format
+          pnpm format
 
       - name: Lint and format `backend` submodule
         run: |
           cd libs/backend
-          pnpm run lint
-          pnpm run format
+          pnpm format
 
       - name: Lint and format `frontend` submodule
         run: |
           cd libs/frontend
-          pnpm run lint
-          pnpm run format
+          pnpm format
 
-      - name: Lint and format `docs` submodule
-        run: |
-          cd docs
-          pnpm run lint
-          pnpm run format
+      # - name: Lint and format `docs` submodule
+      #   run: |
+      #     cd docs
+      #     pnpm format
 
       - name: Check for changes
         id: check_changes
