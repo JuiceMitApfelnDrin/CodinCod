@@ -68,23 +68,19 @@ jobs:
         run: |
           git diff --exit-code || echo "Changes detected" > changes_detected.txt
 
-      - name: Create a new branch if changes exist
-        if: success() && steps.check_changes.outputs.changes_detected
+      - name: Create a new branch and commit changes
+        if: env.CHANGES_DETECTED == 'Changes detected'
         run: |
-          # Generate a new branch name based on the current branch and timestamp
+          # Generate a new branch name
           BRANCH_NAME="format-lint-fix-$(date +%s)"
           git checkout -b $BRANCH_NAME
-          git add .
+
+          # Update submodule references
+          git add libs/types
+          git add libs/backend
+          git add libs/frontend
+          git add docs
+
+          # Commit changes
           git commit -m "chore: format and lint fixes"
           git push origin $BRANCH_NAME
-
-      - name: Create Pull Request
-        if: success() && steps.check_changes.outputs.changes_detected
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }} # This references the newly created branch
-          base: ${{ github.ref_name }} # This references the current branch
-          title: "chore: format and lint fixes"
-          body: "This PR contains formatting and linting fixes automatically generated."
-          labels: "automated PR, linting, formatting"
