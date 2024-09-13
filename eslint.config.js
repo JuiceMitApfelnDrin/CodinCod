@@ -1,6 +1,7 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
+import sortDestructureKeys from "eslint-plugin-sort-destructure-keys";
 
 export default [
 	{
@@ -27,6 +28,8 @@ export default [
 			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
 			yoda: "error"
 		},
-		plugins: [, "sort-destructure-keys"]
+		plugins: {
+			"sort-destructure-keys": sortDestructureKeys
+		}
 	}
 ];
