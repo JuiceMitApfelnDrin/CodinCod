@@ -22,6 +22,7 @@ This repo exists to:
     ```
 
 3. Build the types (required by both libs/backend and libs/frontend)
+
    ```
    cd CodinCod/libs/types
    pnpm install
