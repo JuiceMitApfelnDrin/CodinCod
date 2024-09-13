@@ -23,6 +23,7 @@ CODINCOD_MONGODB_PASSWORD=hunter2
 ```
 
 #### What they mean and where to get them?
+
 <!-- TODO: create a better title or something for this section -->
 
 - `PORT`: when you start the server, it will occupy a port, through which you can access the backend, don't choose the same port for your frontend
@@ -35,20 +36,20 @@ CODINCOD_MONGODB_PASSWORD=hunter2
 
 2. Install dependencies using [`pnpm`](https://github.com/pnpm/pnpm) (`npm` does NOT work because it does not support workspace dependencies which we use for the [`types`](https://github.com/JuiceMitApfelnDrin/CodinCodTypes) package)
 
-    ```bash
-    pnpm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
 3. Fill in the environment variables and make sure you have MongoDB running at `MONGO_URI`. While developing you may use `docker compose up` to start up mongo locally.
 
 4. Start a development server:
 
-    ```bash
-    pnpm run dev
+   ```bash
+   pnpm run dev
 
-    # or start the server and open the app in a new browser tab
-    pnpm run dev -- --open
-    ```
+   # or start the server and open the app in a new browser tab
+   pnpm run dev -- --open
+   ```
 
 ## Code compilation
 

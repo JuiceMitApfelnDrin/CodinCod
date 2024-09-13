@@ -22,14 +22,14 @@ export default [
 		]
 	},
 	{
+		plugins: {
+			"eslint-plugin-sort-destructure-keys": sortDestructureKeys
+		},
 		rules: {
 			"no-undef": "off",
 			"no-unused-vars": "off",
 			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
 			yoda: "error"
-		},
-		plugins: {
-			"sort-destructure-keys": sortDestructureKeys
 		}
 	}
 ];
