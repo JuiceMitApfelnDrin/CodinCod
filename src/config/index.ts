@@ -7,3 +7,4 @@ export * from "./username-config.js";
 export * from "./report-config.js";
 export * from "./puzzle-config.js";
 export * from "./default-values-query-params.js";
+export * from "./cookie.js";
