@@ -82,6 +82,7 @@
 	// needed to open the item by default
 	let statementAccordion = "statement";
 	let constraintsAccordion = "constraints";
+	let testsAccordion = "tests";
 </script>
 
 <!-- {#if puzzle} -->
@@ -90,7 +91,7 @@
 		{puzzle.title}
 	</H1>
 
-	<dl class="flex flex-col gap-1 text-xs text-gray-400 dark:text-gray-600 lg:flex-row">
+	<dl class="flex flex-col gap-1 text-xs text-gray-400 lg:flex-row dark:text-gray-600">
 		{#if isUserDto(puzzle.authorId)}
 			<dt class="font-semibold">Created by</dt>
 			<dd>
@@ -174,31 +175,49 @@
 	</div>
 
 	{#if puzzle.validators}
-		<ul>
-			{#each puzzle.validators as validator, index}
-				<li class={cn(calculatePuzzleResultColor(validator.testResult?.run.result))}>
-					<pre>
-						{validator.input.trim()}
-					</pre>
-					<pre>
-						{validator.output}
-					</pre>
-					<Button on:click={() => executeCode(index, validator.input, validator.output)}
-						>Run code</Button
-					>
+		<Accordion.Root bind:value={testsAccordion}>
+			<Accordion.Item value="tests">
+				<Accordion.Trigger><h2>Tests</h2></Accordion.Trigger>
+				<Accordion.Content>
+					<ul class="flex flex-col gap-8">
+						{#each puzzle.validators as validator, index}
+							<li
+								class={cn(calculatePuzzleResultColor(validator.testResult?.run.result), "w-full")}
+							>
+								<div class="lg:flex">
+									<div class="lg:w-1/2">
+										<h3 class="font-semibold">Input</h3>
+										<pre>
+											{validator.input.trim()}
+										</pre>
+									</div>
+									<div class="lg:w-1/2">
+										<h3 class="font-semibold">Output</h3>
+										<pre>
+											{validator.output}
+										</pre>
+									</div>
+								</div>
 
-					{#if validator.testResult}
-						<p>Lastest result:</p>
-						output:
-						<pre>{validator.testResult?.run.output}</pre>
-						stdout:
-						<pre>{validator.testResult?.run.stdout}</pre>
-						stderr:
-						<pre>{validator.testResult?.run.stderr}</pre>
-					{/if}
-				</li>
-			{/each}
-		</ul>
+								<Button on:click={() => executeCode(index, validator.input, validator.output)}>
+									Run code
+								</Button>
+
+								{#if validator.testResult}
+									<p>Lastest result:</p>
+									output:
+									<pre>{validator.testResult?.run.output}</pre>
+									stdout:
+									<pre>{validator.testResult?.run.stdout}</pre>
+									stderr:
+									<pre>{validator.testResult?.run.stderr}</pre>
+								{/if}
+							</li>
+						{/each}
+					</ul>
+				</Accordion.Content>
+			</Accordion.Item>
+		</Accordion.Root>
 	{/if}
 </Container>
 
@@ -207,6 +226,7 @@
 {/if} -->
 
 <style>
-	dl dt + dd {
+	pre {
+		white-space: pre-line;
 	}
 </style>
