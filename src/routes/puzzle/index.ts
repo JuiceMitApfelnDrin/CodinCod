@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
 import {
 	DEFAULT_PAGE,
-	JwtPayload,
+	AuthenticatedInfo,
 	PaginatedQueryResponse,
 	paginatedQuerySchema,
-	puzzleEntitySchema
+	puzzleEntitySchema,
+	isAuthenticatedInfo
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import { $ref } from "../../config/schema.js";
@@ -23,12 +24,11 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 				return reply.status(400).send({ error: parseResult.error.errors });
 			}
 
-			/**
-			 * assume for now the JwtPayload fields exist, because you need to be authenticated to get here
-			 * and you should to be authenticated to create a puzzle
-			 * TODO: fix type issue
-			 */
-			const user: JwtPayload = request.user as JwtPayload;
+			if (!isAuthenticatedInfo(request.user)) {
+				return reply.status(401).send({ error: "Not right credentials" });
+			}
+
+			const user = request.user;
 			const userId = user.userId;
 
 			const puzzleData = {

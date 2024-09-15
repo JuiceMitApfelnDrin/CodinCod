@@ -1,7 +1,13 @@
 import { FastifyInstance } from "fastify";
 import Puzzle from "../../../models/puzzle/puzzle.js";
 import authenticated from "../../../plugins/middelware/authenticated.js";
-import { JwtPayload, puzzleEntitySchema, VisibilityEnum, isAuthor } from "types";
+import {
+	AuthenticatedInfo,
+	puzzleEntitySchema,
+	VisibilityEnum,
+	isAuthor,
+	isAuthenticatedInfo
+} from "types";
 
 type ParamsId = { Params: { id: string } };
 
@@ -35,7 +41,11 @@ export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
 				return reply.status(400).send({ error: parseResult.error.errors });
 			}
 
-			const user: JwtPayload = request.user as JwtPayload;
+			if (!isAuthenticatedInfo(request.user)) {
+				return reply.status(401).send({ error: "Not right credentials" });
+			}
+
+			const user = request.user;
 			const userId = user.userId;
 
 			try {
@@ -66,7 +76,7 @@ export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
 		async (request, reply) => {
 			const { id } = request.params;
 
-			const user: JwtPayload = request.user as JwtPayload;
+			const user: AuthenticatedInfo = request.user as AuthenticatedInfo;
 			const userId = user.userId;
 
 			try {

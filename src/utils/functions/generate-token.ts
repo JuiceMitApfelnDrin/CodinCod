@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { JwtPayload } from "types";
+import { AuthenticatedInfo } from "types";
 
-export function generateToken(fastify: FastifyInstance, payload: JwtPayload): string {
+export function generateToken(fastify: FastifyInstance, payload: AuthenticatedInfo): string {
 	try {
 		return fastify.jwt.sign(payload, { expiresIn: "24h" });
 	} catch (error) {

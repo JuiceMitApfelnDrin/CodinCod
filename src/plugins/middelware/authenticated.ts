@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { JwtPayload } from "types";
+import { AuthenticatedInfo } from "types";
 
 export default async function authenticated(request: FastifyRequest, reply: FastifyReply) {
 	const token = request.cookies.token;
@@ -13,7 +13,7 @@ export default async function authenticated(request: FastifyRequest, reply: Fast
 		// for some dumb reason it searches on headers.authorization, lost quite a bit of time on this one
 		request.headers.authorization = `bearer ${token}`;
 
-		const decoded = await request.jwtVerify<JwtPayload>();
+		const decoded = await request.jwtVerify<AuthenticatedInfo>();
 		request.user = decoded;
 	} catch (err) {
 		console.log("Token verification error:", { err, token }); // Log error message

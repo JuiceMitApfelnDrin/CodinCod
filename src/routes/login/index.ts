@@ -39,7 +39,12 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 					return reply.status(401).send({ message: "Invalid email/username or password" });
 				}
 
-				const token = generateToken(fastify, { userId: `${user._id}`, username: user.username });
+				const authenticatedUserInfo = {
+					userId: `${user._id}`,
+					username: user.username,
+					isAuthenticated: true
+				};
+				const token = generateToken(fastify, authenticatedUserInfo);
 
 				reply
 					.setCookie("token", token, {

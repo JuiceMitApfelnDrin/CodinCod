@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import {
-	JwtPayload,
+	AuthenticatedInfo,
+	isAuthenticatedInfo,
 	LanguageLabel,
 	PistonExecuteResponse,
 	PuzzleEntity,
@@ -38,11 +39,13 @@ export default async function submissionController(fastify: FastifyInstance) {
 			}
 
 			/**
-			 * assume for now the JwtPayload fields exist, because you need to be authenticated to get here
-			 * and you should to be authenticated to create a submission
-			 * TODO: fix type issue
+			 * todo, have this checking credentials on multiple places, make this easier somehow :)
 			 */
-			const user: JwtPayload = request.user as JwtPayload;
+			if (!isAuthenticatedInfo(request.user)) {
+				return reply.status(401).send({ error: "Not right credentials" });
+			}
+
+			const user = request.user;
 			const userId = user.userId;
 
 			// unpacking body
