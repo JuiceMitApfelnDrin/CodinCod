@@ -1,10 +1,4 @@
 export const localStorageKeys = {
-	THEME: "theme"
+	THEME: "theme",
+	AUTHENTICATED_USER_INFO: "authenticatedUserInfo"
 } as const;
-
-export const themeOptions = {
-	DARK: "dark",
-	LIGHT: "light"
-} as const;
-
-export type ThemeOption = (typeof themeOptions)[keyof typeof themeOptions];

@@ -1,57 +1,25 @@
+import { searchParamKeys } from "@/config/search-params.js";
+import { getAuthenticatedUserInfo } from "@/utils/get-authenticated-user-info.js";
+import { isProtectedRoute } from "@/utils/is-protected-route.js";
+import { logout } from "@/utils/logout.js";
 import { redirect } from "@sveltejs/kit";
-import jwt from "jsonwebtoken";
-import { frontendUrls, type JwtPayload } from "types";
+import { cookieKeys, frontendUrls } from "types";
 
 export const load = async (event) => {
-	const unProtectedRoutes: string[] = [
-		frontendUrls.ROOT,
-		frontendUrls.REGISTER,
-		frontendUrls.LOGIN,
-		frontendUrls.LEARN,
-		frontendUrls.PUZZLES
-	];
+	const isLoggingOut = event.url.search.includes(searchParamKeys.LOGOUT);
 
-	const token = event.cookies.get("token");
-
-	let currentUser: JwtPayload | null = null;
-
-	if (token) {
-		try {
-			const JWT_SECRET = import.meta.env.VITE_JWT_SECRET;
-
-			if (!JWT_SECRET) {
-				throw new Error("Forgot environment variable VITE_JWT_SECRET in .env");
-			}
-
-			currentUser = jwt.verify(token, JWT_SECRET) as JwtPayload;
-		} catch (err) {
-			if (!unProtectedRoutes.includes(event.url.pathname)) {
-				throw redirect(303, frontendUrls.LOGIN);
-			}
-		}
-	} else {
-		if (!unProtectedRoutes.includes(event.url.pathname)) {
-			throw redirect(303, frontendUrls.LOGIN);
-		}
+	if (isLoggingOut) {
+		logout(event);
 	}
 
-	const query = event.url.searchParams.get("signout");
-	if (Boolean(query) === true) {
-		event.cookies.delete("token", { path: "/" });
+	const token = event.cookies.get(cookieKeys.TOKEN);
+	const currentUser = getAuthenticatedUserInfo(token);
+
+	const isLoggedOut = !currentUser.isAuthenticated;
+
+	if (isLoggedOut && isProtectedRoute(event)) {
+		throw redirect(303, frontendUrls.LOGIN);
 	}
 
-	if (currentUser) {
-		return {
-			userInfo: {
-				isAuthenticated: true,
-				...currentUser
-			}
-		};
-	} else {
-		return {
-			userInfo: {
-				isAuthenticated: false
-			}
-		};
-	}
+	return currentUser;
 };
