@@ -3,11 +3,10 @@ import { PuzzleResultEnum, puzzleResultSchema } from "types";
 /**
  * checks whether something is a puzzleResult
  *
- * @param {any} something
+ * @param {unknown} something
  * @returns a background color in accordance with the puzzleResult
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function calculatePuzzleResultColor(something: any): string {
+export function calculatePuzzleResultColor(something: unknown): string {
 	const isPuzzleResult = puzzleResultSchema.safeParse(something);
 
 	if (!isPuzzleResult.success) {
