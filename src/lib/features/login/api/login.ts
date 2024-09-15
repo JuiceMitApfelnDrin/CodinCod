@@ -3,7 +3,7 @@ import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication
 import { backendUrls, POST } from "types";
 
 export async function login(identifier: string, password: string) {
-	return await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.LOGIN), {
+	return fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.LOGIN), {
 		body: JSON.stringify({ identifier, password }),
 		headers: {
 			"Content-Type": "application/json"
