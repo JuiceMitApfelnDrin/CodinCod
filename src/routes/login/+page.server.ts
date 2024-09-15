@@ -20,7 +20,6 @@ export const actions = {
 		}
 
 		const result = await login(form.data.identifier, form.data.password);
-
 		const data = await result.json();
 
 		if (!result.ok) {
