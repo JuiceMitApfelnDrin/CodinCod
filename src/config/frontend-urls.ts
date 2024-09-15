@@ -2,11 +2,12 @@ export const frontendUrls = {
 	ROOT: "/",
 
 	// account activity related
-	SIGN_OUT: "/sign-out",
-	SIGN_UP: "/sign-up",
-	SIGN_IN: "/sign-in",
+	// SIGN_OUT: "/sign-out",
+	// SIGN_UP: "/sign-up",
+	// SIGN_IN: "/sign-in",
 	REGISTER: "/register",
 	LOGIN: "/login",
+	LOGOUT: "/logout",
 
 	// puzzles
 	PUZZLES: "/puzzles",
@@ -36,3 +37,13 @@ export const frontendUrls = {
 } as const;
 
 export type FrontendUrl = (typeof frontendUrls)[keyof typeof frontendUrls];
+
+const frontendUrlsArray: FrontendUrl[] = Object.values(frontendUrls);
+
+const indexNotFound = -1;
+export function isFrontendUrl(supposedFrontendUrl: unknown): supposedFrontendUrl is FrontendUrl {
+	return (
+		typeof supposedFrontendUrl === "string" &&
+		frontendUrlsArray.findIndex((item) => item === supposedFrontendUrl) !== indexNotFound
+	);
+}
