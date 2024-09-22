@@ -14,16 +14,17 @@ This repo exists to:
    - [NodeJs](https://nodejs.org/en/download/package-manager)
    - [pnpm](https://pnpm.io/)
    - MongoDb instance: can be either [locally](https://www.mongodb.com/try/download/community) or in [mongodb's online environment](https://www.mongodb.com/cloud/atlas/register).
+   - [piston](https://github.com/engineer-man/piston), used for code execution in a safe environment, **if** you are **not** going to **execute code**, **you don't** technically **need it**
 
 2. Clone the project structure and its submodules:
 
-    ```bash
-    git clone --recursive https://github.com/JuiceMitApfelnDrin/CodinCod 
-    ```
+   ```bash
+   git clone --recursive https://github.com/JuiceMitApfelnDrin/CodinCod 
+   ```
 
 3. Build the types (required by both libs/backend and libs/frontend)
 
-   ```
+   ```bash
    cd CodinCod/libs/types
    pnpm install
    pnpm build
