@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
 import {
+	isFetchError,
 	isPistonExecuteResponseSuccess,
 	LanguageLabel,
 	PistonExecuteRequest,
 	PistonExecuteResponse,
-	pistonExecuteResponseSuccessSchema,
 	supportedLanguages
 } from "types";
 import { calculateResult } from "../../utils/functions/calculate-result.js";
@@ -28,7 +28,31 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 			files: [{ content: code }],
 			stdin: testInput
 		};
-		const executionRes: PistonExecuteResponse = await fastify.piston(requestObject);
+
+		let executionRes: PistonExecuteResponse;
+		try {
+			executionRes = await fastify.piston(requestObject);
+		} catch (err: unknown) {
+			request.log.error(
+				{
+					err,
+					requestBody: request.body
+				},
+				"Error during code execution"
+			);
+
+			if (isFetchError(err) && err.cause?.code === "ECONNREFUSED") {
+				return reply.status(503).send({
+					error: "Service unavailable",
+					message: "Unable to reach piston code execution service"
+				});
+			}
+
+			return reply.status(500).send({
+				error: "Internal Server Error",
+				message: "Something went wrong during piston code execution"
+			});
+		}
 
 		if (!isPistonExecuteResponseSuccess(executionRes)) {
 			return reply.status(500).send({ error: "Error with piston.", message: executionRes.message });
