@@ -27,7 +27,6 @@
 		"@fastify/mongodb": "^8.0.0",
 		"@fastify/swagger": "^8.15.0",
 		"@fastify/swagger-ui": "^4.1.0",
-		"@types/bcrypt": "^5.0.2",
 		"bcrypt": "^5.1.1",
 		"dotenv": "^16.4.5",
 		"eslint-plugin-sort-destructure-keys": "^2.0.0",
@@ -40,6 +39,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
+		"@types/bcrypt": "^5.0.2",
 		"@eslint/js": "^9.7.0",
 		"@tsconfig/recommended": "^1.0.7",
 		"@types/node": "^20.14.11",
