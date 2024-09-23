@@ -1,8 +1,10 @@
 import { FastifyInstance } from "fastify";
 import {
+	isPistonExecuteResponseSuccess,
 	LanguageLabel,
 	PistonExecuteRequest,
 	PistonExecuteResponse,
+	pistonExecuteResponseSuccessSchema,
 	supportedLanguages
 } from "types";
 import { calculateResult } from "../../utils/functions/calculate-result.js";
@@ -28,23 +30,14 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 		};
 		const executionRes: PistonExecuteResponse = await fastify.piston(requestObject);
 
+		if (!isPistonExecuteResponseSuccess(executionRes)) {
+			return reply.status(500).send({ error: "Error with piston.", message: executionRes.message });
+		}
+
 		let run = executionRes.run;
 		let compile = executionRes.compile;
 
-		// determine result
-		// compare stdin to stdout
-
-		// isMatch:
-		// response.run.output.trim() === request.expectedOutput.trim() ||
-		// request.expectedOutput.trim() === response.run.stdout.trim()
-
 		run.result = calculateResult(run.output, testOutput);
-
-		// if (compile) {
-		// 	compile.result = calculateResult(compile.output, testOutput)
-		// }
-
-		console.log({ run, compile, testOutput, testInput });
 
 		return reply.status(200).send({
 			run,

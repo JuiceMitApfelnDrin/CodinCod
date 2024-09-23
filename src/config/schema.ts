@@ -23,7 +23,12 @@ import {
 	pistonFileSchema,
 	pistonExecuteRequestSchema,
 	pistonExecuteResponseSchema,
-	puzzleResultSchema
+	puzzleResultSchema,
+	editPuzzleSchema,
+	acceptedDateSchema,
+	createPuzzleSchema,
+	pistonExecuteResponseErrorSchema,
+	pistonExecuteResponseSuccessSchema
 } from "types";
 
 export const { schemas, $ref } = buildJsonSchemas({
@@ -50,5 +55,10 @@ export const { schemas, $ref } = buildJsonSchemas({
 	pistonFileSchema,
 	pistonExecuteRequestSchema,
 	pistonExecuteResponseSchema,
-	puzzleResultSchema
+	puzzleResultSchema,
+	editPuzzleSchema,
+	acceptedDateSchema,
+	createPuzzleSchema,
+	pistonExecuteResponseErrorSchema,
+	pistonExecuteResponseSuccessSchema
 });

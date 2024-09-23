@@ -1,11 +1,10 @@
 import { FastifyInstance } from "fastify";
 import {
 	DEFAULT_PAGE,
-	AuthenticatedInfo,
 	PaginatedQueryResponse,
 	paginatedQuerySchema,
-	puzzleEntitySchema,
-	isAuthenticatedInfo
+	isAuthenticatedInfo,
+	createPuzzleSchema
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import { $ref } from "../../config/schema.js";
@@ -18,7 +17,7 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 			onRequest: authenticated
 		},
 		async (request, reply) => {
-			const parseResult = puzzleEntitySchema.omit({ authorId: true }).safeParse(request.body);
+			const parseResult = createPuzzleSchema.safeParse(request.body);
 
 			if (!parseResult.success) {
 				return reply.status(400).send({ error: parseResult.error.errors });
