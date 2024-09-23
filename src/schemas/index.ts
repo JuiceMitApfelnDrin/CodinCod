@@ -11,3 +11,4 @@ export * from "./message.schema.js";
 export * from "./paginated-query.schema.js";
 export * from "./paginated-query-response.schema.js";
 export * from "./token.schema.js";
+export * from "./fetch-error.schema.js";
