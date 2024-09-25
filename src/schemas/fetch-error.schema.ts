@@ -14,6 +14,5 @@ export const fetchErrorSchema = z.object({
 export type FetchError = z.infer<typeof fetchErrorSchema>;
 
 export function isFetchError(error: unknown): error is FetchError {
-	console.log(fetchErrorSchema.safeParse(error).error);
 	return fetchErrorSchema.safeParse(error).success;
 }
