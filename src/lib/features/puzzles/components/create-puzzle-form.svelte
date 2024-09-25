@@ -3,12 +3,12 @@
 	import { type SuperValidated, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
-	import { POST, puzzleEntitySchema, type PuzzleEntity } from "types";
+	import { createPuzzleSchema, POST, type PuzzleEntity } from "types";
 
 	export let data: SuperValidated<PuzzleEntity>;
 
 	const form = superForm(data, {
-		validators: zodClient(puzzleEntitySchema.pick({ title: true }))
+		validators: zodClient(createPuzzleSchema)
 	});
 
 	const { enhance, form: formData } = form;

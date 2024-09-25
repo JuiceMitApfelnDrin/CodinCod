@@ -34,6 +34,6 @@ export const actions = {
 			fail(400, { form, message: data.message });
 		}
 
-		throw redirect(302, frontendUrls.SIGN_IN);
+		throw redirect(302, frontendUrls.LOGIN);
 	}
 };

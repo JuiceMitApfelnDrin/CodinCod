@@ -10,17 +10,16 @@ export function calculatePuzzleResultColor(something: unknown): string {
 	const isPuzzleResult = puzzleResultSchema.safeParse(something);
 
 	if (!isPuzzleResult.success) {
-		return "";
+		return "border-gray-300 dark:border-gray-300";
 	}
 
 	switch (something) {
 		case PuzzleResultEnum.SUCCESS:
-			return "bg-green-400 dark:bg-green-600";
-		case PuzzleResultEnum.ERROR:
-			return "bg-red-400 dark:bg-red-600";
+			return "border-green-600 dark:border-green-600";
 		case PuzzleResultEnum.UNKNOWN:
-			return "bg-violet-400 dark:bg-violet-600";
+		case PuzzleResultEnum.ERROR:
+			return "border-red-600 dark:border-red-600";
 		default:
-			return "bg-violet-400 dark:bg-violet-600";
+			return "border-violet-600 dark:border-violet-600";
 	}
 }

@@ -2,8 +2,6 @@
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import { frontendUrls } from "types";
-	import * as Menubar from "$lib/components/ui/menubar";
-	import Settings from "lucide-svelte/icons/settings";
 	import ToggleTheme from "./toggle-theme.svelte";
 	import LogoutButton from "./logout-button.svelte";
 	import { authenticatedUserInfo } from "../../../stores";
@@ -35,7 +33,7 @@
 			<ul class="flex flex-1 flex-row gap-4">
 				{#each navigationLinks as link}
 					<li
-						class="rounded-md transition-all motion-reduce:transition-none dark:hover:bg-slate-500"
+						class="rounded-md transition-all motion-reduce:transition-none dark:hover:bg-gray-500"
 					>
 						<a class="px-1 py-4" href={link.href}>{link.text}</a>
 					</li>
@@ -47,7 +45,7 @@
 					<Avatar.Root>
 						<!-- TODO: fetch user profile picture -->
 						<Avatar.Image
-							class="rounded-full border-4 border-slate-800 dark:border-slate-200"
+							class="rounded-full border-2 border-black dark:border-white"
 							src={"https://github.com/reeveng.png"}
 							alt={$authenticatedUserInfo?.username}
 						/>

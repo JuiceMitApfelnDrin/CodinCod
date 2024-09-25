@@ -39,4 +39,5 @@
 		},
 		".cm-scroller, .cm-gutters": { height: "70vh", minHeight: "300px", overflow: "auto" }
 	}}
+	class="codemirror-default-height"
 />

@@ -17,11 +17,13 @@
 	import { page } from "$app/stores";
 	import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie.js";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions.js";
-	import * as Accordion from "$lib/components/ui/accordion";
 	import { cn } from "@/utils/cn.js";
 	import { calculatePuzzleResultColor } from "@/utils/calculate-puzzle-result-color.js";
 	import { buildFrontendUrl } from "@/config/frontend";
 	import Separator from "@/components/ui/separator/separator.svelte";
+	import TestProgressBar from "@/features/puzzles/components/test-progress-bar.svelte";
+	import ValidatorStatus from "@/features/puzzles/components/validator-status.svelte";
+	import Accordion from "@/components/ui/accordion/accordion.svelte";
 
 	let puzzleId = $page.params.id;
 
@@ -32,7 +34,7 @@
 	let code: string = "";
 	let language: LanguageLabel = DEFAULT_LANGUAGE;
 
-	async function executeCode(itemInlist: number, testInput: string, testOutput: string) {
+	async function executeCode(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.EXECUTE), {
 			body: JSON.stringify({
 				code,
@@ -47,7 +49,7 @@
 		});
 		const testResult = await response.json();
 
-		const validator = puzzle.validators?.[itemInlist];
+		const validator = puzzle.validators?.[itemInList];
 
 		if (validator) {
 			validator.testResult = testResult;
@@ -79,10 +81,11 @@
 		}
 	}
 
-	// needed to open the item by default
-	let statementAccordion = "statement";
-	let constraintsAccordion = "constraints";
-	let testsAccordion = "tests";
+	let openTests = true;
+
+	function openTestsAccordion() {
+		openTests = true;
+	}
 </script>
 
 <!-- {#if puzzle} -->
@@ -128,19 +131,19 @@
 	</dl>
 
 	<div class="mb-8">
-		<Accordion.Root bind:value={statementAccordion}>
-			<Accordion.Item value="statement">
-				<Accordion.Trigger><h2>Statement</h2></Accordion.Trigger>
-				<Accordion.Content class="pl-4">{puzzle.statement}</Accordion.Content>
-			</Accordion.Item>
-		</Accordion.Root>
+		<Accordion open={true} id="statement">
+			<h2 slot="title">Statement</h2>
+			<p slot="content">
+				{puzzle.statement}
+			</p>
+		</Accordion>
 
-		<Accordion.Root bind:value={constraintsAccordion}>
-			<Accordion.Item value="constraints">
-				<Accordion.Trigger><h2>Constraints</h2></Accordion.Trigger>
-				<Accordion.Content class="pl-4">{puzzle.constraints}</Accordion.Content>
-			</Accordion.Item>
-		</Accordion.Root>
+		<Accordion open={true} id="constraints">
+			<h2 slot="title">Constraints</h2>
+			<p slot="content">
+				{puzzle.constraints}
+			</p>
+		</Accordion>
 	</div>
 
 	<Select.Root
@@ -169,64 +172,81 @@
 
 	<div class="flex flex-row justify-end gap-2">
 		{#if puzzle.validators}
-			<Button on:click={runAllTests}>Run all tests</Button>
+			<Button variant="secondary" on:click={runAllTests}>Run all tests</Button>
 		{/if}
-		<Button on:click={submitCode}>Submit code</Button>
+		<Button variant="secondary" on:click={submitCode}>Submit code</Button>
 	</div>
 
 	{#if puzzle.validators}
-		<Accordion.Root bind:value={testsAccordion}>
-			<Accordion.Item value="tests">
-				<Accordion.Trigger><h2>Tests</h2></Accordion.Trigger>
-				<Accordion.Content>
-					<ul class="flex flex-col gap-8">
-						{#each puzzle.validators as validator, index}
-							<li
-								class={cn(calculatePuzzleResultColor(validator.testResult?.run.result), "w-full")}
-							>
-								<div class="lg:flex">
+		<TestProgressBar {openTestsAccordion} validators={puzzle.validators} class="my-7" />
+	{/if}
+
+	{#if puzzle.validators}
+		<Accordion bind:open={openTests} id="tests">
+			<h2 slot="title">Tests</h2>
+			<ul class="flex flex-col gap-10" slot="content">
+				{#each puzzle.validators as validator, index}
+					<li class="relative">
+						<div
+							class={cn(
+								calculatePuzzleResultColor(validator.testResult?.run.result),
+								"w-full space-y-8 rounded-lg border-2 p-4"
+							)}
+							id={`validator-${index}`}
+						>
+							<div class="lg:flex">
+								<div class="space-y-2 lg:w-1/2">
+									<h3 class="text-lg font-semibold">Input</h3>
+									<pre>
+									{validator.input.trim()}
+								</pre>
+								</div>
+								<div class="space-y-2 lg:w-1/2">
+									<h3 class="text-lg font-semibold">Expected output</h3>
+									<pre>
+									{validator.output}
+								</pre>
+								</div>
+							</div>
+
+							{#if validator.testResult}
+								<div class="space-y-2">
+									<h3 class="text-lg font-semibold">Latest result</h3>
 									<div class="lg:w-1/2">
-										<h3 class="font-semibold">Input</h3>
-										<pre>
-											{validator.input.trim()}
-										</pre>
+										<h4 class="font-bold">Stdout:</h4>
+										<pre>{validator.testResult?.run.stdout}</pre>
 									</div>
 									<div class="lg:w-1/2">
-										<h3 class="font-semibold">Output</h3>
-										<pre>
-											{validator.output}
-										</pre>
+										<h4 class="font-bold">Stderr:</h4>
+										<pre>{validator.testResult?.run.stderr}</pre>
 									</div>
 								</div>
+							{/if}
 
-								<Button on:click={() => executeCode(index, validator.input, validator.output)}>
-									Run code
-								</Button>
+							<Button
+								variant="secondary"
+								on:click={() => executeCode(index, validator.input, validator.output)}
+							>
+								Run code
+							</Button>
+						</div>
 
-								{#if validator.testResult}
-									<p>Lastest result:</p>
-									output:
-									<pre>{validator.testResult?.run.output}</pre>
-									stdout:
-									<pre>{validator.testResult?.run.stdout}</pre>
-									stderr:
-									<pre>{validator.testResult?.run.stderr}</pre>
-								{/if}
-							</li>
-						{/each}
-					</ul>
-				</Accordion.Content>
-			</Accordion.Item>
-		</Accordion.Root>
+						{#if validator.testResult}
+							<ValidatorStatus class="absolute right-0 top-0 mr-4 mt-4 p-0" {validator} />
+						{/if}
+					</li>
+				{/each}
+			</ul>
+		</Accordion>
 	{/if}
 </Container>
 
-<!-- {:else}
-	<Error status={data.status} message={data.data.error}></Error>
-{/if} -->
-
 <style>
 	pre {
-		white-space: pre-line;
+		@apply whitespace-pre-line;
+	}
+
+	h2 {
+		@apply inline text-xl underline;
 	}
 </style>

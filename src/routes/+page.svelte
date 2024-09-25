@@ -8,7 +8,13 @@
 	<H1>Discover</H1>
 
 	<P>
-		this will eventually show an overview of the currently on going games and/or games that haven't
-		started yet, you can 1v1, 1vX, ...
+		This will eventually show an overview of the currently ongoing games and/or games that haven't
+		started yet.<br />You will be able to:
 	</P>
+	<ul class="list-inside list-disc">
+		<li>1v1</li>
+		<li>1vX</li>
+		<li>puzzle golfing</li>
+		<li>optimize puzzles in terms of speed/time/...</li>
+	</ul>
 </Container>

@@ -31,7 +31,7 @@
 			<ul class="flex flex-1 flex-row gap-4">
 				{#each navigationLinks as link}
 					<li
-						class="rounded-md transition-all motion-reduce:transition-none dark:hover:bg-slate-500"
+						class="rounded-md transition-all motion-reduce:transition-none dark:hover:bg-gray-500"
 					>
 						<a class="px-1 py-4" href={link.href}>{link.text}</a>
 					</li>

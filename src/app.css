@@ -89,3 +89,8 @@ a:hover {
 a:focus {
 	@apply outline-none ring-2 ring-blue-400;
 }
+
+.codemirror-default-height {
+	min-height: 300px;
+	height: 70vh;
+}
