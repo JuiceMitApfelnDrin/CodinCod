@@ -31,12 +31,12 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 					: await User.findOne({ username: identifier }).select("+password").exec();
 
 				if (!user) {
-					return reply.status(401).send({ message: "Invalid email/username or password" });
+					return reply.status(400).send({ message: "Invalid email/username or password" });
 				}
 				const isMatch = await bcrypt.compare(password, user.password);
 
 				if (!isMatch) {
-					return reply.status(401).send({ message: "Invalid email/username or password" });
+					return reply.status(400).send({ message: "Invalid email/username or password" });
 				}
 
 				const authenticatedUserInfo = {
@@ -47,6 +47,7 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				const token = generateToken(fastify, authenticatedUserInfo);
 
 				return reply
+					.status(200)
 					.setCookie(cookieKeys.TOKEN, token, {
 						path: "/",
 						httpOnly: true,
@@ -55,7 +56,7 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 					})
 					.send({ message: "Login successful" });
 			} catch (error) {
-				return reply.send({ message: error });
+				return reply.status(500).send({ message: error });
 			}
 		}
 	);

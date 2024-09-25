@@ -59,6 +59,7 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				const token = generateToken(fastify, authenticatedUserInfo);
 
 				return reply
+					.status(200)
 					.setCookie(cookieKeys.TOKEN, token, {
 						path: "/",
 						httpOnly: true,
