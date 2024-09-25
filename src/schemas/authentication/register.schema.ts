@@ -6,4 +6,4 @@ export const registerSchema = userEntitySchema.pick({
 	username: true,
 	password: true
 });
-export type RegisterInput = z.infer<typeof registerSchema>;
+export type Register = z.infer<typeof registerSchema>;
