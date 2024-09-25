@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import bcrypt from "bcrypt";
-import { isEmail, loginSchema } from "types";
+import { cookieKeys, isEmail, loginSchema } from "types";
 import { $ref } from "../../config/schema.js";
 import User from "../../models/user/user.js";
 import { generateToken } from "../../utils/functions/generate-token.js";
@@ -46,8 +46,8 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				};
 				const token = generateToken(fastify, authenticatedUserInfo);
 
-				reply
-					.setCookie("token", token, {
+				return reply
+					.setCookie(cookieKeys.TOKEN, token, {
 						path: "/",
 						httpOnly: true,
 						secure: process.env.NODE_ENV === "production",
@@ -55,7 +55,7 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 					})
 					.send({ message: "Login successful" });
 			} catch (error) {
-				reply.send(error);
+				return reply.send({ message: error });
 			}
 		}
 	);

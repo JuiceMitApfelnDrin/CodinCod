@@ -4,7 +4,8 @@ import { Error } from "mongoose";
 import { MongoError } from "mongodb";
 import { $ref } from "../../config/schema.js";
 import User from "../../models/user/user.js";
-import { registerSchema } from "types";
+import { cookieKeys, registerSchema } from "types";
+import { generateToken } from "../../utils/functions/generate-token.js";
 
 export default async function registerRoutes(fastify: FastifyInstance) {
 	fastify.post(
@@ -49,7 +50,22 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				await user.save();
 
 				// TODO: give information back to the user about the user in question, see registerresponseschema
-				reply.status(201).send({ message: "User registered successfully" });
+
+				const authenticatedUserInfo = {
+					userId: `${user._id}`,
+					username: user.username,
+					isAuthenticated: true
+				};
+				const token = generateToken(fastify, authenticatedUserInfo);
+
+				return reply
+					.setCookie(cookieKeys.TOKEN, token, {
+						path: "/",
+						httpOnly: true,
+						secure: process.env.NODE_ENV === "production",
+						maxAge: 3600
+					})
+					.send({ message: "User registered successfully" });
 			} catch (error) {
 				if (error instanceof Error.ValidationError) {
 					const messages = Object.values(error.errors).map((err) => err.message);
@@ -61,7 +77,7 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					return reply.status(400).send({ message: `Duplicate key, unique value already exists` });
 				}
 
-				reply.status(500).send({ message: "Internal server error", error });
+				return reply.status(500).send({ message: "Internal server error", error });
 			}
 		}
 	);
