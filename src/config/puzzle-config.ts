@@ -10,4 +10,4 @@ export const PUZZLE_CONFIG = {
 	// constraints
 	minConstraintsLength: 1,
 	maxConstraintsLength: 256
-};
+} as const;
