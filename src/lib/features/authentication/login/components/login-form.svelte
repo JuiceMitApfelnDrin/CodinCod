@@ -4,9 +4,9 @@
 	import { Input } from "@/components/ui/input";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import { type LoginInput, loginSchema, POST } from "types";
+	import { type Login, loginSchema, POST } from "types";
 
-	export let data: SuperValidated<LoginInput>;
+	export let data: SuperValidated<Login>;
 
 	const form = superForm(data.data, {
 		validators: zodClient(loginSchema)
@@ -15,7 +15,7 @@
 	const { enhance, form: formData, message, validateForm } = form;
 
 	const handleFormInput = debounce(async () => {
-		await validateForm({ update: true });
+		await validateForm({ update: false });
 	}, 500);
 </script>
 
@@ -29,7 +29,7 @@
 >
 	<Form.Field {form} name="identifier" class="w-full">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Username or Email</Form.Label>
+			<Form.Label class="text-lg">Username or email</Form.Label>
 			<Input {...attrs} bind:value={$formData.identifier} />
 		</Form.Control>
 		<Form.FieldErrors />

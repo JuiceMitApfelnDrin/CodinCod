@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import RegisterForm from "@/features/register/components/register-form.svelte";
+	import RegisterForm from "@/features/authentication/register/components/register-form.svelte";
 	import P from "@/components/typography/p.svelte";
 	import { frontendUrls } from "types";
 

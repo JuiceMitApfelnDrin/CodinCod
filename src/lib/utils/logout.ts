@@ -1,4 +1,3 @@
-import { localStorageKeys } from "@/config/local-storage";
 import { redirect, type ServerLoadEvent } from "@sveltejs/kit";
 import { cookieKeys, frontendUrls } from "types";
 

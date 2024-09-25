@@ -3,7 +3,8 @@ import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
 import { frontendUrls, loginSchema } from "types";
-import { login } from "@/features/login/api/login";
+import { login } from "@/features/authentication/login/api/login";
+import { setCookie } from "@/features/authentication/utils/setCookie";
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(loginSchema));
@@ -26,23 +27,7 @@ export const actions = {
 			fail(400, { form, message: data.message });
 		}
 
-		// TODO: fix the cookie not being saved after this point, problem with svelte-kit most likely
-		// Get cookies from the result
-		const setCookieHeader = result.headers.get("set-cookie");
-		if (setCookieHeader) {
-			// Parse the set-cookie header and set cookies
-			const cookieParts = setCookieHeader.split("; ");
-			const [cookieNameValue] = cookieParts;
-			const [name, value] = cookieNameValue.split("=");
-
-			// Set the cookie using SvelteKit's cookies API
-			cookies.set(name, value, {
-				httpOnly: true, // Adjust as necessary
-				path: "/", // Set the appropriate path
-				sameSite: "strict", // Adjust as necessary
-				secure: true // Adjust as necessary
-			});
-		}
+		setCookie(result, cookies);
 
 		throw redirect(302, frontendUrls.ROOT);
 	}

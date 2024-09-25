@@ -2,7 +2,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Container from "@/components/ui/container/container.svelte";
-	import LoginForm from "@/features/login/components/login-form.svelte";
+	import LoginForm from "@/features/authentication/login/components/login-form.svelte";
 	import { frontendUrls } from "types";
 
 	export let data;

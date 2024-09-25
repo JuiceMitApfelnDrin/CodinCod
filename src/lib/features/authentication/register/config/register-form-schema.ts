@@ -18,4 +18,4 @@ export const registerFormSchema = registerSchema.refine(
 	}
 );
 
-export type RegisterFormSchema = z.infer<typeof registerFormSchema>;
+export type RegisterForm = z.infer<typeof registerFormSchema>;

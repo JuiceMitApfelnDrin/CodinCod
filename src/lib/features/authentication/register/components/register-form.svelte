@@ -2,12 +2,12 @@
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import * as Form from "$lib/components/ui/form";
 	import { Input } from "@/components/ui/input";
-	import { registerFormSchema, type RegisterFormSchema } from "../config/register-form-schema";
+	import { registerFormSchema, type RegisterForm } from "../config/register-form-schema";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
 	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
 
-	export let data: SuperValidated<RegisterFormSchema>;
+	export let data: SuperValidated<RegisterForm>;
 
 	const form = superForm(data.data, {
 		validators: zodClient(registerFormSchema)

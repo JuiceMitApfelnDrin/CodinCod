@@ -1,10 +1,11 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { registerFormSchema } from "@/features/register/config/register-form-schema";
+import { registerFormSchema } from "@/features/authentication/register/config/register-form-schema";
 import type { PageServerLoad } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
 import { backendUrls, frontendUrls, POST } from "types";
+import { setCookie } from "@/features/authentication/utils/setCookie";
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(registerFormSchema));
@@ -13,7 +14,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ cookies, request }) => {
 		const form = await superValidate(request, zod(registerFormSchema));
 
 		if (!form.valid) {
@@ -34,6 +35,8 @@ export const actions = {
 			fail(400, { form, message: data.message });
 		}
 
-		throw redirect(302, frontendUrls.LOGIN);
+		setCookie(result, cookies);
+
+		throw redirect(302, frontendUrls.ROOT);
 	}
 };
