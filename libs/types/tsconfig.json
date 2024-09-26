@@ -1,0 +1,19 @@
+{
+	"extends": "@tsconfig/recommended/tsconfig.json",
+	"compilerOptions": {
+		"skipLibCheck": true,
+		"isolatedModules": true,
+		"esModuleInterop": true,
+		"noEmit": false,
+		"allowJs": true,
+		"declarationMap": true,
+		"declaration": true,
+		"target": "ESNext",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"outDir": "dist",
+		"rootDir": "src",
+		"lib": ["ESNext", "DOM"]
+	},
+	"exclude": ["node_modules", "dist/", "eslint.config.js"]
+}
