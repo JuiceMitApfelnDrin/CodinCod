@@ -1,0 +1,27 @@
+{
+	"authorId": "juicemitapfelndrin",
+	"constraints": "N lines",
+	"statement": "Print numbers from 1 to N, but if the number is divisible by F, print \"Fizz\", and if the number is divisible by B print \"Buzz\". If it is divisible by both print \"FizzBuzz\".\nThis is a description paragraph.\n\n* This is a list\n* With two items\n  1. And a sublist\n  2. That is ordered\n    - With another\n    - Sublist inside\n\t3. xdd\n\n| And this is | A table |\n|-------------|---------|\n| With two    | columns |\n\n<script>alert(\"hi there bois\")</script> => shouldn't alert :) \n```js\n const something = 'bruh'\n```",
+	"title": "FizzBuzz",
+	"validators": [
+		{
+			"input": "7 2 3",
+			"output": "1\nFizz\nBuzz\nFizz\n5\nFizzBuzz\n7"
+		},
+		{
+			"input": "3 1 1",
+			"output": "FizzBuzz\nFizzBuzz\nFizzBuzz"
+		},
+		{
+			"input": "10 11 12",
+			"output": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10"
+		}
+	],
+	"solution": {
+		"code": "// Function to handle input from stdin\nasync function readStdin() {\n    const decoder = new TextDecoder(); // Create a decoder to decode the input\n    const buffer = new Uint8Array(1024); // Buffer for reading data\n\n    while (true) {\n        // Read from stdin\n        const bytesRead = await Deno.stdin.read(buffer);\n\n        if (bytesRead === null) {\n            // End of input\n            break;\n        }\n\n        // Decode and log the input\n        const input = decoder.decode(buffer.subarray(0, bytesRead)).trim();\n\n        const [n, f, b] = input.split(\" \").map(Number)\n        let output = \"\"\n        for (let i = 1; i <= n; i++) {\n            if (i % f == 0 && i % b == 0) {\n                output += \" FizzBuzz\"\n            } else if (i % f == 0) {\n                output += \" Fizz\"\n            } else if (i % b == 0) {\n                output += \" Buzz\"\n            } else {\n                output += ` ${i}`\n            }\n        }\n\n        console.log(output.trim())\n    }\n}\n\n// Call the function to start reading from stdin\nreadStdin();",
+		"language": "javascript",
+		"languageVersion": ""
+	},
+	"difficulty": "beginner",
+	"visibility": "draft"
+}
