@@ -15,7 +15,6 @@
 	import * as Select from "$lib/components/ui/select";
 	import Button from "@/components/ui/button/button.svelte";
 	import { page } from "$app/stores";
-	import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie.js";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions.js";
 	import { cn } from "@/utils/cn.js";
 	import { calculatePuzzleResultColor } from "@/utils/calculate-puzzle-result-color.js";
@@ -24,6 +23,7 @@
 	import TestProgressBar from "@/features/puzzles/components/test-progress-bar.svelte";
 	import ValidatorStatus from "@/features/puzzles/components/validator-status.svelte";
 	import Accordion from "@/components/ui/accordion/accordion.svelte";
+	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
 
 	let puzzleId = $page.params.id;
 

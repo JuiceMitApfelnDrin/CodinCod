@@ -2,7 +2,7 @@
 	import Toggle from "../ui/toggle/toggle.svelte";
 	import Moon from "lucide-svelte/icons/moon";
 	import Sun from "lucide-svelte/icons/sun";
-	import { isDarkTheme, toggleDarkTheme } from "../../../stores";
+	import { isDarkTheme, toggleDarkTheme } from "../../stores";
 </script>
 
 <Toggle

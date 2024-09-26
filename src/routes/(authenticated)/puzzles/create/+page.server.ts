@@ -1,11 +1,11 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import type { PageServerLoad } from "../$types";
+import type { PageServerLoad } from "../../../puzzles/$types";
 import { backendUrls, createPuzzleSchema, frontendUrls, POST, puzzleEntitySchema } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildFrontendUrl } from "@/config/frontend";
-import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie";
+import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(createPuzzleSchema));

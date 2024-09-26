@@ -78,17 +78,19 @@
 	}
 }
 
+/*
 a {
-	@apply text-blue-600 underline decoration-blue-600 transition-colors duration-300;
+	@apply text-blue-600 underline decoration-blue-600 transition-colors duration-300 dark:text-blue-400 dark:decoration-blue-400;
 }
 
 a:hover {
-	@apply text-blue-800 decoration-blue-800;
+	@apply text-blue-800 decoration-blue-800 dark:text-blue-100 dark:decoration-blue-100;
 }
 
 a:focus {
 	@apply outline-none ring-2 ring-blue-400;
 }
+*/
 
 .codemirror-default-height {
 	min-height: 300px;

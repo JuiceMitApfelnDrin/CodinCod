@@ -12,7 +12,7 @@
 </script>
 
 <FormPrimitive.FieldErrors
-	class={cn("text-sm font-medium text-destructive", className)}
+	class={cn("text-destructive text-sm font-medium dark:text-red-500", className)}
 	{...$$restProps}
 	let:errors
 	let:fieldErrorsAttrs

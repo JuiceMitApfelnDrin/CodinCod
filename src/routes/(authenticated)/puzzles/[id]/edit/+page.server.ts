@@ -4,7 +4,7 @@ import { buildBackendUrl } from "@/config/backend";
 import { backendUrls, PUT, puzzleEntitySchema, type PuzzleEntity } from "types";
 import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
-import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie.js";
+import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
 
 export async function load({ fetch, params }) {
 	const id = params.id;

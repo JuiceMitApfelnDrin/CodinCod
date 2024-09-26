@@ -1,6 +1,6 @@
 import { goto } from "$app/navigation";
 import { buildBackendUrl } from "@/config/backend";
-import { fetchWithAuthenticationCookie } from "@/utils/fetch-with-authentication-cookie";
+import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { backendUrls, DELETE, frontendUrls } from "types";
 
 export async function deletePuzzle(id: string) {

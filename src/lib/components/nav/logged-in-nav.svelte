@@ -4,7 +4,7 @@
 	import { frontendUrls } from "types";
 	import ToggleTheme from "./toggle-theme.svelte";
 	import LogoutButton from "./logout-button.svelte";
-	import { authenticatedUserInfo } from "../../../stores";
+	import { authenticatedUserInfo } from "../../stores";
 
 	const navigationLinks = [
 		{
@@ -24,7 +24,9 @@
 </script>
 
 <header>
-	<nav class="bg-secondary-500 dark:bg-secondary-900 py-6">
+	<nav
+		class="bg-teal-300 bg-gradient-to-b from-teal-100 py-6 text-teal-950 dark:bg-teal-800 dark:from-teal-950 dark:text-teal-100"
+	>
 		<div class="container mx-auto flex flex-row flex-wrap items-end gap-8">
 			<a href={frontendUrls.ROOT}>
 				<span class="self-center whitespace-nowrap text-4xl font-semibold">CodinCod</span>

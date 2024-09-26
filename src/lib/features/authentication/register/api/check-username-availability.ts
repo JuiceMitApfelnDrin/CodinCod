@@ -16,4 +16,4 @@ export const checkUsernameAvailability = debounce(async (username: string): Prom
 	cache[username] = isAvailable;
 
 	return isAvailable;
-}, 500);
+}, 250);

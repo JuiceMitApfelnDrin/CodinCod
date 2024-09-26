@@ -6,21 +6,22 @@
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
 	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
+	import * as Alert from "@/components/ui/alert";
+	import { CircleAlert } from "lucide-svelte";
 
 	export let data: SuperValidated<RegisterForm>;
+	export let message: string = "";
 
 	const form = superForm(data.data, {
 		validators: zodClient(registerFormSchema)
 	});
 
-	const { enhance, form: formData, message, validateForm } = form;
+	const { enhance, form: formData, validateForm } = form;
 
 	const handleFormInput = debounce(async () => {
 		await validateForm({ update: false });
 	}, 500);
 </script>
-
-{#if $message}<h3>{$message}</h3>{/if}
 
 <form
 	method={POST}
@@ -28,10 +29,29 @@
 	class="my-5 flex flex-col items-center gap-5"
 	on:input={handleFormInput}
 >
+	{#if message}
+		<Alert.Root variant="destructive">
+			<CircleAlert class="h-4 w-4" />
+
+			<Alert.Title>Unable to register</Alert.Title>
+
+			<Alert.Description>
+				{message}
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
+
 	<Form.Field {form} name="username" class="w-full">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Username</Form.Label>
-			<Input {...attrs} bind:value={$formData.username} placeholder="john_doe123" />
+			<Input
+				{...attrs}
+				bind:value={$formData.username}
+				placeholder="john_doe123"
+				minlength={USERNAME_CONFIG.minUsernameLength}
+				maxlength={USERNAME_CONFIG.maxUsernameLength}
+				pattern={USERNAME_CONFIG.allowedCharacters.source}
+			/>
 		</Form.Control>
 		<Form.Description
 			>Username must be {USERNAME_CONFIG.minUsernameLength}-{USERNAME_CONFIG.maxUsernameLength} characters
@@ -43,7 +63,7 @@
 	<Form.Field {form} name="email" class="w-full">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Email</Form.Label>
-			<Input {...attrs} bind:value={$formData.email} placeholder="john@example.com" />
+			<Input {...attrs} bind:value={$formData.email} placeholder="john@example.com" type="email" />
 		</Form.Control>
 		<Form.Description>Email must be a valid email address.</Form.Description>
 		<Form.FieldErrors />

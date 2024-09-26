@@ -5,7 +5,7 @@ import type { PageServerLoad } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
 import { backendUrls, frontendUrls, POST } from "types";
-import { setCookie } from "@/features/authentication/utils/setCookie";
+import { setCookie } from "@/features/authentication/utils/set-cookie";
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(registerFormSchema));
@@ -18,7 +18,7 @@ export const actions = {
 		const form = await superValidate(request, zod(registerFormSchema));
 
 		if (!form.valid) {
-			fail(400, { form });
+			return fail(400, { form });
 		}
 
 		const result = await fetch(buildBackendUrl(backendUrls.REGISTER), {
@@ -32,7 +32,7 @@ export const actions = {
 		const data = await result.json();
 
 		if (!result.ok) {
-			fail(400, { form, message: data.message });
+			return fail(400, { form, message: data.message });
 		}
 
 		setCookie(result, cookies);

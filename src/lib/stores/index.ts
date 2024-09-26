@@ -42,10 +42,9 @@ if (browser) {
 
 export const authenticatedUserInfo = writable<AuthenticatedInfo | null>(null);
 
-export const isAuthenticated = derived(
-	authenticatedUserInfo,
-	(userInfo) => userInfo?.isAuthenticated ?? false
-);
+export const isAuthenticated = derived(authenticatedUserInfo, (userInfo) => {
+	return userInfo?.isAuthenticated ?? false;
+});
 export const setAuthenticatedUserInfo = (userInfo: AuthenticatedInfo) => {
 	authenticatedUserInfo.set(userInfo);
 };
