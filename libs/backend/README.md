@@ -1,7 +1,3 @@
-<!--
-    Thanks for your contribution! Please note that README files are managed in the docs repository. To make changes, go to docs/backend/README.md.
--->
-
 # Backend
 
 Written in [Node-js](https://nodejs.org/en), with [Fastify](https://fastify.dev/).

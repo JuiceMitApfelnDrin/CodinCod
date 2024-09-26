@@ -1,4 +1,4 @@
-# Todos
+# Todo's
 
 ## Major
 

@@ -4,7 +4,7 @@ export const PUZZLE_CONFIG = {
 	maxTitleLength: 128,
 
 	// statement
-	minStatementLength: 32,
+	minStatementLength: 1,
 	maxStatementLength: 2048,
 
 	// constraints
