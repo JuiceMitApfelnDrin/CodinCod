@@ -15,6 +15,7 @@
 	} from "types";
 	import { page } from "$app/stores";
 	import * as Select from "$lib/components/ui/select";
+	import P from "@/components/typography/p.svelte";
 
 	export let data;
 
@@ -54,21 +55,6 @@
 			return $form;
 		});
 	}
-
-	// let isAuthenticated = false;
-	// let userEmail = "";
-	// let userId = "";
-	// onMount(() => {
-	// 	console.log(data);
-	// 	isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated") || "false");
-	// 	userEmail = localStorage.getItem("userEmail") || "";
-	// 	userId = localStorage.getItem("userId") || "";
-
-	// 	console.log(localStorage);
-	// 	console.log("Is Authenticated:", isAuthenticated);
-	// 	console.log("User Email:", userEmail);
-	// 	console.log("User ID:", userId);
-	// });
 
 	let { enhance, form: formData, message } = form;
 
@@ -130,7 +116,7 @@
 			<Form.Label class="text-lg">Validators</Form.Label>
 			{#if $formData.validators}
 				{#each $formData.validators as _, index}
-					<div class="my-4 flex items-center gap-2">
+					<div class="my-4 flex gap-2">
 						<Textarea
 							{...attrs}
 							bind:value={$formData.validators[index].input}
@@ -153,22 +139,21 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Fieldset {form} name="solution">
-		<Form.Legend>Solution</Form.Legend>
+	<Form.Fieldset
+		{form}
+		name="solution"
+		class="my-8 flex flex-col gap-4 rounded-lg border border-black p-8 dark:border-white"
+	>
+		<Form.Legend class="px-4 text-3xl">Solution</Form.Legend>
 
-		<Form.Field {form} name="solution.code">
-			<Form.Control let:attrs>
-				<Form.Label class="text-lg">Code</Form.Label>
-				<Textarea {...attrs} bind:value={$formData.solution.code} />
-			</Form.Control>
-			<Form.Description
-				>This is a solution to the puzzle. A way to solve and validate all validators.</Form.Description
-			>
-			<Form.FieldErrors />
-		</Form.Field>
+		<P>
+			This is where you create a solution to this puzzle. A way to solve and validate all
+			validators.
+		</P>
 
 		<Form.Field {form} name="solution.language">
 			<Form.Control let:attrs>
+				<Form.Label class="text-lg">Language</Form.Label>
 				<Select.Root
 					selected={selectedLanguage}
 					onSelectedChange={(v) => {
@@ -182,7 +167,6 @@
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
-							<Select.Label class="text-lg">Language</Select.Label>
 							{#each languageLabels as language}
 								<Select.Item value={language} label={language} />
 							{/each}
@@ -192,17 +176,20 @@
 				</Select.Root>
 			</Form.Control>
 			<Form.Description
-				>This is a solution to the puzzle. A way to solve and validate all validators.</Form.Description
+				>This is the language the code to solve the puzzles will is written in.</Form.Description
 			>
+			<Form.FieldErrors />
+		</Form.Field>
+
+		<Form.Field {form} name="solution.code">
+			<Form.Control let:attrs>
+				<Form.Label class="text-lg">Code</Form.Label>
+				<Textarea {...attrs} bind:value={$formData.solution.code} />
+			</Form.Control>
+			<Form.Description>This is for the code that tests the puzzle.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 	</Form.Fieldset>
 
 	<Form.Button>Update Puzzle</Form.Button>
-
-	<!-- {#if isAuthor($formData.authorId)}
-		<Button type="button" on:click={() => deletePuzzle($page.params.id)} variant={"destructive"}>
-			Delete Puzzle
-		</Button>
-	{/if} -->
 </form>
