@@ -1,7 +1,7 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { buildBackendUrl } from "@/config/backend";
-import { backendUrls, PUT, puzzleEntitySchema, type PuzzleEntity } from "types";
+import { backendUrls, PUT, puzzleDtoSchema, type PuzzleDto } from "types";
 import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
@@ -16,12 +16,9 @@ export async function load({ fetch, params }) {
 		fail(response.status, { error: "Failed to fetch the puzzle." });
 	}
 
-	const puzzle: PuzzleEntity = await response.json();
+	const puzzle: PuzzleDto = await response.json();
 
-	const validate = await superValidate(
-		puzzle,
-		zod(puzzleEntitySchema.omit({ authorId: true, createdAt: true, updatedAt: true }))
-	);
+	const validate = await superValidate(puzzle, zod(puzzleDtoSchema));
 
 	return {
 		form: validate
@@ -30,7 +27,7 @@ export async function load({ fetch, params }) {
 
 export const actions = {
 	default: async ({ params, request }) => {
-		const form = await superValidate(request, zod(puzzleEntitySchema));
+		const form = await superValidate(request, zod(puzzleDtoSchema));
 
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
