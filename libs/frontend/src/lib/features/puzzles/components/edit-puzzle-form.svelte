@@ -131,8 +131,12 @@
 			{#if $formData.validators}
 				{#each $formData.validators as _, index}
 					<div class="my-4 flex items-center gap-2">
-						<Input {...attrs} bind:value={$formData.validators[index].input} placeholder="Input" />
-						<Input
+						<Textarea
+							{...attrs}
+							bind:value={$formData.validators[index].input}
+							placeholder="Input"
+						/>
+						<Textarea
 							{...attrs}
 							bind:value={$formData.validators[index].output}
 							placeholder="Output"
