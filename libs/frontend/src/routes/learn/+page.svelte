@@ -25,4 +25,22 @@
 		So basically 3 levels, that expect a user to have a different understanding of the language, and
 		each tailored to how much the person would like to know and understand
 	</P>
+
+	<ul>
+		<li>where are we going to place the content?</li>
+		<li>will we use html or markdown?</li>
+		<li>
+			if markdown:
+			<ul>
+				<li>
+					take a look at <a href="https://github.com/remarkjs/remark">remark</a> or something similar
+				</li>
+				<li>
+					and make sure to look at something that can generate table of contents, like: <a
+						href="https://github.com/remarkjs/remark-toc">remark toc</a
+					>
+				</li>
+			</ul>
+		</li>
+	</ul>
 </Container>
