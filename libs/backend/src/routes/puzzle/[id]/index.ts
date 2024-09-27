@@ -82,12 +82,14 @@ export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
 			try {
 				const puzzle = await Puzzle.findById(id);
 				const noPuzzle = !puzzle;
+
 				if (noPuzzle) {
 					return reply.status(404).send({ error: "Puzzle not found" });
 				}
 
 				const isAuthorOfPuzzle = isAuthor(puzzle.authorId.toString(), userId);
 				const isNotAuthorOfPuzzle = !isAuthorOfPuzzle;
+
 				if (isNotAuthorOfPuzzle) {
 					return reply.status(403).send({ error: "Not authorized to delete this puzzle" });
 				}
