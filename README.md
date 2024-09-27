@@ -12,14 +12,14 @@ This repo exists to:
 
    - [Git](https://git-scm.com/download/)
    - [NodeJs](https://nodejs.org/en/download/package-manager)
-   - [pnpm](https://pnpm.io/)
+   - [Pnpm](https://pnpm.io/)
    - MongoDb instance: can be either [locally](https://www.mongodb.com/try/download/community) or in [mongodb's online environment](https://www.mongodb.com/cloud/atlas/register).
-   - [piston](https://github.com/engineer-man/piston), used for code execution in a safe environment, **if** you are **not** going to **execute code**, **you don't** technically **need it**
+   - [Piston](https://github.com/engineer-man/piston), used for code execution in a safe environment, **if** you are **not** going to **execute code**, **you don't** technically **need it**
 
 2. Clone the project structure and its submodules:
 
    ```bash
-   git clone --recursive https://github.com/JuiceMitApfelnDrin/CodinCod 
+   git clone https://github.com/JuiceMitApfelnDrin/CodinCod
    ```
 
 3. Build the types (required by both libs/backend and libs/frontend)
@@ -30,4 +30,4 @@ This repo exists to:
    pnpm build
    ```
 
-4. Follow the instructions for the [backend](backend/README.md) and/or [frontend](frontend/README.md) depending on what you're working on
+4. Follow the instructions for the [backend](./libs/backend/README.md) and/or [frontend](./libs/frontend/README.md) depending on what you're working on
