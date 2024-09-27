@@ -3,9 +3,10 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import { buildFrontendUrl } from "@/config/frontend.js";
-	import { frontendUrls } from "types";
+	import { frontendUrls, isAuthor } from "types";
 	import P from "@/components/typography/p.svelte";
 	import H2 from "@/components/typography/h2.svelte";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores/index.js";
 
 	export let data;
 
@@ -21,7 +22,9 @@
 	</H1>
 	<P>puzzle was created on: {puzzle.createdAt}, and last update happened on: {puzzle.updatedAt}</P>
 
-	<a href={editUrl}>Edit puzzle</a>
+	{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(puzzle.authorId._id, $authenticatedUserInfo?.userId)}
+		<a href={editUrl}>Edit puzzle</a>
+	{/if}
 	<a href={playUrl}>Play puzzle</a>
 
 	{#if puzzle.statement}
