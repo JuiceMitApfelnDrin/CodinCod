@@ -11,7 +11,7 @@ import {
 
 type ParamsId = { Params: { id: string } };
 
-export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
+export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
 		const { id } = request.params;
 

@@ -7,7 +7,7 @@ import { VisibilityEnum } from "../../enums/visibility-enum.js";
 import { PUZZLE_CONFIG } from "../../config/puzzle-config.js";
 import { solutionSchema } from "./solution.schema.js";
 import { userDtoSchema } from "../user/user-dto.schema.js";
-import { acceptedDateSchema } from "../../enums/accepted-date.js";
+import { acceptedDateSchema } from "../date/accepted-date.js";
 
 export const puzzleEntitySchema = z.object({
 	title: z.string().min(PUZZLE_CONFIG.minTitleLength).max(PUZZLE_CONFIG.maxTitleLength),

@@ -4,12 +4,14 @@ import { backendUrls } from "types";
 
 const cache: Record<string, boolean> = {};
 
-export const checkUsernameAvailability = debounce(async (username: string): Promise<boolean> => {
+export const usernameIsAvailable = debounce(async (username: string): Promise<boolean> => {
 	if (username in cache) {
 		return cache[username];
 	}
 
-	const response = await fetch(buildBackendUrl(backendUrls.CHECK_USERNAME, { username }));
+	const response = await fetch(
+		buildBackendUrl(backendUrls.USER_BY_USERNAME_IS_AVAILABLE, { username })
+	);
 	const result = await response.json();
 
 	const isAvailable = result.isAvailable;

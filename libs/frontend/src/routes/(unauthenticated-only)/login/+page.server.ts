@@ -3,8 +3,8 @@ import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
 import { frontendUrls, loginSchema } from "types";
-import { login } from "@/features/authentication/login/api/login";
 import { setCookie } from "@/features/authentication/utils/set-cookie";
+import { login } from "@/api/login";
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(loginSchema));

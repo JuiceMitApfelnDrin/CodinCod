@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Container from "@/components/ui/container/container.svelte";
-	import ContributionGraph from "../../lib/features/profile/components/calendar-heatmap.svelte";
+	// import ContributionGraph from "../../lib/features/profile/components/calendar-heatmap.svelte";
 	// import { getLastSegment } from '$utils/getLastSegment';
 
 	export let data;
 </script>
 
 <Container class="items-center gap-10 px-10 pt-10 xl:flex-row xl:items-start">
+	hi there
 	<!-- create a link component? where based on a part of the string, it renders the right component -->
 
 	<!-- <Card>
@@ -29,5 +30,5 @@
 	</Card> -->
 	<!-- The profile page salutes you! Show a github like overview of when a user solved puzzles! -->
 
-	<ContributionGraph solvedPuzzles={data.activity.submissions} />
+	<!-- <ContributionGraph solvedPuzzles={data.activity.submissions} /> -->
 </Container>

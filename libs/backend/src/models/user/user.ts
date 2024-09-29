@@ -2,35 +2,9 @@ import mongoose, { Document, Schema } from "mongoose";
 import { UserEntity } from "types";
 import bcrypt from "bcrypt";
 import { USER } from "../../utils/constants/model.js";
+import { profileSchema } from "./user-profile.js";
 
 interface UserDocument extends Document, UserEntity {}
-
-const profileSchema = new Schema({
-	picture: {
-		type: String,
-		required: false,
-		trim: true
-	},
-	bio: {
-		type: String,
-		required: false,
-		trim: true
-	},
-	location: {
-		type: String,
-		required: false,
-		trim: true
-	},
-	socials: {
-		required: false,
-		type: [
-			{
-				type: String,
-				trim: true
-			}
-		]
-	}
-});
 
 const userSchema = new Schema<UserDocument>({
 	createdAt: {

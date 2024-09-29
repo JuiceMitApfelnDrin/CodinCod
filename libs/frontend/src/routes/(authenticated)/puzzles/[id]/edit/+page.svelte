@@ -3,7 +3,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import Button from "@/components/ui/button/button.svelte";
-	import { deletePuzzle } from "@/features/puzzles/api/delete-puzzle";
+	import { deletePuzzle } from "@/api/delete-puzzle.js";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import { isAuthor, type PuzzleDto } from "types";
 	import { page } from "$app/stores";

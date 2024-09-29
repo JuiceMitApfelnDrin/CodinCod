@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { checkUsernameAvailability } from "../api/check-username-availability";
+import { usernameIsAvailable } from "../../../../api/username-is-availability";
 import { registerSchema } from "types";
 
 export const registerFormSchema = registerSchema.superRefine(async (data, ctx) => {
@@ -11,7 +11,7 @@ export const registerFormSchema = registerSchema.superRefine(async (data, ctx) =
 		return;
 	}
 
-	const isAvailable = await checkUsernameAvailability(username);
+	const isAvailable = await usernameIsAvailable(username);
 
 	if (!isAvailable) {
 		ctx.addIssue({

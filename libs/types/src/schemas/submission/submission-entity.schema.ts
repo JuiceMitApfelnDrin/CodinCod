@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { puzzleResultSchema } from "../piston/puzzle-result.js";
-import { acceptedDateSchema } from "../../enums/accepted-date.js";
+import { acceptedDateSchema } from "../date/accepted-date.js";
 
 export const submissionEntitySchema = z.object({
 	code: z.string(),
