@@ -28,6 +28,7 @@ export const frontendUrls = {
 
 	// learn
 	LEARN: "/learn",
+	LEARN_SLUG: "/learn/:slug",
 
 	// community
 	FORUM: "/forum",

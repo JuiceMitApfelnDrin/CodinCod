@@ -5,6 +5,7 @@ dotenv.config();
 import Fastify from "fastify";
 import cors from "./plugins/config/cors.js";
 import jwt from "./plugins/config/jwt.js";
+import websocket from "@fastify/websocket";
 import fastifyFormbody from "@fastify/formbody";
 import mongooseConnector from "./plugins/config/mongoose.js";
 import router from "./router.js";
@@ -33,6 +34,15 @@ server.register(cors);
 server.register(swagger);
 server.register(jwt);
 server.register(swaggerUi);
+server.register(websocket);
+server.register(async function (fastify) {
+	fastify.get("/", { websocket: true }, (socket /* WebSocket */, req /* FastifyRequest */) => {
+		socket.on("message", (message) => {
+			console.log(message.toString());
+			socket.send("hi from server");
+		});
+	});
+});
 
 // server.register(dbConnectorPlugin);
 server.register(fastifyFormbody);
