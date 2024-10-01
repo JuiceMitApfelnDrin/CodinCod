@@ -2,6 +2,12 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
+	import { buildFrontendUrl } from "@/config/frontend";
+	import { frontendUrls } from "types";
+
+	export let data;
+
+	const { slugs } = data;
 </script>
 
 <Container>
@@ -26,21 +32,11 @@
 		each tailored to how much the person would like to know and understand
 	</P>
 
-	<ul>
-		<li>where are we going to place the content?</li>
-		<li>will we use html or markdown?</li>
-		<li>
-			if markdown:
-			<ul>
-				<li>
-					take a look at <a href="https://github.com/remarkjs/remark">remark</a> or something similar
-				</li>
-				<li>
-					and make sure to look at something that can generate table of contents, like: <a
-						href="https://github.com/remarkjs/remark-toc">remark toc</a
-					>
-				</li>
-			</ul>
-		</li>
-	</ul>
+	{#if slugs}
+		<ul>
+			{#each slugs as slug}
+				<li><a href={buildFrontendUrl(frontendUrls.LEARN_SLUG, { slug })}>{slug}</a></li>
+			{/each}
+		</ul>
+	{/if}
 </Container>
