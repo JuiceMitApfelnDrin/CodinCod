@@ -2,10 +2,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import Fastify from "fastify";
+import Fastify, { FastifyRequest } from "fastify";
 import cors from "./plugins/config/cors.js";
 import jwt from "./plugins/config/jwt.js";
-import websocket from "@fastify/websocket";
+import websocket, { WebSocket } from "@fastify/websocket";
 import fastifyFormbody from "@fastify/formbody";
 import mongooseConnector from "./plugins/config/mongoose.js";
 import router from "./router.js";
@@ -35,11 +35,92 @@ server.register(swagger);
 server.register(jwt);
 server.register(swaggerUi);
 server.register(websocket);
+
+const rooms = new Map();
+
+function updatePlayersInRoom(room: Map<string, { socket: WebSocket; joinedAt: Date }>) {
+	room.forEach((userObj) => {
+		console.log({ userObj, room });
+
+		userObj.socket.send(
+			JSON.stringify({
+				room: Array.from(room.entries(), ([key, value]) => {
+					return { username: key, joinedAt: value.joinedAt };
+				})
+			})
+		);
+	});
+}
+
+function updatePlayer(socket: WebSocket, event: string, message: string) {
+	socket.send(
+		JSON.stringify({
+			event,
+			message
+		})
+	);
+}
+
 server.register(async function (fastify) {
-	fastify.get("/", { websocket: true }, (socket /* WebSocket */, req /* FastifyRequest */) => {
+	fastify.get("/", { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
 		socket.on("message", (message) => {
-			console.log(message.toString());
-			socket.send("hi from server");
+			const data: { event: string; username?: string; roomId?: string } = JSON.parse(
+				message.toString()
+			);
+			const { event } = data;
+
+			console.log(JSON.parse(message.toString()));
+			switch (event) {
+				case "join:room":
+					{
+						const { roomId, username } = data;
+
+						if (!rooms.has(roomId)) {
+							rooms.set(roomId, new Map());
+						}
+
+						// add a user to the room
+						const room = rooms.get(roomId);
+						room.set(username, { joinedAt: new Date(), socket });
+
+						// notify people someone joined
+						updatePlayer(socket, event, "welcome!");
+						updatePlayersInRoom(room);
+					}
+					break;
+				case "leave:room":
+					{
+						const { roomId, username } = data;
+
+						// if room exists
+						if (rooms.has(roomId)) {
+							// remove user from room
+							const room = rooms.get(roomId);
+
+							if (room.has(username)) {
+								room.delete(username);
+							}
+						}
+
+						// if room is empty
+						if (rooms.size === 0) {
+							// remove room, since no longer in use
+							rooms.delete(roomId);
+						} else {
+							const room = rooms.get(roomId);
+
+							// notify people someone left
+							updatePlayer(socket, event, "cya!");
+							updatePlayersInRoom(room);
+						}
+					}
+					break;
+				default:
+					socket.send("hi from server");
+					break;
+			}
+
+			console.log(rooms);
 		});
 	});
 });
