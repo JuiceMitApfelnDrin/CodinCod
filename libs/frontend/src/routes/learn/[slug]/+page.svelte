@@ -3,8 +3,6 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import { githubRepo } from "@/config/general.js";
 
-	const normalizedSlug = $page.params.slug;
-
 	export let data;
 </script>
 
@@ -20,13 +18,13 @@
 </svelte:head>
 
 <Container>
+	<div class="prose">
+		<svelte:component this={data.content} />
+	</div>
+
 	<p>
 		If you see something that can be improved, <a href={`${githubRepo}/issues`}>open an issue</a>
 		or
 		<a href={githubRepo}>contribute on github</a>.
 	</p>
-
-	<div class="prose">
-		<svelte:component this={data.content} />
-	</div>
 </Container>
