@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { validatorEntitySchema } from "./validator.schema.js";
 import { difficultySchema } from "./difficulty.schema.js";
-import { visibilitySchema } from "./visibility.schema.js";
+import { puzzleVisibilitySchema } from "./puzzle-visibility.schema.js";
 import { DifficultyEnum } from "../../enums/difficulty-enum.js";
-import { VisibilityEnum } from "../../enums/visibility-enum.js";
+import { PuzzleVisibilityEnum } from "../../enums/puzzle-visibility-enum.js";
 import { PUZZLE_CONFIG } from "../../config/puzzle-config.js";
 import { solutionSchema } from "./solution.schema.js";
 import { userDtoSchema } from "../user/user-dto.schema.js";
@@ -28,7 +28,7 @@ export const puzzleEntitySchema = z.object({
 	validators: z.array(validatorEntitySchema).optional(),
 	difficulty: difficultySchema.default(() => DifficultyEnum.INTERMEDIATE),
 	// TODO: later not now !
-	visibility: visibilitySchema.default(() => VisibilityEnum.DRAFT),
+	visibility: puzzleVisibilitySchema.default(() => PuzzleVisibilityEnum.DRAFT),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
 	solution: solutionSchema,

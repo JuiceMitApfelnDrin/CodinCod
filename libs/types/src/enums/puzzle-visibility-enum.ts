@@ -6,7 +6,7 @@
  * INACTIVE: Puzzle is not active or usable yet (could be used for puzzles that are temporarily hidden but not archived).
  * ARCHIVED: Puzzle is archived and no longer visible or active.
  */
-export const VisibilityEnum = {
+export const PuzzleVisibilityEnum = {
 	DRAFT: "draft",
 	REVIEW: "review",
 	REVISE: "revise",

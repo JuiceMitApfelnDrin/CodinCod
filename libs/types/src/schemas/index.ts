@@ -7,6 +7,7 @@ export * from "./piston/index.js";
 export * from "./submission/index.js";
 export * from "./date/index.js";
 export * from "./activity/index.js";
+export * from "./game/index.js";
 
 // individual files
 export * from "./message.schema.js";
