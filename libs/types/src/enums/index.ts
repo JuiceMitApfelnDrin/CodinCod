@@ -6,3 +6,4 @@ export * from "./game-visibility-enum.js";
 export * from "./piston-file-encoding-enum.js";
 export * from "./puzzle-result-enum.js";
 export * from "./activity-type-enum.js";
+export * from "./game-event-enum.js";

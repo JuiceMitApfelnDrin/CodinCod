@@ -4,7 +4,9 @@ import { DifficultyEnum, PuzzleEntity, PuzzleVisibilityEnum } from "types";
 import solutionSchema from "./solution.js";
 import validatorSchema from "./validator.js";
 
-interface PuzzleDocument extends Document, Omit<PuzzleEntity, "authorId" | "solution" | "_id"> {
+export interface PuzzleDocument
+	extends Document,
+		Omit<PuzzleEntity, "authorId" | "solution" | "_id"> {
 	authorId: ObjectId;
 	solution?: ObjectId;
 }

@@ -11,6 +11,7 @@
 	"module": "",
 	"scripts": {
 		"build": "tsc",
+		"dev": "tsc -w",
 		"type-check": "tsc",
 		"lint": "npx eslint .",
 		"lint:fix": "npm run lint -- --fix",

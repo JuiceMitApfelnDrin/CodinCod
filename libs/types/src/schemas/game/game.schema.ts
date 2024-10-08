@@ -10,6 +10,7 @@ export const gameEntitySchema = z.object({
 	puzzle: z.string().or(puzzleDtoSchema),
 	startTime: acceptedDateSchema,
 	endTime: acceptedDateSchema,
-	config: gameConfigSchema
+	config: gameConfigSchema,
+	createdAt: acceptedDateSchema
 });
 export type GameEntity = z.infer<typeof gameEntitySchema>;
