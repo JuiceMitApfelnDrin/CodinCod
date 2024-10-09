@@ -3,14 +3,14 @@ import { getAuthenticatedUserInfo } from "@/features/authentication/utils/get-au
 import { logout } from "@/features/authentication/utils/logout.js";
 import { cookieKeys } from "types";
 
-export const load = async (event) => {
-	const isLoggingOut = event.url.search.includes(searchParamKeys.LOGOUT);
+export const load = async ({cookies, url}) => {
+	const isLoggingOut = url.search.includes(searchParamKeys.LOGOUT);
 
 	if (isLoggingOut) {
-		logout(event);
+		logout(cookies);
 	}
 
-	const token = event.cookies.get(cookieKeys.TOKEN);
+	const token = cookies.get(cookieKeys.TOKEN);
 	const currentUser = getAuthenticatedUserInfo(token);
 
 	return currentUser;
