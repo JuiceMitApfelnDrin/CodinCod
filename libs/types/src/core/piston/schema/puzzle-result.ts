@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PuzzleResultEnum } from "../../enums/puzzle-result-enum.js";
+import { PuzzleResultEnum } from "../../puzzle/index.js";
 
 export const puzzleResultSchema = z.enum([
 	PuzzleResultEnum.ERROR,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TagEnum } from "../../enums/tag-enum.js";
+import { TagEnum } from "../enum/tag-enum.js";
 
 export const tagSchema = z.enum([
 	TagEnum.ALGORITHMS,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PuzzleVisibilityEnum } from "../../enums/puzzle-visibility-enum.js";
+import { PuzzleVisibilityEnum } from "../enum/puzzle-visibility-enum.js";
 
 export const puzzleVisibilitySchema = z.enum([
 	PuzzleVisibilityEnum.APPROVED,

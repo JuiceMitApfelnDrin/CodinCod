@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DifficultyEnum } from "../../enums/difficulty-enum.js";
+import { DifficultyEnum } from "../enum/difficulty-enum.js";
 
 export const difficultySchema = z.enum([
 	DifficultyEnum.BEGINNER,

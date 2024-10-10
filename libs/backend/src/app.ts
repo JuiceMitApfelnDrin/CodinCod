@@ -14,7 +14,7 @@ import fastifyCookie from "@fastify/cookie";
 import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
 import piston from "./plugins/decorators/piston.js";
-import { GameEvent, MINIMUM_PLAYERS_IN_GAME } from "types";
+import { GameEvent } from "types";
 import Game from "./models/game/game.js";
 import Puzzle, { PuzzleDocument } from "./models/puzzle/puzzle.js";
 import mongoose from "mongoose";

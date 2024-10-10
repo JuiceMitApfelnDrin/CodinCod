@@ -1,7 +1,7 @@
 import z from "zod";
 import { USERNAME_CONFIG } from "../../authentication/config/username-config.js";
 import { PASSWORD_CONFIG } from "../../authentication/config/password-config.js";
-import { acceptedDateSchema } from "../../../common/schema/accepted-date.js";
+import { acceptedDateSchema } from "../../common/index.js";
 
 export const userEntitySchema = z.object({
 	username: z

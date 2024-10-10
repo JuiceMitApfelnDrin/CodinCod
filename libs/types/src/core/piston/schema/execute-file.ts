@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PistonFileEncodingEnum } from "../../enums/piston-file-encoding-enum.js";
+import { PistonFileEncodingEnum } from "../enum/piston-file-encoding-enum.js";
 
 const pistonFileEncoding = z.enum([
 	PistonFileEncodingEnum.BASE64,

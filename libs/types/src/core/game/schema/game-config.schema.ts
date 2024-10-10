@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { LanguageLabelEnum } from "../../config/languages.js";
 import { gameVisibilitySchema } from "./game-visibility.schema.js";
-import { DEFAULT_GAME_LENGTH_IN_SECONDS } from "../../config/game.js";
+import { LanguageLabelEnum } from "../../puzzle/index.js";
+import { DEFAULT_GAME_LENGTH_IN_SECONDS } from "../config/game.js";
 
 export const gameConfigSchema = z.object({
 	allowedLanguages: z.array(

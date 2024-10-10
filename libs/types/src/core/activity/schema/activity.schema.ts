@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { acceptedDateSchema } from "../../../common/schema/accepted-date.js";
 import { ActivityTypeEnum } from "../enum/activity-type-enum.js";
+import { acceptedDateSchema } from "../../common/index.js";
 
 export const activitySchema = z.object({
 	createdAt: acceptedDateSchema,

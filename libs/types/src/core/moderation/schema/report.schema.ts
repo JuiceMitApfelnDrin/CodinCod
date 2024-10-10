@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ProblemTypeEnum } from "../../enums/problem-type-enum.js";
-import { REPORT_CONFIG } from "../../config/report-config.js";
+import { ProblemTypeEnum } from "../enum/problem-type-enum.js";
+import { REPORT_CONFIG } from "../config/report-config.js";
 
 /**
  * @property {string} problematicIdentifier - The ID of the user or puzzle that is being reported. This field identifies which entity is problematic.
