@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
-import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
-import { gameConfigSchema } from "./game-config.schema.js";
-import { puzzleDtoSchema } from "../../puzzle/schema/puzzle-dto.schema.js";
+import { gameOptionsSchema } from "./options.schema.js";
+import { userDtoSchema } from "../../user/index.js";
+import { puzzleDtoSchema } from "../../puzzle/index.js";
+import { acceptedDateSchema } from "../../common/index.js";
 
 export const gameEntitySchema = z.object({
 	players: z.array(z.string().or(userDtoSchema)),
@@ -10,7 +10,7 @@ export const gameEntitySchema = z.object({
 	puzzle: z.string().or(puzzleDtoSchema),
 	startTime: acceptedDateSchema,
 	endTime: acceptedDateSchema,
-	config: gameConfigSchema,
+	options: gameOptionsSchema,
 	createdAt: acceptedDateSchema
 });
 export type GameEntity = z.infer<typeof gameEntitySchema>;

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { GAME, PUZZLE, USER } from "../../utils/constants/model.js";
 import { DEFAULT_GAME_LENGTH_IN_MILLISECONDS, GameEntity } from "types";
-import gameConfigSchema from "./game-config.js";
+import gameOptionsSchema from "./game-config.js";
 
 interface GameDocument extends Document, Omit<GameEntity, "_id"> {}
 
@@ -36,7 +36,7 @@ const gameSchema = new Schema<GameDocument>({
 		type: Date,
 		required: true
 	},
-	config: gameConfigSchema,
+	options: gameOptionsSchema,
 	puzzle: {
 		ref: PUZZLE,
 		required: true,

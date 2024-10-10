@@ -3,7 +3,7 @@ import { gameVisibilitySchema } from "./game-visibility.schema.js";
 import { LanguageLabelEnum } from "../../puzzle/index.js";
 import { DEFAULT_GAME_LENGTH_IN_SECONDS } from "../config/game.js";
 
-export const gameConfigSchema = z.object({
+export const gameOptionsSchema = z.object({
 	allowedLanguages: z.array(
 		z.object({
 			language: LanguageLabelEnum,
@@ -13,4 +13,4 @@ export const gameConfigSchema = z.object({
 	maxGameDurationInSeconds: z.number().default(DEFAULT_GAME_LENGTH_IN_SECONDS),
 	visibility: gameVisibilitySchema
 });
-export type GameConfig = z.infer<typeof gameConfigSchema>;
+export type GameOptions = z.infer<typeof gameOptionsSchema>;
