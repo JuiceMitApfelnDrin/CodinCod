@@ -1,4 +1,4 @@
-export const GameEvent = {
+export const GameEventEnum = {
 	// temporary, should be moved out somewhere else, atm is just to be able to create games and test the other stuff
 	HOST_GAME: "game:host",
 

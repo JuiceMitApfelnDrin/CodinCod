@@ -7,5 +7,7 @@ export * from "./enum/game-visibility-enum.js";
 
 // schema
 export * from "./schema/options.schema.js";
-export * from "./schema/game-visibility.schema.js";
-export * from "./schema/game.schema.js";
+export * from "./schema/visibility.schema.js";
+export * from "./schema/game-entity.schema.js";
+export * from "./schema/event.schema.js";
+export * from "./schema/session.schema.js";

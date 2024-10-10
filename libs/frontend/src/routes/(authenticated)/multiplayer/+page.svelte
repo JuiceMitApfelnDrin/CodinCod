@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
-	import { GameEvent } from "types";
+	import { GameEventEnum } from "types";
 
 	let state = {
 		// players
@@ -21,6 +21,7 @@
 
 	let socket: WebSocket;
 	onMount(() => {
+		// TODO: remove hardcoded url, make env param?
 		socket = new WebSocket("ws://localhost:8888/");
 
 		socket.addEventListener("open", (message) => {
@@ -36,7 +37,7 @@
 
 			const { event } = data;
 			switch (event) {
-				case GameEvent.HOST_GAME:
+				case GameEventEnum.HOST_GAME:
 					{
 						state.gameId = data.message;
 					}
@@ -59,7 +60,7 @@
 			console.log({ state });
 			socket.send(
 				JSON.stringify({
-					event: GameEvent.LEAVE_GAME,
+					event: GameEventEnum.LEAVE_GAME,
 					gameId: state.gameId,
 					username: $authenticatedUserInfo?.username
 				})
@@ -76,7 +77,7 @@
 			on:click={() => {
 				socket.send(
 					JSON.stringify({
-						event: GameEvent.START_GAME,
+						event: GameEventEnum.START_GAME,
 						gameId: state.gameId
 					})
 				);
@@ -92,7 +93,7 @@
 		on:click={() => {
 			socket.send(
 				JSON.stringify({
-					event: GameEvent.HOST_GAME,
+					event: GameEventEnum.HOST_GAME,
 					username: $authenticatedUserInfo?.username,
 					userId: $authenticatedUserInfo?.userId
 				})
@@ -111,7 +112,7 @@
 						on:click={() => {
 							socket.send(
 								JSON.stringify({
-									event: GameEvent.JOIN_GAME,
+									event: GameEventEnum.JOIN_GAME,
 									gameId: joinableGame.id,
 									username: $authenticatedUserInfo?.username,
 									userId: $authenticatedUserInfo?.userId

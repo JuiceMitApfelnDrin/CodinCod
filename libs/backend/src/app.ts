@@ -14,7 +14,7 @@ import fastifyCookie from "@fastify/cookie";
 import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
 import piston from "./plugins/decorators/piston.js";
-import { GameEvent } from "types";
+import { GameEvent, GameEventEnum, GameEventUserInfo } from "types";
 import Game from "./models/game/game.js";
 import Puzzle, { PuzzleDocument } from "./models/puzzle/puzzle.js";
 import mongoose from "mongoose";
@@ -40,15 +40,9 @@ server.register(jwt);
 server.register(swaggerUi);
 server.register(websocket);
 
-type EventInfo = { event: string; username?: string; gameId?: string; userId?: string };
-type KnownUserInfo = {
-	joinedAt: Date;
-	socket: WebSocket;
-	userId: String;
-};
-const games: Map<string, Map<string, KnownUserInfo>> = new Map();
+const games: Map<string, Map<string, GameEventUserInfo>> = new Map();
 
-function updatePlayersInGame(game: Map<string, KnownUserInfo>) {
+function updatePlayersInGame(game: Map<string, GameEventUserInfo>) {
 	const currentGame = JSON.stringify({
 		game: Array.from(game.entries(), ([key, value]) => {
 			return { username: key, joinedAt: value.joinedAt };
@@ -174,12 +168,12 @@ server.register(async function (fastify) {
 		socket.send(JSON.stringify({ event: "welcome", games: joinableGames }));
 
 		socket.on("message", async (message) => {
-			const data: EventInfo = JSON.parse(message.toString());
+			const data: GameEvent = JSON.parse(message.toString());
 			const { event, gameId, username, userId } = data;
 
 			console.log(JSON.parse(message.toString()));
 
-			if (event === GameEvent.HOST_GAME) {
+			if (event === GameEventEnum.HOST_GAME) {
 				console.log("hosting a game");
 				hostGame({ userId, socket, username, event });
 				return;
@@ -191,21 +185,24 @@ server.register(async function (fastify) {
 			}
 
 			switch (event) {
-				case GameEvent.JOIN_GAME:
+				case GameEventEnum.JOIN_GAME:
 					{
-						const { username, userId } = data;
+						if (!username || !userId) {
+
+							break;
+						}
 
 						joinGame({ gameId, userId, socket, username, event });
 					}
 					break;
-				case GameEvent.LEAVE_GAME:
+				case GameEventEnum.LEAVE_GAME:
 					{
 						const { username } = data;
 
 						leaveGame({ gameId, socket, username, event });
 					}
 					break;
-				case GameEvent.START_GAME:
+				case GameEventEnum.START_GAME:
 					{
 						startGame({ gameId, socket });
 
