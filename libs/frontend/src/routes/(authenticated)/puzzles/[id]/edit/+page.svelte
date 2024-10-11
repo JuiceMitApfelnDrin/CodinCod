@@ -10,6 +10,7 @@
 	import * as Menubar from "@/components/ui/menubar";
 	import { Settings } from "lucide-svelte";
 	import Error from "@/components/error/error.svelte";
+	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 
 	export let data;
 
@@ -29,13 +30,7 @@
 					<Menubar.Trigger><Settings class="h-4 w-4" /></Menubar.Trigger>
 					<Menubar.Content>
 						<Menubar.Item>
-							<Button
-								type="button"
-								on:click={() => deletePuzzle($page.params.id)}
-								variant="destructive"
-							>
-								Delete Puzzle
-							</Button>
+							<DeletePuzzleConfirmationDialog />
 						</Menubar.Item>
 					</Menubar.Content>
 				</Menubar.Menu>
