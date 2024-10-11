@@ -13,7 +13,6 @@
 		puzzleEntitySchema,
 		type LanguageLabel
 	} from "types";
-	import { page } from "$app/stores";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
 
@@ -58,24 +57,8 @@
 
 	let { enhance, form: formData, message } = form;
 
-	let selectedLanguage: { label: LanguageLabel; value: LanguageLabel };
-
-	$: selectedLanguage = $formData.solution.language
-		? {
-				label: $formData.language,
-				value: $formData.language
-			}
-		: {
-				label: $formData.language,
-				value: DEFAULT_LANGUAGE
-			};
+	let language: LanguageLabel = $formData.solution.language ?? DEFAULT_LANGUAGE;
 </script>
-
-{#if $message}
-	<div class:success={$page.status == 200} class:error={$page.status >= 400}>
-		{$message}
-	</div>
-{/if}
 
 <form method={POST} use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
@@ -155,10 +138,10 @@
 			<Form.Control let:attrs>
 				<Form.Label class="text-lg">Language</Form.Label>
 				<Select.Root
-					selected={selectedLanguage}
+					selected={{ label: language, value: language }}
 					onSelectedChange={(v) => {
 						if (v) {
-							$formData.solution.language = v.value;
+							language = v.value;
 						}
 					}}
 				>
