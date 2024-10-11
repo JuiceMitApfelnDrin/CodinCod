@@ -21,7 +21,7 @@ export const frontendUrls = {
 
 	// user profile
 	USER_PROFILE: "/profile",
-	USER_PROFILE_BY_ID: "/profile/:id",
+	USER_PROFILE_BY_USERNAME: "/profile/:username",
 
 	// play game
 	PLAY: "/",

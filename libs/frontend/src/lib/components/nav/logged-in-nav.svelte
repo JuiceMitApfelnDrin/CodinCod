@@ -6,6 +6,7 @@
 	import LogoutButton from "./logout-button.svelte";
 	import { authenticatedUserInfo } from "../../stores";
 	import { websiteName } from "@/config/general";
+	import { buildFrontendUrl } from "@/config/frontend";
 
 	const navigationLinks = [
 		{
@@ -59,9 +60,17 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>My Account</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item>
-							<a href={frontendUrls.USER_PROFILE}>Profile</a>
-						</DropdownMenu.Item>
+						{#if $authenticatedUserInfo}
+							<DropdownMenu.Item>
+								<a
+									href={buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
+										username: $authenticatedUserInfo.username
+									})}
+								>
+									Profile
+								</a>
+							</DropdownMenu.Item>
+						{/if}
 						<DropdownMenu.Item>
 							<a href={frontendUrls.SETTINGS}>Preferences</a>
 						</DropdownMenu.Item>

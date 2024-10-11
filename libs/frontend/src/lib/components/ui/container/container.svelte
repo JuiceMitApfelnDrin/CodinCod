@@ -8,6 +8,6 @@
 	export { className as class };
 </script>
 
-<div class={cn("container mx-auto my-4 flex flex-col", className)}>
+<div class={cn("container mx-auto my-4 flex max-w-screen-lg flex-col", className)}>
 	<slot></slot>
 </div>

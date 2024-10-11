@@ -8,7 +8,7 @@
 </script>
 
 <Container>
-	<H1>Create a puzzle</H1>
+	<H1 class="my-8 pb-0">Create a puzzle</H1>
 
 	<CreatePuzzleForm data={formData}></CreatePuzzleForm>
 </Container>

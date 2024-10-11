@@ -7,7 +7,7 @@
 </script>
 
 <Dialog.Root>
-	<Dialog.Trigger type="button" class={buttonVariants({ variant: "destructive" })}>
+	<Dialog.Trigger type="button" class={buttonVariants({ variant: "outline" })}>
 		Delete Puzzle
 	</Dialog.Trigger>
 	<Dialog.Content>
@@ -19,7 +19,6 @@
 			</Dialog.Description>
 		</Dialog.Header>
 		<Dialog.Footer>
-			<Button variant="secondary">Cancel action</Button>
 			<Button variant="destructive" on:click={() => deletePuzzle($page.params.id)}>
 				Delete puzzle
 			</Button>

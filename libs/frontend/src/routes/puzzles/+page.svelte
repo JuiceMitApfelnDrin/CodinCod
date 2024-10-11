@@ -14,24 +14,32 @@
 </script>
 
 <Container>
-	<H1>Puzzles</H1>
+	<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+		<H1 class="my-8 pb-0">Puzzles</H1>
 
-	<P class="gap-2 md:flex">
-		<Button href={frontendUrls.PUZZLE_CREATE}>Create a new puzzles</Button>
+		<div class="flex flex-col gap-2 md:flex-row md:gap-4">
+			<Button href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button>
+		</div>
+	</div>
 
-		<!-- wip, search should come here: -->
-		<!-- <Input placeholder="Search through puzzles" /> -->
-	</P>
-	<P>
-		Puzzles found {totalItems}:
-	</P>
-	<Ul>
-		{#each items as puzzle}
-			<li>
-				<a href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: puzzle._id })}>{puzzle.title}</a>
-			</li>
-		{/each}
-	</Ul>
+	<!-- TODO: search should come here: -->
+	<!-- <Input placeholder="Search through puzzles" /> -->
+	{#if totalItems <= 0}
+		<P>Couldn't find any puzzles!</P>
+	{:else}
+		<P>
+			Puzzles found {totalItems}:
+		</P>
+		<Ul>
+			{#each items as puzzle}
+				<li>
+					<a href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: puzzle._id })}
+						>{puzzle.title}</a
+					>
+				</li>
+			{/each}
+		</Ul>
 
-	<Pagination {totalPages} currentPage={page}></Pagination>
+		<Pagination {totalPages} currentPage={page}></Pagination>
+	{/if}
 </Container>

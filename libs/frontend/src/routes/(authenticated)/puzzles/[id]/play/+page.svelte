@@ -101,8 +101,8 @@
 				{#if puzzle.authorId._id}
 					<!-- TODO: on hover, show the user info https://www.shadcn-svelte.com/docs/components/hover-card -->
 					<a
-						href={buildFrontendUrl(frontendUrls.USER_PROFILE_BY_ID, {
-							id: puzzle.authorId._id
+						href={buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
+							username: puzzle.authorId.username
 						})}
 					>
 						{puzzle.authorId.username}
@@ -111,9 +111,9 @@
 					{puzzle.authorId.username}
 				{/if}
 			</dd>
-		{/if}
 
-		<Separator orientation="vertical" />
+			<Separator orientation="vertical" />
+		{/if}
 
 		<dt class="font-semibold">Created on</dt>
 		<dd>
