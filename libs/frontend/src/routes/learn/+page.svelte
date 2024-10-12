@@ -35,7 +35,11 @@
 	{#if slugs}
 		<ul>
 			{#each slugs as slug}
-				<li><a href={buildFrontendUrl(frontendUrls.LEARN_SLUG, { slug })}>{slug}</a></li>
+				<li>
+					<a href={buildFrontendUrl(frontendUrls.LEARN_SLUG, { slug })}>
+						{slug}
+					</a>
+				</li>
 			{/each}
 		</ul>
 	{/if}
