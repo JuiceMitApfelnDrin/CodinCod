@@ -16,7 +16,8 @@ const userSchema = new Schema<UserDocument>({
 		required: true,
 		trim: true,
 		type: String,
-		unique: true
+		unique: true,
+		select: false
 	},
 	password: {
 		required: true,
