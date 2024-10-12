@@ -1,8 +1,9 @@
 import { getAuthenticatedUserInfo } from "@/features/authentication/utils/get-authenticated-user-info.js";
 import { redirect } from "@sveltejs/kit";
 import { cookieKeys, frontendUrls } from "types";
+import type { LayoutServerLoadEvent } from "./$types";
 
-export const load = async ({ cookies }) => {
+export async function load({ cookies }: LayoutServerLoadEvent) {
 	const token = cookies.get(cookieKeys.TOKEN);
 	const currentUser = getAuthenticatedUserInfo(token);
 
@@ -11,4 +12,4 @@ export const load = async ({ cookies }) => {
 	}
 
 	return currentUser;
-};
+}
