@@ -13,8 +13,11 @@
 		puzzleEntitySchema,
 		type LanguageLabel
 	} from "types";
+	import { page } from "$app/stores";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
+	import * as Alert from "$lib/components/ui/alert";
+	import { CircleAlert, CircleCheck } from "lucide-svelte";
 
 	export let data;
 
@@ -173,6 +176,29 @@
 			<Form.FieldErrors />
 		</Form.Field>
 	</Form.Fieldset>
+
+	<!-- TODO: make two separate components out of this -->
+	{#if $message}
+		<Alert.Root variant={$page.status < 400 ? "success" : "destructive"}>
+			{#if $page.status < 400}
+				<CircleCheck class="h-4 w-4" />
+			{:else}
+				<CircleAlert class="h-4 w-4" />
+			{/if}
+
+			{#if $page.status < 400}
+				<Alert.Title>Updated puzzle!</Alert.Title>
+			{:else}
+				<Alert.Title>Error updating the puzzle - HTTP {$page.status}</Alert.Title>
+			{/if}
+
+			{#if $page.status >= 400}
+				<Alert.Description>
+					{$message}
+				</Alert.Description>
+			{/if}
+		</Alert.Root>
+	{/if}
 
 	<Form.Button>Update Puzzle</Form.Button>
 </form>
