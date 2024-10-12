@@ -2,42 +2,57 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
+	import ActivityGroup from "@/features/profile/components/activity-feed/activity-group.svelte";
+	import Activity from "@/features/profile/components/activity-feed/activity.svelte";
 	import CalendarHeatmap from "@/features/profile/components/calendar-heatmap.svelte";
+	import { groupByCreatedAtDate } from "@/utils/groupActivityByCreatedAtDate.js";
+	import dayjs from "dayjs";
 	import { isUserDto } from "types";
-	// import ContributionGraph from "../../lib/features/profile/components/calendar-heatmap.svelte";
-	// import { getLastSegment } from '$utils/getLastSegment';
 
 	export let data;
-	$: console.log(data);
-	const { activity, user } = data.userActivity;
+
+	const { puzzles, submissions, user } = data;
+	const originalActivities: Activity[] = [...submissions, ...puzzles, user];
+	const activitiesGroupedByCreatedAtDate = groupByCreatedAtDate(originalActivities);
 </script>
 
-<Container class="items-center gap-10 px-10 pt-10 xl:flex-row xl:items-start">
-	{#if user && isUserDto(user)}
-		<Card.Root class="w-full">
-			<Card.Header>
-				<H1 class="flex w-full justify-center">{user.username}</H1>
-			</Card.Header>
+<Container class="gap-8">
+	<div class="flex items-center gap-8 xl:flex-row xl:items-start">
+		{#if user && isUserDto(user)}
+			<Card.Root class="w-full">
+				<Card.Header>
+					<H1 class="flex w-full justify-center">{user.username}</H1>
+				</Card.Header>
 
-			<Card.Content>
-				<p>{user.profile?.bio ?? "This user hasn't set a bio yet."}</p>
+				<Card.Content>
+					<p>{user.profile?.bio ?? "This user hasn't set a bio yet."}</p>
 
-				{#if user.profile?.socials}
-					<div>
-						<ul class="list-none">
-							{#each user.profile.socials as link}
-								<li class="flex flex-row gap-2">
-									<a class="hover:underline" href={link}>
-										{link}
-									</a>
-								</li>
-							{/each}
-						</ul>
-					</div>
-				{/if}
-			</Card.Content>
-		</Card.Root>
-	{/if}
+					{#if user.profile?.socials}
+						<div>
+							<ul class="list-none">
+								{#each user.profile.socials as link}
+									<li class="flex flex-row gap-2">
+										<a class="hover:underline" href={link}>
+											{link}
+										</a>
+									</li>
+								{/each}
+							</ul>
+						</div>
+					{/if}
+				</Card.Content>
+			</Card.Root>
+		{/if}
 
-	<CalendarHeatmap activity={[...activity.submissions, ...activity.puzzles, user]} />
+		<CalendarHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
+	</div>
+
+	{#each Object.entries(activitiesGroupedByCreatedAtDate).sort((a, b) => {
+		const aDate = a[0];
+		const bDate = b[0];
+
+		return dayjs(aDate).isBefore(dayjs(bDate)) ? 1 : -1;
+	}) as [date, activities]}
+		<ActivityGroup {date} {activities}></ActivityGroup>
+	{/each}
 </Container>

@@ -17,3 +17,7 @@ export type Activity = z.infer<typeof activitySchema>;
 export function isActivity(supposedActivity: unknown): supposedActivity is Activity {
 	return activitySchema.safeParse(supposedActivity).success;
 }
+
+export type GroupedActivitiesByDate = {
+	[dateKey: string]: Activity[];
+};

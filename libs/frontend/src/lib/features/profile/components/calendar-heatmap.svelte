@@ -2,35 +2,11 @@
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { cn } from "@/utils/cn";
 	import dayjs from "dayjs";
-	import type { Activity } from "types";
+	import type { GroupedActivitiesByDate } from "types";
 
-	export let activity: Activity[] = [];
+	export let activitiesGroupedByDate: GroupedActivitiesByDate;
 	export let minAmount = 0;
 	export let maxAmount = 8;
-
-	interface GroupedItems {
-		[dateKey: string]: Activity[]; // The key is a string (date), and the value is an array of Items
-	}
-
-	function groupByCreatedAtDate(items: Activity[]) {
-		return items.reduce<GroupedItems>((acc, item) => {
-			// Ensure createdAt is a valid date
-			const dateKey = dayjs(item.createdAt).format("YYYY-MM-DD");
-
-			// Initialize the array for this date if it doesn't exist
-			if (!acc[dateKey]) {
-				acc[dateKey] = [];
-			}
-
-			// Push the item into the corresponding array
-			acc[dateKey].push(item);
-
-			return acc;
-		}, {});
-	}
-
-	console.log(groupByCreatedAtDate(activity));
-	const groupedActivity = groupByCreatedAtDate(activity);
 
 	// create the thing first, then use it
 	// let days: number[] = [];
@@ -62,7 +38,7 @@
 	let days: number[] = Array.from({ length: 364 })
 		.map((_, i) => {
 			const date = dayjs().subtract(i, "day").format("YYYY-MM-DD");
-			return groupedActivity[date] ? groupedActivity[date].length : 0;
+			return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
 		})
 		.reverse(); // reverse to start with the oldest day
 
@@ -109,7 +85,7 @@
 </script>
 
 <div
-	class="dark:border-primary-500 border-primary-700 h-full w-full flex-col rounded-lg border bg-white dark:bg-black"
+	class="dark:border-primary-500 border-primary-700 h-full w-full flex-col rounded-lg border p-4"
 >
 	<!-- TODO: possibly make this a table instead, with a tooltips and sr-only text -->
 	<table class="overflow-x-scroll">
