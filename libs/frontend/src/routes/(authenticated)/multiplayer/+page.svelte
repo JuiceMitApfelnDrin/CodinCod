@@ -42,9 +42,9 @@
 						state.gameId = data.message;
 					}
 					break;
-				case "welcome":
+				case GameEventEnum.OVERVIEW_OF_GAMES:
 					{
-						state.games = data.games;
+						state.games = data.message;
 					}
 					break;
 				default:
@@ -66,6 +66,7 @@
 				})
 			);
 
+			state.creator = false;
 			state.gameId = undefined;
 		}}
 	>
@@ -98,6 +99,7 @@
 					userId: $authenticatedUserInfo?.userId
 				})
 			);
+			state.creator = true;
 		}}
 	>
 		host game
@@ -119,6 +121,7 @@
 								})
 							);
 
+							state.creator = false;
 							state.gameId = joinableGame.id;
 						}}
 					>

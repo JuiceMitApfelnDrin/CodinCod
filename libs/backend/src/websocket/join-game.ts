@@ -27,6 +27,6 @@ export function joinGame({
 
 		// notify people someone joined
 		updatePlayer({ socket, event, message: gameId });
-		updatePlayersInGame(game);
+		updatePlayersInGame({ game });
 	}
 }

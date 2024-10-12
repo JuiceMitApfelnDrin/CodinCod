@@ -25,6 +25,7 @@ export async function startGame({
 		updatePlayer({ socket, event: GameEventEnum.NONEXISTENT_GAME, message: "no game yo!" });
 		return;
 	}
+
 	console.log({ game });
 	const playersInGame = Array.from(game.values());
 
@@ -45,9 +46,11 @@ export async function startGame({
 
 	const databaseGame = new Game({
 		players: playersInGame.map((player) => player.userId),
-		creator,
+		creator: creator.userId,
 		puzzle: randomPuzzle._id
 	});
+
+	databaseGame.save();
 
 	console.log({ databaseGame });
 }
