@@ -28,8 +28,6 @@ export default async function userByUsernameActivityRoutes(fastify: FastifyInsta
 				Submission.find({ userId: userId })
 			]);
 
-			console.log({ puzzlesByUser, submissionsByUser });
-
 			return reply.status(200).send({
 				user,
 				message: "User activity found",
