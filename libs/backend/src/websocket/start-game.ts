@@ -26,10 +26,7 @@ export async function startGame({
 		return;
 	}
 
-	console.log({ game });
 	const playersInGame = Array.from(game.values());
-
-	console.log({ playersInGame });
 
 	const creator = playersInGame.reduce((oldestPlayer, currentPlayer) => {
 		if (oldestPlayer.joinedAt < currentPlayer.joinedAt) {
@@ -41,8 +38,6 @@ export async function startGame({
 
 	const randomPuzzles = await Puzzle.aggregate<PuzzleDocument>([{ $sample: { size: 1 } }]).exec();
 	const randomPuzzle = randomPuzzles[0];
-
-	console.log({ creator });
 
 	const databaseGame = new Game({
 		players: playersInGame.map((player) => player.userId),

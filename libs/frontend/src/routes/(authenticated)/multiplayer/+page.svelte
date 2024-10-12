@@ -4,34 +4,32 @@
 	import { GameEventEnum } from "types";
 
 	let state = {
-		// players
 		// TODO: timeleft/countdown timer when game is started
-		// gameId
-		// currently joinable games
-		// host of game : boolean
 		creator: false,
 		gameId: undefined,
 		games: [
 			// {
+			// players
 			// amountOfPlayersJoined: number
-			// gameId: string
 			// }
 		]
 	};
 
 	let socket: WebSocket;
 	onMount(() => {
-		// TODO: remove hardcoded url, make env param?
-		socket = new WebSocket("ws://localhost:8888/");
+		const websocketUrl = import.meta.env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER;
+
+		if (!websocketUrl) {
+			alert("Did you forget an environment variable? VITE_BACKEND_WEBSOCKET_MULTIPLAYER");
+		}
+
+		socket = new WebSocket(websocketUrl);
 
 		socket.addEventListener("open", (message) => {
-			// TODO: receive open games from backend on connection
 			console.log("WebSocket connection opened");
-			console.log(message);
 		});
 
 		socket.addEventListener("message", (message) => {
-			// ongoing, arrange player data, gameId, hostGame
 			const data = JSON.parse(message.data);
 			console.log({ data });
 
@@ -108,7 +106,6 @@
 	{#if state.games}
 		<ul>
 			{#each state.games as joinableGame}
-				<!-- TODO: on click, set state.gameid -->
 				<li>
 					<button
 						on:click={() => {
@@ -125,16 +122,10 @@
 							state.gameId = joinableGame.id;
 						}}
 					>
-						join game with id: {joinableGame.id} and players {joinableGame.amountOfPlayersJoined}
+						Join a game with {joinableGame.amountOfPlayersJoined} other players!
 					</button>
 				</li>
 			{/each}
 		</ul>
 	{/if}
 {/if}
-
-<!-- 
-
--->
-
-<!--  -->
