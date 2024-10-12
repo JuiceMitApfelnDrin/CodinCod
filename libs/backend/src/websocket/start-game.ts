@@ -14,7 +14,7 @@ export async function startGame({
 	socket: WebSocket;
 	games: WebSocketGamesMap;
 }) {
-	console.log("start the game event");
+	console.log("start the game");
 
 	const game = games.get(gameId);
 

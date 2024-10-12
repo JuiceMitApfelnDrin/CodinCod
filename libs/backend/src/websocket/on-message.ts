@@ -24,16 +24,14 @@ export async function onMessage({
 	const data: GameEvent = JSON.parse(message.toString());
 	const { event, gameId, username, userId } = data;
 
-	console.log(JSON.parse(message.toString()));
+	console.log({ messageReceived: JSON.parse(message.toString()) });
 
 	if (event === GameEventEnum.HOST_GAME) {
-		console.log("hosting a game");
-
 		if (!isString(userId)) {
 			updatePlayer({
 				socket,
 				event: GameEventEnum.INCORRECT_VALUE,
-				message: `${userId} is not a string`
+				message: `userId (${userId}) is not a string`
 			});
 			return;
 		}
@@ -42,7 +40,7 @@ export async function onMessage({
 			updatePlayer({
 				socket,
 				event: GameEventEnum.INCORRECT_VALUE,
-				message: `${username} is not a string`
+				message: `username (${username}) is not a string`
 			});
 			return;
 		}
@@ -53,7 +51,11 @@ export async function onMessage({
 	}
 
 	if (!gameId) {
-		updatePlayer({ socket, event: GameEventEnum.NONEXISTENT_GAME, message: "no gameId yo!" });
+		updatePlayer({
+			socket,
+			event: GameEventEnum.NONEXISTENT_GAME,
+			message: `game with id (${gameId}) doesn't exist`
+		});
 		return;
 	}
 
@@ -76,12 +78,12 @@ export async function onMessage({
 					updatePlayer({
 						socket,
 						event: GameEventEnum.INCORRECT_VALUE,
-						message: `${username} is not a string`
+						message: `username (${username}) is not a string`
 					});
 					return;
 				}
 
-				leaveGame({ gameId, socket, username, event, games });
+				leaveGame({ gameId, socket, username, games });
 				addPlayerToActivePlayers({ activePlayers, playerSocketToAdd: socket });
 			}
 			break;

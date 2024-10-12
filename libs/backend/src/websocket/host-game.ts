@@ -17,6 +17,8 @@ export function hostGame({
 	userId: string;
 	games: WebSocketGamesMap;
 }) {
+	console.log("hosting a game");
+
 	const randomId = new mongoose.Types.ObjectId().toString();
 
 	games.set(randomId, new Map());
