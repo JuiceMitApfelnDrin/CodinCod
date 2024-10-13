@@ -2,17 +2,23 @@ import Puzzle from "@/models/puzzle/puzzle.js";
 import Submission from "@/models/submission/submission.js";
 import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { userEntitySchema } from "types";
+import { httpResponseCodes, isUsername } from "types";
+import { ParamsUsername } from "../types.js";
+import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
 
 export default async function userByUsernameActivityRoutes(fastify: FastifyInstance) {
-	fastify.get("/", async (request, reply) => {
-		const parseResult = userEntitySchema.pick({ username: true }).safeParse(request.params);
+	fastify.get<ParamsUsername>("/", async (request, reply) => {
+		const { username } = request.params;
 
-		if (!parseResult.success) {
-			return reply.status(400).send({ message: "Invalid request data" });
+		if (!isUsername(username)) {
+			const { BAD_REQUEST } = httpResponseCodes.CLIENT_ERROR;
+			const { IS_INVALID } = genericReturnMessages[BAD_REQUEST];
+			const { USERNAME } = userProperties;
+
+			return reply.status(BAD_REQUEST).send({
+				message: `${USERNAME} ${IS_INVALID}`
+			});
 		}
-
-		const { username } = parseResult.data;
 
 		try {
 			const user = await User.findOne({ username });
