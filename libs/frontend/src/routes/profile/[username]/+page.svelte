@@ -17,35 +17,33 @@
 </script>
 
 <Container class="gap-8">
-	<div class="flex items-center gap-8 xl:flex-row xl:items-start">
-		{#if user && isUserDto(user)}
-			<Card.Root class="w-full">
-				<Card.Header>
-					<H1 class="flex w-full justify-center">{user.username}</H1>
-				</Card.Header>
+	{#if user && isUserDto(user)}
+		<Card.Root class="w-full">
+			<Card.Header>
+				<H1 class="flex w-full justify-center">{user.username}</H1>
+			</Card.Header>
 
-				<Card.Content>
-					<p>{user.profile?.bio ?? "This user hasn't set a bio yet."}</p>
+			<Card.Content>
+				<p>{user.profile?.bio ?? "This user hasn't set a bio yet."}</p>
 
-					{#if user.profile?.socials}
-						<div>
-							<ul class="list-none">
-								{#each user.profile.socials as link}
-									<li class="flex flex-row gap-2">
-										<a class="hover:underline" href={link}>
-											{link}
-										</a>
-									</li>
-								{/each}
-							</ul>
-						</div>
-					{/if}
-				</Card.Content>
-			</Card.Root>
-		{/if}
+				{#if user.profile?.socials}
+					<div>
+						<ul class="list-none">
+							{#each user.profile.socials as link}
+								<li class="flex flex-row gap-2">
+									<a class="hover:underline" href={link}>
+										{link}
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</div>
+				{/if}
+			</Card.Content>
+		</Card.Root>
+	{/if}
 
-		<CalendarHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
-	</div>
+	<CalendarHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
 
 	{#each Object.entries(activitiesGroupedByCreatedAtDate).sort((a, b) => {
 		const aDate = a[0];
