@@ -3,6 +3,7 @@ import { ValueOfGameEvent } from "types";
 import { joinGame } from "./join-game.js";
 import { WebSocketGamesMap } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
+import { generateRandomObjectIdString } from "@/utils/functions/generate-random-object-id-string.js";
 
 export function hostGame({
 	userId,
@@ -17,9 +18,7 @@ export function hostGame({
 	userId: string;
 	games: WebSocketGamesMap;
 }) {
-	console.log("hosting a game");
-
-	const randomId = new mongoose.Types.ObjectId().toString();
+	const randomId = generateRandomObjectIdString();
 
 	games.set(randomId, new Map());
 
