@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { usernameIsAvailable } from "../../../../api/username-is-availability";
 import { registerSchema } from "types";
+import { usernameIsAvailable } from "@/api/username-is-availability";
 
 export const registerFormSchema = registerSchema.superRefine(async (data, ctx) => {
 	const { username } = data;
