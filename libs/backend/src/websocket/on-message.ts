@@ -58,16 +58,15 @@ export async function onMessage({
 	}
 
 	switch (event) {
-		case GameEventEnum.JOIN_GAME:
-			{
-				if (!username || !userId) {
-					break;
-				}
-
-				joinGame({ gameId, userId, socket, username, event, games });
-				removePlayerFromPlayers({ players, playerSocketToRemove: socket });
+		case GameEventEnum.JOIN_GAME: {
+			if (!username || !userId) {
+				return;
 			}
-			break;
+
+			joinGame({ gameId, userId, socket, username, event, games });
+			removePlayerFromPlayers({ players, playerSocketToRemove: socket });
+			return;
+		}
 		case GameEventEnum.LEAVE_GAME:
 			{
 				const { username } = data;
@@ -84,7 +83,7 @@ export async function onMessage({
 				leaveGame({ gameId, socket, username, games });
 				addPlayerToPlayers({ players, playerSocketToAdd: socket });
 			}
-			break;
+			return;
 		case GameEventEnum.START_GAME:
 			{
 				startGame({ gameId, socket, games });
@@ -92,9 +91,9 @@ export async function onMessage({
 				// when game is started, removed from joinable games
 				games.delete(gameId);
 			}
-			break;
+			return;
 		default:
 			socket.send("hi from server");
-			break;
+			return;
 	}
 }
