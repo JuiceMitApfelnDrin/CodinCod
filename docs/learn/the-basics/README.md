@@ -8,6 +8,10 @@ title: Learn the basics
 
 ### integer / number
 
+### character
+
+### array
+
 ### string
 
 ### boolean

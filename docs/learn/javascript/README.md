@@ -2,4 +2,4 @@
 title: Learn javascript
 ---
 
-# The basics
+# Javascript
