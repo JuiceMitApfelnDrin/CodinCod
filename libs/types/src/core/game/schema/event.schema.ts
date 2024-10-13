@@ -11,11 +11,3 @@ export const gameEventSchema = gameSessionSchema.pick({
 	username: true
 });
 export type GameEvent = z.infer<typeof gameEventSchema>;
-
-export const gameEventUserInfoSchema = z.object({
-	userId: authenticatedInfoSchema.shape.userId,
-	username: authenticatedInfoSchema.shape.username,
-	joinedAt: acceptedDateSchema,
-	socket: z.any()
-});
-export type GameEventUserInfo = z.infer<typeof gameEventUserInfoSchema> & { socket: WebSocket };
