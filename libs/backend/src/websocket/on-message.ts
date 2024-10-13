@@ -24,8 +24,6 @@ export async function onMessage({
 	const data: GameEvent = JSON.parse(message.toString());
 	const { event, gameId, username, userId } = data;
 
-	console.log({ messageReceived: JSON.parse(message.toString()) });
-
 	if (event === GameEventEnum.HOST_GAME) {
 		if (!isString(userId)) {
 			updatePlayer({

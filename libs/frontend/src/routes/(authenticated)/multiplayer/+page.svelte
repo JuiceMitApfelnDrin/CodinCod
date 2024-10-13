@@ -31,7 +31,6 @@
 
 		socket.addEventListener("message", (message) => {
 			const data = JSON.parse(message.data);
-			console.log({ data });
 
 			const { event } = data;
 			switch (event) {
@@ -55,7 +54,6 @@
 {#if state.gameId}
 	<button
 		on:click={() => {
-			console.log({ state });
 			socket.send(
 				JSON.stringify({
 					event: GameEventEnum.LEAVE_GAME,

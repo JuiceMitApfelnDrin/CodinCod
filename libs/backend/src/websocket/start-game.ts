@@ -14,8 +14,6 @@ export async function startGame({
 	socket: WebSocket;
 	games: WebSocketGamesMap;
 }) {
-	console.log("start the game");
-
 	const game = games.get(gameId);
 
 	// [ongoing] create the game
@@ -46,6 +44,4 @@ export async function startGame({
 	});
 
 	databaseGame.save();
-
-	console.log({ databaseGame });
 }
