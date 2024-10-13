@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { PuzzleResultEnum } from "../../puzzle/index.js";
 
+// TODO: find a better name for this schema
 export const puzzleResultSchema = z.enum([
 	PuzzleResultEnum.ERROR,
 	PuzzleResultEnum.SUCCESS,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { pistonFileSchema } from "./execute-file.js";
+import { pistonFileSchema } from "./file-encoding.js";
 
 export const pistonExecutionRequestSchema = z.object({
 	language: z.string(),

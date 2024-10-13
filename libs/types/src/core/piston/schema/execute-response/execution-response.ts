@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { pistonExecutionResponseSuccessSchema } from "./execute-response-success.js";
-import { pistonExecutionResponseErrorSchema } from "./execute-response-error.js";
+import { pistonExecutionResponseSuccessSchema } from "./execution-success.js";
+import { pistonExecutionResponseErrorSchema } from "./execution-error.js";
 
 export const pistonExecutionResponseSchema = pistonExecutionResponseSuccessSchema.or(
 	pistonExecutionResponseErrorSchema
