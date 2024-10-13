@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { ValueOfGameEvent } from "types";
 import { joinGame } from "./join-game.js";
 import { WebSocketGamesMap } from "@/types/games.js";
