@@ -1,4 +1,4 @@
-import { GameEvent, GameEventEnum, isString } from "types";
+import { GameEventEnum, isString } from "types";
 import { updatePlayer } from "./update-player.js";
 import { hostGame } from "./host-game.js";
 import { joinGame } from "./join-game.js";
@@ -21,7 +21,7 @@ export async function onMessage({
 	games: WebSocketGamesMap;
 	players: WebSocket[];
 }) {
-	const data: GameEvent = JSON.parse(message.toString());
+	const data: any = JSON.parse(message.toString());
 	const { event, gameId, username, userId } = data;
 
 	if (event === GameEventEnum.HOST_GAME) {
