@@ -2,10 +2,9 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import Fastify, { FastifyRequest } from "fastify";
+import Fastify from "fastify";
 import cors from "./plugins/config/cors.js";
 import jwt from "./plugins/config/jwt.js";
-import websocket, { WebSocket } from "@fastify/websocket";
 import fastifyFormbody from "@fastify/formbody";
 import mongooseConnector from "./plugins/config/mongoose.js";
 import router from "./router.js";
@@ -14,11 +13,7 @@ import fastifyCookie from "@fastify/cookie";
 import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
 import piston from "./plugins/decorators/piston.js";
-import { WebSocketGamesMap } from "./types/games.js";
-import { onMessage } from "./websocket/on-message.js";
-import { updateActivePlayers } from "./websocket/update-active-players.js";
-import { onConnection } from "./websocket/on-connection.js";
-import { onClose } from "./websocket/on-close.js";
+import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 
 const server = Fastify({
 	logger: true // Boolean(process.env.NODE_ENV !== "development")
@@ -39,25 +34,7 @@ server.register(cors);
 server.register(swagger);
 server.register(jwt);
 server.register(swaggerUi);
-server.register(websocket);
-
-const games: WebSocketGamesMap = new Map();
-const activePlayerList: WebSocket[] = [];
-
-server.register(async function (fastify) {
-	fastify.get("/", { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
-		onConnection({ activePlayers: activePlayerList, games, newPlayerSocket: socket });
-
-		socket.on("message", (message) => {
-			onMessage({ message, games, socket, activePlayers: activePlayerList });
-			updateActivePlayers({ sockets: activePlayerList, games });
-		});
-
-		socket.on("close", (code, reason) => {
-			onClose({ code, reason, activePlayers: activePlayerList, playerSocketToRemove: socket });
-		});
-	});
-});
+server.register(setupWebSockets);
 
 // server.register(dbConnectorPlugin);
 server.register(fastifyFormbody);
