@@ -8,8 +8,7 @@ import {
 	isAuthor,
 	isAuthenticatedInfo
 } from "types";
-
-type ParamsId = { Params: { id: string } };
+import { ParamsId } from "./types.js";
 
 export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
