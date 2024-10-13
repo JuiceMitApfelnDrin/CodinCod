@@ -1,11 +1,11 @@
 import { WebSocket } from "@fastify/websocket";
 
-export function addPlayerToActivePlayers({
-	activePlayers,
+export function addPlayerToPlayers({
+	players,
 	playerSocketToAdd
 }: {
-	activePlayers: WebSocket[];
+	players: WebSocket[];
 	playerSocketToAdd: WebSocket;
 }) {
-	activePlayers.push(playerSocketToAdd);
+	players.push(playerSocketToAdd);
 }

@@ -7,19 +7,19 @@ import { startGame } from "./start-game.js";
 import { WebSocketGamesMap } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { RawData } from "ws";
-import { removePlayerFromActivePlayers } from "./remove-player-from-active-players.js";
-import { addPlayerToActivePlayers } from "./add-player-to-active-players.js";
+import { removePlayerFromPlayers } from "./remove-player-from-active-players.js";
+import { addPlayerToPlayers } from "./add-player-to-active-players.js";
 
 export async function onMessage({
 	message,
 	socket,
 	games,
-	activePlayers
+	players
 }: {
 	message: RawData;
 	socket: WebSocket;
 	games: WebSocketGamesMap;
-	activePlayers: WebSocket[];
+	players: WebSocket[];
 }) {
 	const data: GameEvent = JSON.parse(message.toString());
 	const { event, gameId, username, userId } = data;
@@ -46,7 +46,7 @@ export async function onMessage({
 		}
 
 		hostGame({ userId, socket, username, event, games });
-		removePlayerFromActivePlayers({ activePlayers, playerSocketToRemove: socket });
+		removePlayerFromPlayers({ players, playerSocketToRemove: socket });
 		return;
 	}
 
@@ -67,7 +67,7 @@ export async function onMessage({
 				}
 
 				joinGame({ gameId, userId, socket, username, event, games });
-				removePlayerFromActivePlayers({ activePlayers, playerSocketToRemove: socket });
+				removePlayerFromPlayers({ players, playerSocketToRemove: socket });
 			}
 			break;
 		case GameEventEnum.LEAVE_GAME:
@@ -84,7 +84,7 @@ export async function onMessage({
 				}
 
 				leaveGame({ gameId, socket, username, games });
-				addPlayerToActivePlayers({ activePlayers, playerSocketToAdd: socket });
+				addPlayerToPlayers({ players, playerSocketToAdd: socket });
 			}
 			break;
 		case GameEventEnum.START_GAME:

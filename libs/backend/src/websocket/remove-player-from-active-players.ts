@@ -1,15 +1,15 @@
 import { WebSocket } from "@fastify/websocket";
 
-export function removePlayerFromActivePlayers({
-	activePlayers,
+export function removePlayerFromPlayers({
+	players,
 	playerSocketToRemove
 }: {
-	activePlayers: WebSocket[];
+	players: WebSocket[];
 	playerSocketToRemove: WebSocket;
 }) {
-	const socketIndex = activePlayers.findIndex((websocket) => websocket === playerSocketToRemove);
+	const socketIndex = players.findIndex((websocket) => websocket === playerSocketToRemove);
 
 	if (socketIndex !== -1) {
-		activePlayers.splice(socketIndex, 1);
+		players.splice(socketIndex, 1);
 	}
 }

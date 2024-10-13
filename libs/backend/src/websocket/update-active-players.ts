@@ -3,7 +3,7 @@ import { WebSocket } from "@fastify/websocket";
 import { updatePlayer } from "./update-player.js";
 import { GameEventEnum } from "types";
 
-export function updateActivePlayers({
+export function updatePlayers({
 	sockets,
 	games
 }: {

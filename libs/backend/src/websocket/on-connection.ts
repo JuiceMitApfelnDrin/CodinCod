@@ -1,17 +1,17 @@
 import { WebSocketGamesMap } from "@/types/games.js";
-import { addPlayerToActivePlayers } from "./add-player-to-active-players.js";
-import { updateActivePlayers } from "./update-active-players.js";
+import { addPlayerToPlayers } from "./add-player-to-active-players.js";
+import { updatePlayers } from "./update-active-players.js";
 import { WebSocket } from "@fastify/websocket";
 
 export function onConnection({
-	activePlayers,
+	players,
 	newPlayerSocket,
 	games
 }: {
-	activePlayers: WebSocket[];
+	players: WebSocket[];
 	newPlayerSocket: WebSocket;
 	games: WebSocketGamesMap;
 }) {
-	addPlayerToActivePlayers({ activePlayers: activePlayers, playerSocketToAdd: newPlayerSocket });
-	updateActivePlayers({ sockets: [newPlayerSocket], games });
+	addPlayerToPlayers({ players: players, playerSocketToAdd: newPlayerSocket });
+	updatePlayers({ sockets: [newPlayerSocket], games });
 }
