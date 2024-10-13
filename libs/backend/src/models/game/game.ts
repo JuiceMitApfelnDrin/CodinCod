@@ -5,10 +5,6 @@ import gameOptionsSchema from "./game-config.js";
 
 interface GameDocument extends Document, Omit<GameEntity, "_id"> {}
 
-/**
- * IDEA: Eventually add puzzle types
- * offering different play modes and play styles
- */
 const gameSchema = new Schema<GameDocument>({
 	players: [
 		{
