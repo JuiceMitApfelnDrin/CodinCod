@@ -11,5 +11,6 @@
 - `refactor`: A code change that neither fixes a bug nor adds a feature
 - `cleanup`: Strictly removal of code
 - `revert`: Revert something
-- `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc);
+- `beautify`: Changes strictly related to making the frontend look more pretty;
 - `test`: Adding missing tests or correcting existing tests
