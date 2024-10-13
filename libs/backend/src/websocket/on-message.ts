@@ -87,9 +87,6 @@ export async function onMessage({
 		case GameEventEnum.START_GAME:
 			{
 				startGame({ gameId, socket, games });
-
-				// when game is started, removed from joinable games
-				games.delete(gameId);
 			}
 			return;
 		default:

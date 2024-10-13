@@ -24,6 +24,9 @@ export async function startGame({
 		return;
 	}
 
+	// when game is started, removed from joinable games
+	games.delete(gameId);
+
 	const playersInGame = Array.from(game.values());
 
 	const creator = playersInGame.reduce((oldestPlayer, currentPlayer) => {
