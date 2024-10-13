@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { pistonExecuteResponseSuccessSchema } from "./execute-response-success.js";
-import { pistonExecuteResponseErrorSchema } from "./execute-response-error.js";
+import { pistonExecutionResponseSuccessSchema } from "./execute-response-success.js";
+import { pistonExecutionResponseErrorSchema } from "./execute-response-error.js";
 
-export const pistonExecuteResponseSchema = pistonExecuteResponseSuccessSchema.or(
-	pistonExecuteResponseErrorSchema
+export const pistonExecutionResponseSchema = pistonExecutionResponseSuccessSchema.or(
+	pistonExecutionResponseErrorSchema
 );
-export type PistonExecuteResponse = z.infer<typeof pistonExecuteResponseSchema>;
+export type PistonExecutionResponse = z.infer<typeof pistonExecutionResponseSchema>;

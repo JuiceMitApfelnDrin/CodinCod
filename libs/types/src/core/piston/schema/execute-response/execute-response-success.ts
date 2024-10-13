@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { puzzleResultSchema } from "../puzzle-result.js";
 
-export const pistonExecuteResponseSuccessSchema = z.object({
+export const pistonExecutionResponseSuccessSchema = z.object({
 	language: z.string(),
 	version: z.string(),
 	run: z.object({
@@ -23,9 +23,9 @@ export const pistonExecuteResponseSuccessSchema = z.object({
 		})
 		.optional()
 });
-export type PistonExecuteResponseSuccess = z.infer<typeof pistonExecuteResponseSuccessSchema>;
-export function isPistonExecuteResponseSuccess(
+export type PistonExecutionResponseSuccess = z.infer<typeof pistonExecutionResponseSuccessSchema>;
+export function isPistonExecutionResponseSuccess(
 	supposedExecutionSuccess: unknown
-): supposedExecutionSuccess is PistonExecuteResponseSuccess {
-	return pistonExecuteResponseSuccessSchema.safeParse(supposedExecutionSuccess).success;
+): supposedExecutionSuccess is PistonExecutionResponseSuccess {
+	return pistonExecutionResponseSuccessSchema.safeParse(supposedExecutionSuccess).success;
 }

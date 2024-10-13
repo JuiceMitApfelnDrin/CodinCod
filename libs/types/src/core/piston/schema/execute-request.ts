@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { pistonFileSchema } from "./execute-file.js";
 
-export const pistonExecuteRequestSchema = z.object({
+export const pistonExecutionRequestSchema = z.object({
 	language: z.string(),
 	version: z.string(),
 	files: z.array(pistonFileSchema),
@@ -12,4 +12,4 @@ export const pistonExecuteRequestSchema = z.object({
 	compile_memory_limit: z.number().optional(), // in bytes
 	run_memory_limit: z.number().optional() // in bytes
 });
-export type PistonExecuteRequest = z.infer<typeof pistonExecuteRequestSchema>;
+export type PistonExecutionRequest = z.infer<typeof pistonExecutionRequestSchema>;
