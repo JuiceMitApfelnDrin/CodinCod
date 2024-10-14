@@ -6,6 +6,14 @@
 </script>
 
 {#if activity}
-	Activity date: {formattedDateYearMonthDay(activity.createdAt)}
-	Activity type: {activity.type}
+	<dl>
+		<dt>Activity date</dt>
+		<dd>
+			{formattedDateYearMonthDay(activity.createdAt)}
+		</dd>
+		<dt>Activity type</dt>
+		<dd>
+			{activity.type}
+		</dd>
+	</dl>
 {/if}
