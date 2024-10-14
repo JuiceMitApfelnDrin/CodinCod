@@ -116,9 +116,6 @@
 		--square-size: 0.75rem;
 	}
 
-	.calendar {
-	}
-
 	.day-header {
 		font-size: calc(var(--square-size) - 0.05rem);
 	}
