@@ -1,11 +1,10 @@
-import { WebSocket } from "@fastify/websocket";
+import websocket, { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { onConnection } from "../../websocket/on-connection.js";
 import { onMessage } from "../../websocket/on-message.js";
-import { updatePlayers } from "../../websocket/update-active-players.js";
+import { updatePlayers } from "../../websocket/update-players.js";
 import { onClose } from "../../websocket/on-close.js";
 import { WebSocketGamesMap } from "@/types/games.js";
-import websocket from "@fastify/websocket";
 
 const games: WebSocketGamesMap = new Map();
 const activePlayerList: WebSocket[] = [];

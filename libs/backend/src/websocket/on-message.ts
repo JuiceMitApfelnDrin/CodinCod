@@ -7,8 +7,9 @@ import { startGame } from "./start-game.js";
 import { WebSocketGamesMap } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { RawData } from "ws";
-import { removePlayerFromPlayers } from "./remove-player-from-active-players.js";
-import { addPlayerToPlayers } from "./add-player-to-active-players.js";
+import { removePlayerFromPlayers } from "./remove-player-from-players.js";
+import { addPlayerToPlayers } from "./add-player-to-players.js";
+import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
 
 export async function onMessage({
 	message,
@@ -21,8 +22,13 @@ export async function onMessage({
 	games: WebSocketGamesMap;
 	players: WebSocket[];
 }) {
-	const data: any = JSON.parse(message.toString());
-	const { event, gameId, username, userId } = data;
+	let parsedMessage = parseRawDataMessage(message, socket);
+
+	if (!parsedMessage) {
+		return;
+	}
+
+	const { event, gameId, username, userId } = parsedMessage;
 
 	if (event === GameEventEnum.HOST_GAME) {
 		if (!isString(userId)) {
@@ -67,28 +73,24 @@ export async function onMessage({
 			removePlayerFromPlayers({ players, playerSocketToRemove: socket });
 			return;
 		}
-		case GameEventEnum.LEAVE_GAME:
-			{
-				const { username } = data;
-
-				if (!isString(username)) {
-					updatePlayer({
-						socket,
-						event: GameEventEnum.INCORRECT_VALUE,
-						message: `username (${username}) is not a string`
-					});
-					return;
-				}
-
-				leaveGame({ gameId, socket, username, games });
-				addPlayerToPlayers({ players, playerSocketToAdd: socket });
+		case GameEventEnum.LEAVE_GAME: {
+			if (!isString(username)) {
+				updatePlayer({
+					socket,
+					event: GameEventEnum.INCORRECT_VALUE,
+					message: `username (${username}) is not a string`
+				});
+				return;
 			}
+
+			leaveGame({ gameId, socket, username, games });
+			addPlayerToPlayers({ players, playerSocketToAdd: socket });
 			return;
-		case GameEventEnum.START_GAME:
-			{
-				startGame({ gameId, socket, games });
-			}
+		}
+		case GameEventEnum.START_GAME: {
+			startGame({ gameId, socket, games });
 			return;
+		}
 		default:
 			socket.send("hi from server");
 			return;

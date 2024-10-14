@@ -1,5 +1,5 @@
 import { WebSocket } from "@fastify/websocket";
-import { removePlayerFromPlayers } from "./remove-player-from-active-players.js";
+import { removePlayerFromPlayers } from "./remove-player-from-players.js";
 
 export function onClose({
 	players,
