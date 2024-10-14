@@ -6,17 +6,17 @@
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
 	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
-	import * as Alert from "@/components/ui/alert";
-	import { CircleAlert } from "lucide-svelte";
+	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
+	import { isHttpErrorCode } from "@/utils/is-http-error-code";
+	import { page } from "$app/stores";
 
 	export let data: SuperValidated<RegisterForm>;
-	export let message: string = "";
 
 	const form = superForm(data.data, {
 		validators: zodClient(registerFormSchema)
 	});
 
-	const { enhance, form: formData, validateForm } = form;
+	const { enhance, form: formData, validateForm, message } = form;
 
 	const handleFormInput = debounce(async () => {
 		await validateForm({ update: false });
@@ -29,18 +29,6 @@
 	class="my-5 flex flex-col items-center gap-5"
 	on:input={handleFormInput}
 >
-	{#if message}
-		<Alert.Root variant="destructive">
-			<CircleAlert class="h-4 w-4" />
-
-			<Alert.Title>Unable to register</Alert.Title>
-
-			<Alert.Description>
-				{message}
-			</Alert.Description>
-		</Alert.Root>
-	{/if}
-
 	<Form.Field {form} name="username" class="w-full">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Username</Form.Label>
@@ -88,6 +76,12 @@
 		>
 		<Form.FieldErrors />
 	</Form.Field>
+
+	<GenericAlert
+		title={isHttpErrorCode($page.status) ? "Unable to register" : "Registration successful"}
+		status={$page.status}
+		message={$message}
+	/>
 
 	<Form.Button>Register</Form.Button>
 </form>
