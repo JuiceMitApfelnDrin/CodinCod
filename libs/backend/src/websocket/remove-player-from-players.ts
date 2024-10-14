@@ -1,6 +1,6 @@
 import { WebSocket } from "@fastify/websocket";
 
-export function removePlayerFromPlayers({
+export async function removePlayerFromPlayers({
 	players,
 	playerSocketToRemove
 }: {
