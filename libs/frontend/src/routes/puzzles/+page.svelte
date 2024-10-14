@@ -7,6 +7,7 @@
 	import { frontendUrls } from "types";
 	import { buildFrontendUrl } from "@/config/frontend.js";
 	import Button from "@/components/ui/button/button.svelte";
+	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 
 	export let data;
 
@@ -14,32 +15,32 @@
 </script>
 
 <Container>
-	<div class="flex flex-col md:flex-row md:items-center md:justify-between">
-		<H1 class="my-8 pb-0">Puzzles</H1>
+	<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
+		<H1>Puzzles</H1>
 
-		<div class="flex flex-col gap-2 md:flex-row md:gap-4">
-			<Button href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button>
-		</div>
-	</div>
+		<Button href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button>
+	</LogicalUnit>
 
 	<!-- TODO: search should come here: -->
 	<!-- <Input placeholder="Search through puzzles" /> -->
-	{#if totalItems <= 0}
-		<P>Couldn't find any puzzles!</P>
-	{:else}
-		<P>
-			Puzzles found {totalItems}:
-		</P>
-		<Ul>
-			{#each items as puzzle}
-				<li>
-					<a href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: puzzle._id })}
-						>{puzzle.title}</a
-					>
-				</li>
-			{/each}
-		</Ul>
+	<LogicalUnit>
+		{#if totalItems <= 0}
+			<P>Couldn't find any puzzles!</P>
+		{:else}
+			<P>
+				Puzzles found {totalItems}:
+			</P>
+			<Ul>
+				{#each items as puzzle}
+					<li>
+						<a href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: puzzle._id })}
+							>{puzzle.title}</a
+						>
+					</li>
+				{/each}
+			</Ul>
 
-		<Pagination {totalPages} currentPage={page}></Pagination>
-	{/if}
+			<Pagination {totalPages} currentPage={page}></Pagination>
+		{/if}
+	</LogicalUnit>
 </Container>
