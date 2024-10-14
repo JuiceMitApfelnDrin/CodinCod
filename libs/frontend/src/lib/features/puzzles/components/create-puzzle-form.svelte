@@ -3,9 +3,9 @@
 	import { type SuperValidated, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
-	import { createPuzzleSchema, POST, type PuzzleEntity } from "types";
+	import { createPuzzleSchema, POST, type CreatePuzzle } from "types";
 
-	export let data: SuperValidated<PuzzleEntity>;
+	export let data: SuperValidated<CreatePuzzle>;
 
 	const form = superForm(data, {
 		validators: zodClient(createPuzzleSchema)
