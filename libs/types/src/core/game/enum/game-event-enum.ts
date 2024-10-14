@@ -7,6 +7,7 @@ export const GameEventEnum = {
 	START_GAME: "game:start",
 	JOIN_GAME: "game:join",
 	LEAVE_GAME: "game:leave",
+	GO_TO_GAME: "game:go-to",
 
 	NONEXISTENT_GAME: "game:nonexistent",
 	INCORRECT_VALUE: "value:incorrect",

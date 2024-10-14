@@ -1,7 +1,7 @@
 import Puzzle, { PuzzleDocument } from "@/models/puzzle/puzzle.js";
 import { updatePlayer } from "./update-player.js";
 import Game from "@/models/game/game.js";
-import { GameEventEnum } from "types";
+import { buildFrontendUrl, frontendUrls, GameEventEnum } from "types";
 import { WebSocketGamesMap } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 
@@ -46,5 +46,13 @@ export async function startGame({
 		puzzle: randomPuzzle._id
 	});
 
-	databaseGame.save();
+	const newlyCreatedGame = await databaseGame.save();
+
+	game.forEach((item) => {
+		updatePlayer({
+			event: GameEventEnum.GO_TO_GAME,
+			socket: item.socket,
+			message: buildFrontendUrl(frontendUrls.MULTIPLAYER_ID, { id: newlyCreatedGame.id })
+		});
+	});
 }
