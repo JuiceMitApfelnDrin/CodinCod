@@ -24,7 +24,10 @@ export const frontendUrls = {
 	USER_PROFILE_BY_USERNAME: "/profile/:username",
 
 	// play game
-	PLAY: "/",
+	// PLAY: "/",
+	// multiplayer
+	MULTIPLAYER: "/multiplayer",
+	MULTIPLAYER_ID: "/multiplayer/:id",
 
 	// learn
 	LEARN: "/learn",

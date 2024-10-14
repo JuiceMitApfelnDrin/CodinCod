@@ -4,8 +4,7 @@
 	import Ul from "@/components/typography/ul.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import { frontendUrls } from "types";
-	import { buildFrontendUrl } from "@/config/frontend.js";
+	import { buildFrontendUrl, frontendUrls } from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 

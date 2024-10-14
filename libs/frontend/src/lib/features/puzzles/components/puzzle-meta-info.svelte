@@ -1,8 +1,7 @@
 <script lang="ts">
 	import H1 from "@/components/typography/h1.svelte";
-	import { buildFrontendUrl } from "@/config/frontend";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { frontendUrls, isUserDto, type PuzzleDto } from "types";
+	import { buildFrontendUrl, frontendUrls, isUserDto, type PuzzleDto } from "types";
 	import * as HoverCard from "$lib/components/ui/hover-card";
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";

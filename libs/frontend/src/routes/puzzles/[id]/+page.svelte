@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
-	import { buildFrontendUrl } from "@/config/frontend.js";
-	import { frontendUrls, isAuthor, isUserDto } from "types";
+	import { buildFrontendUrl, frontendUrls, isAuthor } from "types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/index.js";
 	import Button from "@/components/ui/button/button.svelte";
 	import Accordion from "@/components/ui/accordion/accordion.svelte";

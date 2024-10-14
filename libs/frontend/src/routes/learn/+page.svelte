@@ -2,8 +2,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
-	import { buildFrontendUrl } from "@/config/frontend";
-	import { frontendUrls } from "types";
+	import { buildFrontendUrl, frontendUrls } from "types";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 
 	export let data;

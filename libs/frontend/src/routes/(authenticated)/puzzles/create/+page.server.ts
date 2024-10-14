@@ -1,9 +1,8 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { backendUrls, createPuzzleSchema, frontendUrls, POST } from "types";
+import { backendUrls, buildFrontendUrl, createPuzzleSchema, frontendUrls, POST } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
-import { buildFrontendUrl } from "@/config/frontend";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import type { RequestEvent } from "./$types.js";
 

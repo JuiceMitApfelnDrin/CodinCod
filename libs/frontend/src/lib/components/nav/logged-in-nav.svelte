@@ -1,17 +1,16 @@
 <script lang="ts">
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { frontendUrls } from "types";
+	import { buildFrontendUrl, frontendUrls } from "types";
 	import ToggleTheme from "./toggle-theme.svelte";
 	import LogoutButton from "./logout-button.svelte";
 	import { authenticatedUserInfo } from "../../stores";
 	import { websiteName } from "@/config/general";
-	import { buildFrontendUrl } from "@/config/frontend";
 	import Button from "../ui/button/button.svelte";
 
 	const navigationLinks = [
 		{
-			href: frontendUrls.PLAY,
+			href: frontendUrls.ROOT,
 			text: "Play"
 		},
 

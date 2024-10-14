@@ -1,4 +1,4 @@
-import type { FrontendUrl } from "types";
+import { FrontendUrl } from "../../core/index.js";
 
 interface Params {
 	[key: string]: string | number;
