@@ -7,6 +7,7 @@
 	import { authenticatedUserInfo } from "../../stores";
 	import { websiteName } from "@/config/general";
 	import { buildFrontendUrl } from "@/config/frontend";
+	import Button from "../ui/button/button.svelte";
 
 	const navigationLinks = [
 		{
@@ -45,15 +46,22 @@
 			</ul>
 
 			<DropdownMenu.Root>
-				<DropdownMenu.Trigger>
-					<Avatar.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Avatar.Root asChild>
 						<!-- TODO: fetch user profile picture -->
-						<Avatar.Image
+						<Button
+							size="icon"
 							class="rounded-full border-2 border-black dark:border-white"
-							src={"https://github.com/reeveng.png"}
-							alt={$authenticatedUserInfo?.username}
-						/>
-						<Avatar.Fallback>{$authenticatedUserInfo?.username}</Avatar.Fallback>
+							variant="outline"
+							builders={[builder]}
+						>
+							<Avatar.Image
+								class="rounded-full"
+								src={"https://github.com/juicemitapfelndrin.png"}
+								alt={$authenticatedUserInfo?.username}
+							/>
+							<Avatar.Fallback>{$authenticatedUserInfo?.username}</Avatar.Fallback>
+						</Button>
 					</Avatar.Root>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
