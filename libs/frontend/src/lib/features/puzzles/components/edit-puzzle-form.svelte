@@ -21,7 +21,7 @@
 
 	export let data;
 
-	const form = superForm(data.form, {
+	const form = superForm(data, {
 		dataType: "json",
 		multipleSubmits: "allow",
 		resetForm: false,

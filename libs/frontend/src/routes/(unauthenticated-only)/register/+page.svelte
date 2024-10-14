@@ -8,7 +8,7 @@
 	import { websiteName } from "@/config/general.js";
 
 	export let data;
-	export let form;
+	const { form: formData } = data;
 </script>
 
 <Container class="items-center justify-center">
@@ -19,7 +19,7 @@
 		</Card.Header>
 
 		<Card.Content>
-			<RegisterForm message={form?.message} data={data.form}></RegisterForm>
+			<RegisterForm data={formData}></RegisterForm>
 		</Card.Content>
 
 		<Card.Footer>

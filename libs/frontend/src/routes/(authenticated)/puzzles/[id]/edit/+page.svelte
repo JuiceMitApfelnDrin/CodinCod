@@ -11,7 +11,8 @@
 
 	export let data;
 
-	const puzzle: PuzzleDto = data.form.data;
+	const { form: formData } = data;
+	const puzzle: PuzzleDto = formData.data;
 
 	let isPuzzleAuthor = false;
 
@@ -30,7 +31,7 @@
 			<DeletePuzzleConfirmationDialog />
 		</LogicalUnit>
 
-		<EditPuzzleForm {data}></EditPuzzleForm>
+		<EditPuzzleForm data={formData}></EditPuzzleForm>
 	</Container>
 {:else}
 	<Error status={401} />
