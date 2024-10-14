@@ -17,5 +17,7 @@ export function onClose({
 		playerSocketToRemove
 	});
 
+	
+
 	console.log({ code, reason: reason.toString() });
 }
