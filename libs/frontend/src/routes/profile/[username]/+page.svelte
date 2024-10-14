@@ -3,7 +3,7 @@
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
 	import ActivityGroup from "@/features/profile/components/activity-feed/activity-group.svelte";
-	import Activity from "@/features/profile/components/activity-feed/activity.svelte";
+	import Activity from "@/features/profile/components/activity-feed/display-activity.svelte";
 	import CalendarHeatmap from "@/features/profile/components/calendar-heatmap.svelte";
 	import { groupByCreatedAtDate } from "@/utils/groupActivityByCreatedAtDate.js";
 	import dayjs from "dayjs";

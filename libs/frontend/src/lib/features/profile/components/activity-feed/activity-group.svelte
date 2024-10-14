@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import type { AcceptedDate } from "types";
-	import Activity from "./activity.svelte";
+	import type { AcceptedDate, Activity } from "types";
+	import DisplayActivity from "./display-activity.svelte";
 
 	export let date: AcceptedDate;
 	export let activities: Activity[] = [];
@@ -14,7 +14,7 @@
 		<ul>
 			{#each activities as activity}
 				<li>
-					<Activity {activity} />
+					<DisplayActivity {activity} />
 				</li>
 			{/each}
 		</ul>
