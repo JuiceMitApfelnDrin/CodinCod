@@ -8,32 +8,6 @@
 	export let minAmount = 0;
 	export let maxAmount = 8;
 
-	// create the thing first, then use it
-	// let days: number[] = [];
-
-	// const currentDate = new Date();
-
-	// // go from back to front, since submissions are added always at the back
-	// let currentIndexItemInActivity = activity.length - 1;
-
-	// // go over the previous 365 days
-	// for (let i = 0; i < 364; i++) {
-	// 	let solutionsThisDay = 0;
-	// 	// Calculate the date for the current iteration
-	// 	const pastDate = new Date();
-	// 	pastDate.setDate(currentDate.getDate() - i);
-
-	// 	while (
-	// 		currentIndexItemInActivity >= 0 &&
-	// 		pastDate < new Date(activity[currentIndexItemInActivity]?.createdAt)
-	// 	) {
-	// 		currentIndexItemInActivity -= 1;
-	// 		solutionsThisDay += 1;
-	// 	}
-
-	// 	days.push(solutionsThisDay);
-	// }
-
 	// Create an array for the previous 365 days and count activities for each day
 	let days: number[] = Array.from({ length: 364 })
 		.map((_, i) => {
@@ -41,18 +15,6 @@
 			return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
 		})
 		.reverse(); // reverse to start with the oldest day
-
-	// const minActivity: number = Math.min(...days);
-	// const maxActivity: number = Math.max(...days);
-
-	// const dayIndexToFormattedDate = (index: number): string => {
-	// 	const date = new Date();
-	// 	return new Date(date.setDate(date.getDate() - index)).toLocaleString(undefined, {
-	// 		day: "numeric",
-	// 		month: "long",
-	// 		year: "numeric"
-	// 	});
-	// };
 
 	const calcDayStyle = (activity: number): string => {
 		if (activity > 0)
