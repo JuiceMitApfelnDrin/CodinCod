@@ -275,9 +275,6 @@ importers:
       '@tsconfig/recommended':
         specifier: ^1.0.7
         version: 1.0.7
-      '@types/ws':
-        specifier: ^8.5.12
-        version: 8.5.12
       eslint:
         specifier: 9.x
         version: 9.10.0
