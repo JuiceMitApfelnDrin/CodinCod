@@ -2,6 +2,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import websocket from "@fastify/websocket";
 import Fastify from "fastify";
 import cors from "./plugins/config/cors.js";
 import jwt from "./plugins/config/jwt.js";
@@ -13,6 +14,7 @@ import fastifyCookie from "@fastify/cookie";
 import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
 import piston from "./plugins/decorators/piston.js";
+import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 
 const server = Fastify({
 	logger: true // Boolean(process.env.NODE_ENV !== "development")
@@ -33,11 +35,12 @@ server.register(cors);
 server.register(swagger);
 server.register(jwt);
 server.register(swaggerUi);
-
 // server.register(dbConnectorPlugin);
 server.register(fastifyFormbody);
 server.register(mongooseConnector);
 server.register(piston);
+server.register(websocket);
+server.register(setupWebSockets);
 
 // register custom plugins
 

@@ -7,7 +7,7 @@
 	import { frontendUrls } from "types";
 
 	export let data;
-	export let form;
+	const { form: formData } = data;
 </script>
 
 <Container class="items-center justify-center">
@@ -18,7 +18,7 @@
 		</Card.Header>
 
 		<Card.Content>
-			<LoginForm message={form?.message} data={data.form}></LoginForm>
+			<LoginForm data={formData}></LoginForm>
 		</Card.Content>
 
 		<Card.Footer>

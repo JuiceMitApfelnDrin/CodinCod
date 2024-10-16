@@ -1,8 +1,9 @@
 import { buildBackendUrl } from "@/config/backend.js";
 import { error } from "@sveltejs/kit";
-import { backendUrls, type PuzzleEntity } from "types";
+import { backendUrls, type PuzzleDto } from "types";
+import type { PageServerLoadEvent } from "./$types";
 
-export async function load({ fetch, params }) {
+export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
 	const url = buildBackendUrl(backendUrls.PUZZLE_DETAIL, { id });
 
@@ -13,7 +14,7 @@ export async function load({ fetch, params }) {
 			error(response.status, "Failed to fetch the puzzle.");
 		}
 
-		const puzzle: PuzzleEntity = await response.json();
+		const puzzle: PuzzleDto = await response.json();
 
 		return { puzzle };
 	} catch (err) {

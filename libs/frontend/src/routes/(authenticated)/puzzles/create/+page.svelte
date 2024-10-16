@@ -10,5 +10,5 @@
 <Container>
 	<H1>Create a puzzle</H1>
 
-	<CreatePuzzleForm data={formData}></CreatePuzzleForm>
+	<CreatePuzzleForm data={formData} />
 </Container>

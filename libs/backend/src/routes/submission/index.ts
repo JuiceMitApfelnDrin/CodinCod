@@ -1,9 +1,10 @@
 import { FastifyInstance } from "fastify";
 import {
-	AuthenticatedInfo,
 	isAuthenticatedInfo,
+	isPistonExecutionResponseError,
+	isPistonExecutionResponseSuccess,
 	LanguageLabel,
-	PistonExecuteResponse,
+	PistonExecutionResponse,
 	PuzzleEntity,
 	SubmissionEntity,
 	submissionEntitySchema,
@@ -83,15 +84,29 @@ export default async function submissionController(fastify: FastifyInstance) {
 
 			const pistonExecutionResponses = await Promise.all(
 				pistonExecutionRequests.map(async (request) => {
-					const response: PistonExecuteResponse = await fastify.piston(request);
+					const response: PistonExecutionResponse = await fastify.piston(request);
 
-					return {
-						response,
-						stdin: request.stdin,
-						isMatch:
-							response.run.output.trim() === request.expectedOutput.trim() ||
-							request.expectedOutput.trim() === response.run.stdout.trim()
-					};
+					if (isPistonExecutionResponseError(response)) {
+						return {
+							response,
+							stdin: request.stdin,
+							isMatch: false
+						};
+					}
+
+					if (isPistonExecutionResponseSuccess(response)) {
+						const expectedOutput = request.expectedOutput.trim();
+
+						return {
+							response,
+							stdin: request.stdin,
+							isMatch:
+								response.run.output.trim() === expectedOutput ||
+								response.run.stdout.trim() === expectedOutput
+						};
+					}
+
+					return { isMatch: false };
 				})
 			);
 

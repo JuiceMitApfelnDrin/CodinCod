@@ -1,0 +1,84 @@
+import { ValueOf } from "../types/value-of.js";
+
+export const httpResponseCodes = {
+	INFORMATION: {
+		CONTINUE: 100,
+		SWITCHING_PROTOCOLS: 101,
+		PROCESSING: 102,
+		EARLY_HINTS: 103
+	},
+
+	SUCCESSFUL: {
+		OK: 200,
+		CREATED: 201,
+		ACCEPTED: 202,
+		NON_AUTHORITATIVE_INFO: 203,
+		NO_CONTENT: 204,
+		RESET_CONTENT: 205,
+		PARTIAL_CONTENT: 206,
+		MULTI_STATUS: 207,
+		ALREADY_REPORTED: 208,
+		I_AM_USED: 226
+	},
+
+	REDIRECTION: {
+		MULTIPLE_CHOICES: 300, // more than one response, be more specific
+		MOVED_PERMANENTLY: 301, // new uri in response
+		FOUND: 302, // changed temporarily, in the future keep using this uri
+		SEE_OTHER: 303, // get at another uri
+		NOT_MODIFIED: 304, // for caching, says it has not been modified, so keep on using the one you have
+		// 305 and 306 aren't used anymore
+		TEMPORARY_REDIRECT: 307, // post/put/patch/get it at another uri
+		PERMANENT_REDIRECT: 308 // permanently located on another uri
+	},
+
+	CLIENT_ERROR: {
+		BAD_REQUEST: 400,
+		UNAUTHORIZED: 401,
+		PAYMENT_REQUIRED: 402, // reserved for the future, not really in use
+		FORBIDDEN: 403,
+		NOT_FOUND: 404,
+		METHOD_NOT_ALLOWED: 405,
+		NOT_ACCEPTABLE: 406,
+		PROXY_AUTHENTICATION_REQUIRED: 407,
+		REQUEST_TIMEOUT: 408,
+		CONFLICT: 409,
+		GONE: 410,
+		LENGTH_REQUIRED: 411,
+		PRECONDITION_FAILED: 412,
+		PAYLOAD_TOO_LARGE: 413,
+		URI_TOO_LONG: 414,
+		UNSUPPORTED_MEDIA_TYPE: 415,
+		RANGE_NOT_SATISFIED: 416,
+		EXPECTATION_FAILED: 417,
+		I_AM_A_TEAPOT: 418,
+		MISDIRECTED_REQUEST: 421,
+		UNPROCESSABLE_CONTENT: 422,
+		LOCKED: 423,
+		FAILED_DEPENDENCY: 424,
+		TOO_EARLY: 425,
+		UPGRADE_REQUIRED: 426,
+		PRECONDITION_REQUIRED: 428,
+		TOO_MANY_REQUESTS: 429,
+		REQUEST_HEADER_FIELDS_TOO_LARGE: 431,
+		UNAVAILABLE_FOR_LEGAL_REASONS: 451
+	},
+
+	SERVER_ERROR: {
+		INTERNAL_SERVER_ERROR: 500,
+		NOT_IMPLEMENTED: 501,
+		BAD_GATEWAY: 502,
+		SERVICE_UNAVAILABLE: 503,
+		GATEWAY_TIMEOUT: 504,
+		HTTP_VERSION_NOT_SUPPORTED: 505,
+		VARIANT_ALSO_NEGOTIATES: 506,
+		INSUFFICIENT_STORAGE: 507,
+		LOOP_DETECTED: 508,
+		NOT_EXTENDED: 510,
+		NETWORK_AUTHENTICATION_REQUIRED: 511
+	}
+} as const;
+
+export type HttpResponseCode = ValueOf<{
+	[K in keyof typeof httpResponseCodes]: ValueOf<(typeof httpResponseCodes)[K]>;
+}>;

@@ -1,3 +1,3 @@
-export function isAuthor(authorId: string, currentUserId: string): boolean {
-	return authorId === currentUserId;
+export function isAuthor(authorId: any, currentUserId: string): boolean {
+	return authorId && authorId === currentUserId;
 }

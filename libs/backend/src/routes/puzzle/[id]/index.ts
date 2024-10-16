@@ -4,14 +4,13 @@ import authenticated from "../../../plugins/middelware/authenticated.js";
 import {
 	AuthenticatedInfo,
 	puzzleEntitySchema,
-	VisibilityEnum,
+	PuzzleVisibilityEnum,
 	isAuthor,
 	isAuthenticatedInfo
 } from "types";
+import { ParamsId } from "./types.js";
 
-type ParamsId = { Params: { id: string } };
-
-export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
+export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
 		const { id } = request.params;
 
@@ -94,7 +93,7 @@ export default async function puzzleDetailRoutes(fastify: FastifyInstance) {
 					return reply.status(403).send({ error: "Not authorized to delete this puzzle" });
 				}
 
-				const isDraft = puzzle.visibility === VisibilityEnum.DRAFT;
+				const isDraft = puzzle.visibility === PuzzleVisibilityEnum.DRAFT;
 				const isNotDraft = !isDraft;
 				if (isNotDraft) {
 					// TODO: figure out: this is a questionable choice at the moment, but might not want to delete an interesting puzzle completely which users already have solved, so maybe archive instead of a full delete??

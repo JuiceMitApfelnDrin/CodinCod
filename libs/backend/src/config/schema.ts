@@ -11,7 +11,7 @@ import {
 	difficultySchema,
 	identifierSchema,
 	userEntitySchema,
-	visibilitySchema,
+	puzzleVisibilitySchema,
 	submissionEntitySchema,
 	loginResponseSchema,
 	registerResponseSchema,
@@ -21,14 +21,14 @@ import {
 	paginatedQuerySchema,
 	paginatedQueryResponseSchema,
 	pistonFileSchema,
-	pistonExecuteRequestSchema,
-	pistonExecuteResponseSchema,
+	pistonExecutionRequestSchema,
+	pistonExecutionResponseSchema,
 	puzzleResultSchema,
 	editPuzzleSchema,
 	acceptedDateSchema,
 	createPuzzleSchema,
-	pistonExecuteResponseErrorSchema,
-	pistonExecuteResponseSuccessSchema
+	pistonExecutionResponseErrorSchema,
+	pistonExecutionResponseSuccessSchema
 } from "types";
 
 export const { schemas, $ref } = buildJsonSchemas({
@@ -43,7 +43,7 @@ export const { schemas, $ref } = buildJsonSchemas({
 	difficultySchema,
 	identifierSchema,
 	userEntitySchema,
-	visibilitySchema,
+	visibilitySchema: puzzleVisibilitySchema,
 	submissionEntitySchema,
 	loginResponseSchema,
 	registerResponseSchema,
@@ -53,12 +53,12 @@ export const { schemas, $ref } = buildJsonSchemas({
 	paginatedQuerySchema,
 	paginatedQueryResponseSchema,
 	pistonFileSchema,
-	pistonExecuteRequestSchema,
-	pistonExecuteResponseSchema,
+	pistonExecutionRequestSchema,
+	pistonExecutionResponseSchema,
 	puzzleResultSchema,
 	editPuzzleSchema,
 	acceptedDateSchema,
 	createPuzzleSchema,
-	pistonExecuteResponseErrorSchema,
-	pistonExecuteResponseSuccessSchema
+	pistonExecutionResponseErrorSchema,
+	pistonExecutionResponseSuccessSchema
 });

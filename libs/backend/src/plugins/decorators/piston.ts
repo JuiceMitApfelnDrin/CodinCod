@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
 import fastifyPlugin from "fastify-plugin";
-import { PistonExecuteRequest, PistonExecuteResponse, pistonUrls, POST } from "types";
+import { PistonExecutionRequest, PistonExecutionResponse, pistonUrls, POST } from "types";
 
 async function piston(fastify: FastifyInstance) {
-	fastify.decorate("piston", async (pistonExecutionRequestObject: PistonExecuteRequest) => {
+	fastify.decorate("piston", async (pistonExecutionRequestObject: PistonExecutionRequest) => {
 		const PISTON_API = process.env.PISTON_URI;
 
 		if (!PISTON_API) {
@@ -17,7 +17,7 @@ async function piston(fastify: FastifyInstance) {
 			},
 			body: JSON.stringify(pistonExecutionRequestObject)
 		});
-		const executionRes: PistonExecuteResponse = await res.json();
+		const executionRes: PistonExecutionResponse = await res.json();
 
 		return executionRes;
 	});

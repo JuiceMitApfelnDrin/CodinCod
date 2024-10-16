@@ -5,8 +5,9 @@ import { backendUrls, PUT, puzzleDtoSchema, type PuzzleDto } from "types";
 import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
+import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
 
-export async function load({ fetch, params }) {
+export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
 
 	const url = buildBackendUrl(backendUrls.PUZZLE_DETAIL, { id });
@@ -26,7 +27,7 @@ export async function load({ fetch, params }) {
 }
 
 export const actions = {
-	default: async ({ params, request }) => {
+	default: async ({ params, request }: RequestEvent) => {
 		const form = await superValidate(request, zod(puzzleDtoSchema));
 
 		if (!form.valid) {
