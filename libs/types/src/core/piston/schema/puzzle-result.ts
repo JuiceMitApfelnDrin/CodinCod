@@ -1,12 +1,7 @@
 import { z } from "zod";
 import { PuzzleResultEnum } from "../../puzzle/index.js";
+import { getValues } from "../../../utils/functions/getValues.js";
 
 // TODO: find a better name for this schema
-export const puzzleResultSchema = z.enum([
-	PuzzleResultEnum.ERROR,
-	PuzzleResultEnum.SUCCESS,
-
-	// TODO: probably want to get rid of unknown situations eventually :)
-	PuzzleResultEnum.UNKNOWN
-]);
+export const puzzleResultSchema = z.enum(getValues(PuzzleResultEnum));
 export type PuzzleResult = z.infer<typeof puzzleResultSchema>;

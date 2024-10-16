@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { userDtoSchema } from "../../user/index.js";
 import { submissionEntitySchema } from "./submission-entity.schema.js";
 
 const baseSubmissionDtoSchema = submissionEntitySchema;

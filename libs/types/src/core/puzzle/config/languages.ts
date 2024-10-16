@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { getValues } from "../../../utils/functions/getValues.js";
+import { getKeys } from "../../../utils/functions/getKeys.js";
 
 export const supportedLanguages = {
 	python: {
@@ -40,4 +42,4 @@ export type LanguageVersion = string;
 export const languageLabels = Object.keys(supportedLanguages) as LanguageLabel[];
 export const DEFAULT_LANGUAGE: LanguageLabel = "python";
 
-export const LanguageLabelEnum = z.enum(languageLabels as [LanguageLabel, ...LanguageLabel[]]);
+export const LanguageLabelEnum = z.enum(getKeys(supportedLanguages));
