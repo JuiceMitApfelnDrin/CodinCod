@@ -5,7 +5,7 @@ import type { LayoutServerLoadEvent } from "./$types";
 
 export async function load({ cookies }: LayoutServerLoadEvent) {
 	const token = cookies.get(cookieKeys.TOKEN);
-	const currentUser = getAuthenticatedUserInfo(token);
+	const currentUser = getAuthenticatedUserInfo(token, cookies);
 
 	if (currentUser.isAuthenticated) {
 		throw redirect(303, frontendUrls.ROOT);

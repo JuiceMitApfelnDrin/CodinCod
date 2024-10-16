@@ -12,7 +12,7 @@ export async function load({ cookies, url }: ServerLoadEvent) {
 	}
 
 	const token = cookies.get(cookieKeys.TOKEN);
-	const currentUser = getAuthenticatedUserInfo(token);
+	const currentUser = getAuthenticatedUserInfo(token, cookies);
 
 	return currentUser;
 }
