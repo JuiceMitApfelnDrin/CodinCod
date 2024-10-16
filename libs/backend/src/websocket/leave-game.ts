@@ -1,8 +1,10 @@
 import { GameEventEnum } from "types";
 import { updatePlayer } from "./update-player.js";
 import { updatePlayersInGame } from "./update-players-in-game.js";
-import { WebSocketGamesMap } from "@/types/games.js";
+import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
+import { removePlayerFromGame } from "./remove-player-from-game.js";
+import { removeGameFromGames } from "./remove-game-from-games.js";
 
 export function leaveGame({
 	gameId,
@@ -13,20 +15,11 @@ export function leaveGame({
 	gameId: string;
 	socket: WebSocket;
 	username: string;
-	games: WebSocketGamesMap;
+	games: OpenGames;
 }) {
+	const game = games[gameId];
+
 	// if game exists
-	if (!games.has(gameId)) {
-		updatePlayer({
-			socket,
-			event: GameEventEnum.NONEXISTENT_GAME,
-			message: `game with id (${gameId}), couldn't be found`
-		});
-		return;
-	}
-
-	const game = games.get(gameId);
-
 	if (!game) {
 		updatePlayer({
 			socket,
@@ -36,17 +29,18 @@ export function leaveGame({
 		return;
 	}
 
-	// remove user from game
-	if (game.has(username)) {
-		game.delete(username);
+	const userInfo = game[username];
+
+	if (userInfo) {
+		removePlayerFromGame({ game, usernamePlayerToRemove: username });
 	}
 
 	// if game is empty
-	if (game.size === 0) {
-		// remove game, since no longer in use
-		games.delete(gameId);
+	if (Object.keys(game).length === 0) {
+		// no longer in use
+		removeGameFromGames({ gameId, games });
 	} else {
-		const game = games.get(gameId);
+		const game = games[gameId];
 
 		if (game) {
 			// notify people someone left

@@ -1,11 +1,11 @@
-import { WebSocketGame } from "@/types/games.js";
+import { OpenGame } from "@/types/games.js";
 
 export function removePlayerFromGame({
 	game,
 	usernamePlayerToRemove
 }: {
-	game: WebSocketGame;
+	game: OpenGame;
 	usernamePlayerToRemove: string;
 }) {
-	game.delete(usernamePlayerToRemove);
+	delete game[usernamePlayerToRemove];
 }

@@ -1,8 +1,8 @@
-import { ValueOfGameEvent } from "types";
 import { joinGame } from "./join-game.js";
-import { WebSocketGamesMap } from "@/types/games.js";
+import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { generateRandomObjectIdString } from "@/utils/functions/generate-random-object-id-string.js";
+import { GameEvent } from "types";
 
 export function hostGame({
 	userId,
@@ -12,14 +12,14 @@ export function hostGame({
 	games
 }: {
 	socket: WebSocket;
-	event: ValueOfGameEvent;
+	event: GameEvent;
 	username: string;
 	userId: string;
-	games: WebSocketGamesMap;
+	games: OpenGames;
 }) {
 	const randomId = generateRandomObjectIdString();
 
-	games.set(randomId, new Map());
+	games[randomId] = {};
 
 	joinGame({ gameId: randomId, userId, socket, username, event, games });
 }

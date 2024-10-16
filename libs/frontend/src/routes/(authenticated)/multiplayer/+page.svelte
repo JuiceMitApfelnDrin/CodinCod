@@ -1,9 +1,15 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
 	import { GameEventEnum } from "types";
 
-	let state = {
+	let state: {
+		creator?: boolean;
+		gameId?: string;
+		game?: { users: { username: string; userId: string }[] };
+		games: { id: string; amountOfPlayersJoined: number }[];
+	} = {
 		// TODO: timeleft/countdown timer when game is started
 		creator: false,
 		gameId: undefined,
@@ -29,10 +35,13 @@
 			console.log("WebSocket connection opened");
 		});
 
-		socket.addEventListener("message", (message) => {
+		socket.addEventListener("message", async (message) => {
 			const data = JSON.parse(message.data);
 
 			const { event } = data;
+
+			console.log({ event, data });
+
 			switch (event) {
 				case GameEventEnum.HOST_GAME:
 					{
@@ -41,10 +50,22 @@
 					break;
 				case GameEventEnum.OVERVIEW_OF_GAMES:
 					{
-						state.games = data.message;
+						state.games = JSON.parse(data.message);
+					}
+					break;
+				case GameEventEnum.OVERVIEW_GAME:
+					{
+						state.game = { users: JSON.parse(data.message) };
+					}
+					break;
+				case GameEventEnum.GO_TO_GAME:
+					{
+						await goto(data.message);
 					}
 					break;
 				default:
+					console.log("unknown / unhandled event: ", { event });
+
 					break;
 			}
 		});

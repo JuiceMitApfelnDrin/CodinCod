@@ -1,17 +1,16 @@
-import websocket, { WebSocket } from "@fastify/websocket";
+import { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { onConnection } from "../../websocket/on-connection.js";
 import { onMessage } from "../../websocket/on-message.js";
 import { updatePlayers } from "../../websocket/update-players.js";
 import { onClose } from "../../websocket/on-close.js";
-import { WebSocketGamesMap } from "@/types/games.js";
+import { OpenGames } from "@/types/games.js";
 
-const games: WebSocketGamesMap = new Map();
+const games: OpenGames = {};
 const activePlayerList: WebSocket[] = [];
 
 export async function setupWebSockets(fastify: FastifyInstance) {
 	// needs to happen before other routes in the whole flow
-	fastify.register(websocket);
 
 	fastify.get("/", { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
 		onConnection({ players: activePlayerList, games, newPlayerSocket: socket });
@@ -22,7 +21,7 @@ export async function setupWebSockets(fastify: FastifyInstance) {
 		});
 
 		socket.on("close", (code, reason) => {
-			onClose({ code, reason, players: activePlayerList, playerSocketToRemove: socket });
+			onClose({ code, reason, players: activePlayerList, playerSocketToRemove: socket, games });
 		});
 	});
 }

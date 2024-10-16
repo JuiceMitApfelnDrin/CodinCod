@@ -1,4 +1,6 @@
 import { GameUserInfo } from "types";
 
-export type WebSocketGame = Map<string, GameUserInfo>;
-export type WebSocketGamesMap = Map<string, WebSocketGame>;
+export type Username = string;
+export type GameId = string;
+export type OpenGame = { [key: Username]: GameUserInfo };
+export type OpenGames = { [key: GameId]: OpenGame };

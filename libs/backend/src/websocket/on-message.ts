@@ -4,7 +4,7 @@ import { hostGame } from "./host-game.js";
 import { joinGame } from "./join-game.js";
 import { leaveGame } from "./leave-game.js";
 import { startGame } from "./start-game.js";
-import { WebSocketGamesMap } from "@/types/games.js";
+import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { RawData } from "ws";
 import { removePlayerFromPlayers } from "./remove-player-from-players.js";
@@ -19,7 +19,7 @@ export async function onMessage({
 }: {
 	message: RawData;
 	socket: WebSocket;
-	games: WebSocketGamesMap;
+	games: OpenGames;
 	players: WebSocket[];
 }) {
 	let parsedMessage = parseRawDataMessage(message, socket);

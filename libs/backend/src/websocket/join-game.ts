@@ -1,7 +1,7 @@
-import { ValueOfGameEvent } from "types";
+import { GameEvent } from "types";
 import { updatePlayer } from "./update-player.js";
 import { updatePlayersInGame } from "./update-players-in-game.js";
-import { WebSocketGamesMap } from "@/types/games.js";
+import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 
 export function joinGame({
@@ -14,16 +14,16 @@ export function joinGame({
 }: {
 	gameId: string;
 	socket: WebSocket;
-	event: ValueOfGameEvent;
+	event: GameEvent;
 	username: string;
 	userId: string;
-	games: WebSocketGamesMap;
+	games: OpenGames;
 }) {
-	const game = games.get(gameId);
+	const game = games[gameId];
 
 	// add a user to the game
 	if (game && username && userId) {
-		game.set(username, { joinedAt: new Date(), socket, userId, username });
+		game[username] = { joinedAt: new Date(), socket, userId, username };
 
 		// notify people someone joined
 		updatePlayer({ socket, event, message: gameId });

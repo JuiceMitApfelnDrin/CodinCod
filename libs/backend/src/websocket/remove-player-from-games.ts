@@ -1,25 +1,15 @@
-import { WebSocketGamesMap } from "@/types/games.js";
+import { OpenGames } from "@/types/games.js";
 import { removePlayerFromGame } from "./remove-player-from-game.js";
-import { WebSocket } from "@fastify/websocket";
+import { GameUserInfo } from "types";
 
-export async function removePlayerFromGames({
-	games,
-	socketToRemove
-}: {
-	games: WebSocketGamesMap;
-	socketToRemove: WebSocket;
-}) {
+export async function removeStoppedPlayersFromGames({ games }: { games: OpenGames }) {
 	// TODO: is it safe to stop when you have removed only one item, who is to say someone may join multiple through an unofficial client?
 	// looking at you :susge:
-	games.forEach((game) => {
-		const itemToRemove = game.entries().find(([_, gameUserObj]) => {
-			return gameUserObj.socket === socketToRemove;
+	Object.values(games).forEach((game) => {
+		Object.values(game).filter((gameUserObj: GameUserInfo) => {
+			if (!gameUserObj.socket || gameUserObj.socket.CLOSED) {
+				removePlayerFromGame({ game, usernamePlayerToRemove: gameUserObj.username });
+			}
 		});
-
-		if (itemToRemove) {
-			const [username, _] = itemToRemove;
-
-			removePlayerFromGame({ game, usernamePlayerToRemove: username });
-		}
 	});
 }

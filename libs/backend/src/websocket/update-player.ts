@@ -1,5 +1,5 @@
 import { WebSocket } from "@fastify/websocket";
-import { ValueOfGameEvent } from "types";
+import { GameEvent } from "types";
 
 export function updatePlayer({
 	socket,
@@ -7,8 +7,8 @@ export function updatePlayer({
 	message
 }: {
 	socket: WebSocket;
-	event: ValueOfGameEvent;
-	message: any;
+	event: GameEvent;
+	message: string;
 }) {
 	socket.send(
 		JSON.stringify({

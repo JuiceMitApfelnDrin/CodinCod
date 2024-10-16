@@ -1,9 +1,9 @@
 import { WebSocket } from "@fastify/websocket";
 import { removePlayerFromPlayers } from "./remove-player-from-players.js";
-import { removePlayerFromGames } from "./remove-player-from-games.js";
-import { WebSocketGamesMap } from "@/types/games.js";
+import { removeStoppedPlayersFromGames } from "./remove-player-from-games.js";
+import { OpenGames } from "@/types/games.js";
 
-export function onClose({
+export async function onClose({
 	players,
 	playerSocketToRemove,
 	code,
@@ -14,14 +14,15 @@ export function onClose({
 	playerSocketToRemove: WebSocket;
 	code: number;
 	reason: Buffer;
-	games: WebSocketGamesMap;
+	games: OpenGames;
 }) {
-	removePlayerFromPlayers({
-		players,
-		playerSocketToRemove
-	});
+	await Promise.all([
+		removePlayerFromPlayers({
+			players,
+			playerSocketToRemove
+		}),
+		removeStoppedPlayersFromGames({ games })
+	]);
 
-	removePlayerFromGames({ games, socketToRemove: playerSocketToRemove });
-
-	console.log({ code, reason: reason.toString() });
+	console.log({ reason, code });
 }
