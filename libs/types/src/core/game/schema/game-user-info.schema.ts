@@ -8,4 +8,4 @@ export const gameUserInfoSchema = z.object({
 	joinedAt: acceptedDateSchema,
 	socket: z.any()
 });
-export type GameUserInfo = z.infer<typeof gameUserInfoSchema> & { socket: WebSocket };
+export type GameUserInfo = z.infer<typeof gameUserInfoSchema>;
