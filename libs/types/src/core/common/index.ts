@@ -3,6 +3,7 @@ export * from "./config/backend-urls.js";
 export * from "./config/cookie.js";
 export * from "./config/default-values-query-params.js";
 export * from "./config/frontend-urls.js";
+export * from "./config/web-socket-urls.js";
 
 // enum
 export * from "./enum/http-response-codes.js";

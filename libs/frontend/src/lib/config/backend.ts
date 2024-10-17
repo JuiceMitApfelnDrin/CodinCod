@@ -1,4 +1,4 @@
-import { type BackendUrl } from "types";
+import { type BackendUrl, type WebSocketUrl } from "types";
 
 interface Params {
 	[key: string]: string | number;
@@ -18,7 +18,7 @@ export function buildBackendUrl(path: BackendUrl, params: Params = {}) {
 	const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 	if (!backendUrl) {
-		throw new Error("Bruh, you forgot to add vite_backend_url to your .env");
+		throw new Error("Bruh, you forgot to add VITE_BACKEND_URL to your .env");
 	}
 
 	let url = `${backendUrl}${path}`;
@@ -29,6 +29,18 @@ export function buildBackendUrl(path: BackendUrl, params: Params = {}) {
 			url = url.replace(`:${key}`, String(value));
 		});
 	}
+
+	return url;
+}
+
+export function buildWebSocketBackendUrl(path: WebSocketUrl) {
+	const backendUrl = import.meta.env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER;
+
+	if (!backendUrl) {
+		throw new Error("Bruh, you forgot to add VITE_BACKEND_WEBSOCKET_MULTIPLAYER to your .env");
+	}
+
+	let url = `${backendUrl}${path}`;
 
 	return url;
 }
