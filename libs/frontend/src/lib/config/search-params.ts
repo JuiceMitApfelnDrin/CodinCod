@@ -1,3 +1,4 @@
 export const searchParamKeys = {
-	LOGOUT: "logout"
+	LOGOUT: "logout",
+	REDIRECT_URL: "redirectUrl"
 } as const;
