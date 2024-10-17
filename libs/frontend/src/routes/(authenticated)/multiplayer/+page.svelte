@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
-	import { GameEventEnum } from "types";
+	import { GameEventEnum, webSocketUrls } from "types";
 
 	let state: {
 		creator?: boolean;
@@ -23,13 +24,8 @@
 
 	let socket: WebSocket;
 	onMount(() => {
-		const websocketUrl = import.meta.env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER;
-
-		if (!websocketUrl) {
-			alert("Did you forget an environment variable? VITE_BACKEND_WEBSOCKET_MULTIPLAYER");
-		}
-
-		socket = new WebSocket(websocketUrl);
+		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.WAITING_ROOM);
+		socket = new WebSocket(webSocketUrl);
 
 		socket.addEventListener("open", (message) => {
 			console.log("WebSocket connection opened");
