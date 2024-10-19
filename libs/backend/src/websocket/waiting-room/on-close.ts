@@ -2,6 +2,7 @@ import { WebSocket } from "@fastify/websocket";
 import { removePlayerFromPlayers } from "./remove-player-from-players.js";
 import { removeStoppedPlayersFromGames } from "./remove-player-from-games.js";
 import { OpenGames } from "@/types/games.js";
+import { removeEmptyGames } from "./remove-empty-games.js";
 
 export async function onClose({
 	players,
@@ -21,7 +22,8 @@ export async function onClose({
 			players,
 			playerSocketToRemove
 		}),
-		removeStoppedPlayersFromGames({ games })
+		removeStoppedPlayersFromGames({ games }),
+		removeEmptyGames({ games })
 	]);
 
 	console.log({ reason, code });
