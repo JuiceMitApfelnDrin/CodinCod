@@ -2,7 +2,7 @@ import mongoose, { ObjectId, Schema } from "mongoose";
 import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
 import { SubmissionEntity } from "types";
 
-interface SubmissionDocument extends Document, Omit<SubmissionEntity, "puzzleId" | "userId"> {
+export interface SubmissionDocument extends Document, Omit<SubmissionEntity, "puzzleId" | "userId"> {
 	puzzleId: ObjectId;
 	userId: ObjectId;
 }

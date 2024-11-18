@@ -17,6 +17,7 @@ export async function onClose({
 	reason: Buffer;
 	games: OpenGames;
 }) {
+	// TODO: when a player gets removed and is host/creator, move the ownership to second in line
 	await Promise.all([
 		removePlayerFromPlayers({
 			players,

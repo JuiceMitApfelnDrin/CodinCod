@@ -1,7 +1,7 @@
 import { OpenGame } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { GameEventEnum, GameUserInfo } from "types";
-import { updatePlayer } from "./update-player.js";
+import { updatePlayer } from "../common/update-player.js";
 import { findCreator } from "./find-creator.js";
 
 export function updatePlayersInGame({ game }: { game: OpenGame }) {
@@ -14,13 +14,11 @@ export function updatePlayersInGame({ game }: { game: OpenGame }) {
 
 	const creator = findCreator({ players: playersInGame });
 
-	const currentGameStatus = JSON.stringify({ users: playersInGame, creator: creator });
-
 	Object.values(game).forEach((userObj: GameUserInfo) => {
 		updatePlayer({
 			socket: userObj.socket,
 			event: GameEventEnum.OVERVIEW_GAME,
-			message: currentGameStatus
+			data: { users: playersInGame, creator: creator }
 		});
 	});
 }

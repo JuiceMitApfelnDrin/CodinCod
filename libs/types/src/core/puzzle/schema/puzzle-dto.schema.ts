@@ -1,12 +1,10 @@
 import { z } from "zod";
 import { puzzleEntitySchema } from "./puzzle-entity.schema.js";
-import { userDtoSchema } from "../../user/index.js";
 
 const basePuzzleDtoSchema = puzzleEntitySchema;
 
 export const puzzleDtoSchema = basePuzzleDtoSchema.extend({
-	_id: z.string().optional(),
-	authorId: userDtoSchema
+	_id: z.string().optional()
 });
 
 export type PuzzleDto = z.infer<typeof puzzleDtoSchema>;

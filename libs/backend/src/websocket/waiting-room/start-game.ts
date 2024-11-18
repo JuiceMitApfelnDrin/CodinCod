@@ -1,7 +1,7 @@
 import Puzzle, { PuzzleDocument } from "@/models/puzzle/puzzle.js";
-import { updatePlayer } from "./update-player.js";
+import { updatePlayer } from "../common/update-player.js";
 import Game from "@/models/game/game.js";
-import { buildFrontendUrl, frontendUrls, GameEventEnum } from "types";
+import { buildFrontendUrl, frontendUrls, GameEventEnum, PuzzleVisibilityEnum } from "types";
 import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { findCreator } from "./find-creator.js";
@@ -48,7 +48,22 @@ export async function startGame({
 
 	const creator = findCreator({ players: playersInGame });
 
-	const randomPuzzles = await Puzzle.aggregate<PuzzleDocument>([{ $sample: { size: 1 } }]).exec();
+	const randomPuzzles = await Puzzle.aggregate<PuzzleDocument>([
+		{ $match: { visibility: PuzzleVisibilityEnum.APPROVED } },
+		{ $sample: { size: 1 } }
+	]).exec();
+
+	console.log({ randomPuzzles });
+
+	if (randomPuzzles.length < 1) {
+		updatePlayer({
+			event: GameEventEnum.NOT_ENOUGH_GAMES,
+			socket,
+			message: "create a game and get it approved in order to play games"
+		});
+		return;
+	}
+
 	const randomPuzzle = randomPuzzles[0];
 
 	const databaseGame = new Game({

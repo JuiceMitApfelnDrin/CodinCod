@@ -1,25 +1,16 @@
 import { FastifyInstance } from "fastify";
 import {
+	CodeExecutionParams,
 	isFetchError,
 	isPistonExecutionResponseSuccess,
-	LanguageLabel,
 	PistonExecutionRequest,
 	PistonExecutionResponse,
 	supportedLanguages
 } from "types";
 import { calculateResult } from "../../utils/functions/calculate-result.js";
 
-type ExecuteParams = {
-	Body: {
-		code: string;
-		language: LanguageLabel;
-		testInput: string;
-		testOutput: string;
-	};
-};
-
 export default async function executeRoutes(fastify: FastifyInstance) {
-	fastify.post<ExecuteParams>("/", async (request, reply) => {
+	fastify.post<{ Body: CodeExecutionParams }>("/", async (request, reply) => {
 		const { code, language, testInput, testOutput } = request.body;
 
 		const requestObject: PistonExecutionRequest = {

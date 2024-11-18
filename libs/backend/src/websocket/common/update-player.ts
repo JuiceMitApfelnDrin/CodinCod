@@ -4,16 +4,19 @@ import { GameEvent } from "types";
 export function updatePlayer({
 	socket,
 	event,
-	message
+	message,
+	data
 }: {
 	socket: WebSocket;
 	event: GameEvent;
-	message: string;
+	message?: string;
+	data?: any;
 }) {
 	socket.send(
 		JSON.stringify({
 			event,
-			message
+			message,
+			data
 		})
 	);
 }

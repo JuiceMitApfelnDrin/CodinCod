@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import Puzzle from "../../../models/puzzle/puzzle.js";
-import authenticated from "../../../plugins/middelware/authenticated.js";
+import authenticated from "../../../plugins/middleware/authenticated.js";
 import {
 	AuthenticatedInfo,
 	puzzleEntitySchema,

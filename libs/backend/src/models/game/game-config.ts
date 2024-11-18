@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { GameOptions, GameVisibilityEnum } from "types";
+import { GameOptions } from "types";
 import languageSchema from "../programming-language/language.js";
 
 /**
@@ -14,10 +14,13 @@ const gameOptionsSchema = new Schema<GameOptions>({
 	},
 	visibility: {
 		required: true,
-		type: String,
-		default: () => GameVisibilityEnum.PUBLIC
+		type: String
 	},
-	allowedLanguages: [languageSchema]
+	allowedLanguages: [languageSchema],
+	mode: {
+		required: true,
+		type: String
+	}
 });
 
 export default gameOptionsSchema;

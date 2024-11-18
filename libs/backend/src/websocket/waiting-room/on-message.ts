@@ -1,5 +1,5 @@
 import { GameEventEnum, isString } from "types";
-import { updatePlayer } from "./update-player.js";
+import { updatePlayer } from "../common/update-player.js";
 import { hostGame } from "./host-game.js";
 import { joinGame } from "./join-game.js";
 import { leaveGame } from "./leave-game.js";

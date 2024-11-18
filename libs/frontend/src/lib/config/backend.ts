@@ -33,14 +33,21 @@ export function buildBackendUrl(path: BackendUrl, params: Params = {}) {
 	return url;
 }
 
-export function buildWebSocketBackendUrl(path: WebSocketUrl) {
-	const backendUrl = import.meta.env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER;
+export function buildWebSocketBackendUrl(path: WebSocketUrl, params: Params = {}) {
+	const webSocketUrl = import.meta.env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER;
 
-	if (!backendUrl) {
+	if (!webSocketUrl) {
 		throw new Error("Bruh, you forgot to add VITE_BACKEND_WEBSOCKET_MULTIPLAYER to your .env");
 	}
 
-	let url = `${backendUrl}${path}`;
+	let url = `${webSocketUrl}${path}`;
+
+	if (params) {
+		// Replace placeholders in the path with actual values
+		Object.entries(params).forEach(([key, value]) => {
+			url = url.replace(`:${key}`, String(value));
+		});
+	}
 
 	return url;
 }

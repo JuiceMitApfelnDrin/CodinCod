@@ -1,25 +1,35 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import Error from "@/components/error/error.svelte";
+	import H1 from "@/components/typography/h1.svelte";
+	import P from "@/components/typography/p.svelte";
+	import Button from "@/components/ui/button/button.svelte";
+	import Container from "@/components/ui/container/container.svelte";
+	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
-	import { GameEventEnum, webSocketUrls } from "types";
+	import { frontendUrls, GameEventEnum, isCreator, webSocketUrls } from "types";
 
 	let state: {
-		creator?: boolean;
 		gameId?: string;
-		game?: { users: { username: string; userId: string }[] };
+		game?: {
+			users: { username: string; userId: string; joinedAt: Date }[];
+			creator: { username: string; userId: string; joinedAt: Date };
+		};
 		games: { id: string; amountOfPlayersJoined: number }[];
+		errorMessage: string;
 	} = {
-		// TODO: timeleft/countdown timer when game is started
-		creator: false,
+		// TODO: time-left/countdown timer when game is started
 		gameId: undefined,
 		games: [
 			// {
 			// players
 			// amountOfPlayersJoined: number
 			// }
-		]
+		],
+		game: undefined,
+		errorMessage: ""
 	};
 
 	let socket: WebSocket;
@@ -32,31 +42,36 @@
 		});
 
 		socket.addEventListener("message", async (message) => {
-			const data = JSON.parse(message.data);
+			const receivedInformation = JSON.parse(message.data);
 
-			const { event } = data;
+			const { event } = receivedInformation;
 
-			console.log({ event, data });
+			console.log({ event, data: receivedInformation });
 
 			switch (event) {
 				case GameEventEnum.HOST_GAME:
 					{
-						state.gameId = data.message;
+						state.gameId = receivedInformation.message;
 					}
 					break;
 				case GameEventEnum.OVERVIEW_OF_GAMES:
 					{
-						state.games = JSON.parse(data.message);
+						state.games = receivedInformation.data;
 					}
 					break;
 				case GameEventEnum.OVERVIEW_GAME:
 					{
-						state.game = { users: JSON.parse(data.message) };
+						state.game = receivedInformation.data;
 					}
 					break;
 				case GameEventEnum.GO_TO_GAME:
 					{
-						await goto(data.message);
+						await goto(receivedInformation.message);
+					}
+					break;
+				case GameEventEnum.NOT_ENOUGH_GAMES:
+					{
+						state.errorMessage = receivedInformation.message;
 					}
 					break;
 				default:
@@ -68,79 +83,111 @@
 	});
 </script>
 
-{#if state.gameId}
-	<button
-		on:click={() => {
-			socket.send(
-				JSON.stringify({
-					event: GameEventEnum.LEAVE_GAME,
-					gameId: state.gameId,
-					username: $authenticatedUserInfo?.username
-				})
-			);
-
-			state.creator = false;
-			state.gameId = undefined;
-		}}
-	>
-		leave game
-	</button>
-
-	{#if state.creator}
-		<button
-			on:click={() => {
-				socket.send(
-					JSON.stringify({
-						event: GameEventEnum.START_GAME,
-						gameId: state.gameId
-					})
-				);
-			}}
-		>
-			start game
-		</button>
-	{/if}
-
-	<div>waiting game</div>
+{#if state.errorMessage}
+	<Container>
+		<Error
+			link={{ href: frontendUrls.PUZZLE_CREATE, message: "Go to create a puzzle" }}
+			message={state.errorMessage}
+		/>
+	</Container>
 {:else}
-	<button
-		on:click={() => {
-			socket.send(
-				JSON.stringify({
-					event: GameEventEnum.HOST_GAME,
-					username: $authenticatedUserInfo?.username,
-					userId: $authenticatedUserInfo?.userId
-				})
-			);
-			state.creator = true;
-		}}
-	>
-		host game
-	</button>
+	<Container>
+		<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
+			<H1>Multiplayer</H1>
 
-	{#if state.games}
-		<ul>
-			{#each state.games as joinableGame}
-				<li>
-					<button
+			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
+				{#if state.gameId}
+					<Button
 						on:click={() => {
 							socket.send(
 								JSON.stringify({
-									event: GameEventEnum.JOIN_GAME,
-									gameId: joinableGame.id,
+									event: GameEventEnum.LEAVE_GAME,
+									gameId: state.gameId,
+									username: $authenticatedUserInfo?.username
+								})
+							);
+
+							state.gameId = undefined;
+							state.game = undefined;
+						}}
+					>
+						leave game
+					</Button>
+
+					{#if $authenticatedUserInfo?.userId && isCreator(state.game?.creator.userId, $authenticatedUserInfo?.userId)}
+						<Button
+							on:click={() => {
+								socket.send(
+									JSON.stringify({
+										event: GameEventEnum.START_GAME,
+										gameId: state.gameId
+									})
+								);
+							}}
+						>
+							start game
+						</Button>
+					{/if}
+				{:else}
+					<Button
+						on:click={() => {
+							socket.send(
+								JSON.stringify({
+									event: GameEventEnum.HOST_GAME,
 									username: $authenticatedUserInfo?.username,
 									userId: $authenticatedUserInfo?.userId
 								})
 							);
-
-							state.creator = false;
-							state.gameId = joinableGame.id;
 						}}
 					>
-						Join a game with {joinableGame.amountOfPlayersJoined} other players!
-					</button>
-				</li>
-			{/each}
-		</ul>
-	{/if}
+						host game
+					</Button>
+					<!-- TODO: give ability to host a custom game -->
+				{/if}
+			</div>
+		</LogicalUnit>
+
+		{#if state.gameId}
+			<P>waiting for game to start</P>
+
+			{#if state.game}
+				<ul>
+					{#each state.game.users as user}
+						<li class="list-inside list-disc">
+							{user.username}{#if isCreator(state.game.creator.userId, user.userId)}
+								{` - Creator/host!`}{/if}
+						</li>
+					{/each}
+				</ul>
+			{/if}
+		{:else if state.games && state.games.length > 0}
+			<ul>
+				{#each state.games as joinableGame}
+					<li>
+						<Button
+							on:click={() => {
+								socket.send(
+									JSON.stringify({
+										event: GameEventEnum.JOIN_GAME,
+										gameId: joinableGame.id,
+										username: $authenticatedUserInfo?.username,
+										userId: $authenticatedUserInfo?.userId
+									})
+								);
+
+								state.gameId = joinableGame.id;
+							}}
+						>
+							Join a game with {joinableGame.amountOfPlayersJoined} other players!
+						</Button>
+					</li>
+				{/each}
+			</ul>
+		{:else}
+			<P>
+				No games are being hosted by other players. You can host on yourself by clicking on the
+				"host game" button.
+			</P>
+		{/if}
+	</Container>
 {/if}

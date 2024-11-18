@@ -3,29 +3,22 @@ import {
 	isAuthenticatedInfo,
 	isPistonExecutionResponseError,
 	isPistonExecutionResponseSuccess,
-	LanguageLabel,
+	isString,
 	PistonExecutionResponse,
-	PuzzleEntity,
 	SubmissionEntity,
 	submissionEntitySchema,
+	SubmissionParams,
 	supportedLanguages
 } from "types";
-import authenticated from "../../plugins/middelware/authenticated.js";
+import authenticated from "../../plugins/middleware/authenticated.js";
 import Submission from "../../models/submission/submission.js";
-import Puzzle from "../../models/puzzle/puzzle.js";
+import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { PuzzleResultEnum } from "types/dist/enums/puzzle-result-enum.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
-
-type SubmissionParams = {
-	Body: {
-		code: string;
-		language: LanguageLabel;
-		puzzleId: string;
-	};
-};
+import Game from "@/models/game/game.js";
 
 export default async function submissionController(fastify: FastifyInstance) {
-	fastify.post<SubmissionParams>(
+	fastify.post<{ Body: SubmissionParams }>(
 		"/",
 		{
 			onRequest: authenticated
@@ -53,7 +46,7 @@ export default async function submissionController(fastify: FastifyInstance) {
 			const { language, puzzleId, code } = request.body;
 
 			// retrieve test cases
-			const puzzle: PuzzleEntity | null = await Puzzle.findById(puzzleId);
+			const puzzle: PuzzleDocument | null = await Puzzle.findById(puzzleId);
 
 			if (!puzzle) {
 				return reply.send({
@@ -127,6 +120,43 @@ export default async function submissionController(fastify: FastifyInstance) {
 
 				const submission = new Submission(submissionData);
 				await submission.save();
+
+				/**
+				 * When user is part of an open game, also add the submission to the open game
+				 * start:
+				 */
+				const puzzleId = puzzle._id;
+				const matchingGame = await Game.findOne({
+					players: userId,
+					puzzle: puzzleId,
+					endTime: {
+						$lte: new Date(new Date(submission.createdAt).getTime() + 20 * 1000)
+					}
+				})
+					.populate("playerSubmissions")
+					.exec();
+
+				if (matchingGame) {
+					const playerSubmission = matchingGame.playerSubmissions?.find((submission) => {
+						if (!isString(submission)) {
+							return submission.userId == userId;
+						}
+
+						return false;
+					});
+
+					if (!playerSubmission) {
+						matchingGame.playerSubmissions = [
+							...(matchingGame.playerSubmissions ?? []),
+							submission._id.toString()
+						];
+
+						await matchingGame.save();
+					}
+				}
+				/**
+				 * :end
+				 */
 
 				return reply.status(201).send(submission);
 			} catch (error) {

@@ -1,5 +1,5 @@
 import { GameEventEnum } from "types";
-import { updatePlayer } from "./update-player.js";
+import { updatePlayer } from "../common/update-player.js";
 import { updatePlayersInGame } from "./update-players-in-game.js";
 import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";

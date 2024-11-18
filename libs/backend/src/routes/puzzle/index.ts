@@ -8,7 +8,7 @@ import {
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import { $ref } from "../../config/schema.js";
-import authenticated from "../../plugins/middelware/authenticated.js";
+import authenticated from "../../plugins/middleware/authenticated.js";
 
 export default async function puzzleRoutes(fastify: FastifyInstance) {
 	fastify.post(
