@@ -16,6 +16,7 @@
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
+	import dayjs from "dayjs";
 	// import { EllipsisVertical, FileWarning, Settings } from "lucide-svelte";
 	import { onMount } from "svelte";
 	import {
@@ -89,6 +90,9 @@
 	}
 
 	const gameId = $page.params.id;
+
+	let endDate = undefined;
+	$: endDate = state.game && dayjs(state.game.endTime).toDate();
 </script>
 
 {#if state.errorMessage}
@@ -120,6 +124,7 @@
 							goto(buildFrontendUrl(frontendUrls.MULTIPLAYER));
 							console.log("submitted code");
 						}}
+						{endDate}
 					/>
 				{/if}
 			</Resizable.Pane>

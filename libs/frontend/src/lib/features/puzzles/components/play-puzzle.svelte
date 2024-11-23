@@ -18,10 +18,12 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import { executeCode } from "@/api/execute-code";
 	import { submitCode } from "@/api/submit-code";
+	import CountdownTimer from "@/components/ui/countdown-timer/countdown-timer.svelte";
 
 	export let puzzle: PuzzleDto;
 	export let puzzleId: string;
 	export let onSubmitCode: () => void = () => {};
+	export let endDate: Date | undefined;
 
 	let code: string = "";
 	let language: LanguageLabel = DEFAULT_LANGUAGE;
@@ -82,27 +84,31 @@
 </LogicalUnit>
 
 <LogicalUnit class="space-y-4">
-	<Select.Root
-		selected={{ label: language, value: language }}
-		onSelectedChange={(v) => {
-			if (v) {
-				language = v.value;
-			}
-		}}
-	>
-		<Select.Trigger class="w-[180px]">
-			<Select.Value placeholder="Select a language" />
-		</Select.Trigger>
-		<Select.Content>
-			<Select.Group>
-				<Select.Label class="text-lg">Language</Select.Label>
-				{#each languageLabels as language}
-					<Select.Item value={language} label={language} />
-				{/each}
-			</Select.Group>
-		</Select.Content>
-		<Select.Input bind:value={language} />
-	</Select.Root>
+	<LogicalUnit class="flex flex-col justify-between gap-2 md:flex-row">
+		<Select.Root
+			selected={{ label: language, value: language }}
+			onSelectedChange={(v) => {
+				if (v) {
+					language = v.value;
+				}
+			}}
+		>
+			<Select.Trigger class="w-[180px]">
+				<Select.Value placeholder="Select a language" />
+			</Select.Trigger>
+			<Select.Content>
+				<Select.Group>
+					<Select.Label class="text-lg">Language</Select.Label>
+					{#each languageLabels as language}
+						<Select.Item value={language} label={language} />
+					{/each}
+				</Select.Group>
+			</Select.Content>
+			<Select.Input bind:value={language} />
+		</Select.Root>
+
+		<CountdownTimer {endDate} />
+	</LogicalUnit>
 
 	<CodeMirror {language} bind:value={code} />
 
