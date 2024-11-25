@@ -5,6 +5,7 @@ import {
 	isPistonExecutionResponseSuccess,
 	isString,
 	PistonExecutionResponse,
+	SUBMISSION_BUFFER_IN_MILLISECONDS,
 	SubmissionEntity,
 	submissionEntitySchema,
 	SubmissionParams,
@@ -125,24 +126,25 @@ export default async function submissionController(fastify: FastifyInstance) {
 				 * When user is part of an open game, also add the submission to the open game
 				 * start:
 				 */
-				const extraTime = 20 * 1000; // in case of bad internet connection or the like
+				// TODO: think about this, does this cover every edge case?
+				// since this is an important piece of functionality, come back to this later :)
 
 				const puzzleId = puzzle._id;
 				const matchingGame = await Game.findOne({
 					players: userId,
 					puzzle: puzzleId,
 					endTime: {
-						$lte: new Date(new Date(submission.createdAt).getTime() + extraTime)
+						$lte: new Date(
+							new Date(submission.createdAt).getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS
+						)
 					}
 				})
 					.sort({ endTime: -1 })
 					.populate("playerSubmissions")
 					.exec();
-				console.log("matchingGame:", { matchingGame });
 
 				if (matchingGame) {
 					const playerSubmission = matchingGame.playerSubmissions?.find((submission) => {
-						console.log("Checking submission:", submission);
 						if (!isString(submission)) {
 							return submission.userId.toString() === userId;
 						}
@@ -157,10 +159,7 @@ export default async function submissionController(fastify: FastifyInstance) {
 						];
 
 						const savedGame = await matchingGame.save();
-						console.log("Saved game:", savedGame);
 					}
-
-					console.log("playerSubmissions:", matchingGame.playerSubmissions);
 				}
 				/**
 				 * :end

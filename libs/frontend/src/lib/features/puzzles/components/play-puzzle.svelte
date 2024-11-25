@@ -19,10 +19,12 @@
 	import { executeCode } from "@/api/execute-code";
 	import { submitCode } from "@/api/submit-code";
 	import CountdownTimer from "@/components/ui/countdown-timer/countdown-timer.svelte";
+	import { currentTime } from "@/stores/current-time";
+	import dayjs from "dayjs";
 
 	export let puzzle: PuzzleDto;
 	export let puzzleId: string;
-	export let onSubmitCode: () => void = () => {};
+	export let onPlayerSubmitCode: () => void = () => {};
 	export let endDate: Date | undefined;
 
 	let code: string = "";
@@ -59,8 +61,18 @@
 	// }
 
 	async function endPuzzleGame() {
-		await submitCode({ code, language, puzzleId });
-		onSubmitCode();
+		if (code.trim()) {
+			await submitCode({ code, language, puzzleId });
+		}
+		onPlayerSubmitCode();
+	}
+
+	let endedGame = false;
+	$: {
+		if (!endedGame && endDate && dayjs(endDate).isBefore($currentTime)) {
+			endPuzzleGame();
+			endedGame = true;
+		}
 	}
 
 	let openTests = true;
@@ -112,7 +124,7 @@
 			<Select.Input bind:value={language} />
 		</Select.Root>
 
-		<CountdownTimer onCountdownFinished={endPuzzleGame} {endDate} />
+		<CountdownTimer {endDate} />
 	</LogicalUnit>
 
 	<CodeMirror {language} bind:value={code} />
@@ -202,7 +214,7 @@
 	</LogicalUnit>
 {/if}
 
-<style>
+<style lang="postcss">
 	pre {
 		@apply whitespace-pre-line;
 	}

@@ -31,8 +31,6 @@
 		// })
 	]);
 
-	console.log(playerSubmissions);
-
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs } = table.createViewModel(columns);
 </script>
 

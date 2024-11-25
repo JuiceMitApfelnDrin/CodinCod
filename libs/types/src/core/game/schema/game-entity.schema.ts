@@ -7,7 +7,7 @@ import { submissionDtoSchema } from "../../submission/index.js";
 
 export const gameEntitySchema = z.object({
 	players: z.array(z.string().or(userDtoSchema)),
-	creator: z.string().optional().or(userDtoSchema.optional()),
+	creator: z.string().or(userDtoSchema),
 	puzzle: z.string().or(puzzleDtoSchema),
 	startTime: acceptedDateSchema,
 	endTime: acceptedDateSchema,

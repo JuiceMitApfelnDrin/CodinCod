@@ -4,8 +4,17 @@ import { WebSocket } from "@fastify/websocket";
 import { GameEventEnum } from "types";
 import { updatePlayer } from "../common/update-player.js";
 import { isValidObjectId } from "mongoose";
+import { addPlayerToPlayers } from "../common/add-player-to-players.js";
 
-export async function onConnection({ socket, id }: { socket: WebSocket; id: string }) {
+export async function onConnection({
+	socket,
+	id,
+	players
+}: {
+	socket: WebSocket;
+	id: string;
+	players: WebSocket[];
+}) {
 	if (!isValidObjectId(id)) {
 		updatePlayer({
 			socket,
@@ -14,6 +23,8 @@ export async function onConnection({ socket, id }: { socket: WebSocket; id: stri
 		});
 		return;
 	}
+
+	addPlayerToPlayers({ players, playerSocketToAdd: socket });
 
 	const game = await Game.findById(id)
 		.populate("creator")

@@ -1,42 +1,32 @@
 <script lang="ts">
 	import { formatToTwoDigits } from "@/utils/format-to-two-digits";
-	import { onDestroy } from "svelte";
 	import LogicalUnit from "../logical-unit/logical-unit.svelte";
 	import { cn } from "@/utils/cn";
+	import { currentTime } from "@/stores/current-time";
+	import dayjs from "dayjs";
 
 	export let endDate: Date | undefined;
-	export let onCountdownFinished: () => void;
 
-	let timeRemaining = calculateTimeRemaining();
-	let interval: ReturnType<typeof setInterval>;
+	const DEFAULT_TIME_REMAINING = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
-	function calculateTimeRemaining() {
-		if (!endDate) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+	let timeRemaining = DEFAULT_TIME_REMAINING;
 
-		const now = new Date().getTime();
-		const end = new Date(endDate).getTime();
-		const diff = Math.max(end - now, 0); // Ensure no negative values
-		const seconds = Math.floor((diff / 1000) % 60);
-		const minutes = Math.floor((diff / (1000 * 60)) % 60);
-		const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-		const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+	$: {
+		if (!endDate) {
+			timeRemaining = DEFAULT_TIME_REMAINING;
+		} else {
+			const now = $currentTime.getTime();
+			const end = dayjs(endDate);
+			const diff = Math.max(end.diff(now), 0); // Ensure no negative values
 
-		return { days, hours, minutes, seconds };
-	}
+			const seconds = Math.floor((diff / 1000) % 60);
+			const minutes = Math.floor((diff / (1000 * 60)) % 60);
+			const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+			const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-	function updateTimer() {
-		timeRemaining = calculateTimeRemaining();
-		if (
-			timeRemaining.days === 0 &&
-			timeRemaining.hours === 0 &&
-			timeRemaining.minutes === 0 &&
-			timeRemaining.seconds === 0
-		) {
-			clearInterval(interval);
-			onCountdownFinished();
+			timeRemaining = { days, hours, minutes, seconds };
 		}
 	}
-	interval = setInterval(updateTimer, 1000);
 
 	let showDays = false,
 		showHours = false,
@@ -48,10 +38,6 @@
 		showMinutes = showHours || timeRemaining.minutes > 0;
 		showSeconds = true;
 	}
-
-	onDestroy(() => {
-		clearInterval(interval);
-	});
 </script>
 
 {#if endDate}

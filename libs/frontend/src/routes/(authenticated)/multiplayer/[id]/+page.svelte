@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Error from "@/components/error/error.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
@@ -17,11 +18,11 @@
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
+	import { currentTime } from "@/stores/current-time";
+	import { getUserIdFromUser, isUserIdInUserList } from "@/utils/get-user-id-from-user";
 	import dayjs from "dayjs";
 	// import { EllipsisVertical, FileWarning, Settings } from "lucide-svelte";
 	import { onMount } from "svelte";
-	import { createTable } from "svelte-headless-table";
-	import { readable } from "svelte/store";
 	import {
 		buildFrontendUrl,
 		frontendUrls,
@@ -30,10 +31,15 @@
 		isString,
 		isSubmissionDto,
 		isUserDto,
+		SUBMISSION_BUFFER_IN_MILLISECONDS,
 		webSocketUrls,
 		type GameState,
 		type UserDto
 	} from "types";
+
+	const gameId = $page.params.id;
+
+	let isGameOver = false;
 
 	const state: GameState = {
 		game: undefined,
@@ -69,7 +75,7 @@
 				case GameEventEnum.FINISHED_GAME:
 					{
 						state.game = data.game;
-						console.log(data);
+						isGameOver = true;
 					}
 					break;
 				default:
@@ -80,29 +86,23 @@
 		});
 	});
 
-	function isUserIdInPlayers(userId: string, players: (string | UserDto)[] = []): boolean {
-		return players.some((player) => {
-			if (isUserDto(player)) {
-				return player._id === userId;
-			} else {
-				return player === userId;
-			}
-		});
-	}
-
 	let isNotPlayerInGame = true;
 	$: {
 		isNotPlayerInGame = Boolean(
 			$authenticatedUserInfo?.userId &&
-				!isUserIdInPlayers($authenticatedUserInfo.userId, state.game?.players ?? [])
+				!isUserIdInUserList($authenticatedUserInfo.userId, state.game?.players ?? [])
 		);
 	}
 
-	const gameId = $page.params.id;
-
-	let now = new Date();
-	let endDate = undefined;
+	let endDate = state.game?.endTime;
 	$: endDate = state.game && dayjs(state.game.endTime).toDate();
+
+	$: {
+		const now = $currentTime;
+		isGameOver = Boolean(
+			endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)
+		);
+	}
 </script>
 
 {#if state.errorMessage}
@@ -117,12 +117,32 @@
 	<Container>
 		<Loader />
 	</Container>
-{:else if endDate && dayjs(endDate).isBefore(now)}
+{:else if isGameOver}
 	<Container>
+		<LogicalUnit>
+			{#if getUserIdFromUser(state.game.creator) === $authenticatedUserInfo?.userId}
+				<Button variant="outline">
+					Create a game with the same options
+					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?
+						should you first check whether there is a similar game in the lobby and throw everyone that way or take everyone to the next game 
+					-->
+				</Button>
+			{/if}
+
+			<Button variant="outline" on:click={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}>
+				Go to multiplayer
+			</Button>
+		</LogicalUnit>
+
 		{#if !state.game}
 			<Loader />
 		{:else if state.game.playerSubmissions}
-			<StandingsTable playerSubmissions={state.game.playerSubmissions} />
+			<StandingsTable
+				playerSubmissions={state.game.playerSubmissions.filter((submission) =>
+					isSubmissionDto(submission)
+				)}
+			/>
+			<!-- TODO: this is absolute shit, wtf are you doing? filtering this shit instead of something far more simple? search that simple solution! thinkge  -->
 		{:else}
 			<P>No player submissions for this game</P>
 		{/if}
@@ -139,9 +159,11 @@
 					<PlayPuzzle
 						puzzleId={state.puzzle._id}
 						puzzle={state.puzzle}
-						onSubmitCode={() => {
-							socket.send(GameEventEnum.SUBMITTED_PLAYER);
-							now = new Date();
+						onPlayerSubmitCode={() => {
+							if (!isGameOver) {
+								socket.send(GameEventEnum.SUBMITTED_PLAYER);
+								isGameOver = true;
+							}
 						}}
 						{endDate}
 					/>

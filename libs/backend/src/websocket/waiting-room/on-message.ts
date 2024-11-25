@@ -7,8 +7,8 @@ import { startGame } from "./start-game.js";
 import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { RawData } from "ws";
-import { removePlayerFromPlayers } from "./remove-player-from-players.js";
-import { addPlayerToPlayers } from "./add-player-to-players.js";
+import { removePlayerFromPlayers } from "../common/remove-player-from-players.js";
+import { addPlayerToPlayers } from "../common/add-player-to-players.js";
 import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
 
 export async function onMessage({
