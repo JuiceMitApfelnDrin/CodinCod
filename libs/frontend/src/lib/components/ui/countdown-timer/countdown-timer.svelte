@@ -5,6 +5,7 @@
 	import { cn } from "@/utils/cn";
 
 	export let endDate: Date | undefined;
+	export let onCountdownFinished: () => void;
 
 	let timeRemaining = calculateTimeRemaining();
 	let interval: ReturnType<typeof setInterval>;
@@ -32,14 +33,10 @@
 			timeRemaining.seconds === 0
 		) {
 			clearInterval(interval);
+			onCountdownFinished();
 		}
 	}
-
 	interval = setInterval(updateTimer, 1000);
-
-	onDestroy(() => {
-		clearInterval(interval);
-	});
 
 	let showDays = false,
 		showHours = false,
@@ -51,6 +48,10 @@
 		showMinutes = showHours || timeRemaining.minutes > 0;
 		showSeconds = true;
 	}
+
+	onDestroy(() => {
+		clearInterval(interval);
+	});
 </script>
 
 {#if endDate}

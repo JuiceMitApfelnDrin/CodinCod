@@ -32,11 +32,10 @@ export async function onConnection({ socket, id }: { socket: WebSocket; id: stri
 
 	const currentTime = new Date();
 	if (game.endTime < currentTime) {
-		// TODO: return tournament standings or redirect to standings
 		updatePlayer({
 			socket,
 			event: GameEventEnum.FINISHED_GAME,
-			message: "game has finished"
+			data: { game }
 		});
 		return;
 	}

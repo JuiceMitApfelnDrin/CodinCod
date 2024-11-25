@@ -10,5 +10,6 @@ export const submissionDtoSchema = baseSubmissionDtoSchema.extend({
 export type SubmissionDto = z.infer<typeof submissionDtoSchema>;
 
 export function isSubmissionDto(data: unknown): data is SubmissionDto {
+	console.log(submissionDtoSchema.safeParse(data));
 	return submissionDtoSchema.safeParse(data).success;
 }

@@ -58,6 +58,11 @@
 	// 	}, 0);
 	// }
 
+	async function endPuzzleGame() {
+		await submitCode({ code, language, puzzleId });
+		onSubmitCode();
+	}
+
 	let openTests = true;
 
 	function openTestsAccordion() {
@@ -107,7 +112,7 @@
 			<Select.Input bind:value={language} />
 		</Select.Root>
 
-		<CountdownTimer {endDate} />
+		<CountdownTimer onCountdownFinished={endPuzzleGame} {endDate} />
 	</LogicalUnit>
 
 	<CodeMirror {language} bind:value={code} />
@@ -125,8 +130,7 @@
 		<Button
 			variant="secondary"
 			on:click={async () => {
-				await submitCode({ code, language, puzzleId });
-				onSubmitCode();
+				endPuzzleGame();
 			}}
 		>
 			Submit code

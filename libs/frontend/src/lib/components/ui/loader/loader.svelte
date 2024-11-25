@@ -4,6 +4,7 @@
 </script>
 
 <P class="sr-only">loading</P>
+
 <svg
 	role="status"
 	class={cn(

@@ -125,21 +125,26 @@ export default async function submissionController(fastify: FastifyInstance) {
 				 * When user is part of an open game, also add the submission to the open game
 				 * start:
 				 */
+				const extraTime = 20 * 1000; // in case of bad internet connection or the like
+
 				const puzzleId = puzzle._id;
 				const matchingGame = await Game.findOne({
 					players: userId,
 					puzzle: puzzleId,
 					endTime: {
-						$lte: new Date(new Date(submission.createdAt).getTime() + 20 * 1000)
+						$lte: new Date(new Date(submission.createdAt).getTime() + extraTime)
 					}
 				})
+					.sort({ endTime: -1 })
 					.populate("playerSubmissions")
 					.exec();
+				console.log("matchingGame:", { matchingGame });
 
 				if (matchingGame) {
 					const playerSubmission = matchingGame.playerSubmissions?.find((submission) => {
+						console.log("Checking submission:", submission);
 						if (!isString(submission)) {
-							return submission.userId == userId;
+							return submission.userId.toString() === userId;
 						}
 
 						return false;
@@ -151,8 +156,11 @@ export default async function submissionController(fastify: FastifyInstance) {
 							submission._id.toString()
 						];
 
-						await matchingGame.save();
+						const savedGame = await matchingGame.save();
+						console.log("Saved game:", savedGame);
 					}
+
+					console.log("playerSubmissions:", matchingGame.playerSubmissions);
 				}
 				/**
 				 * :end

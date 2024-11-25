@@ -2,7 +2,9 @@ import mongoose, { ObjectId, Schema } from "mongoose";
 import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
 import { SubmissionEntity } from "types";
 
-export interface SubmissionDocument extends Document, Omit<SubmissionEntity, "puzzleId" | "userId"> {
+export interface SubmissionDocument
+	extends Document,
+		Omit<SubmissionEntity, "puzzleId" | "userId"> {
 	puzzleId: ObjectId;
 	userId: ObjectId;
 }
@@ -29,6 +31,14 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		ref: USER,
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
+	},
+	language: {
+		required: true,
+		type: String
+	},
+	languageVersion: {
+		required: true,
+		type: String
 	}
 });
 

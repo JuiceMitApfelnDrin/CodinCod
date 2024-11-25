@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Error from "@/components/error/error.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
 	import H2 from "@/components/typography/h2.svelte";
+	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import Input from "@/components/ui/input/input.svelte";
@@ -13,18 +13,22 @@
 	import * as Resizable from "@/components/ui/resizable";
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import JoinGameConfirmationDialog from "@/features/game/components/join-game-confirmation-dialog.svelte";
+	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
 	import dayjs from "dayjs";
 	// import { EllipsisVertical, FileWarning, Settings } from "lucide-svelte";
 	import { onMount } from "svelte";
+	import { createTable } from "svelte-headless-table";
+	import { readable } from "svelte/store";
 	import {
 		buildFrontendUrl,
 		frontendUrls,
 		GameEventEnum,
 		httpResponseCodes,
 		isString,
+		isSubmissionDto,
 		isUserDto,
 		webSocketUrls,
 		type GameState,
@@ -60,8 +64,13 @@
 					}
 					break;
 				case GameEventEnum.NONEXISTENT_GAME:
-				case GameEventEnum.FINISHED_GAME:
 					state.errorMessage = receivedInformation.message;
+					break;
+				case GameEventEnum.FINISHED_GAME:
+					{
+						state.game = data.game;
+						console.log(data);
+					}
 					break;
 				default:
 					console.log("unknown / unhandled event: ", { event });
@@ -91,6 +100,7 @@
 
 	const gameId = $page.params.id;
 
+	let now = new Date();
 	let endDate = undefined;
 	$: endDate = state.game && dayjs(state.game.endTime).toDate();
 </script>
@@ -107,6 +117,16 @@
 	<Container>
 		<Loader />
 	</Container>
+{:else if endDate && dayjs(endDate).isBefore(now)}
+	<Container>
+		{#if !state.game}
+			<Loader />
+		{:else if state.game.playerSubmissions}
+			<StandingsTable playerSubmissions={state.game.playerSubmissions} />
+		{:else}
+			<P>No player submissions for this game</P>
+		{/if}
+	</Container>
 {:else if isNotPlayerInGame}
 	<Container>
 		<JoinGameConfirmationDialog {gameId} {socket} />
@@ -121,8 +141,7 @@
 						puzzle={state.puzzle}
 						onSubmitCode={() => {
 							socket.send(GameEventEnum.SUBMITTED_PLAYER);
-							goto(buildFrontendUrl(frontendUrls.MULTIPLAYER));
-							console.log("submitted code");
+							now = new Date();
 						}}
 						{endDate}
 					/>
