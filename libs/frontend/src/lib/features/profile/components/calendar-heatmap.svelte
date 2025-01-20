@@ -1,108 +1,130 @@
 <script lang="ts">
-	import type { Submission } from "@/models/submission.model";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
+	import { cn } from "@/utils/cn";
+	import dayjs from "dayjs";
+	import type { GroupedActivitiesByDate } from "types";
 
-	export let solvedPuzzles: Submission[] = [];
+	export let activitiesGroupedByDate: GroupedActivitiesByDate;
+	export let minAmount = 0;
+	export let maxAmount = 8;
 
-	// create the thing first, then use it
-	let days: number[] = [];
+	// Create an array for the previous 365 days and count activities for each day
+	let days: number[] = Array.from({ length: 364 })
+		.map((_, i) => {
+			const date = dayjs().subtract(i, "day").format("YYYY-MM-DD");
+			return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
+		})
+		.reverse(); // reverse to start with the oldest day
 
-	const currentDate = new Date();
-
-	// go from back to front, since submissions are added always at the back
-	let currentIndexItemInSolvedPuzzles = solvedPuzzles.length - 1;
-
-	// go over the previous 365 days
-	for (let i = 0; i < 364; i++) {
-		let solutionsThisDay = 0;
-		// Calculate the date for the current iteration
-		const pastDate = new Date();
-		pastDate.setDate(currentDate.getDate() - i);
-
-		while (
-			currentIndexItemInSolvedPuzzles >= 0 &&
-			pastDate < new Date(solvedPuzzles[currentIndexItemInSolvedPuzzles]?.submitted_at)
-		) {
-			currentIndexItemInSolvedPuzzles -= 1;
-			solutionsThisDay += 1;
-		}
-
-		days.push(solutionsThisDay);
-	}
-
-	const minSolvedPuzzles: number = Math.min(...days);
-	const maxSolvedPuzzles: number = Math.max(...days);
-
-	const dayIndexToFormattedDate = (index: number): string => {
-		const date = new Date();
-		return new Date(date.setDate(date.getDate() - index)).toLocaleString(undefined, {
-			day: "numeric",
-			month: "long",
-			year: "numeric"
-		});
-	};
-
-	const calcDayStyle = (solvedPuzzles: number): string => {
-		if (solvedPuzzles > 0)
+	const calcDayStyle = (activity: number): string => {
+		if (activity > 0)
 			return `background: rgba(217, 70, 239, ${
-				calculatePercentage(minSolvedPuzzles, maxSolvedPuzzles, solvedPuzzles) + 0.15
+				calculatePercentage(minAmount, maxAmount, activity) + 0.15
 			});`;
 
 		return `background: rgba(64, 64, 64, 1)`;
 	};
 
-	const dayNames: string[] = Array.from({ length: 7 }).map((_, index) => {
-		const date = new Date();
-		return new Date(date.setDate(date.getDate() - index))
-			.toLocaleDateString(undefined, {
-				weekday: "short"
-			})
-			.toUpperCase();
+	const dayNames = Array.from({ length: 7 }).map((_, index) => {
+		const currentDay = dayjs().subtract(index, "day");
+
+		return {
+			shortDayName: currentDay.format("ddd").toUpperCase(),
+			longDayName: currentDay.format("dddd")
+		};
 	});
+
+	const months = Array.from({ length: 12 })
+		.map((_, index) => {
+			const currentMonth = dayjs().subtract(index, "month");
+
+			return {
+				longMonthName: currentMonth.format("MMMM"),
+				shortMonthName: currentMonth.format("MMM")
+			};
+		})
+		.reverse(); // reverse to start with the oldest month
 </script>
 
 <div
-	class="dark:border-primary-500 border-primary-700 flex h-full w-full items-center justify-center rounded-lg border bg-white dark:bg-black"
+	class="dark:border-primary-500 border-primary-700 h-full w-full flex-col rounded-lg border p-4"
 >
 	<!-- TODO: possibly make this a table instead, with a tooltips and sr-only text -->
-	<div class="calendar px-5 py-10">
-		{#each dayNames as dayName}
-			<p
-				class="day-header dark:text-primary-300 text-primary-600 flex w-full items-center justify-center text-left font-bold"
-			>
-				{dayName}
-			</p>
-		{/each}
+	<table class="overflow-x-scroll">
+		<caption class="sr-only hidden">Activity graph</caption>
+		<thead>
+			<tr>
+				<th></th>
+				{#each months as monthName}
+					<th
+						colspan="4"
+						class="month-header dark:text-primary-300 text-primary-600 text-center font-bold"
+					>
+						<span class="sr-only">
+							{monthName.longMonthName}
+						</span>
+						<span aria-hidden="true">
+							{monthName.shortMonthName}
+						</span>
+					</th>
+				{/each}
+			</tr>
+		</thead>
 
-		{#each days as solvedPuzzles, index}
-			<div
-				class="day rounded shadow-sm shadow-neutral-700"
-				style={calcDayStyle(solvedPuzzles)}
-				title="Solved {solvedPuzzles} puzzles on {dayIndexToFormattedDate(index)}"
-			/>
-		{/each}
+		<tbody>
+			{#each dayNames as dayName, index}
+				<tr class="calendar">
+					<td
+						class="day-header dark:text-primary-300 text-primary-600 flex w-full items-center justify-center text-left font-bold"
+					>
+						<span class="sr-only">
+							{dayName.longDayName}
+						</span>
+						<span aria-hidden="true" class={cn(index % 2 !== 0 && "hidden")}>
+							{dayName.shortDayName}
+						</span>
+					</td>
+
+					{#each days as activity, dayIndex}
+						{#if dayIndex % 7 === index}
+							<td
+								class="day rounded shadow-sm shadow-neutral-700"
+								style={calcDayStyle(activity)}
+								title="Solved {activity} puzzles on {dayjs()
+									.subtract(dayIndex, 'day')
+									.format('MMMM DD, YYYY')}"
+							/>
+						{/if}
+					{/each}
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+
+	<div>
+		<a href="docs/activity">Learn how we measure activity</a>
 	</div>
 </div>
 
 <style>
-	:root {
-		--square-size: 0.75rem;
+	table {
+		border-spacing: 0.25rem;
+		border-collapse: separate;
 	}
 
-	.calendar {
-		display: grid;
-		grid: repeat(7, var(--square-size)) / auto repeat(53, var(--square-size));
-		grid-auto-flow: column;
-		gap: 0.4rem;
-		overflow: hidden;
+	:root {
+		--square-size: 0.75rem;
 	}
 
 	.day-header {
 		font-size: calc(var(--square-size) - 0.05rem);
 	}
 
-	.calendar .day {
+	tr {
 		height: var(--square-size);
+	}
+	td {
+		line-height: 0;
 		width: var(--square-size);
 	}
 </style>

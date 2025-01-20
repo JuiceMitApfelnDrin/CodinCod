@@ -6,7 +6,7 @@
 
 	const navigationLinks = [
 		{
-			href: frontendUrls.PLAY,
+			href: frontendUrls.ROOT,
 			text: "Play"
 		},
 

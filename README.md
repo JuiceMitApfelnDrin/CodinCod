@@ -1,6 +1,6 @@
 # CodinCod project overview
 
-This repo exists to:
+The [docs](./docs/README.md) repo exists to:
 
 1. get up to speed quickly;
 2. create a general shared understanding;

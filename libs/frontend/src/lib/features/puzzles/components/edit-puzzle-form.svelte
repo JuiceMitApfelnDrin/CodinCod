@@ -16,10 +16,12 @@
 	import { page } from "$app/stores";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
+	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
+	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 
 	export let data;
 
-	const form = superForm(data.form, {
+	const form = superForm(data, {
 		dataType: "json",
 		multipleSubmits: "allow",
 		resetForm: false,
@@ -58,24 +60,8 @@
 
 	let { enhance, form: formData, message } = form;
 
-	let selectedLanguage: { label: LanguageLabel; value: LanguageLabel };
-
-	$: selectedLanguage = $formData.solution.language
-		? {
-				label: $formData.language,
-				value: $formData.language
-			}
-		: {
-				label: $formData.language,
-				value: DEFAULT_LANGUAGE
-			};
+	let language: LanguageLabel = $formData.solution.language ?? DEFAULT_LANGUAGE;
 </script>
-
-{#if $message}
-	<div class:success={$page.status == 200} class:error={$page.status >= 400}>
-		{$message}
-	</div>
-{/if}
 
 <form method={POST} use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
@@ -155,10 +141,10 @@
 			<Form.Control let:attrs>
 				<Form.Label class="text-lg">Language</Form.Label>
 				<Select.Root
-					selected={selectedLanguage}
+					selected={{ label: language, value: language }}
 					onSelectedChange={(v) => {
 						if (v) {
-							$formData.solution.language = v.value;
+							language = v.value;
 						}
 					}}
 				>
@@ -190,6 +176,14 @@
 			<Form.FieldErrors />
 		</Form.Field>
 	</Form.Fieldset>
+
+	<GenericAlert
+		title={isHttpErrorCode($page.status)
+			? "Error whilst trying to updating the puzzle"
+			: "Updated the puzzle"}
+		status={$page.status}
+		message={$message}
+	/>
 
 	<Form.Button>Update Puzzle</Form.Button>
 </form>

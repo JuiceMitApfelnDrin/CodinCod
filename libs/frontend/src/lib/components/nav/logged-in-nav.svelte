@@ -1,14 +1,16 @@
 <script lang="ts">
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { frontendUrls } from "types";
+	import { buildFrontendUrl, frontendUrls } from "types";
 	import ToggleTheme from "./toggle-theme.svelte";
 	import LogoutButton from "./logout-button.svelte";
 	import { authenticatedUserInfo } from "../../stores";
+	import { websiteName } from "@/config/general";
+	import Button from "../ui/button/button.svelte";
 
 	const navigationLinks = [
 		{
-			href: frontendUrls.PLAY,
+			href: frontendUrls.ROOT,
 			text: "Play"
 		},
 
@@ -29,7 +31,7 @@
 	>
 		<div class="container mx-auto flex flex-row flex-wrap items-end gap-8">
 			<a href={frontendUrls.ROOT}>
-				<span class="self-center whitespace-nowrap text-4xl font-bold">CodinCod</span>
+				<span class="self-center whitespace-nowrap text-4xl font-bold">{websiteName}</span>
 			</a>
 
 			<ul class="flex flex-1 flex-row gap-4">
@@ -43,24 +45,39 @@
 			</ul>
 
 			<DropdownMenu.Root>
-				<DropdownMenu.Trigger>
-					<Avatar.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Avatar.Root asChild>
 						<!-- TODO: fetch user profile picture -->
-						<Avatar.Image
+						<Button
+							size="icon"
 							class="rounded-full border-2 border-black dark:border-white"
-							src={"https://github.com/reeveng.png"}
-							alt={$authenticatedUserInfo?.username}
-						/>
-						<Avatar.Fallback>{$authenticatedUserInfo?.username}</Avatar.Fallback>
+							variant="outline"
+							builders={[builder]}
+						>
+							<Avatar.Image
+								class="rounded-full"
+								src={"https://github.com/juicemitapfelndrin.png"}
+								alt={$authenticatedUserInfo?.username}
+							/>
+							<Avatar.Fallback>{$authenticatedUserInfo?.username}</Avatar.Fallback>
+						</Button>
 					</Avatar.Root>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>My Account</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item>
-							<a href={frontendUrls.USER_PROFILE}>Profile</a>
-						</DropdownMenu.Item>
+						{#if $authenticatedUserInfo}
+							<DropdownMenu.Item>
+								<a
+									href={buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
+										username: $authenticatedUserInfo.username
+									})}
+								>
+									Profile
+								</a>
+							</DropdownMenu.Item>
+						{/if}
 						<DropdownMenu.Item>
 							<a href={frontendUrls.SETTINGS}>Preferences</a>
 						</DropdownMenu.Item>

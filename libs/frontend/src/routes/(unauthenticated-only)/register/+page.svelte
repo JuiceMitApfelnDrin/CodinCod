@@ -5,20 +5,21 @@
 	import P from "@/components/typography/p.svelte";
 	import { frontendUrls } from "types";
 	import * as Card from "@/components/ui/card";
+	import { websiteName } from "@/config/general.js";
 
 	export let data;
-	export let form;
+	const { form: formData } = data;
 </script>
 
 <Container class="items-center justify-center">
 	<Card.Root class="my-4 w-full md:my-8 md:max-w-lg lg:my-12">
 		<Card.Header>
 			<H1>Register</H1>
-			<Card.Description>Welcome to CodinCod, the adventure awaits!</Card.Description>
+			<Card.Description>Welcome to {websiteName}, the adventure awaits!</Card.Description>
 		</Card.Header>
 
 		<Card.Content>
-			<RegisterForm message={form?.message} data={data.form}></RegisterForm>
+			<RegisterForm data={formData}></RegisterForm>
 		</Card.Content>
 
 		<Card.Footer>

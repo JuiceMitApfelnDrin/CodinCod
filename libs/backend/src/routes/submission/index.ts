@@ -1,30 +1,22 @@
 import { FastifyInstance } from "fastify";
 import {
-	AuthenticatedInfo,
 	isAuthenticatedInfo,
-	LanguageLabel,
-	PistonExecuteResponse,
-	PuzzleEntity,
+	isPistonExecutionResponseError,
+	isPistonExecutionResponseSuccess,
+	PistonExecutionResponse,
 	SubmissionEntity,
 	submissionEntitySchema,
+	SubmissionParams,
 	supportedLanguages
 } from "types";
-import authenticated from "../../plugins/middelware/authenticated.js";
+import authenticated from "../../plugins/middleware/authenticated.js";
 import Submission from "../../models/submission/submission.js";
-import Puzzle from "../../models/puzzle/puzzle.js";
+import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { PuzzleResultEnum } from "types/dist/enums/puzzle-result-enum.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
 
-type SubmissionParams = {
-	Body: {
-		code: string;
-		language: LanguageLabel;
-		puzzleId: string;
-	};
-};
-
-export default async function submissionController(fastify: FastifyInstance) {
-	fastify.post<SubmissionParams>(
+export default async function submissionRoutes(fastify: FastifyInstance) {
+	fastify.post<{ Body: SubmissionParams }>(
 		"/",
 		{
 			onRequest: authenticated
@@ -52,7 +44,7 @@ export default async function submissionController(fastify: FastifyInstance) {
 			const { language, puzzleId, code } = request.body;
 
 			// retrieve test cases
-			const puzzle: PuzzleEntity | null = await Puzzle.findById(puzzleId);
+			const puzzle: PuzzleDocument | null = await Puzzle.findById(puzzleId);
 
 			if (!puzzle) {
 				return reply.send({
@@ -83,15 +75,29 @@ export default async function submissionController(fastify: FastifyInstance) {
 
 			const pistonExecutionResponses = await Promise.all(
 				pistonExecutionRequests.map(async (request) => {
-					const response: PistonExecuteResponse = await fastify.piston(request);
+					const response: PistonExecutionResponse = await fastify.piston(request);
 
-					return {
-						response,
-						stdin: request.stdin,
-						isMatch:
-							response.run.output.trim() === request.expectedOutput.trim() ||
-							request.expectedOutput.trim() === response.run.stdout.trim()
-					};
+					if (isPistonExecutionResponseError(response)) {
+						return {
+							response,
+							stdin: request.stdin,
+							isMatch: false
+						};
+					}
+
+					if (isPistonExecutionResponseSuccess(response)) {
+						const expectedOutput = request.expectedOutput.trim();
+
+						return {
+							response,
+							stdin: request.stdin,
+							isMatch:
+								response.run.output.trim() === expectedOutput ||
+								response.run.stdout.trim() === expectedOutput
+						};
+					}
+
+					return { isMatch: false };
 				})
 			);
 

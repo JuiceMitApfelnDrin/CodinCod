@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
-	import H1 from "@/components/typography/h1.svelte";
-	import { buildFrontendUrl } from "@/config/frontend.js";
-	import { frontendUrls, isAuthor } from "types";
-	import P from "@/components/typography/p.svelte";
-	import H2 from "@/components/typography/h2.svelte";
+	import { buildFrontendUrl, frontendUrls, isAuthor } from "types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/index.js";
+	import Button from "@/components/ui/button/button.svelte";
+	import Accordion from "@/components/ui/accordion/accordion.svelte";
+	import { cn } from "@/utils/cn.js";
+	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
+	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 
 	export let data;
 
@@ -16,28 +17,38 @@
 	const playUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_PLAY, { id: $page.params.id });
 </script>
 
-<Container class="flex flex-col gap-2">
-	<H1>
-		{puzzle.title}
-	</H1>
-	<P>puzzle was created on: {puzzle.createdAt}, and last update happened on: {puzzle.updatedAt}</P>
+<Container class="flex flex-col gap-4 md:gap-8 lg:gap-12">
+	<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
+		<PuzzleMetaInfo {puzzle} />
 
-	{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(puzzle.authorId._id, $authenticatedUserInfo?.userId)}
-		<a href={editUrl}>Edit puzzle</a>
-	{/if}
-	<a href={playUrl}>Play puzzle</a>
+		<div class="flex flex-col gap-2 md:flex-row md:gap-4">
+			{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(puzzle.authorId._id, $authenticatedUserInfo?.userId)}
+				<Button variant="outline" href={editUrl}>Edit puzzle</Button>
+			{/if}
 
-	{#if puzzle.statement}
-		<H2>Statement</H2>
-		<P>
-			{puzzle.statement}
-		</P>
-	{/if}
+			<Button href={playUrl}>Play puzzle</Button>
+		</div>
+	</LogicalUnit>
 
-	{#if puzzle.constraints}
-		<H2>Constraints</H2>
-		<P>
-			{puzzle.constraints}
-		</P>
-	{/if}
+	<LogicalUnit class="mb-8">
+		<Accordion open={true} id="statement">
+			<h2 slot="title">Statement</h2>
+			<p slot="content" class={cn(!puzzle.statement && "italic opacity-50")}>
+				{puzzle.statement ?? "Author still needs to add a statement"}
+			</p>
+		</Accordion>
+
+		<Accordion open={true} id="constraints">
+			<h2 slot="title">Constraints</h2>
+			<p slot="content" class={cn(!puzzle.constraints && "italic opacity-50")}>
+				{puzzle.constraints ?? "Author still needs to add a constraints"}
+			</p>
+		</Accordion>
+	</LogicalUnit>
 </Container>
+
+<style>
+	h2 {
+		@apply inline text-xl underline;
+	}
+</style>
