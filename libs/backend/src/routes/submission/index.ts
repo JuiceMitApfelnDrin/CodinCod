@@ -3,9 +3,7 @@ import {
 	isAuthenticatedInfo,
 	isPistonExecutionResponseError,
 	isPistonExecutionResponseSuccess,
-	isString,
 	PistonExecutionResponse,
-	SUBMISSION_BUFFER_IN_MILLISECONDS,
 	SubmissionEntity,
 	submissionEntitySchema,
 	SubmissionParams,
@@ -16,9 +14,8 @@ import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { PuzzleResultEnum } from "types/dist/enums/puzzle-result-enum.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
-import Game from "@/models/game/game.js";
 
-export default async function submissionController(fastify: FastifyInstance) {
+export default async function submissionRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: SubmissionParams }>(
 		"/",
 		{
@@ -121,49 +118,6 @@ export default async function submissionController(fastify: FastifyInstance) {
 
 				const submission = new Submission(submissionData);
 				await submission.save();
-
-				/**
-				 * When user is part of an open game, also add the submission to the open game
-				 * start:
-				 */
-				// TODO: think about this, does this cover every edge case?
-				// since this is an important piece of functionality, come back to this later :)
-
-				const puzzleId = puzzle._id;
-				const matchingGame = await Game.findOne({
-					players: userId,
-					puzzle: puzzleId,
-					endTime: {
-						$lte: new Date(
-							new Date(submission.createdAt).getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS
-						)
-					}
-				})
-					.sort({ endTime: -1 })
-					.populate("playerSubmissions")
-					.exec();
-
-				if (matchingGame) {
-					const playerSubmission = matchingGame.playerSubmissions?.find((submission) => {
-						if (!isString(submission)) {
-							return submission.userId.toString() === userId;
-						}
-
-						return false;
-					});
-
-					if (!playerSubmission) {
-						matchingGame.playerSubmissions = [
-							...(matchingGame.playerSubmissions ?? []),
-							submission._id.toString()
-						];
-
-						const savedGame = await matchingGame.save();
-					}
-				}
-				/**
-				 * :end
-				 */
 
 				return reply.status(201).send(submission);
 			} catch (error) {

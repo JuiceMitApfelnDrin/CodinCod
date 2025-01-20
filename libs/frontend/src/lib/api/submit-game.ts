@@ -2,20 +2,21 @@ import { buildBackendUrl } from "@/config/backend";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { backendUrls, POST, type SubmissionParams } from "types";
 
-export async function submitCode({ code, language, puzzleId }: SubmissionParams) {
-	const response = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION), {
+export async function submitGame({
+	gameId,
+	submissionId
+}: {
+	gameId: string;
+	submissionId: string;
+}) {
+	return await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION_GAME), {
 		body: JSON.stringify({
-			code,
-			language,
-			puzzleId
+			gameId,
+			submissionId
 		}),
 		headers: {
 			"Content-Type": "application/json"
 		},
 		method: POST
 	});
-
-	const submission = await response.json();
-
-	return submission;
 }

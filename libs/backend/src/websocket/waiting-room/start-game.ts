@@ -53,8 +53,6 @@ export async function startGame({
 		{ $sample: { size: 1 } }
 	]).exec();
 
-	console.log({ randomPuzzles });
-
 	if (randomPuzzles.length < 1) {
 		updatePlayer({
 			event: GameEventEnum.NOT_ENOUGH_GAMES,

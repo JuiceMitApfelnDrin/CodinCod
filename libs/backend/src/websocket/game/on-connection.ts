@@ -52,11 +52,12 @@ export async function onConnection({
 	}
 
 	const puzzle = await Puzzle.findById(game.puzzle).populate("authorId");
-	updatePlayer({
-		socket,
-		event: GameEventEnum.OVERVIEW_GAME,
-		data: { game, puzzle }
-	});
 
-	console.log({ game });
+	if (puzzle) {
+		updatePlayer({
+			socket,
+			event: GameEventEnum.OVERVIEW_GAME,
+			data: { game, puzzle }
+		});
+	}
 }

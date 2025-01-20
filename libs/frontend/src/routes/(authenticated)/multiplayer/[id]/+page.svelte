@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
+	import { submitGame } from "@/api/submit-game";
 	import Error from "@/components/error/error.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
 	import H2 from "@/components/typography/h2.svelte";
@@ -34,7 +35,7 @@
 		SUBMISSION_BUFFER_IN_MILLISECONDS,
 		webSocketUrls,
 		type GameState,
-		type UserDto
+		type SubmissionDto
 	} from "types";
 
 	const gameId = $page.params.id;
@@ -65,8 +66,12 @@
 			switch (event) {
 				case GameEventEnum.OVERVIEW_GAME:
 					{
-						state.game = data.game;
-						state.puzzle = data.puzzle;
+						if (data.game) {
+							state.game = data.game;
+						}
+						if (data.puzzle) {
+							state.puzzle = data.puzzle;
+						}
 					}
 					break;
 				case GameEventEnum.NONEXISTENT_GAME:
@@ -100,9 +105,30 @@
 	$: {
 		const now = $currentTime;
 		isGameOver = Boolean(
-			endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)
+			isGameOver ||
+				(endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)) ||
+				state.game?.playerSubmissions?.some((submission) =>
+					isSubmissionDto(submission) ? submission.userId === $authenticatedUserInfo?.userId : false
+				)
 		);
 	}
+
+	const findPlayerSubmission = (playerId: string | undefined) => {
+		if (!state.game || !isString(playerId)) {
+			return undefined;
+		}
+
+		const playerSubmissions: SubmissionDto[] =
+			state.game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
+
+		return playerSubmissions?.find((submission) => submission.userId === playerId);
+	};
+
+	let playerSubmissions;
+	$: playerSubmissions =
+		state.game?.playerSubmissions?.filter((submission) => isSubmissionDto(submission)) ?? [];
+
+	$: console.log(playerSubmissions);
 </script>
 
 {#if state.errorMessage}
@@ -122,7 +148,7 @@
 		<LogicalUnit>
 			{#if getUserIdFromUser(state.game.creator) === $authenticatedUserInfo?.userId}
 				<Button variant="outline">
-					Create a game with the same options
+					<WorkInProgress />: Create a game with the same options
 					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?
 						should you first check whether there is a similar game in the lobby and throw everyone that way or take everyone to the next game 
 					-->
@@ -137,11 +163,7 @@
 		{#if !state.game}
 			<Loader />
 		{:else if state.game.playerSubmissions}
-			<StandingsTable
-				playerSubmissions={state.game.playerSubmissions.filter((submission) =>
-					isSubmissionDto(submission)
-				)}
-			/>
+			<StandingsTable {playerSubmissions} />
 			<!-- TODO: this is absolute shit, wtf are you doing? filtering this shit instead of something far more simple? search that simple solution! thinkge  -->
 		{:else}
 			<P>No player submissions for this game</P>
@@ -159,9 +181,18 @@
 					<PlayPuzzle
 						puzzleId={state.puzzle._id}
 						puzzle={state.puzzle}
-						onPlayerSubmitCode={() => {
-							if (!isGameOver) {
-								socket.send(GameEventEnum.SUBMITTED_PLAYER);
+						onPlayerSubmitCode={async (submissionId) => {
+							if (!isGameOver && state.game?._id) {
+								await submitGame({ gameId: state.game._id, submissionId });
+
+								socket.send(
+									JSON.stringify({
+										event: GameEventEnum.SUBMITTED_PLAYER,
+										userId: $authenticatedUserInfo?.userId,
+										submissionId
+									})
+								);
+
 								isGameOver = true;
 							}
 						}}
@@ -255,7 +286,9 @@
 						{#each state.game.players as player}
 							<li>
 								{#if isUserDto(player)}
-									<UserHoverCard user={player} /> - using ??? - busy!
+									<UserHoverCard user={player} />{` - using ${
+										findPlayerSubmission(player._id)?.language ?? "???"
+									} - ${findPlayerSubmission(player._id)?.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
 									{player}
 								{/if}

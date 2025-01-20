@@ -2,6 +2,7 @@
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import {
 		DEFAULT_LANGUAGE,
+		isSubmissionDto,
 		languageLabels,
 		type LanguageLabel,
 		type PuzzleDto,
@@ -24,7 +25,7 @@
 
 	export let puzzle: PuzzleDto;
 	export let puzzleId: string;
-	export let onPlayerSubmitCode: () => void = () => {};
+	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
 	export let endDate: Date | undefined;
 
 	let code: string = "";
@@ -62,9 +63,12 @@
 
 	async function endPuzzleGame() {
 		if (code.trim()) {
-			await submitCode({ code, language, puzzleId });
+			const submission = await submitCode({ code, language, puzzleId });
+
+			if (isSubmissionDto(submission) && submission._id) {
+				onPlayerSubmitCode(submission._id);
+			}
 		}
-		onPlayerSubmitCode();
 	}
 
 	let endedGame = false;

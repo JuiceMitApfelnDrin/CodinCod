@@ -12,7 +12,8 @@ export interface SubmissionDocument
 const submissionSchema = new Schema<SubmissionDocument>({
 	code: {
 		required: true,
-		type: String
+		type: String,
+		select: false
 	},
 	createdAt: {
 		default: Date.now,

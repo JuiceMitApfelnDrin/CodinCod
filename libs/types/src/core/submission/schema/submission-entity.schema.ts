@@ -3,7 +3,7 @@ import { puzzleResultSchema } from "../../piston/schema/puzzle-result.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 
 export const submissionEntitySchema = z.object({
-	code: z.string(),
+	code: z.string().optional(),
 	language: z.string(),
 	languageVersion: z.string(),
 	createdAt: acceptedDateSchema.default(() => new Date()),

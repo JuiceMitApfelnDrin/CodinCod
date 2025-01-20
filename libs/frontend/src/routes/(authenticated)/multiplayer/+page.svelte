@@ -148,7 +148,7 @@
 		</LogicalUnit>
 
 		{#if state.gameId}
-			<P>waiting for game to start</P>
+			<P>waiting for the game to start</P>
 
 			{#if state.game}
 				<ul>
