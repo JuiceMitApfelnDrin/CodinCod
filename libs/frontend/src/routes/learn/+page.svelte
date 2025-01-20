@@ -16,7 +16,8 @@
 	<LogicalUnit>
 		<P>
 			this will eventually show a bunch of resources, that are free and open-source, that people can
-			use to learn new different languages (among others) at their own pace and time
+			use to learn new different languages at their own pace and time, and look through resources
+			related to code golfing, ...
 		</P>
 		<P>
 			there should be a general language learning path with the basics e.g.: "if-else" ..., as well
