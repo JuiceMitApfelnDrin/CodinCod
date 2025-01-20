@@ -202,9 +202,8 @@
 			</Resizable.Pane>
 			<Resizable.Handle />
 			<Resizable.Pane class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12">
-				<H2>Chat</H2>
+				<H2>Chat - <WorkInProgress /></H2>
 
-				<WorkInProgress />
 				<!-- <ol>
 					<li>
 						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
@@ -277,9 +276,7 @@
 					<Button variant="outline">Send message</Button>
 				</LogicalUnit>
 
-				<H2>Standings</H2>
-
-				<WorkInProgress />
+				<H2>Standings - <WorkInProgress /></H2>
 
 				{#if state.game.players}
 					<ul>
