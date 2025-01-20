@@ -8,7 +8,6 @@
 		"dev": "tsx watch src/index.ts",
 		"build": "pkgroll",
 		"start": "tsx src/index.ts",
-		"prepare": "husky",
 		"lint": "npx eslint .",
 		"lint:fix": "npm run lint -- --fix",
 		"prettier": "npx prettier . --check",
