@@ -18,6 +18,7 @@
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@tailwindcss/typography": "^0.5.16",
 		"@types/cal-heatmap": "^3.5.39",
 		"@types/eslint": "^8.56.0",
 		"@types/jsonwebtoken": "^9.0.6",
