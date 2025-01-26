@@ -18,7 +18,7 @@
 </svelte:head>
 
 <Container>
-	<div class="prose">
+	<div class="prose dark:prose-invert prose-stone">
 		<svelte:component this={data.content} />
 	</div>
 
