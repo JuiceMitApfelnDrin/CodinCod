@@ -15,9 +15,9 @@ export const registerFormSchema = registerSchema.superRefine(async (data, ctx) =
 
 	if (!isAvailable) {
 		ctx.addIssue({
-			path: ["username"],
+			code: "custom",
 			message: "Username is already taken",
-			code: "custom"
+			path: ["username"]
 		});
 	}
 });

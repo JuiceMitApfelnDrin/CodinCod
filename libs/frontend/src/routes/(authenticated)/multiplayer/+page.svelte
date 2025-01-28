@@ -12,24 +12,25 @@
 	import { frontendUrls, GameEventEnum, isCreator, webSocketUrls } from "types";
 
 	let state: {
+		errorMessage: string;
 		gameId?: string;
 		game?: {
 			users: { username: string; userId: string; joinedAt: Date }[];
 			creator: { username: string; userId: string; joinedAt: Date };
 		};
 		games: { id: string; amountOfPlayersJoined: number }[];
-		errorMessage: string;
 	} = {
+		errorMessage: "",
 		// TODO: time-left/countdown timer when game is started
+
+		game: undefined,
 		gameId: undefined,
 		games: [
 			// {
 			// players
 			// amountOfPlayersJoined: number
 			// }
-		],
-		game: undefined,
-		errorMessage: ""
+		]
 	};
 
 	let socket: WebSocket;
@@ -46,7 +47,7 @@
 
 			const { event } = receivedInformation;
 
-			console.log({ event, data: receivedInformation });
+			console.log({ data: receivedInformation, event });
 
 			switch (event) {
 				case GameEventEnum.HOST_GAME:
@@ -134,8 +135,8 @@
 							socket.send(
 								JSON.stringify({
 									event: GameEventEnum.HOST_GAME,
-									username: $authenticatedUserInfo?.username,
-									userId: $authenticatedUserInfo?.userId
+									userId: $authenticatedUserInfo?.userId,
+									username: $authenticatedUserInfo?.username
 								})
 							);
 						}}
@@ -170,8 +171,8 @@
 									JSON.stringify({
 										event: GameEventEnum.JOIN_GAME,
 										gameId: joinableGame.id,
-										username: $authenticatedUserInfo?.username,
-										userId: $authenticatedUserInfo?.userId
+										userId: $authenticatedUserInfo?.userId,
+										username: $authenticatedUserInfo?.username
 									})
 								);
 

@@ -29,7 +29,7 @@ export async function load({ params }: PageServerLoadEvent) {
 
 	return {
 		puzzles: puzzlesWithType,
-		user: userWithType,
-		submissions: submissionsWithType
+		submissions: submissionsWithType,
+		user: userWithType
 	};
 }

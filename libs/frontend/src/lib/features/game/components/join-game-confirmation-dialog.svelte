@@ -27,8 +27,8 @@
 						JSON.stringify({
 							event: GameEventEnum.JOIN_GAME,
 							gameId: gameId,
-							username: $authenticatedUserInfo?.username,
-							userId: $authenticatedUserInfo?.userId
+							userId: $authenticatedUserInfo?.userId,
+							username: $authenticatedUserInfo?.username
 						})
 					)}
 			>

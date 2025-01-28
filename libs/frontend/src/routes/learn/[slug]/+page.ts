@@ -7,7 +7,10 @@ export async function load({ params }: LoadEvent) {
 		const post = await import(`../../../../../../docs/learn/${slug}/README.md`);
 
 		return { content: post.default, meta: post.metadata };
-	} catch (e) {
+	} catch (
+		e
+		// TODO: improve error handling
+	) {
 		error(404, `Could not find ${params.slug}`);
 	}
 }

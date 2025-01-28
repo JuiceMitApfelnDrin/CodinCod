@@ -43,9 +43,9 @@
 	let isGameOver = false;
 
 	const state: GameState = {
+		errorMessage: "",
 		game: undefined,
-		puzzle: undefined,
-		errorMessage: ""
+		puzzle: undefined
 	};
 
 	let socket: WebSocket;
@@ -59,7 +59,7 @@
 
 		socket.addEventListener("message", async (message) => {
 			const receivedInformation = JSON.parse(message.data);
-			const { event, data } = receivedInformation;
+			const { data, event } = receivedInformation;
 
 			console.log({ receivedInformation });
 
@@ -188,8 +188,8 @@
 								socket.send(
 									JSON.stringify({
 										event: GameEventEnum.SUBMITTED_PLAYER,
-										userId: $authenticatedUserInfo?.userId,
-										submissionId
+										submissionId,
+										userId: $authenticatedUserInfo?.userId
 									})
 								);
 

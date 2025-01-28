@@ -5,6 +5,7 @@ import type { Config } from "tailwindcss";
 const config: Config = {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	darkMode: ["class"],
+	plugins: [typography],
 	safelist: ["dark"],
 	theme: {
 		container: {
@@ -59,8 +60,7 @@ const config: Config = {
 				sans: [...fontFamily.sans]
 			}
 		}
-	},
-	plugins: [typography]
+	}
 };
 
 export default config;

@@ -45,7 +45,7 @@
 				<p class="text-sm">Some bla bla that needs to come from the user's profile...</p>
 				<div class="flex items-center pt-2">
 					<Calendar class="mr-2 h-4 w-4 opacity-70" />
-					<span class="text-muted-foreground text-xs">Joined September 2022</span>
+					<span class="text-xs text-muted-foreground">Joined September 2022</span>
 				</div>
 			</div>
 		</div>

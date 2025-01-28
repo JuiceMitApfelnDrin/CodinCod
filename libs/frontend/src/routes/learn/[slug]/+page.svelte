@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
-	import { githubRepo } from "@/config/general.js";
+	import BecomeAContributor from "@/features/learn/components/become-a-contributor.svelte";
 
 	export let data;
 </script>
@@ -18,13 +18,9 @@
 </svelte:head>
 
 <Container>
-	<div class="prose dark:prose-invert prose-stone">
+	<div class="prose prose-stone dark:prose-invert">
 		<svelte:component this={data.content} />
 	</div>
 
-	<p>
-		If you see something that can be improved, <a href={`${githubRepo}/issues`}>open an issue</a>
-		or
-		<a href={githubRepo}>contribute on github</a>.
-	</p>
+	<BecomeAContributor />
 </Container>

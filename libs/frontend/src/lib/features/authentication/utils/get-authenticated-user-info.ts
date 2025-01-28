@@ -27,14 +27,14 @@ export function getAuthenticatedUserInfo(token: string | undefined, cookies: Coo
 			} else if (err instanceof jwt.JsonWebTokenError) {
 				console.error("Invalid token:", err);
 				return {
-					isAuthenticated: false,
-					error: "Invalid token"
+					error: "Invalid token",
+					isAuthenticated: false
 				};
 			} else if (err instanceof jwt.NotBeforeError) {
 				console.error("Token not active yet:", err);
 				return {
-					isAuthenticated: false,
-					error: "Token not active"
+					error: "Token not active",
+					isAuthenticated: false
 				};
 			} else {
 				console.error("Error verifying token:", err);

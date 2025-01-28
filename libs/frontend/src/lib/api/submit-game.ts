@@ -1,6 +1,6 @@
 import { buildBackendUrl } from "@/config/backend";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
-import { backendUrls, POST, type SubmissionParams } from "types";
+import { backendUrls, POST } from "types";
 
 export async function submitGame({
 	gameId,

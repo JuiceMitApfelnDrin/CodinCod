@@ -7,17 +7,18 @@ import Title from "./alert-title.svelte";
 export const alertVariants = tv({
 	base: "[&>svg]:text-foreground relative w-full rounded-lg border p-4 [&:has(svg)]:pl-11 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4",
 
+	defaultVariants: {
+		variant: "default"
+	},
+
 	variants: {
 		variant: {
 			default: "bg-background text-foreground",
-			success:
-				"border-green-500/50 text-green-700 dark:border-green-500 dark:[&>svg]:text-green-300 [&>svg]:text-green-700 dark:text-green-300 dark:border-green-500",
 			destructive:
-				"border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive dark:[&>svg]:text-red-500 dark:text-red-500 dark:border-red-500"
+				"border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive dark:[&>svg]:text-red-500 dark:text-red-500 dark:border-red-500",
+			success:
+				"border-green-500/50 text-green-700 dark:border-green-500 dark:[&>svg]:text-green-300 [&>svg]:text-green-700 dark:text-green-300 dark:border-green-500"
 		}
-	},
-	defaultVariants: {
-		variant: "default"
 	}
 });
 
