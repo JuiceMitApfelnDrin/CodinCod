@@ -5,5 +5,6 @@ export * from "./game/index.js";
 export * from "./moderation/index.js";
 export * from "./piston/index.js";
 export * from "./puzzle/index.js";
+export * from "./profile/index.js";
 export * from "./submission/index.js";
 export * from "./user/index.js";
