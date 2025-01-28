@@ -8,6 +8,7 @@
 	import { cn } from "@/utils/cn.js";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
+	import Markdown from "@/components/typography/markdown.svelte";
 
 	export let data;
 
@@ -33,16 +34,22 @@
 	<LogicalUnit class="mb-8">
 		<Accordion open={true} id="statement">
 			<h2 slot="title">Statement</h2>
-			<p slot="content" class={cn(!puzzle.statement && "italic opacity-50")}>
-				{puzzle.statement ?? "Author still needs to add a statement"}
-			</p>
+			<div slot="content" class={cn(!puzzle.statement && "italic opacity-50")}>
+				<Markdown
+					markdown={puzzle.statement}
+					fallbackText={"Author still needs to add a statement"}
+				/>
+			</div>
 		</Accordion>
 
 		<Accordion open={true} id="constraints">
 			<h2 slot="title">Constraints</h2>
-			<p slot="content" class={cn(!puzzle.constraints && "italic opacity-50")}>
-				{puzzle.constraints ?? "Author still needs to add a constraints"}
-			</p>
+			<div slot="content" class={cn(!puzzle.constraints && "italic opacity-50")}>
+				<Markdown
+					markdown={puzzle.constraints}
+					fallbackText={"Author still needs to add constraints"}
+				/>
+			</div>
 		</Accordion>
 	</LogicalUnit>
 </Container>

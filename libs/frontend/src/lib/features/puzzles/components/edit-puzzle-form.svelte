@@ -79,7 +79,7 @@
 			<Textarea {...attrs} bind:value={$formData.statement} />
 		</Form.Control>
 		<Form.Description>
-			This will be the description of the puzzle (markdown formatting supported, eventually).
+			This will be the description of the puzzle (markdown formatting supported).
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
@@ -91,8 +91,8 @@
 		</Form.Control>
 		<Form.Description>
 			Describe to the best of your abilities what the puzzle is limited to, e.g.:
-			<InlineCode>1 ≤ n ≤ 100; 1 ≤ h ≤ 15; 0 ≤ x1 &lt; x2 ≤ 200</InlineCode>. Markdown formatting
-			supported, eventually.
+			<InlineCode>1 ≤ n ≤ 100; 1 ≤ h ≤ 15; 0 ≤ x1 &lt; x2 ≤ 200</InlineCode>. (Markdown formatting
+			supported).
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>

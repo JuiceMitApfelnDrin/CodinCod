@@ -11,6 +11,6 @@
 
 {#if puzzle}
 	<Container>
-		<PlayPuzzle {puzzleId} {puzzle} />
+		<PlayPuzzle endDate={undefined} {puzzleId} {puzzle} />
 	</Container>
 {/if}

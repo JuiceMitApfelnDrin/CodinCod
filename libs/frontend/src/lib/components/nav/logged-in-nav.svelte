@@ -23,6 +23,21 @@
 			text: "Learn"
 		}
 	];
+
+	const dropdownLinksLoggedIn = $authenticatedUserInfo
+		? [
+				{
+					href: buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
+						username: $authenticatedUserInfo.username
+					}),
+					text: "Profile"
+				},
+				{
+					href: frontendUrls.SETTINGS,
+					text: "Settings"
+				}
+			]
+		: [];
 </script>
 
 <header>
@@ -65,27 +80,16 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
-						<DropdownMenu.Label>My Account</DropdownMenu.Label>
-						<DropdownMenu.Separator />
-						{#if $authenticatedUserInfo}
+						{#each dropdownLinksLoggedIn as { text, href }}
 							<DropdownMenu.Item>
-								<a
-									href={buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
-										username: $authenticatedUserInfo.username
-									})}
-								>
-									Profile
-								</a>
+								<a class="h-full w-full" {href}>{text}</a>
 							</DropdownMenu.Item>
-						{/if}
-						<DropdownMenu.Item>
-							<a href={frontendUrls.SETTINGS}>Preferences</a>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item><LogoutButton /></DropdownMenu.Item>
-
-						<DropdownMenu.Separator></DropdownMenu.Separator>
+						{/each}
 
 						<DropdownMenu.Item><ToggleTheme /></DropdownMenu.Item>
+						<DropdownMenu.Separator></DropdownMenu.Separator>
+
+						<DropdownMenu.Item><LogoutButton /></DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>

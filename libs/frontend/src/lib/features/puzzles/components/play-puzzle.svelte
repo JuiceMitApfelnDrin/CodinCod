@@ -22,6 +22,7 @@
 	import CountdownTimer from "@/components/ui/countdown-timer/countdown-timer.svelte";
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
+	import Markdown from "@/components/typography/markdown.svelte";
 
 	export let puzzle: PuzzleDto;
 	export let puzzleId: string;
@@ -91,16 +92,16 @@
 <LogicalUnit>
 	<Accordion open={true} id="statement">
 		<h2 slot="title">Statement</h2>
-		<p slot="content">
-			{puzzle.statement}
-		</p>
+		<div slot="content">
+			<Markdown markdown={puzzle.statement} fallbackText="No constraints" />
+		</div>
 	</Accordion>
 
 	<Accordion open={true} id="constraints">
 		<h2 slot="title">Constraints</h2>
-		<p slot="content">
-			{puzzle.constraints}
-		</p>
+		<div slot="content">
+			<Markdown markdown={puzzle.constraints} fallbackText="No constraints" />
+		</div>
 	</Accordion>
 </LogicalUnit>
 

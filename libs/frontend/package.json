@@ -61,6 +61,7 @@
 		"dayjs": "^1.11.13",
 		"formsnap": "^1.0.0",
 		"jsonwebtoken": "^9.0.2",
+		"marked": "^15.0.6",
 		"svelte-codemirror-editor": "^1.4.0",
 		"svelte-headless-table": "^0.18.3",
 		"sveltekit-superforms": "^2.13.1",
