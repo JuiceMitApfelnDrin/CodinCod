@@ -11,7 +11,7 @@
 
 	export let data;
 
-	const { form: formData } = data;
+	const { deletePuzzle: deletePuzzleFormData, form: formData } = data;
 	const puzzle: PuzzleDto = formData.data;
 
 	let isPuzzleAuthor = false;
@@ -28,7 +28,7 @@
 		<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
 			<PuzzleMetaInfo {puzzle} />
 
-			<DeletePuzzleConfirmationDialog />
+			<DeletePuzzleConfirmationDialog data={deletePuzzleFormData} />
 		</LogicalUnit>
 
 		<EditPuzzleForm data={formData}></EditPuzzleForm>

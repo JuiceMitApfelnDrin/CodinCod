@@ -63,7 +63,7 @@
 	let language: LanguageLabel = $formData.solution.language ?? DEFAULT_LANGUAGE;
 </script>
 
-<form method={POST} use:enhance class="flex flex-col gap-4">
+<form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Title</Form.Label>

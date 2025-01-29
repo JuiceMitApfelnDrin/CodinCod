@@ -9,6 +9,7 @@ export * from "./enum/puzzle-visibility-enum.js";
 export * from "./enum/tag-enum.js";
 
 // schema
+export * from "./schema/delete-puzzle.schema.js";
 export * from "./schema/difficulty.schema.js";
 export * from "./schema/puzzle-dto.schema.js";
 export * from "./schema/puzzle-entity.schema.js";

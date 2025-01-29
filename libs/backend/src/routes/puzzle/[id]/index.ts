@@ -6,7 +6,8 @@ import {
 	puzzleEntitySchema,
 	PuzzleVisibilityEnum,
 	isAuthor,
-	isAuthenticatedInfo
+	isAuthenticatedInfo,
+	DeletePuzzle
 } from "types";
 import { ParamsId } from "./types.js";
 
@@ -67,7 +68,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 		}
 	);
 
-	fastify.delete<ParamsId>(
+	fastify.delete<{ Params: DeletePuzzle }>(
 		"/",
 		{
 			onRequest: authenticated
