@@ -1,6 +1,6 @@
 export async function getLearnSlugs() {
 	const slugs = [];
-	const paths = import.meta.glob("../../../../../docs/learn/**/README.md");
+	const paths = import.meta.glob("/src/content/learn/**/README.md");
 
 	for (const path in paths) {
 		// remove ../../../../../docs/learn/
