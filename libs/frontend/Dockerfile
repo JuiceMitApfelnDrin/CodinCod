@@ -22,4 +22,4 @@ WORKDIR /app/libs/frontend
 RUN pnpm build
 
 # Start the development server
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "dev", "--host", "0.0.0.0"]
