@@ -1,0 +1,33 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: . # Root directory
+      dockerfile: libs/backend/Dockerfile # Correct path
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # depends_on:
+    #   - mongo
+
+  frontend:
+    container_name: frontend
+    build:
+      context: . # Root directory
+      dockerfile: libs/frontend/Dockerfile # Correct path
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=production
+
+  # mongo:
+  #   container_name: mongo
+  #   image: mongo:latest
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data/db
+
+# volumes:
+#   mongo-data:
