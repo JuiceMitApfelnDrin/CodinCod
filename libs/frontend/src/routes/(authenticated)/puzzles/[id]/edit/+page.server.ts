@@ -6,7 +6,7 @@ import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
 import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
-import { handleDeletePuzzleForm } from "@/api/delete-puzzle.js";
+import { handleDeletePuzzleForm } from "@/api/handle-delete-puzzle-form.js";
 
 export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
