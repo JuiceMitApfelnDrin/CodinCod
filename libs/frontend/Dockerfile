@@ -21,5 +21,7 @@ COPY libs/types ./libs/types/
 WORKDIR /app/libs/types
 RUN pnpm build
 
+WORKDIR /app/libs/frontend
+
 # Start the development server
 CMD ["pnpm", "dev", "--host", "0.0.0.0"]
