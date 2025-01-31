@@ -286,9 +286,6 @@ importers:
       eslint-plugin-sort-destructure-keys:
         specifier: ^2.0.0
         version: 2.0.0(eslint@9.10.0)
-      types:
-        specifier: 'file:'
-        version: file:libs/types(eslint@9.10.0)
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -6022,15 +6019,4 @@ packages:
   'file:':
     resolution: {directory: '', type: directory}
     name: codin-cod
-    dev: false
-
-  file:libs/types(eslint@9.10.0):
-    resolution: {directory: libs/types, type: directory}
-    id: file:libs/types
-    name: types
-    dependencies:
-      eslint-plugin-sort-destructure-keys: 2.0.0(eslint@9.10.0)
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - eslint
     dev: false

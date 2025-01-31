@@ -17,7 +17,7 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 		const puzzle: PuzzleDto = await response.json();
 
 		return { puzzle };
-	} catch (err) {
+	} catch {
 		error(500, "Server error occurred while attempting to fetch the puzzle.");
 	}
 }
