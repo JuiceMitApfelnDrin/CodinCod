@@ -22,5 +22,8 @@ COPY libs/types ./libs/types/
 WORKDIR /app/libs/types
 RUN pnpm build
 
+WORKDIR /app/libs/backend
+RUN pnpm build
+
 # Start the backend
 CMD ["pnpm", "start"]

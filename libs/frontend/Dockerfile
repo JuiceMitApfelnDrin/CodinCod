@@ -5,8 +5,6 @@ WORKDIR /app
 # Copy root files and workspace config
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 
-
-
 # Copy all necessary package.json files for dependencies
 COPY libs/frontend/package.json ./libs/frontend/
 COPY libs/types/package.json ./libs/types/
