@@ -1,4 +1,4 @@
-import { getUserActivityByUsername } from "@/api/get-user-activity-by-username.js";
+import { getUserActivityByUsername } from "../../api/get-user-activity-by-username.js";
 import { ActivityTypeEnum, type PuzzleDto, type SubmissionDto } from "types";
 import type { PageServerLoadEvent } from "./$types";
 

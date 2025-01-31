@@ -5,9 +5,6 @@ import { backendUrls, POST } from "types";
 export async function login(identifier: string, password: string) {
 	return fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.LOGIN), {
 		body: JSON.stringify({ identifier, password }),
-		headers: {
-			"Content-Type": "application/json"
-		},
 		method: POST
 	});
 }

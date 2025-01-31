@@ -1,29 +1,15 @@
 import { FastifyInstance } from "fastify";
-import { isAuthenticatedInfo, SUBMISSION_BUFFER_IN_MILLISECONDS, SubmissionEntity } from "types";
-import authenticated from "../../../plugins/middleware/authenticated.js";
+import { SUBMISSION_BUFFER_IN_MILLISECONDS, SubmissionEntity } from "types";
 import { isValidationError } from "../../../utils/functions/is-validation-error.js";
 import Game from "@/models/game/game.js";
 import Submission from "@/models/submission/submission.js";
 
 export default async function submissionGameRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: { gameId: string; submissionId: string } }>(
+	fastify.post<{ Body: { gameId: string; submissionId: string; userId: string } }>(
 		"/",
-		{
-			onRequest: authenticated
-		},
 		async (request, reply) => {
-			/**
-			 * todo, have this checking credentials on multiple places, make this easier somehow :)
-			 */
-			if (!isAuthenticatedInfo(request.user)) {
-				return reply.status(401).send({ error: "Not right credentials" });
-			}
-
-			const user = request.user;
-			const userId = user.userId;
-
 			// unpacking body
-			const { gameId, submissionId } = request.body;
+			const { gameId, submissionId, userId } = request.body;
 
 			try {
 				const matchingSubmission = await Submission.findById<SubmissionEntity>(submissionId).exec();

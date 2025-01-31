@@ -4,4 +4,5 @@ export type SubmissionParams = {
 	code: string;
 	language: LanguageLabel;
 	puzzleId: string;
+	userId: string
 };

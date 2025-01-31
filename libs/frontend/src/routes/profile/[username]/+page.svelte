@@ -3,11 +3,10 @@
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
 	import ActivityGroup from "@/features/profile/components/activity-feed/activity-group.svelte";
-	import Activity from "@/features/profile/components/activity-feed/display-activity.svelte";
 	import CalendarHeatmap from "@/features/profile/components/calendar-heatmap.svelte";
 	import { groupByCreatedAtDate } from "@/utils/group-activity-by-created-at-date.js";
 	import dayjs from "dayjs";
-	import { isUserDto } from "types";
+	import { isUserDto, type Activity } from "types";
 
 	export let data;
 

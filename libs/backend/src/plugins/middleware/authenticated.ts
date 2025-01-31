@@ -4,6 +4,8 @@ import { AuthenticatedInfo } from "types";
 export default async function authenticated(request: FastifyRequest, reply: FastifyReply) {
 	const token = request.cookies.token;
 
+	console.log({ token, cookies: JSON.stringify(request.cookies) });
+
 	if (!token) {
 		return reply.status(401).send({ message: "Unauthorized" });
 	}

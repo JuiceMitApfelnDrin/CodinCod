@@ -7,3 +7,15 @@ export const OPTIONS = "OPTIONS";
 export const TRACE = "TRACE";
 export const HEAD = "HEAD";
 export const CONNECT = "CONNECT";
+
+export const httpRequestMethod = {
+	GET: "GET",
+	PUT: "PUT",
+	POST: "POST",
+	PATCH: "PATCH",
+	DELETE: "DELETE",
+	OPTIONS: "OPTIONS",
+	TRACE: "TRACE",
+	HEAD: "HEAD",
+	CONNECT: "CONNECT"
+} as const;

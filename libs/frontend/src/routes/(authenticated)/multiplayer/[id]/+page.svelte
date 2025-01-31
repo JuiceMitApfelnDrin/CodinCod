@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
-	import { submitGame } from "@/api/submit-game";
 	import Error from "@/components/error/error.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
 	import H2 from "@/components/typography/h2.svelte";
@@ -13,7 +12,9 @@
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
+	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { buildWebSocketBackendUrl } from "@/config/backend";
+	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import JoinGameConfirmationDialog from "@/features/game/components/join-game-confirmation-dialog.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
@@ -28,6 +29,7 @@
 		buildFrontendUrl,
 		frontendUrls,
 		GameEventEnum,
+		httpRequestMethod,
 		httpResponseCodes,
 		isString,
 		isSubmissionDto,
@@ -182,8 +184,16 @@
 						puzzleId={state.puzzle._id}
 						puzzle={state.puzzle}
 						onPlayerSubmitCode={async (submissionId) => {
-							if (!isGameOver && state.game?._id) {
-								await submitGame({ gameId: state.game._id, submissionId });
+							if (!isGameOver && state.game?._id && $authenticatedUserInfo) {
+								await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.SUBMIT_GAME), {
+									body: JSON.stringify({
+										gameId,
+										submissionId,
+										userId: $authenticatedUserInfo.userId
+									}),
+
+									method: httpRequestMethod.POST
+								});
 
 								socket.send(
 									JSON.stringify({

@@ -2,6 +2,7 @@
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import {
 		DEFAULT_LANGUAGE,
+		httpRequestMethod,
 		isSubmissionDto,
 		languageLabels,
 		type LanguageLabel,
@@ -17,12 +18,13 @@
 	import Accordion from "@/components/ui/accordion/accordion.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
-	import { executeCode } from "@/api/execute-code";
-	import { submitCode } from "@/api/submit-code";
 	import CountdownTimer from "@/components/ui/countdown-timer/countdown-timer.svelte";
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
 	import Markdown from "@/components/typography/markdown.svelte";
+	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+	import { apiUrls, buildApiUrl } from "@/config/api";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 
 	export let puzzle: PuzzleDto;
 	export let puzzleId: string;
@@ -33,7 +35,16 @@
 	let language: LanguageLabel = DEFAULT_LANGUAGE;
 
 	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
-		const testResult = await executeCode({ code, language, testInput, testOutput });
+		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
+			body: JSON.stringify({
+				code,
+				language,
+				testInput,
+				testOutput
+			}),
+			method: httpRequestMethod.POST
+		});
+		const testResult = await response.json();
 
 		const validator = puzzle.validators?.[itemInList];
 
@@ -63,12 +74,26 @@
 	// }
 
 	async function endPuzzleGame() {
-		if (code.trim()) {
-			const submission = await submitCode({ code, language, puzzleId });
+		if (!isAuthenticated || !$authenticatedUserInfo) {
+			return;
+		}
 
-			if (isSubmissionDto(submission) && submission._id) {
-				onPlayerSubmitCode(submission._id);
-			}
+		const response = await fetch(buildApiUrl(apiUrls.SUBMIT_CODE), {
+			body: JSON.stringify({
+				code,
+				language,
+				puzzleId,
+				userId: $authenticatedUserInfo.userId
+			}),
+			method: httpRequestMethod.POST
+		});
+
+		const submission = await response.json();
+
+		console.log({ submission });
+
+		if (isSubmissionDto(submission) && submission._id) {
+			onPlayerSubmitCode(submission._id);
 		}
 	}
 

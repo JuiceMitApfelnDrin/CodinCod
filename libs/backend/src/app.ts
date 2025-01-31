@@ -31,6 +31,8 @@ server.register(fastifyCookie, {
 	hook: "onRequest",
 	parseOptions: {}
 });
+
+// TODO: make this not show an error, appears to work tho, check wtf is going wrong
 server.register(fastifyRateLimit, {
 	max: 100,
 	timeWindow: "1 minute"
