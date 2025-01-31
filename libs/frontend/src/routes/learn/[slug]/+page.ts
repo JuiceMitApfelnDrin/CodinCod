@@ -4,7 +4,7 @@ export async function load({ params }: LoadEvent) {
 	const slug = params.slug;
 
 	try {
-		const post = await import(`/src/content/learn/${slug}/README.md`);
+		const post = await import(`../../../content/learn/${slug}/README.md`);
 
 		return { content: post.default, meta: post.metadata };
 	} catch {
