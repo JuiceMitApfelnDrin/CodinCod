@@ -1,8 +1,6 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import User from "../models/user/user.js";
-import { resolve } from "path";
-import { promises } from "fs";
+import { FastifyInstance } from "fastify";
 import { userEntitySchema } from "types";
+import User from "../models/user/user.ts";
 
 export default async function indexRoutes(fastify: FastifyInstance) {
 	// fastify.get("/", async function (_request: FastifyRequest, reply: FastifyReply) {

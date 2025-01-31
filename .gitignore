@@ -15,3 +15,6 @@ libs/**/.svelte-kit/
 libs/**/.DS_Store
 libs/**/dist/
 libs/**/.env
+
+# Docker
+docker-compose.override.yml

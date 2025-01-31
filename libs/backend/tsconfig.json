@@ -7,6 +7,7 @@
 		"moduleResolution": "NodeNext",
 		"outDir": "dist",
 		"rootDir": "src",
+		"baseUrl": "./src",
 		"esModuleInterop": true,
 		"strict": true,
 		"resolveJsonModule": true,
@@ -17,6 +18,16 @@
 		"isolatedModules": true,
 		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true,
-		"lib": ["ESNext"]
-	}
+		"lib": ["ESNext"],
+		"paths": {
+			"types": [
+				"./../types/*"
+			]
+		}
+	},
+	"references": [
+		{
+			"path": "./../types",
+		}
+	]
 }

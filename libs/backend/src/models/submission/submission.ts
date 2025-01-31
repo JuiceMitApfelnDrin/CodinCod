@@ -1,6 +1,6 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
-import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
 import { SubmissionEntity } from "types";
+import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.ts";
 
 interface SubmissionDocument extends Document, Omit<SubmissionEntity, "puzzleId" | "userId"> {
 	puzzleId: ObjectId;

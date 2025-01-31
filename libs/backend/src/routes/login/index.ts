@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
 import bcrypt from "bcrypt";
+import { FastifyInstance } from "fastify";
 import { cookieKeys, isEmail, loginSchema } from "types";
-import { $ref } from "../../config/schema.js";
-import User from "../../models/user/user.js";
-import { generateToken } from "../../utils/functions/generate-token.js";
+import { $ref } from "../../config/schema.ts";
+import User from "../../models/user/user.ts";
+import { generateToken } from "../../utils/functions/generate-token.ts";
 
 export default async function loginRoutes(fastify: FastifyInstance) {
 	fastify.post(

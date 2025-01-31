@@ -1,13 +1,13 @@
 import { FastifyInstance } from "fastify";
 import {
-	isFetchError,
-	isPistonExecuteResponseSuccess,
-	LanguageLabel,
-	PistonExecuteRequest,
-	PistonExecuteResponse,
-	supportedLanguages
+    isFetchError,
+    isPistonExecuteResponseSuccess,
+    LanguageLabel,
+    PistonExecuteRequest,
+    PistonExecuteResponse,
+    supportedLanguages
 } from "types";
-import { calculateResult } from "../../utils/functions/calculate-result.js";
+import { calculateResult } from "../../utils/functions/calculate-result.ts";
 
 type ExecuteParams = {
 	Body: {

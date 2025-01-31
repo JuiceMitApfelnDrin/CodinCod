@@ -1,7 +1,7 @@
+import bcrypt from "bcrypt";
 import mongoose, { Document, Schema } from "mongoose";
 import { UserEntity } from "types";
-import bcrypt from "bcrypt";
-import { USER } from "../../utils/constants/model.js";
+import { USER } from "../../utils/constants/model.ts";
 
 interface UserDocument extends Document, UserEntity {}
 

@@ -13,7 +13,11 @@
 		"moduleResolution": "NodeNext",
 		"outDir": "dist",
 		"rootDir": "src",
-		"lib": ["ESNext", "DOM"]
+		"lib": [
+			"ESNext",
+			"DOM"
+		],
+		"composite": true
 	},
 	"exclude": ["node_modules", "dist/", "eslint.config.js"]
 }

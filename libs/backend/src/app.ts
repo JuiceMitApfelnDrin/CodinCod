@@ -2,17 +2,17 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import Fastify from "fastify";
-import cors from "./plugins/config/cors.js";
-import jwt from "./plugins/config/jwt.js";
-import fastifyFormbody from "@fastify/formbody";
-import mongooseConnector from "./plugins/config/mongoose.js";
-import router from "./router.js";
-import { schemas } from "./config/schema.js";
 import fastifyCookie from "@fastify/cookie";
-import swagger from "./plugins/config/swagger.js";
-import swaggerUi from "./plugins/config/swagger-ui.js";
-import piston from "./plugins/decorators/piston.js";
+import fastifyFormbody from "@fastify/formbody";
+import Fastify from "fastify";
+import { schemas } from "./config/schema.ts";
+import cors from "./plugins/config/cors.ts";
+import jwt from "./plugins/config/jwt.ts";
+import mongooseConnector from "./plugins/config/mongoose.ts";
+import swaggerUi from "./plugins/config/swagger-ui.ts";
+import swagger from "./plugins/config/swagger.ts";
+import piston from "./plugins/decorators/piston.ts";
+import router from "./router.ts";
 
 const server = Fastify({
 	logger: true // Boolean(process.env.NODE_ENV !== "development")

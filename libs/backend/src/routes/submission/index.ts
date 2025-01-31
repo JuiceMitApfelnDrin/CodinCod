@@ -1,19 +1,18 @@
 import { FastifyInstance } from "fastify";
 import {
-	AuthenticatedInfo,
-	isAuthenticatedInfo,
-	LanguageLabel,
-	PistonExecuteResponse,
-	PuzzleEntity,
-	SubmissionEntity,
-	submissionEntitySchema,
-	supportedLanguages
+    isAuthenticatedInfo,
+    LanguageLabel,
+    PistonExecuteResponse,
+    PuzzleEntity,
+    SubmissionEntity,
+    submissionEntitySchema,
+    supportedLanguages
 } from "types";
-import authenticated from "../../plugins/middelware/authenticated.js";
-import Submission from "../../models/submission/submission.js";
-import Puzzle from "../../models/puzzle/puzzle.js";
-import { PuzzleResultEnum } from "types/dist/enums/puzzle-result-enum.js";
-import { isValidationError } from "../../utils/functions/is-validation-error.js";
+import { PuzzleResultEnum } from "types/dist/enums/puzzle-result-enum.ts";
+import Puzzle from "../../models/puzzle/puzzle.ts";
+import Submission from "../../models/submission/submission.ts";
+import authenticated from "../../plugins/middelware/authenticated.ts";
+import { isValidationError } from "../../utils/functions/is-validation-error.ts";
 
 type SubmissionParams = {
 	Body: {

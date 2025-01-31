@@ -1,11 +1,11 @@
 import { FastifyInstance } from "fastify";
-import { z } from "zod";
-import { Error } from "mongoose";
 import { MongoError } from "mongodb";
-import { $ref } from "../../config/schema.js";
-import User from "../../models/user/user.js";
+import { Error } from "mongoose";
 import { cookieKeys, registerSchema } from "types";
-import { generateToken } from "../../utils/functions/generate-token.js";
+import { z } from "zod";
+import { $ref } from "../../config/schema.ts";
+import User from "../../models/user/user.ts";
+import { generateToken } from "../../utils/functions/generate-token.ts";
 
 export default async function registerRoutes(fastify: FastifyInstance) {
 	fastify.post(

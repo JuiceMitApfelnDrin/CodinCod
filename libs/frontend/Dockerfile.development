@@ -1,0 +1,60 @@
+# Image setup ##################################################
+
+# Alpine: small size & minimal attack surface
+FROM node:22-alpine
+
+# Required arguments (+ fail if not set)
+ARG UID
+ARG GID
+RUN test -n UID && test -n GID
+
+# Configuration
+WORKDIR /app/libs/frontend
+
+# Rootland #####################################################
+
+USER root
+
+# Set up user with same UID and GID as host user to avoid 
+# permission issues with mounted volumes and generated files
+# - deluser is used to remove the default node user because
+#     usermod doesn't exist on alpine
+# - addgroup is allowed to fail if group already exists (macOS)
+# - adduser uses either the pre-existing or newly created group
+#     since we can't pass the number directly to -G
+# - don't fail eventually, in case 0 0 root already exists
+RUN deluser node \
+  && (addgroup -g ${GID} -S node || true) \
+  && adduser -u ${UID} -S -G `getent group ${GID} | cut -d: -f1` node \
+  || true
+
+# Install dependencies
+RUN apk add --no-cache git \
+  && corepack enable \
+  && corepack use pnpm@*
+
+# Set up directories for app & mounts and set permissions
+RUN mkdir -p \
+  /app/libs/types/dist \
+  /app/node_modules/.pnpm \
+  /.cache && \
+  chown -R ${UID}:${GID} /home/node /app /.cache
+
+# Userland #####################################################
+
+USER ${UID}
+
+# Install dependencies
+RUN corepack install
+
+# Image metadata ###############################################
+
+EXPOSE 5173
+
+VOLUME /app/libs/frontend
+VOLUME /app/node_modules/.pnpm
+VOLUME /app/libs/types
+VOLUME /app/libs/types/dist
+VOLUME /app/pnpm-workspace.yaml
+
+CMD pnpm i && pnpm run dev:docker

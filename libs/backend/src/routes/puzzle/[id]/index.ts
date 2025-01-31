@@ -1,13 +1,13 @@
 import { FastifyInstance } from "fastify";
-import Puzzle from "../../../models/puzzle/puzzle.js";
-import authenticated from "../../../plugins/middelware/authenticated.js";
 import {
-	AuthenticatedInfo,
-	puzzleEntitySchema,
-	VisibilityEnum,
-	isAuthor,
-	isAuthenticatedInfo
+    AuthenticatedInfo,
+    isAuthenticatedInfo,
+    isAuthor,
+    puzzleEntitySchema,
+    VisibilityEnum
 } from "types";
+import Puzzle from "../../../models/puzzle/puzzle.ts";
+import authenticated from "../../../plugins/middelware/authenticated.ts";
 
 type ParamsId = { Params: { id: string } };
 

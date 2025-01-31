@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
-import { PUZZLE, USER, METRICS } from "../../utils/constants/model.js";
+import mongoose, { Document, ObjectId, Schema } from "mongoose";
 import { DifficultyEnum, PuzzleEntity, VisibilityEnum } from "types";
-import solutionSchema from "./solution.js";
-import validatorSchema from "./validator.js";
+import { METRICS, PUZZLE, USER } from "../../utils/constants/model.ts";
+import solutionSchema from "./solution.ts";
+import validatorSchema from "./validator.ts";
 
 interface PuzzleDocument extends Document, Omit<PuzzleEntity, "authorId" | "solution" | "_id"> {
 	authorId: ObjectId;

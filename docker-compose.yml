@@ -1,0 +1,66 @@
+volumes:
+  backend-node-modules:
+  frontend-node-modules:
+  runtime-cache:
+  mongo-data:
+  # types-dist:
+  # types-node-modules:
+
+services:
+  # MongoDB Authentication:
+  #   username: development
+  #   password: local
+  #   port: 27017
+  mongo:
+    container_name: codincod-mongo
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${CODINCOD_MONGO_USERNAME:-development}
+      MONGO_INITDB_ROOT_PASSWORD: ${CODINCOD_MONGO_PASSWORD:-local}
+      MONGO_INITDB_DATABASE: ${CODINCOD_MONGO_DATABASE:-codincod}
+    ports:
+      - ${DOCKER_EXPOSE_MONGO_PORT:-27017}:27017
+
+  backend:
+    container_name: codincod-backend
+    hostname: codincod-backend
+    image: oven/bun:alpine
+    volumes:
+      # Application
+      - ./libs/backend:/app/libs/backend
+      - ./libs/types:/app/libs/types
+      # Dependencies
+      - runtime-cache:/root/.cache/deno
+    ports:
+      - ${CODINCOD_BACKEND_PORT:-4000}:${CODINCOD_BACKEND_PORT:-4000}
+    environment:
+      CODINCOD_JWT_SECRET: ${CODINCOD_JWT_SECRET:-local}
+      CODINCOD_COOKIE_SECRET: ${CODINCOD_COOKIE_SECRET:-local}
+      CODINCOD_MONGO_URI: ${CODINCOD_MONGO_URI:-mongodb://development:local@$mongo:27017}
+      NODE_ENV: ${NODE_ENV:-development}
+    command: >
+      run --watch /app/libs/backend/src/index.ts
+
+  frontend:
+    container_name: codincod-frontend
+    hostname: codincod-frontend
+    build:
+      context: .
+      dockerfile: ./libs/backend/Dockerfile.development
+    volumes:
+      # Application
+      - ./libs/frontend:/app/libs/frontend
+      - ./libs/types:/app/libs/types
+      # Dependencies
+      - frontend-node-modules:/app/libs/frontend/node_modules
+    ports:
+      - ${DOCKER_EXPOSE_FRONTEND_PORT:-5173}:5173
+    environment:
+      CODINCOD_BACKEND_URL: ${CODINCOD_BACKEND_URL:-http://backend:8888}
+      CODINCOD_JWT_SECRET: ${CODINCOD_JWT_SECRET:-local}
+      NODE_ENV: ${NODE_ENV:-development}
+    depends_on:
+      - backend

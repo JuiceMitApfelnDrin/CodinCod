@@ -1,14 +1,14 @@
 import { FastifyInstance } from "fastify";
 import {
-	DEFAULT_PAGE,
-	PaginatedQueryResponse,
-	paginatedQuerySchema,
-	isAuthenticatedInfo,
-	createPuzzleSchema
+    createPuzzleSchema,
+    DEFAULT_PAGE,
+    isAuthenticatedInfo,
+    PaginatedQueryResponse,
+    paginatedQuerySchema
 } from "types";
-import Puzzle from "../../models/puzzle/puzzle.js";
-import { $ref } from "../../config/schema.js";
-import authenticated from "../../plugins/middelware/authenticated.js";
+import { $ref } from "../../config/schema.ts";
+import Puzzle from "../../models/puzzle/puzzle.ts";
+import authenticated from "../../plugins/middelware/authenticated.ts";
 
 export default async function puzzleRoutes(fastify: FastifyInstance) {
 	fastify.post(

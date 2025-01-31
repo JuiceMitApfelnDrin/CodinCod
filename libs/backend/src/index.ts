@@ -1,4 +1,4 @@
-import server from "./app.js";
+import server from "./app.ts";
 
 const FASTIFY_PORT = Number(process.env.PORT) || 8888;
 
