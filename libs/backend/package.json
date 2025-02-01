@@ -29,6 +29,7 @@
 		"@fastify/swagger-ui": "^4.1.0",
 		"@fastify/websocket": "^10.0.1",
 		"bcrypt": "^5.1.1",
+		"@types/bcrypt": "^5.0.2",
 		"dotenv": "^16.4.5",
 		"eslint-plugin-sort-destructure-keys": "^2.0.0",
 		"fastify": "^4.28.1",
@@ -42,7 +43,6 @@
 	"devDependencies": {
 		"@eslint/js": "^9.7.0",
 		"@tsconfig/recommended": "^1.0.7",
-		"@types/bcrypt": "^5.0.2",
 		"@types/node": "^20.14.11",
 		"@types/ws": "^8.5.12",
 		"eslint": "9.x",

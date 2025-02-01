@@ -1,4 +1,4 @@
-import { LanguageLabel } from "../../puzzle/index.js";
+import { LanguageLabel } from "../../puzzle/config/languages.js";
 
 export type CodeExecutionParams = {
 	code: string;
