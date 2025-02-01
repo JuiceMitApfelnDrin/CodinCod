@@ -16,7 +16,7 @@ services:
     build:
       context: . # Root directory
       args:
-        - ORIGIN=${https://codincod.com:-APP_ORIGIN}
+        - ORIGIN=${APP_ORIGIN:-https://codincod.com}
       dockerfile: libs/backend/Dockerfile # Correct path
     ports:
       - "8888:8888"
@@ -42,6 +42,7 @@ services:
     environment:
       - NODE_ENV=production
       - VITE_BACKEND_URL=http://backend:8888
+      - VITE_BACKEND_WEBSOCKET_MULTIPLAYER=ws://backend:8888
     depends_on:
       - backend
 #   # optional for when you want to run mongodb locally
