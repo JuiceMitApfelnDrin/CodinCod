@@ -1,5 +1,7 @@
 FROM node:20
 
+ARG ORIGIN
+ENV ORIGIN=${ORIGIN}
 WORKDIR /app
 
 # Copy root files and workspace config
