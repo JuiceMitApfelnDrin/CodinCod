@@ -24,6 +24,7 @@ WORKDIR /app/libs/types
 RUN pnpm build
 
 WORKDIR /app/libs/frontend
+RUN pnpm build
 
 # Start the development server
-CMD ["pnpm", "dev", "--host", "0.0.0.0"]
+CMD ["pnpm", "preview", "--host", "0.0.0.0"]
