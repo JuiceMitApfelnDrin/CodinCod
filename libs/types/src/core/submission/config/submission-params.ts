@@ -1,8 +1,8 @@
-import { LanguageLabel } from "../../puzzle/index.js";
+import { LanguageLabel } from "../../puzzle/config/languages.js";
 
 export type SubmissionParams = {
 	code: string;
 	language: LanguageLabel;
 	puzzleId: string;
-	userId: string
+	userId: string;
 };

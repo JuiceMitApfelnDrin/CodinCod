@@ -1,5 +1,7 @@
 FROM node:20
 
+ARG ORIGIN
+ENV ORIGIN=${ORIGIN}
 WORKDIR /app
 
 # Copy root files and workspace config
@@ -18,8 +20,11 @@ COPY libs/frontend ./libs/frontend/
 COPY libs/types ./libs/types/
 
 # Build the frontend
+WORKDIR /app/libs/types
+RUN pnpm build
+
 WORKDIR /app/libs/frontend
 RUN pnpm build
 
 # Start the development server
-CMD ["pnpm", "dev", "--host", "0.0.0.0"]
+CMD ["node", "build/index.js"]

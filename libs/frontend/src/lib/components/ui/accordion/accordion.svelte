@@ -9,7 +9,7 @@
 	<slot name="content">no content provided</slot>
 </details>
 
-<style>
+<style lang="postcss">
 	summary {
 		@apply py-2;
 	}

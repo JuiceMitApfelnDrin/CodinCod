@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { pistonExecutionResponseSuccessSchema } from "../../piston/index.js";
+import { pistonExecutionResponseSuccessSchema } from "../../piston/schema/execution-response/execution-success.js";
 
 export const validatorEntitySchema = z.object({
 	input: z.string(),

@@ -6,9 +6,9 @@
 	"license": "ISC",
 	"name": "types",
 	"main": "./dist/index.js",
+	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module",
-	"module": "",
 	"scripts": {
 		"build": "tsc",
 		"dev": "tsc -w",
@@ -21,7 +21,6 @@
 	},
 	"dependencies": {
 		"eslint-plugin-sort-destructure-keys": "^2.0.0",
-		"types": "file:",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {

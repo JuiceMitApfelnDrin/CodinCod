@@ -1,4 +1,4 @@
-import adapter from "@sveltejs/adapter-auto";
+import adapter from "@sveltejs/adapter-node";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import { mdsvex } from "mdsvex";
 
@@ -17,7 +17,10 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			"@/*": "./src/lib/*"
-		}
+		},
+		// csrf: {
+		// 	checkOrigin: false
+		// }
 	},
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
