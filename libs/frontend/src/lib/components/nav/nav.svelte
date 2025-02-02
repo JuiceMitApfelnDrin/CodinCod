@@ -3,7 +3,11 @@
 	import LoggedInNav from "./logged-in-nav.svelte";
 	import LoggedOutNav from "./logged-out-nav.svelte";
 
-	$: console.log({ $isAuthenticated });
+	$: {
+		if (process.env.NODE_ENV === "development") {
+			console.log({ $isAuthenticated });
+		}
+	}
 </script>
 
 {#if $isAuthenticated}

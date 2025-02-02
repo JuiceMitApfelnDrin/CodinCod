@@ -1,4 +1,4 @@
-import { PuzzleDto } from "../../puzzle/index.js";
+import { PuzzleDto } from "../../puzzle/schema/puzzle-dto.schema.js";
 import { GameDto } from "../schema/game-dto.schema.js";
 
 export type GameState = {

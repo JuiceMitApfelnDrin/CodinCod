@@ -25,6 +25,3 @@ title: Learn the basics
 #### while
 
 #### for
-
-
-

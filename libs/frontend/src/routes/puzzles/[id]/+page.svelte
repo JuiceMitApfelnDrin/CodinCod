@@ -14,8 +14,9 @@
 
 	const { puzzle } = data;
 
-	const editUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: $page.params.id });
-	const playUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_PLAY, { id: $page.params.id });
+	let puzzleId = $page.params.id;
+	const editUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: puzzleId });
+	const playUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_PLAY, { id: puzzleId });
 </script>
 
 <Container class="flex flex-col gap-4 md:gap-8 lg:gap-12">
@@ -54,7 +55,7 @@
 	</LogicalUnit>
 </Container>
 
-<style>
+<style lang="postcss">
 	h2 {
 		@apply inline text-xl underline;
 	}

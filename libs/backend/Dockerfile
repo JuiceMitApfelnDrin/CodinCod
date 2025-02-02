@@ -19,6 +19,9 @@ COPY libs/backend ./libs/backend/
 COPY libs/types ./libs/types/
 
 # Build the backend
+WORKDIR /app/libs/types
+RUN pnpm build
+
 WORKDIR /app/libs/backend
 RUN pnpm build
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { authenticatedInfoSchema } from "../../authentication/index.js";
-import { acceptedDateSchema } from "../../common/index.js";
+import { authenticatedInfoSchema } from "../../authentication/schema/authenticated-info.schema.js";
+import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 
 export const gameUserInfoSchema = z.object({
 	userId: authenticatedInfoSchema.shape.userId,

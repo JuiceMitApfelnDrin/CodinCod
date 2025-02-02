@@ -4,10 +4,10 @@ import { difficultySchema } from "./difficulty.schema.js";
 import { puzzleVisibilitySchema } from "./puzzle-visibility.schema.js";
 import { solutionSchema } from "./solution.schema.js";
 import { PUZZLE_CONFIG } from "../config/puzzle-config.js";
-import { userDtoSchema } from "../../user/index.js";
 import { DifficultyEnum } from "../enum/difficulty-enum.js";
 import { PuzzleVisibilityEnum } from "../enum/puzzle-visibility-enum.js";
-import { acceptedDateSchema } from "../../common/index.js";
+import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
+import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 
 export const puzzleEntitySchema = z.object({
 	title: z.string().min(PUZZLE_CONFIG.minTitleLength).max(PUZZLE_CONFIG.maxTitleLength),

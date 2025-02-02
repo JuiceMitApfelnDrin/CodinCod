@@ -3,6 +3,7 @@ import {
 	isPistonExecutionResponseError,
 	isPistonExecutionResponseSuccess,
 	PistonExecutionResponse,
+	PuzzleResultEnum,
 	SubmissionEntity,
 	submissionEntitySchema,
 	SubmissionParams,
@@ -10,7 +11,6 @@ import {
 } from "types";
 import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
-import { PuzzleResultEnum } from "types/dist/enums/puzzle-result-enum.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {

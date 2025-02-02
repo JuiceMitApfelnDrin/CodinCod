@@ -58,7 +58,7 @@ A multi line comment allows you to have multiple lines commented.
 
 ```javascript
 /* the value of x is 1 */
-const x = 1
+const x = 1;
 ```
 
 ### Functions
@@ -114,9 +114,9 @@ Use single-letter variable names (a, b, c, etc.) where possible.
 Example:
 
 ```javascript
-let x = 10; 
+let x = 10;
 
-// Instead of 
+// Instead of
 let count = 10;
 ```
 
@@ -129,6 +129,6 @@ Example:
 ```javascript
 x = 10;
 
-// Instead of 
+// Instead of
 let x = 10;
 ```

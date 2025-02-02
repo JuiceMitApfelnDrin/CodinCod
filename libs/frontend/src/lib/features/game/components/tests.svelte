@@ -1,8 +1,8 @@
 <script lang="ts">
 	import H1 from "@/components/typography/h1.svelte";
-	import type { Validator } from "../../../models/puzzle.model";
+	import type { ValidatorEntity } from "types";
 
-	export let validators: Validator[];
+	export let validators: ValidatorEntity[];
 </script>
 
 <H1>Test results</H1>
