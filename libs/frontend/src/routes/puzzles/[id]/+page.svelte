@@ -55,7 +55,7 @@
 	</LogicalUnit>
 </Container>
 
-<style>
+<style lang="postcss">
 	h2 {
 		@apply inline text-xl underline;
 	}
