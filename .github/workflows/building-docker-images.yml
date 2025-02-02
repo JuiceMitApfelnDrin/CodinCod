@@ -43,6 +43,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: print working directory
+        run: pwd
+
       - name: Build and push images with Docker Compose
         run: |
           docker compose -f docker-compose.yml build
