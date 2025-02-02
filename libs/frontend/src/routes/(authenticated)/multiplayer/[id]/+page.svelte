@@ -36,7 +36,8 @@
 		isUserDto,
 		SUBMISSION_BUFFER_IN_MILLISECONDS,
 		webSocketUrls,
-		type GameState,
+		type GameDto,
+		type PuzzleDto,
 		type SubmissionDto
 	} from "types";
 
@@ -44,11 +45,12 @@
 
 	let isGameOver = false;
 
-	const state: GameState = {
-		errorMessage: "",
-		game: undefined,
-		puzzle: undefined
-	};
+	const state: { game: GameDto | undefined; puzzle: PuzzleDto | undefined; errorMessage: string } =
+		{
+			errorMessage: "",
+			game: undefined,
+			puzzle: undefined
+		};
 
 	let socket: WebSocket;
 	onMount(() => {
@@ -109,9 +111,9 @@
 		isGameOver = Boolean(
 			isGameOver ||
 				(endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)) ||
-				state.game?.playerSubmissions?.some((submission) =>
-					isSubmissionDto(submission) ? submission.userId === $authenticatedUserInfo?.userId : false
-				)
+				state.game?.playerSubmissions
+					?.filter((submission) => isSubmissionDto(submission))
+					.some((submission: SubmissionDto) => submission.userId === $authenticatedUserInfo?.userId)
 		);
 	}
 
