@@ -27,4 +27,4 @@ WORKDIR /app/libs/frontend
 RUN pnpm build
 
 # Start the development server
-CMD ["pnpm", "preview", "--host", "0.0.0.0"]
+CMD ["node", "build/index.js"]

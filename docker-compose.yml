@@ -43,6 +43,8 @@ services:
       - NODE_ENV=production
       - VITE_BACKEND_URL=http://backend:8888
       - VITE_BACKEND_WEBSOCKET_MULTIPLAYER=ws://backend:8888
+      - HOST=0.0.0.0
+      - PORT=5173
     depends_on:
       - backend
 #   # optional for when you want to run mongodb locally
