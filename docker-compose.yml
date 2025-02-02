@@ -20,8 +20,8 @@ services:
       dockerfile: libs/backend/Dockerfile # Correct path
     ports:
       - "8888:8888"
-    env_file:
-      - ./libs/backend/.env # Load frontend environment variables
+    # env_file:
+    #  - ./libs/backend/.env # Load frontend environment variables
     environment:
       - NODE_ENV=production
       - PISTON_URI=http://piston:2000
@@ -37,8 +37,8 @@ services:
       dockerfile: libs/frontend/Dockerfile # Correct path
     ports:
       - "5173:5173"
-    env_file:
-      - ./libs/frontend/.env # Load frontend environment variables
+    # env_file:
+    #  - ./libs/frontend/.env # Load frontend environment variables
     environment:
       - NODE_ENV=production
       - VITE_BACKEND_URL=http://backend:8888
