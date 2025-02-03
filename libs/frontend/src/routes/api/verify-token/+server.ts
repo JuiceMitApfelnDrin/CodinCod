@@ -13,7 +13,8 @@ export async function POST({ request }) {
 
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET);
-		return json({ user: decoded });
+
+		return json(decoded);
 	} catch {
 		return json({ error: "Invalid token", isAuthenticated: false }, { status: 401 });
 	}

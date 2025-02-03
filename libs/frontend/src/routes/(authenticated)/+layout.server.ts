@@ -4,7 +4,7 @@ import { cookieKeys, frontendUrls } from "types";
 import type { LayoutServerLoadEvent } from "./$types";
 import { searchParamKeys } from "@/config/search-params";
 
-export async function load({ cookies,fetch, url,  }: LayoutServerLoadEvent) {
+export async function load({ cookies, fetch, url }: LayoutServerLoadEvent) {
 	const { pathname } = url;
 
 	const token = cookies.get(cookieKeys.TOKEN);

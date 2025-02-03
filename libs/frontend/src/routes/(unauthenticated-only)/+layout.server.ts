@@ -7,7 +7,7 @@ export async function load({ cookies, fetch }: LayoutServerLoadEvent) {
 	const token = cookies.get(cookieKeys.TOKEN);
 
 	if (!token) {
-		throw redirect(303, frontendUrls.ROOT);
+		return { isAuthenticated: false };
 	}
 
 	const currentUser = await getAuthenticatedUserInfo(token, cookies, fetch);
