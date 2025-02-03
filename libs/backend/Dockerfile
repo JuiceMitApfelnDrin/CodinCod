@@ -11,7 +11,7 @@ COPY libs/backend/package.json ./libs/backend/
 COPY libs/types/package.json ./libs/types/
 
 # Install pnpm globally and all workspace dependencies
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8
 RUN pnpm install --filter backend...
 
 # Copy all necessary files for backend and types
