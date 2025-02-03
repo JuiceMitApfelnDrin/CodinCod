@@ -4,7 +4,7 @@ import { logout } from "@/features/authentication/utils/logout.js";
 import type { ServerLoadEvent } from "@sveltejs/kit";
 import { cookieKeys } from "types";
 
-export async function load({ cookies, url }: ServerLoadEvent) {
+export async function load({ cookies,fetch, url,  }: ServerLoadEvent) {
 	const isLoggingOut = url.search.includes(searchParamKeys.LOGOUT);
 
 	if (isLoggingOut) {
@@ -12,7 +12,12 @@ export async function load({ cookies, url }: ServerLoadEvent) {
 	}
 
 	const token = cookies.get(cookieKeys.TOKEN);
-	const currentUser = getAuthenticatedUserInfo(token, cookies);
+
+	if (!token) {
+		return { isAuthenticated: false };
+	}
+
+	const currentUser = await getAuthenticatedUserInfo(token, cookies, fetch);
 
 	return currentUser;
 }
