@@ -19,6 +19,4 @@ export async function onClose({
 			playerSocketToRemove
 		})
 	]);
-
-	console.log({ reason, code });
 }

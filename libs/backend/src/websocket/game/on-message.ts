@@ -21,8 +21,6 @@ export async function onMessage({
 		return;
 	}
 
-	console.log({ parsedMessage });
-
 	const { event } = parsedMessage;
 
 	switch (event) {

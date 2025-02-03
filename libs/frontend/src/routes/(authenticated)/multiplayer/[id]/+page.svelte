@@ -58,14 +58,12 @@
 		socket = new WebSocket(webSocketUrl);
 
 		socket.addEventListener("open", (message) => {
-			console.log("WebSocket connection opened");
+			console.info("WebSocket connection opened");
 		});
 
 		socket.addEventListener("message", async (message) => {
 			const receivedInformation = JSON.parse(message.data);
 			const { data, event } = receivedInformation;
-
-			console.log({ receivedInformation });
 
 			switch (event) {
 				case GameEventEnum.OVERVIEW_GAME:
@@ -88,7 +86,7 @@
 					}
 					break;
 				default:
-					console.log("unknown / unhandled event: ", { event });
+					console.warn("unknown / unhandled event: ", { event });
 
 					break;
 			}
@@ -131,8 +129,6 @@
 	let playerSubmissions;
 	$: playerSubmissions =
 		state.game?.playerSubmissions?.filter((submission) => isSubmissionDto(submission)) ?? [];
-
-	$: console.log(playerSubmissions);
 </script>
 
 {#if state.errorMessage}

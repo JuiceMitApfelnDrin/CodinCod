@@ -26,6 +26,4 @@ export async function onClose({
 		removeStoppedPlayersFromGames({ games }),
 		removeEmptyGames({ games })
 	]);
-
-	console.log({ reason, code });
 }

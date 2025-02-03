@@ -90,8 +90,6 @@
 
 		const submission = await response.json();
 
-		console.log({ submission });
-
 		if (isSubmissionDto(submission) && submission._id) {
 			onPlayerSubmitCode(submission._id);
 		}

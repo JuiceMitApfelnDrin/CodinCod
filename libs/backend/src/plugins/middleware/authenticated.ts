@@ -16,7 +16,6 @@ export default async function authenticated(request: FastifyRequest, reply: Fast
 		const decoded = await request.jwtVerify<AuthenticatedInfo>();
 		request.user = decoded;
 	} catch (err) {
-		console.log("Token verification error:", { err, token }); // Log error message
 		if (err instanceof Error) {
 			return reply.status(401).send({ message: "Invalid token" });
 		}
