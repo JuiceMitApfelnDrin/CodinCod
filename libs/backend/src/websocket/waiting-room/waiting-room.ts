@@ -1,6 +1,6 @@
 import { WebSocket } from "@fastify/websocket";
 import { onConnection } from "./on-connection.js";
-import { FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyRequest } from "fastify";
 import { OpenGames } from "@/types/games.js";
 import { onMessage } from "./on-message.js";
 import { updatePlayers } from "./update-players.js";
@@ -9,7 +9,7 @@ import { onClose } from "./on-close.js";
 const games: OpenGames = {};
 const activePlayerList: WebSocket[] = [];
 
-export function waitingRoom(socket: WebSocket, req: FastifyRequest) {
+export function waitingRoom(socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance) {
 	onConnection({ players: activePlayerList, games, newPlayerSocket: socket });
 
 	socket.on("message", (message) => {

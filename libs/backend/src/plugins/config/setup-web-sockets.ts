@@ -7,7 +7,11 @@ import { ParamsId } from "@/routes/puzzle/[id]/types.js";
 export async function setupWebSockets(fastify: FastifyInstance) {
 	// needs to happen before other routes in the whole flow
 
-	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, waitingRoom);
+	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (...props) =>
+		waitingRoom(...props, fastify)
+	);
 
-	fastify.get<ParamsId>(webSocketUrls.GAME, { websocket: true }, playGame);
+	fastify.get<ParamsId>(webSocketUrls.GAME, { websocket: true }, (...props) =>
+		playGame(...props, fastify)
+	);
 }

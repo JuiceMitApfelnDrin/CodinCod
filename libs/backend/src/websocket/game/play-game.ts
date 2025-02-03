@@ -1,5 +1,5 @@
 import { WebSocket } from "@fastify/websocket";
-import { FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyRequest } from "fastify";
 import { onConnection } from "./on-connection.js";
 import { ParamsId } from "@/routes/puzzle/[id]/types.js";
 import { onClose } from "./on-close.js";
@@ -7,7 +7,11 @@ import { onMessage } from "./on-message.js";
 
 const playersInCurrentGame: WebSocket[] = [];
 
-export function playGame(socket: WebSocket, req: FastifyRequest<ParamsId>) {
+export function playGame(
+	socket: WebSocket,
+	req: FastifyRequest<ParamsId>,
+	fastify: FastifyInstance
+) {
 	const { id } = req.params;
 
 	onConnection({ socket, id, players: playersInCurrentGame });
