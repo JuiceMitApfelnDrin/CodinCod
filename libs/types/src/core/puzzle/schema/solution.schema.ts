@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { LanguageLabelEnum } from "../config/languages.js";
+import { puzzleLanguage } from "./puzzle-language.js";
 
 export const solutionSchema = z.object({
 	code: z.string().default(""),
-	language: LanguageLabelEnum,
+	language: puzzleLanguage,
 	languageVersion: z.string()
 });

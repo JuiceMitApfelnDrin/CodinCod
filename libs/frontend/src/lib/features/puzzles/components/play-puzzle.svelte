@@ -1,12 +1,10 @@
 <script lang="ts">
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import {
-		DEFAULT_LANGUAGE,
 		httpRequestMethod,
 		isSubmissionDto,
-		languageLabels,
-		type LanguageLabel,
 		type PuzzleDto,
+		type PuzzleLanguage,
 		type ValidatorEntity
 	} from "types";
 	import * as Select from "$lib/components/ui/select";
@@ -22,17 +20,19 @@
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
 	import Markdown from "@/components/typography/markdown.svelte";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
+	import { onMount } from "svelte";
 
 	export let puzzle: PuzzleDto;
 	export let puzzleId: string;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
 	export let endDate: Date | undefined;
 
+	let languages: PuzzleLanguage[] = [];
 	let code: string = "";
-	let language: LanguageLabel = DEFAULT_LANGUAGE;
+	let language: PuzzleLanguage = "";
 
 	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
@@ -108,6 +108,17 @@
 	function openTestsAccordion() {
 		openTests = true;
 	}
+
+	async function fetchLanguages() {
+		languages = await fetchSupportedLanguages();
+
+		const defaultLanguage = languages[0];
+		language = defaultLanguage;
+	}
+
+	onMount(() => {
+		fetchLanguages();
+	});
 </script>
 
 <PuzzleMetaInfo {puzzle} />
@@ -144,7 +155,7 @@
 			<Select.Content>
 				<Select.Group>
 					<Select.Label class="text-lg">Language</Select.Label>
-					{#each languageLabels as language}
+					{#each languages as language}
 						<Select.Item value={language} label={language} />
 					{/each}
 				</Select.Group>

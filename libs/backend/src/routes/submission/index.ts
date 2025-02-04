@@ -1,17 +1,18 @@
 import { FastifyInstance } from "fastify";
 import {
+	httpResponseCodes,
 	isPistonExecutionResponseError,
 	isPistonExecutionResponseSuccess,
 	PistonExecutionResponse,
 	PuzzleResultEnum,
 	SubmissionEntity,
 	submissionEntitySchema,
-	SubmissionParams,
-	supportedLanguages
+	SubmissionParams
 } from "types";
 import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
+import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: SubmissionParams }>("/", async (request, reply) => {
@@ -36,7 +37,14 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 		}
 
 		// prepare the execution of tests
-		const executionLanguageDetails = supportedLanguages[language];
+		const runtimes = await fastify.runtimes();
+		const runtimeInfo = findRuntime(runtimes, language);
+
+		if (!runtimeInfo) {
+			return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+				error: "Unsupported language"
+			});
+		}
 
 		// foreach test case, execute the code and see the result, compare to test-case expected output
 		if (!puzzle.validators) {
@@ -48,8 +56,8 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 		const pistonExecutionRequests = puzzle.validators.map((validator) => {
 			return {
-				language: executionLanguageDetails.language,
-				version: executionLanguageDetails.version,
+				language: runtimeInfo.language,
+				version: runtimeInfo.version,
 				files: [{ content: code }],
 				stdin: validator.input,
 				expectedOutput: validator.output
@@ -91,12 +99,12 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 				...parseResult.data,
 				userId: userId,
 				createdAt: new Date(),
-				languageVersion: executionLanguageDetails.version,
+				languageVersion: runtimeInfo.version,
 				result:
 					puzzle.validators.length === matchCount
 						? PuzzleResultEnum.SUCCESS
 						: PuzzleResultEnum.ERROR,
-				language: executionLanguageDetails.language
+				language: runtimeInfo.language
 			};
 
 			const submission = new Submission(submissionData);
