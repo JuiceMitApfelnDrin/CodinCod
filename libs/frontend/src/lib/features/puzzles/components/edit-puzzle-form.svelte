@@ -69,10 +69,6 @@
 	onMount(() => {
 		fetchLanguages();
 	});
-
-	$: {
-		console.log(languages);
-	}
 </script>
 
 <form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
