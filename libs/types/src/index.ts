@@ -55,13 +55,13 @@ export * from "./core/piston/schema/execution-response/execution-success.js";
 export * from "./core/piston/schema/file-encoding.js";
 export * from "./core/piston/schema/puzzle-result.js";
 export * from "./core/piston/schema/request.js";
+export * from "./core/piston/schema/runtime.js";
 
 // profile
 export * from "./core/profile/schema/profile-dto.schema.js";
 export * from "./core/profile/schema/profile-entity.schema.js";
 
 // puzzle
-export * from "./core/puzzle/config/languages.js";
 export * from "./core/puzzle/config/puzzle-config.js";
 export * from "./core/puzzle/enum/difficulty-enum.js";
 export * from "./core/puzzle/enum/puzzle-result-enum.js";
@@ -71,6 +71,7 @@ export * from "./core/puzzle/schema/delete-puzzle.schema.js";
 export * from "./core/puzzle/schema/difficulty.schema.js";
 export * from "./core/puzzle/schema/puzzle-dto.schema.js";
 export * from "./core/puzzle/schema/puzzle-entity.schema.js";
+export * from "./core/puzzle/schema/puzzle-language.js";
 export * from "./core/puzzle/schema/puzzle-metrics.schema.js";
 export * from "./core/puzzle/schema/puzzle-visibility.schema.js";
 export * from "./core/puzzle/schema/solution.schema.js";

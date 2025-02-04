@@ -1,8 +1,9 @@
 import { json } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 import { env } from "$env/dynamic/private";
+import type { RequestEvent } from "./$types";
 
-export async function POST({ request }) {
+export async function POST({ request }: RequestEvent) {
 	const { token } = await request.json();
 
 	const JWT_SECRET = env.JWT_SECRET;
