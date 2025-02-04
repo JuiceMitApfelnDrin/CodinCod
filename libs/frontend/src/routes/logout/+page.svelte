@@ -7,8 +7,8 @@
 	export let data: { loggedOut: boolean };
 
 	onMount(() => {
-        if (data.loggedOut) {
-            clearAuthenticatedUserInfo();
+		if (data.loggedOut) {
+			clearAuthenticatedUserInfo();
 			goto(frontendUrls.ROOT);
 		}
 	});
