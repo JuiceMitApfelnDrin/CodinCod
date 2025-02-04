@@ -39,7 +39,13 @@ import {
 	gameUserInfoSchema,
 	userActivitySchema,
 	gameVisibilitySchema,
-	submissionDtoSchema
+	submissionDtoSchema,
+	gameDtoSchema,
+	gameModeSchema,
+	profileDtoSchema,
+	deletePuzzleSchema,
+	pistonRuntimeSchema,
+	profileEntitySchema
 } from "types";
 
 export const { schemas, $ref } = buildJsonSchemas({
@@ -82,5 +88,11 @@ export const { schemas, $ref } = buildJsonSchemas({
 	gameUserInfoSchema,
 	userActivitySchema,
 	gameVisibilitySchema,
-	submissionDtoSchema
+	submissionDtoSchema,
+	gameDtoSchema,
+	gameModeSchema,
+	profileDtoSchema,
+	deletePuzzleSchema,
+	pistonRuntimeSchema,
+	profileEntitySchema
 });

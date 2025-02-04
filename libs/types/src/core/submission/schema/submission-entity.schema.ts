@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { puzzleResultSchema } from "../../piston/schema/puzzle-result.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 
 export const submissionEntitySchema = z.object({
 	code: z.string().optional(),
@@ -9,6 +10,6 @@ export const submissionEntitySchema = z.object({
 	createdAt: acceptedDateSchema.default(() => new Date()),
 	puzzleId: z.string(),
 	result: puzzleResultSchema,
-	userId: z.string()
+	userId: z.string().or(userDtoSchema)
 });
 export type SubmissionEntity = z.infer<typeof submissionEntitySchema>;
