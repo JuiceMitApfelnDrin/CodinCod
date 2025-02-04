@@ -11,7 +11,7 @@ version = 1
 [install]
 
 nodejs = { pkg-path = "nodejs" }
-pnpm = { pkg-path = "pnpm" }
+pnpm = { pkg-path = "pnpm_8" }
 mongodb-ce = { pkg-path = "mongodb-ce", version = "8.0.4" }
 mongosh = { pkg-path = "mongosh" }
 uv = { pkg-path = "uv" }

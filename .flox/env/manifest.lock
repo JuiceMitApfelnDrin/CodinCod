@@ -14,7 +14,7 @@
         "pkg-path": "nodejs"
       },
       "pnpm": {
-        "pkg-path": "pnpm"
+        "pkg-path": "pnpm_8"
       },
       "uv": {
         "pkg-path": "uv"
@@ -75,18 +75,19 @@
     {
       "attr_path": "mongodb-ce",
       "broken": false,
-      "derivation": "/nix/store/azr2q3rywhxrc1ddpdjgyqn9wj6fzf8g-mongodb-ce-8.0.4.drv",
+      "derivation": "/nix/store/l5vjzc3whfhl5b6d17sv4y8570db68fm-mongodb-ce-8.0.4.drv",
       "description": "MongoDB is a general purpose, document-based, distributed database.",
       "install_id": "mongodb-ce",
       "license": "[ Server Side Public License ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongodb-ce-8.0.4",
       "pname": "mongodb-ce",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": true,
@@ -95,7 +96,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/m754km7333bwlz4a7ghhh3kh25dk7rcy-mongodb-ce-8.0.4"
+        "out": "/nix/store/857dcm5plwqbvdby91d1m3rcszyj977y-mongodb-ce-8.0.4"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -104,18 +105,19 @@
     {
       "attr_path": "mongodb-ce",
       "broken": false,
-      "derivation": "/nix/store/kl6hx9jg2087lwhx9rbrr7zqha4hfq1x-mongodb-ce-8.0.4.drv",
+      "derivation": "/nix/store/jjzhr5a9d2xkziclhm5ghvpqp3b076s2-mongodb-ce-8.0.4.drv",
       "description": "MongoDB is a general purpose, document-based, distributed database.",
       "install_id": "mongodb-ce",
       "license": "[ Server Side Public License ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongodb-ce-8.0.4",
       "pname": "mongodb-ce",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": true,
@@ -124,7 +126,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/x75mkj8ydzhz3rfgqs8zd1jxjikp08fa-mongodb-ce-8.0.4"
+        "out": "/nix/store/ys70kann5wjm6jxp62vgjqw72rwb690r-mongodb-ce-8.0.4"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -133,18 +135,19 @@
     {
       "attr_path": "mongodb-ce",
       "broken": false,
-      "derivation": "/nix/store/jqpq7bqnw8ibihz33di11izay52zyakd-mongodb-ce-8.0.4.drv",
+      "derivation": "/nix/store/1x7y9vaq0dcgx02wffdvnmfz3cbrwibk-mongodb-ce-8.0.4.drv",
       "description": "MongoDB is a general purpose, document-based, distributed database.",
       "install_id": "mongodb-ce",
       "license": "[ Server Side Public License ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongodb-ce-8.0.4",
       "pname": "mongodb-ce",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": true,
@@ -153,7 +156,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/a22vpmhzs7zxcpwlfvgzb548k30lcnpc-mongodb-ce-8.0.4"
+        "out": "/nix/store/16a7yn3cx3q1kzff0dd90m02b4cwrkmg-mongodb-ce-8.0.4"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -162,18 +165,19 @@
     {
       "attr_path": "mongodb-ce",
       "broken": false,
-      "derivation": "/nix/store/64p3hikc8d4fzb67xiy2nhbnr7shvibp-mongodb-ce-8.0.4.drv",
+      "derivation": "/nix/store/7nidsv6bs8p73kp3a4hbin0gc237s6lj-mongodb-ce-8.0.4.drv",
       "description": "MongoDB is a general purpose, document-based, distributed database.",
       "install_id": "mongodb-ce",
       "license": "[ Server Side Public License ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongodb-ce-8.0.4",
       "pname": "mongodb-ce",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": true,
@@ -182,7 +186,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/z8v9nh1qa8dxjjv12i9mxmbhfivjxlys-mongodb-ce-8.0.4"
+        "out": "/nix/store/djjwqpql56glfr7gfvakiqhsrpsr34qi-mongodb-ce-8.0.4"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
@@ -191,18 +195,19 @@
     {
       "attr_path": "mongosh",
       "broken": false,
-      "derivation": "/nix/store/57bqp49qkcd6clppaw9a0gx26lh517ip-mongosh-2.3.7.drv",
+      "derivation": "/nix/store/2wzx6gb0z78m26bnli3131pmyvd5l7zx-mongosh-2.3.7.drv",
       "description": "MongoDB Shell",
       "install_id": "mongosh",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongosh-2.3.7",
       "pname": "mongosh",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -211,7 +216,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/yz0x0yll9yxmxrxm0m8xwzd05jqjvlxn-mongosh-2.3.7"
+        "out": "/nix/store/p7qrw5wh2rv971vzwdll2xwqz9y8r4wv-mongosh-2.3.7"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -220,18 +225,19 @@
     {
       "attr_path": "mongosh",
       "broken": false,
-      "derivation": "/nix/store/djmnhhr8gcja9afp1sf50sl8al85m3m1-mongosh-2.3.7.drv",
+      "derivation": "/nix/store/vkcgb6kzc44yiv0qqis6mdjdrda0jr4a-mongosh-2.3.7.drv",
       "description": "MongoDB Shell",
       "install_id": "mongosh",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongosh-2.3.7",
       "pname": "mongosh",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -240,7 +246,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/q97m3mdz966qbmvl7yyp69wasbwhhdyd-mongosh-2.3.7"
+        "out": "/nix/store/y1x6wa64r5fg2rz9x555l42spnrrcjy9-mongosh-2.3.7"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -249,18 +255,19 @@
     {
       "attr_path": "mongosh",
       "broken": false,
-      "derivation": "/nix/store/74s4g8w9fym5hnqqz6rvnsw6m81vimix-mongosh-2.3.7.drv",
+      "derivation": "/nix/store/pk933c287h505fjf88nly7b4b6j3n329-mongosh-2.3.7.drv",
       "description": "MongoDB Shell",
       "install_id": "mongosh",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongosh-2.3.7",
       "pname": "mongosh",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -269,7 +276,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/jagzqjam4q08l8hjcak30cngbzmzkhvh-mongosh-2.3.7"
+        "out": "/nix/store/ngf531nl5qq689kcyql4spgapf5cqaag-mongosh-2.3.7"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -278,18 +285,19 @@
     {
       "attr_path": "mongosh",
       "broken": false,
-      "derivation": "/nix/store/pj28x9a61pnp399y1f57z9wp1c9va56n-mongosh-2.3.7.drv",
+      "derivation": "/nix/store/72hqni0yqp2dd8bxdz7lzz0s78pmra32-mongosh-2.3.7.drv",
       "description": "MongoDB Shell",
       "install_id": "mongosh",
       "license": "Apache-2.0",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
       "name": "mongosh-2.3.7",
       "pname": "mongosh",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -298,7 +306,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/7yxx0734i7ync4q7khhwwblh7k6vags4-mongosh-2.3.7"
+        "out": "/nix/store/0rw7y6735rvjcpc2lz6c0914xjwnv3kk-mongosh-2.3.7"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
@@ -307,28 +315,29 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/3d63jxlp8q5k9j578l8y8kv66063id4i-nodejs-22.12.0.drv",
+      "derivation": "/nix/store/zh4vzz8z4g7k2p0iqpi8dfz6kgpxkgb1-nodejs-22.11.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "nodejs-22.12.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "nodejs-22.11.0",
       "pname": "nodejs",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "22.12.0",
+      "version": "22.11.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/hvpmcjbmsyknlpjjd7a8na891fv4a81i-nodejs-22.12.0-libv8",
-        "out": "/nix/store/ygk01vha6k5zxgn9rsxi3k6cm2kbnwsc-nodejs-22.12.0"
+        "libv8": "/nix/store/m3rxxwm6jp95kjmh4rklqn0d76biz6wm-nodejs-22.11.0-libv8",
+        "out": "/nix/store/9vkabbbbyfn8hv5l1r8fm59d27imq460-nodejs-22.11.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -337,28 +346,29 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/4ikgm8yyp8zyylpfjkndmswphbps4kq4-nodejs-22.12.0.drv",
+      "derivation": "/nix/store/q23y2j34i9ydidrllrm4gj857hqhvda1-nodejs-22.11.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "nodejs-22.12.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "nodejs-22.11.0",
       "pname": "nodejs",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "22.12.0",
+      "version": "22.11.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/48is8354i9qwj194id0ncczkvzvfqhim-nodejs-22.12.0-libv8",
-        "out": "/nix/store/jdgrvyf5l99rzjayicxjw7i6p98r0rlb-nodejs-22.12.0"
+        "libv8": "/nix/store/0xiwppqyszilzy9cg71c26fxg5qcxh89-nodejs-22.11.0-libv8",
+        "out": "/nix/store/z2lznj5fq0wagkhj7nkgmb5yr4gyv0ws-nodejs-22.11.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -367,28 +377,29 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/8781n36mwvzx5d4mncvgf09pqlgx7gx3-nodejs-22.12.0.drv",
+      "derivation": "/nix/store/vzxxfv1f1i83bnjib0q144v5gndhci33-nodejs-22.11.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "nodejs-22.12.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "nodejs-22.11.0",
       "pname": "nodejs",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "22.12.0",
+      "version": "22.11.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/gvys8kz8pdw62ch2x7k25rrmcw3mqnrw-nodejs-22.12.0-libv8",
-        "out": "/nix/store/6fnlali5gqihxs02adk1bdzjsya9cacp-nodejs-22.12.0"
+        "libv8": "/nix/store/mm87n14lp5akdjlfwh1yg4l93zm8gv9h-nodejs-22.11.0-libv8",
+        "out": "/nix/store/s81s2z275wnjazk4ij3zvn6kslfa5ipf-nodejs-22.11.0"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -397,144 +408,149 @@
     {
       "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/a73rv2rzsy47phyhbdnlnycpvda83z0c-nodejs-22.12.0.drv",
+      "derivation": "/nix/store/542jkp10xz0nd5657bqksqwhhvjcmi9n-nodejs-22.11.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
       "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "nodejs-22.12.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "nodejs-22.11.0",
       "pname": "nodejs",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "22.12.0",
+      "version": "22.11.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "libv8": "/nix/store/n7x07hrc6sjhh6as6c75g15blq1c1ykh-nodejs-22.12.0-libv8",
-        "out": "/nix/store/k1r91cjalyc2mzzllpv5hklhqn8wvgjr-nodejs-22.12.0"
+        "libv8": "/nix/store/fyaac3q8qn3zfxy72airfabm3dakmgf5-nodejs-22.11.0-libv8",
+        "out": "/nix/store/fkyp1bm5gll9adnfcj92snyym524mdrj-nodejs-22.11.0"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "pnpm",
+      "attr_path": "pnpm_8",
       "broken": false,
-      "derivation": "/nix/store/iclfh5ng6m5vhrgsny89m4gsdy1cn9fm-pnpm-10.1.0.drv",
+      "derivation": "/nix/store/9dam3vi26b5cdkrhg2rkqay82i5pa9l8-pnpm-8.15.9.drv",
       "description": "Fast, disk space efficient package manager for JavaScript",
       "install_id": "pnpm",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "pnpm-10.1.0",
-      "pname": "pnpm",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "10.1.0",
+      "version": "pnpm-8.15.9",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/ns9rxfag2c8lnm5k33yabbn0dpnl41i0-pnpm-10.1.0"
+        "out": "/nix/store/1i707arq46lg5h0in8xfgh4z4a49j6gx-pnpm-8.15.9"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "pnpm",
+      "attr_path": "pnpm_8",
       "broken": false,
-      "derivation": "/nix/store/8a81dvawl09akfn5jczcmrv5ik852kk2-pnpm-10.1.0.drv",
+      "derivation": "/nix/store/88chwq7ysal9flwkdmnj9ai1zp7jqyz1-pnpm-8.15.9.drv",
       "description": "Fast, disk space efficient package manager for JavaScript",
       "install_id": "pnpm",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "pnpm-10.1.0",
-      "pname": "pnpm",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "10.1.0",
+      "version": "pnpm-8.15.9",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/d0cg58avvyrbyvszkyc3rdh8ni9br4ny-pnpm-10.1.0"
+        "out": "/nix/store/8c6ljbzv9s2ns0ip6fbwx1wlb9g6bicz-pnpm-8.15.9"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "pnpm",
+      "attr_path": "pnpm_8",
       "broken": false,
-      "derivation": "/nix/store/pa8k0kkgvmnfwxsa57gcs7m1wqm44yzq-pnpm-10.1.0.drv",
+      "derivation": "/nix/store/8pksi9mwjx2k7v1qah5ga976sq9zc1pk-pnpm-8.15.9.drv",
       "description": "Fast, disk space efficient package manager for JavaScript",
       "install_id": "pnpm",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "pnpm-10.1.0",
-      "pname": "pnpm",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "10.1.0",
+      "version": "pnpm-8.15.9",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/c47xc80fy00w35rg6h2qgqg3nz9jmx3a-pnpm-10.1.0"
+        "out": "/nix/store/4089212jlfii2hja84b0n9ixn420wf6k-pnpm-8.15.9"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "pnpm",
+      "attr_path": "pnpm_8",
       "broken": false,
-      "derivation": "/nix/store/86n86v15s4p0hx0hlvsrknxyxk880iij-pnpm-10.1.0.drv",
+      "derivation": "/nix/store/x5fcllw61plg826ddljrim55c12gwshp-pnpm-8.15.9.drv",
       "description": "Fast, disk space efficient package manager for JavaScript",
       "install_id": "pnpm",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "pnpm-10.1.0",
-      "pname": "pnpm",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "10.1.0",
+      "version": "pnpm-8.15.9",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/a3q5cj7p7ciyfcs1hyqkn8fndprkwq4x-pnpm-10.1.0"
+        "out": "/nix/store/apmkhfzw4kdbd5b7g182n41fbf92d5iw-pnpm-8.15.9"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
@@ -543,27 +559,28 @@
     {
       "attr_path": "uv",
       "broken": false,
-      "derivation": "/nix/store/pima17gx5d1ak7v1jz0hsi3pch95r9vb-uv-0.5.26.drv",
+      "derivation": "/nix/store/v4z0gqhj9hsi5n0f5llh059hcyhqlvg8-uv-0.5.18.drv",
       "description": "Extremely fast Python package installer and resolver, written in Rust",
       "install_id": "uv",
       "license": "[ Apache-2.0, MIT ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "uv-0.5.26",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "uv-0.5.18",
       "pname": "uv",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "0.5.26",
+      "version": "0.5.18",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/4giw6h7408lzbgih6vizmg0a9s7j35yx-uv-0.5.26"
+        "out": "/nix/store/rzwxis0yacabfy0krlx3z7j0bjyfv5gw-uv-0.5.18"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -572,27 +589,28 @@
     {
       "attr_path": "uv",
       "broken": false,
-      "derivation": "/nix/store/xi84ac06hwr6nwgml6k3xlbdpi3fzzq3-uv-0.5.26.drv",
+      "derivation": "/nix/store/87jjc60sd3nwjm93ib3hpa76lwiglakh-uv-0.5.18.drv",
       "description": "Extremely fast Python package installer and resolver, written in Rust",
       "install_id": "uv",
       "license": "[ Apache-2.0, MIT ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "uv-0.5.26",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "uv-0.5.18",
       "pname": "uv",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "0.5.26",
+      "version": "0.5.18",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/q6bb62kzwrsixpc1girikp5rm6s29fsz-uv-0.5.26"
+        "out": "/nix/store/1ilvmmjzg9kp4hyg785np55hwg8x7z43-uv-0.5.18"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -601,27 +619,28 @@
     {
       "attr_path": "uv",
       "broken": false,
-      "derivation": "/nix/store/xkdwjgsgjcn71q6bb4qp1pr0c3chf70x-uv-0.5.26.drv",
+      "derivation": "/nix/store/9bq0fkn50d398y6l4mmman0rjw7c33f5-uv-0.5.18.drv",
       "description": "Extremely fast Python package installer and resolver, written in Rust",
       "install_id": "uv",
       "license": "[ Apache-2.0, MIT ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "uv-0.5.26",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "uv-0.5.18",
       "pname": "uv",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "0.5.26",
+      "version": "0.5.18",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/12bsxh950jsdlzdifb37zix3j22j8kyz-uv-0.5.26"
+        "out": "/nix/store/yf1fpa9idcwpir2bj2bqws5i952z5vj3-uv-0.5.18"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -630,27 +649,28 @@
     {
       "attr_path": "uv",
       "broken": false,
-      "derivation": "/nix/store/988kkqp1bw5mg8w76i0nn2d3k8x798bc-uv-0.5.26.drv",
+      "derivation": "/nix/store/dflvcpvflsixkmsdi7mxv90drrkz7qmk-uv-0.5.18.drv",
       "description": "Extremely fast Python package installer and resolver, written in Rust",
       "install_id": "uv",
       "license": "[ Apache-2.0, MIT ]",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=3a228057f5b619feb3186e986dbe76278d707b6e",
-      "name": "uv-0.5.26",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "name": "uv-0.5.18",
       "pname": "uv",
-      "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
-      "rev_count": 746337,
-      "rev_date": "2025-02-01T11:46:30Z",
-      "scrape_date": "2025-02-02T00:30:00Z",
+      "rev": "eb62e6aa39ea67e0b8018ba8ea077efe65807dc8",
+      "rev_count": 738172,
+      "rev_date": "2025-01-14T19:41:48Z",
+      "scrape_date": "2025-01-16T00:14:48Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "0.5.26",
+      "version": "0.5.18",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/vkgi7chxfj6ynbbl1q96k4r8d6sng0np-uv-0.5.26"
+        "out": "/nix/store/9wfdv1xycfvlry7xqw7ssphcqqan245y-uv-0.5.18"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
