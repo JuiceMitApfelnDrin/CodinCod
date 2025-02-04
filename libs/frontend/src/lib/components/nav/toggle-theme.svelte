@@ -10,7 +10,7 @@
 	pressed={$isDarkTheme}
 	on:click={toggleDarkTheme}
 >
-	Current theme: {#if $isDarkTheme}
+	{#if $isDarkTheme}
 		<Moon aria-label="dark mode" />
 	{:else}
 		<Sun aria-label="light mode" />
