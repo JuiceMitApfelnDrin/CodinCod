@@ -17,10 +17,7 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			"@/*": "./src/lib/*"
-		},
-		// csrf: {
-		// 	checkOrigin: false
-		// }
+		}
 	},
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
