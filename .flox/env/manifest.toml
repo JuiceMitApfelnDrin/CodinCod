@@ -14,6 +14,7 @@ nodejs = { pkg-path = "nodejs" }
 pnpm = { pkg-path = "pnpm" }
 mongodb-ce = { pkg-path = "mongodb-ce", version = "8.0.4" }
 mongosh = { pkg-path = "mongosh" }
+uv = { pkg-path = "uv" }
 
 
 # Set environment variables in the `[vars]` section. These variables may not
