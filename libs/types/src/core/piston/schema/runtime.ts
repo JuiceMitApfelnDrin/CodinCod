@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { puzzleLanguage } from "../../puzzle/schema/puzzle-language.js";
+import { puzzleLanguage, puzzleLanguageVersion } from "../../puzzle/schema/puzzle-language.js";
 
 export const pistonRuntimeSchema = z.object({
 	language: puzzleLanguage,
-	version: z.string(),
+	version: puzzleLanguageVersion,
 	aliases: z.array(z.string()),
 	runtime: z.string().optional()
 });
