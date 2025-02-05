@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { pistonFileSchema } from "./file-encoding.js";
+import { puzzleLanguage, puzzleLanguageVersion } from "../../puzzle/schema/puzzle-language.js";
 
 export const pistonExecutionRequestSchema = z.object({
-	language: z.string(),
-	version: z.string(),
+	language: puzzleLanguage,
+	version: puzzleLanguageVersion,
 	files: z.array(pistonFileSchema),
 	stdin: z.string().optional(),
 	args: z.any().optional(),

@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { puzzleResultSchema } from "../puzzle-result.js";
+import { puzzleLanguage, puzzleLanguageVersion } from "../../../puzzle/schema/puzzle-language.js";
 
 export const pistonExecutionResponseSuccessSchema = z.object({
-	language: z.string(),
-	version: z.string(),
+	language: puzzleLanguage,
+	version: puzzleLanguageVersion,
 	run: z.object({
 		signal: z.string().or(z.null()),
 		output: z.string(),
