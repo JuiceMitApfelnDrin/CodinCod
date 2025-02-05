@@ -45,12 +45,9 @@
 
 	let isGameOver = false;
 
-	const state: { game: GameDto | undefined; puzzle: PuzzleDto | undefined; errorMessage: string } =
-		{
-			errorMessage: "",
-			game: undefined,
-			puzzle: undefined
-		};
+	let game: GameDto;
+	let puzzle: PuzzleDto;
+	let errorMessage: string;
 
 	let socket: WebSocket;
 	onMount(() => {
@@ -69,19 +66,19 @@
 				case GameEventEnum.OVERVIEW_GAME:
 					{
 						if (data.game) {
-							state.game = data.game;
+							game = data.game;
 						}
 						if (data.puzzle) {
-							state.puzzle = data.puzzle;
+							puzzle = data.puzzle;
 						}
 					}
 					break;
 				case GameEventEnum.NONEXISTENT_GAME:
-					state.errorMessage = receivedInformation.message;
+					errorMessage = receivedInformation.message;
 					break;
 				case GameEventEnum.FINISHED_GAME:
 					{
-						state.game = data.game;
+						game = data.game;
 						isGameOver = true;
 					}
 					break;
@@ -97,56 +94,59 @@
 	$: {
 		isNotPlayerInGame = Boolean(
 			$authenticatedUserInfo?.userId &&
-				!isUserIdInUserList($authenticatedUserInfo.userId, state.game?.players ?? [])
+				!isUserIdInUserList($authenticatedUserInfo.userId, game?.players ?? [])
 		);
 	}
 
-	let endDate = state.game?.endTime;
-	$: endDate = state.game && dayjs(state.game.endTime).toDate();
+	let endDate: Date;
+	$: endDate = game && dayjs(game.endTime).toDate();
 
 	$: {
 		const now = $currentTime;
 		isGameOver = Boolean(
 			isGameOver ||
 				(endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)) ||
-				state.game?.playerSubmissions
+				game?.playerSubmissions
 					?.filter((submission) => isSubmissionDto(submission))
 					.some((submission: SubmissionDto) => submission.userId === $authenticatedUserInfo?.userId)
 		);
 	}
 
 	const findPlayerSubmission = (playerId: string | undefined) => {
-		if (!state.game || !isString(playerId)) {
+		if (!game || !isString(playerId)) {
 			return undefined;
 		}
 
 		const playerSubmissions: SubmissionDto[] =
-			state.game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
+			game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
 
 		return playerSubmissions?.find((submission) => submission.userId === playerId);
 	};
 
-	let playerSubmissions;
-	$: playerSubmissions =
-		state.game?.playerSubmissions?.filter((submission) => isSubmissionDto(submission)) ?? [];
+	$: {
+		console.log({
+			game,
+			puzzle
+		});
+	}
 </script>
 
-{#if state.errorMessage}
+{#if errorMessage}
 	<Container>
 		<Error
 			link={{ href: frontendUrls.MULTIPLAYER, message: "Go to Multiplayer" }}
 			status={httpResponseCodes.CLIENT_ERROR.NOT_FOUND}
-			message={state.errorMessage}
+			message={errorMessage}
 		/>
 	</Container>
-{:else if !state.game}
+{:else if !game}
 	<Container>
 		<Loader />
 	</Container>
 {:else if isGameOver}
 	<Container>
 		<LogicalUnit>
-			{#if getUserIdFromUser(state.game.creator) === $authenticatedUserInfo?.userId}
+			{#if getUserIdFromUser(game.creator) === $authenticatedUserInfo?.userId}
 				<Button variant="outline">
 					<WorkInProgress />: Create a game with the same options
 					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?
@@ -160,10 +160,10 @@
 			</Button>
 		</LogicalUnit>
 
-		{#if !state.game}
+		{#if !game}
 			<Loader />
-		{:else if state.game.playerSubmissions}
-			<StandingsTable {playerSubmissions} />
+		{:else if game.playerSubmissions}
+			<StandingsTable {game} />
 			<!-- TODO: this is absolute shit, wtf are you doing? filtering this shit instead of something far more simple? search that simple solution! thinkge  -->
 		{:else}
 			<P>No player submissions for this game</P>
@@ -173,16 +173,16 @@
 	<Container>
 		<JoinGameConfirmationDialog {gameId} {socket} />
 	</Container>
-{:else if state.puzzle && state.game}
+{:else if puzzle && game}
 	<Container>
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane class="mr-4 flex flex-col gap-4 md:gap-8 lg:gap-12">
-				{#if state.puzzle._id}
+				{#if puzzle._id}
 					<PlayPuzzle
-						puzzleId={state.puzzle._id}
-						puzzle={state.puzzle}
+						puzzleId={puzzle._id}
+						{puzzle}
 						onPlayerSubmitCode={async (submissionId) => {
-							if (!isGameOver && state.game?._id && $authenticatedUserInfo) {
+							if (!isGameOver && game?._id && $authenticatedUserInfo) {
 								await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.SUBMIT_GAME), {
 									body: JSON.stringify({
 										gameId,
@@ -214,64 +214,64 @@
 
 				<!-- <ol>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-
-					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
+							class="inline"
+						/> report player button
+					</li>
+
+					<li>
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
 					<li>
-						<UserHoverCard user={state.game.players[0]} />: bla bla bla <EllipsisVertical
+						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
 							class="inline"
 						/> report player button
 					</li>
@@ -286,9 +286,9 @@
 
 				<H2>Standings - <WorkInProgress /></H2>
 
-				{#if state.game.players}
+				{#if game.players}
 					<ul>
-						{#each state.game.players as player}
+						{#each game.players as player}
 							<li>
 								{#if isUserDto(player)}
 									<UserHoverCard user={player} />{` - using ${

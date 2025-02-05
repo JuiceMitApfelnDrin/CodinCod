@@ -7,7 +7,6 @@ import {
 	createPuzzleSchema
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
-import { $ref } from "../../config/schema.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
 
 export default async function puzzleRoutes(fastify: FastifyInstance) {
@@ -46,51 +45,40 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 		}
 	);
 
-	fastify.get(
-		"/",
-		{
-			schema: {
-				querystring: $ref("paginatedQuerySchema"),
-				response: {
-					200: $ref("paginatedQueryResponseSchema")
-				}
-			}
-		},
-		async (request, reply) => {
-			const parseResult = paginatedQuerySchema.safeParse(request.query);
+	fastify.get("/", async (request, reply) => {
+		const parseResult = paginatedQuerySchema.safeParse(request.query);
 
-			if (!parseResult.success) {
-				return reply.status(400).send({ error: parseResult.error.errors });
-			}
-
-			const query = parseResult.data;
-			const { page, pageSize } = query;
-
-			try {
-				// Calculate pagination offsets
-				const offsetSkip = (page - DEFAULT_PAGE) * pageSize;
-
-				// Fetch puzzles from the database with pagination
-				const [puzzles, total] = await Promise.all([
-					Puzzle.find().skip(offsetSkip).limit(pageSize).exec(),
-					Puzzle.countDocuments()
-				]);
-
-				// Calculate total pages
-				const totalPages = Math.ceil(total / pageSize);
-
-				const paginatedResponse: PaginatedQueryResponse = {
-					page,
-					pageSize,
-					totalPages,
-					totalItems: total,
-					items: puzzles
-				};
-
-				return reply.send(paginatedResponse);
-			} catch (error) {
-				return reply.status(500).send({ error: "Failed to fetch puzzles" });
-			}
+		if (!parseResult.success) {
+			return reply.status(400).send({ error: parseResult.error.errors });
 		}
-	);
+
+		const query = parseResult.data;
+		const { page, pageSize } = query;
+
+		try {
+			// Calculate pagination offsets
+			const offsetSkip = (page - DEFAULT_PAGE) * pageSize;
+
+			// Fetch puzzles from the database with pagination
+			const [puzzles, total] = await Promise.all([
+				Puzzle.find().skip(offsetSkip).limit(pageSize).exec(),
+				Puzzle.countDocuments()
+			]);
+
+			// Calculate total pages
+			const totalPages = Math.ceil(total / pageSize);
+
+			const paginatedResponse: PaginatedQueryResponse = {
+				page,
+				pageSize,
+				totalPages,
+				totalItems: total,
+				items: puzzles
+			};
+
+			return reply.send(paginatedResponse);
+		} catch (error) {
+			return reply.status(500).send({ error: "Failed to fetch puzzles" });
+		}
+	});
 }

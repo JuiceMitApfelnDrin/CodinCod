@@ -43,5 +43,12 @@ const submissionSchema = new Schema<SubmissionDocument>({
 	}
 });
 
+submissionSchema.virtual("user", {
+	ref: USER,
+	localField: "userId",
+	foreignField: "_id",
+	justOne: true
+});
+
 const Submission = mongoose.model<SubmissionDocument>(SUBMISSION, submissionSchema);
 export default Submission;
