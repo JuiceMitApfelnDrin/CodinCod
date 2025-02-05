@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { page } from "$app/stores";
 	import Error from "@/components/error/error.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
@@ -9,29 +10,49 @@
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
-	import { frontendUrls, GameEventEnum, isCreator, webSocketUrls } from "types";
+	import { buildFrontendUrl, frontendUrls, GameEventEnum, isCreator, webSocketUrls } from "types";
 
-	let state: {
-		errorMessage: string;
-		gameId?: string;
-		game?: {
-			users: { username: string; userId: string; joinedAt: Date }[];
-			creator: { username: string; userId: string; joinedAt: Date };
-		};
-		games: { id: string; amountOfPlayersJoined: number }[];
-	} = {
-		errorMessage: "",
-		// TODO: time-left/countdown timer when game is started
+	let game:
+		| {
+				users: { username: string; userId: string; joinedAt: Date }[];
+				creator: { username: string; userId: string; joinedAt: Date };
+		  }
+		| undefined;
+	let games: { id: string; amountOfPlayersJoined: number }[];
+	let gameId: string | undefined;
+	let errorMessage: string | undefined;
+	let hasRoomIdOnMount = false;
 
-		game: undefined,
-		gameId: undefined,
-		games: [
-			// {
-			// players
-			// amountOfPlayersJoined: number
-			// }
-		]
+	const queryParamKeys = {
+		ROOM_ID: "roomId"
 	};
+
+	function updateRoomIdInUrl() {
+		if (gameId) {
+			query.set(queryParamKeys.ROOM_ID, gameId);
+
+			goto(`?${query.toString()}`);
+		} else {
+			query.delete(queryParamKeys.ROOM_ID);
+
+			goto(`?${query.toString()}`);
+		}
+	}
+
+	function checkForRoomId() {
+		if (query.has(queryParamKeys.ROOM_ID)) {
+			socket.send(
+				JSON.stringify({
+					event: GameEventEnum.JOIN_GAME,
+					gameId: query.get(queryParamKeys.ROOM_ID),
+					userId: $authenticatedUserInfo?.userId,
+					username: $authenticatedUserInfo?.username
+				})
+			);
+
+			hasRoomIdOnMount = true;
+		}
+	}
 
 	let socket: WebSocket;
 	onMount(() => {
@@ -40,6 +61,8 @@
 
 		socket.addEventListener("open", (message) => {
 			console.info("WebSocket connection opened");
+
+			checkForRoomId();
 		});
 
 		socket.addEventListener("message", async (message) => {
@@ -50,17 +73,19 @@
 			switch (event) {
 				case GameEventEnum.HOST_GAME:
 					{
-						state.gameId = receivedInformation.message;
+						gameId = receivedInformation.message;
+
+						updateRoomIdInUrl();
 					}
 					break;
 				case GameEventEnum.OVERVIEW_OF_GAMES:
 					{
-						state.games = receivedInformation.data;
+						games = receivedInformation.data;
 					}
 					break;
 				case GameEventEnum.OVERVIEW_GAME:
 					{
-						state.game = receivedInformation.data;
+						game = receivedInformation.data;
 					}
 					break;
 				case GameEventEnum.GO_TO_GAME:
@@ -70,7 +95,16 @@
 					break;
 				case GameEventEnum.NOT_ENOUGH_GAMES:
 					{
-						state.errorMessage = receivedInformation.message;
+						errorMessage = receivedInformation.message;
+					}
+					break;
+				case GameEventEnum.NONEXISTENT_GAME:
+					{
+						const roomId = query.get(queryParamKeys.ROOM_ID);
+
+						if (roomId) {
+							await goto(buildFrontendUrl(frontendUrls.MULTIPLAYER_ID, { id: roomId }));
+						}
 					}
 					break;
 				default:
@@ -80,13 +114,15 @@
 			}
 		});
 	});
+
+	let query = new URLSearchParams($page.url.searchParams.toString());
 </script>
 
-{#if state.errorMessage}
+{#if errorMessage}
 	<Container>
 		<Error
 			link={{ href: frontendUrls.PUZZLE_CREATE, message: "Go to create a puzzle" }}
-			message={state.errorMessage}
+			message={errorMessage}
 		/>
 	</Container>
 {:else}
@@ -95,31 +131,33 @@
 			<H1>Multiplayer</H1>
 
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
-				{#if state.gameId}
+				{#if gameId}
 					<Button
 						on:click={() => {
 							socket.send(
 								JSON.stringify({
 									event: GameEventEnum.LEAVE_GAME,
-									gameId: state.gameId,
+									gameId: gameId,
 									username: $authenticatedUserInfo?.username
 								})
 							);
 
-							state.gameId = undefined;
-							state.game = undefined;
+							gameId = undefined;
+							game = undefined;
+
+							updateRoomIdInUrl();
 						}}
 					>
 						leave game
 					</Button>
 
-					{#if $authenticatedUserInfo?.userId && isCreator(state.game?.creator.userId, $authenticatedUserInfo?.userId)}
+					{#if $authenticatedUserInfo?.userId && isCreator(game?.creator.userId, $authenticatedUserInfo?.userId)}
 						<Button
 							on:click={() => {
 								socket.send(
 									JSON.stringify({
 										event: GameEventEnum.START_GAME,
-										gameId: state.gameId
+										gameId: gameId
 									})
 								);
 							}}
@@ -146,22 +184,22 @@
 			</div>
 		</LogicalUnit>
 
-		{#if state.gameId}
+		{#if gameId}
 			<P>waiting for the game to start</P>
 
-			{#if state.game}
+			{#if game}
 				<ul>
-					{#each state.game.users as user}
+					{#each game.users as user}
 						<li class="list-inside list-disc">
-							{user.username}{#if isCreator(state.game.creator.userId, user.userId)}
+							{user.username}{#if isCreator(game.creator.userId, user.userId)}
 								{` - Creator/host!`}{/if}
 						</li>
 					{/each}
 				</ul>
 			{/if}
-		{:else if state.games && state.games.length > 0}
+		{:else if games && games.length > 0}
 			<ul>
-				{#each state.games as joinableGame}
+				{#each games as joinableGame}
 					<li>
 						<Button
 							on:click={() => {
@@ -174,7 +212,9 @@
 									})
 								);
 
-								state.gameId = joinableGame.id;
+								gameId = joinableGame.id;
+
+								updateRoomIdInUrl();
 							}}
 						>
 							Join a game with {joinableGame.amountOfPlayersJoined} other players!
