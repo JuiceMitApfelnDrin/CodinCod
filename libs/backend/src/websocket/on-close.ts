@@ -21,7 +21,6 @@ export async function onClose({
 			players,
 			playerSocketToRemove
 		}),
-		
 		removeStoppedPlayersFromGames({ games })
 	]);
 
