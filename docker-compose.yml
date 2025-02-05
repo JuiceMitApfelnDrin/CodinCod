@@ -1,0 +1,58 @@
+services:
+  piston:
+    image: ghcr.io/engineer-man/piston
+    container_name: piston
+    restart: always
+    privileged: true
+    ports:
+      - 2000:2000
+    volumes:
+      - ./data/piston/packages:/piston/packages
+    tmpfs:
+      - /tmp:exec
+
+  backend:
+    container_name: backend
+    build:
+      context: . # Root directory
+      args:
+        - ORIGIN=${APP_ORIGIN:-https://codincod.com}
+      dockerfile: libs/backend/Dockerfile # Correct path
+    ports:
+      - "8888:8888"
+    # env_file:
+    #  - ./libs/backend/.env # Load frontend environment variables
+    environment:
+      - NODE_ENV=production
+      - PISTON_URI=http://piston:2000
+    depends_on:
+      - piston
+  #   # optional for when you want to run mongodb locally
+  #     - mongo
+
+  frontend:
+    container_name: frontend
+    build:
+      context: . # Root directory
+      dockerfile: libs/frontend/Dockerfile # Correct path
+    ports:
+      - "5173:5173"
+    # env_file:
+    #  - ./libs/frontend/.env # Load frontend environment variables
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=5173
+    depends_on:
+      - backend
+#   # optional for when you want to run mongodb locally
+#   mongo:
+#     image: mongo:latest
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: codincod-dev
+#       MONGO_INITDB_ROOT_PASSWORD: hunter2
+#     volumes:
+#       - mongo_data:/data/db
+
+# volumes:
+#   mongo_data:

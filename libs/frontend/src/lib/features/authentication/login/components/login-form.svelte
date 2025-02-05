@@ -15,7 +15,7 @@
 		validators: zodClient(loginSchema)
 	});
 
-	const { enhance, form: formData, validateForm, message } = form;
+	const { enhance, form: formData, message, validateForm } = form;
 
 	const handleFormInput = debounce(async () => {
 		await validateForm({ update: false });

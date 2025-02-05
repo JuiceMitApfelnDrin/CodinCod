@@ -1,44 +1,46 @@
 import jwt from "jsonwebtoken";
-import { isAuthenticatedInfo } from "types";
+import { httpRequestMethod, isAuthenticatedInfo } from "types";
 import { logout } from "./logout";
 import type { Cookies } from "@sveltejs/kit";
+import { apiUrls } from "@/config/api";
 
-export function getAuthenticatedUserInfo(token: string | undefined, cookies: Cookies) {
-	if (token) {
-		const JWT_SECRET = import.meta.env.VITE_JWT_SECRET;
+export async function getAuthenticatedUserInfo(
+	token: string,
+	cookies: Cookies,
+	eventFetch = fetch
+) {
+	try {
+		const response = await eventFetch(apiUrls.VERIFY_TOKEN, {
+			body: JSON.stringify({ token }),
+			method: httpRequestMethod.POST
+		});
 
-		if (!JWT_SECRET) {
-			throw new Error("Forgot environment variable VITE_JWT_SECRET in .env");
+		const authenticatedInfo = await response.json();
+
+		if (isAuthenticatedInfo(authenticatedInfo)) {
+			return authenticatedInfo;
 		}
+	} catch (err) {
+		if (err instanceof jwt.TokenExpiredError) {
+			logout(cookies);
 
-		try {
-			const authenticatedInfo = jwt.verify(token, JWT_SECRET);
-
-			if (isAuthenticatedInfo(authenticatedInfo)) {
-				return authenticatedInfo;
-			}
-		} catch (err) {
-			if (err instanceof jwt.TokenExpiredError) {
-				logout(cookies);
-
-				return {
-					isAuthenticated: false
-				};
-			} else if (err instanceof jwt.JsonWebTokenError) {
-				console.error("Invalid token:", err);
-				return {
-					isAuthenticated: false,
-					error: "Invalid token"
-				};
-			} else if (err instanceof jwt.NotBeforeError) {
-				console.error("Token not active yet:", err);
-				return {
-					isAuthenticated: false,
-					error: "Token not active"
-				};
-			} else {
-				console.error("Error verifying token:", err);
-			}
+			return {
+				isAuthenticated: false
+			};
+		} else if (err instanceof jwt.JsonWebTokenError) {
+			console.error("Invalid token:", err);
+			return {
+				error: "Invalid token",
+				isAuthenticated: false
+			};
+		} else if (err instanceof jwt.NotBeforeError) {
+			console.error("Token not active yet:", err);
+			return {
+				error: "Token not active",
+				isAuthenticated: false
+			};
+		} else {
+			console.error("Error verifying token:", err);
 		}
 	}
 

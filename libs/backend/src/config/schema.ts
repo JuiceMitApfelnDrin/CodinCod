@@ -28,7 +28,18 @@ import {
 	acceptedDateSchema,
 	createPuzzleSchema,
 	pistonExecutionResponseErrorSchema,
-	pistonExecutionResponseSuccessSchema
+	pistonExecutionResponseSuccessSchema,
+	activitySchema,
+	solutionSchema,
+	gameEventSchema,
+	puzzleDtoSchema,
+	fetchErrorSchema,
+	gameEntitySchema,
+	gameOptionsSchema,
+	gameUserInfoSchema,
+	userActivitySchema,
+	gameVisibilitySchema,
+	submissionDtoSchema
 } from "types";
 
 export const { schemas, $ref } = buildJsonSchemas({
@@ -60,5 +71,16 @@ export const { schemas, $ref } = buildJsonSchemas({
 	acceptedDateSchema,
 	createPuzzleSchema,
 	pistonExecutionResponseErrorSchema,
-	pistonExecutionResponseSuccessSchema
+	pistonExecutionResponseSuccessSchema,
+	activitySchema,
+	solutionSchema,
+	gameEventSchema,
+	puzzleDtoSchema,
+	fetchErrorSchema,
+	gameEntitySchema,
+	gameOptionsSchema,
+	gameUserInfoSchema,
+	userActivitySchema,
+	gameVisibilitySchema,
+	submissionDtoSchema
 });

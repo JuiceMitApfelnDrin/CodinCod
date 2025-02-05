@@ -1,11 +1,12 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { buildBackendUrl } from "@/config/backend";
-import { backendUrls, PUT, puzzleDtoSchema, type PuzzleDto } from "types";
+import { backendUrls, deletePuzzleSchema, PUT, puzzleDtoSchema, type PuzzleDto } from "types";
 import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
 import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
+import { handleDeletePuzzleForm } from "../../../../api/handle-delete-puzzle-form.js";
 
 export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
@@ -20,14 +21,17 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 	const puzzle: PuzzleDto = await response.json();
 
 	const validate = await superValidate(puzzle, zod(puzzleDtoSchema));
+	const validateDeletePuzzle = await superValidate({ id }, zod(deletePuzzleSchema));
 
 	return {
+		deletePuzzle: validateDeletePuzzle,
 		form: validate
 	};
 }
 
 export const actions = {
-	default: async ({ params, request }: RequestEvent) => {
+	deletePuzzle: handleDeletePuzzleForm,
+	editPuzzle: async ({ params, request }: RequestEvent) => {
 		const form = await superValidate(request, zod(puzzleDtoSchema));
 
 		if (!form.valid) {

@@ -1,30 +1,31 @@
 import { FastifyInstance } from "fastify";
 import {
+	CodeExecutionParams,
+	httpResponseCodes,
 	isFetchError,
 	isPistonExecutionResponseSuccess,
-	LanguageLabel,
 	PistonExecutionRequest,
-	PistonExecutionResponse,
-	supportedLanguages
+	PistonExecutionResponse
 } from "types";
 import { calculateResult } from "../../utils/functions/calculate-result.js";
-
-type ExecuteParams = {
-	Body: {
-		code: string;
-		language: LanguageLabel;
-		testInput: string;
-		testOutput: string;
-	};
-};
+import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 
 export default async function executeRoutes(fastify: FastifyInstance) {
-	fastify.post<ExecuteParams>("/", async (request, reply) => {
+	fastify.post<{ Body: CodeExecutionParams }>("/", async (request, reply) => {
 		const { code, language, testInput, testOutput } = request.body;
 
+		const runtimes = await fastify.runtimes();
+		const runtimeInfo = findRuntime(runtimes, language);
+
+		if (!runtimeInfo) {
+			return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+				error: "Unsupported language"
+			});
+		}
+
 		const requestObject: PistonExecutionRequest = {
-			language: supportedLanguages[language].language,
-			version: supportedLanguages[language].version,
+			language: runtimeInfo.language,
+			version: runtimeInfo.version,
 			files: [{ content: code }],
 			stdin: testInput
 		};

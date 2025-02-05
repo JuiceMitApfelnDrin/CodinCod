@@ -1,9 +1,19 @@
-<script>
-	import { page } from "$app/stores";
-	import { deletePuzzle } from "@/api/delete-puzzle";
+<script lang="ts">
 	import { buttonVariants } from "@/components/ui/button";
-	import Button from "@/components/ui/button/button.svelte";
 	import * as Dialog from "@/components/ui/dialog";
+	import * as Form from "@/components/ui/form";
+	import Input from "@/components/ui/input/input.svelte";
+	import { superForm, type SuperValidated } from "sveltekit-superforms";
+	import { zodClient } from "sveltekit-superforms/adapters";
+	import { deletePuzzleSchema, type DeletePuzzle } from "types";
+
+	export let data: SuperValidated<DeletePuzzle>;
+
+	const form = superForm(data, {
+		validators: zodClient(deletePuzzleSchema)
+	});
+
+	const { enhance, form: formData } = form;
 </script>
 
 <Dialog.Root>
@@ -13,15 +23,22 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title>Are you absolutely sure?</Dialog.Title>
-			<Dialog.Description>
-				This action cannot be undone. This will permanently delete your puzzle and remove this
-				puzzle from our servers.
-			</Dialog.Description>
+
+			<form method="POST" action="?/deletePuzzle" use:enhance>
+				<Form.Field {form} name="id">
+					<Form.Control let:attrs>
+						<Input type="hidden" {...attrs} bind:value={$formData.id} />
+					</Form.Control>
+					<Form.Description>
+						This action cannot be undone. This will permanently delete your puzzle and remove this
+						puzzle from our servers.
+					</Form.Description>
+					<Form.FieldErrors />
+				</Form.Field>
+
+				<Form.Button variant="destructive">Delete puzzle</Form.Button>
+			</form>
 		</Dialog.Header>
-		<Dialog.Footer>
-			<Button variant="destructive" on:click={() => deletePuzzle($page.params.id)}>
-				Delete puzzle
-			</Button>
-		</Dialog.Footer>
+		<Dialog.Footer></Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

@@ -6,17 +6,17 @@
 	import Error from "@/components/error/error.svelte";
 	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
-	import { getAuthorIdFromPuzzleDto } from "@/utils/get-authorId-from-puzzle-dto.js";
+	import { getUserIdFromUser } from "@/utils/get-user-id-from-user.js";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 
 	export let data;
 
-	const { form: formData } = data;
+	const { deletePuzzle: deletePuzzleFormData, form: formData } = data;
 	const puzzle: PuzzleDto = formData.data;
 
 	let isPuzzleAuthor = false;
 
-	const puzzleAuthorId = getAuthorIdFromPuzzleDto(puzzle);
+	const puzzleAuthorId = getUserIdFromUser(puzzle.authorId);
 
 	if ($isAuthenticated && $authenticatedUserInfo != null) {
 		isPuzzleAuthor = isAuthor(puzzleAuthorId, $authenticatedUserInfo.userId);
@@ -28,7 +28,7 @@
 		<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
 			<PuzzleMetaInfo {puzzle} />
 
-			<DeletePuzzleConfirmationDialog />
+			<DeletePuzzleConfirmationDialog data={deletePuzzleFormData} />
 		</LogicalUnit>
 
 		<EditPuzzleForm data={formData}></EditPuzzleForm>

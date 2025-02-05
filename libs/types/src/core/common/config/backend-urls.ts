@@ -14,10 +14,12 @@ export const backendUrls = {
 	// puzzle routes
 	PUZZLE: `${baseRoute}/puzzle`,
 	PUZZLE_DETAIL: `${baseRoute}/puzzle/:id`,
+	PUZZLE_LANGUAGES: `${baseRoute}/puzzle/languages`,
 
 	HEALTH: `${baseRoute}/health`,
 	VALIDATOR: `${baseRoute}/validator`,
 	SUBMISSION: `${baseRoute}/submission`,
+	SUBMISSION_GAME: `${baseRoute}/submission/game`,
 	REPORT: `${baseRoute}/report`
 } as const;
 

@@ -14,7 +14,7 @@ export function setCookie(result: Response, cookies: Cookies) {
 			httpOnly: true,
 			path: "/",
 			sameSite: "strict",
-			secure: true
+			secure: process.env.NODE_ENV === "production"
 		});
 	}
 }

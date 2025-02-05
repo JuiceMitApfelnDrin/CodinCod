@@ -1,5 +1,0 @@
----
-title: Learn javascript
----
-
-# Javascript

@@ -6,7 +6,7 @@ async function corsSetup(fastify: FastifyInstance) {
 	fastify.register(cors, {
 		allowedHeaders: ["Authorization", "Content-Type"],
 		credentials: true,
-		origin: true
+		origin: false
 	});
 }
 

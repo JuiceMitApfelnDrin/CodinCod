@@ -1,9 +1,11 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
+import typography from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	darkMode: ["class"],
+	plugins: [typography],
 	safelist: ["dark"],
 	theme: {
 		container: {

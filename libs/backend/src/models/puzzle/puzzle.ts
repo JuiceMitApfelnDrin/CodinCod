@@ -29,7 +29,7 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		trim: true,
 		type: String
 	},
-	// TODO: rename this to user, since it gets filled in most of the time
+	// TODO: rename authorId this to author, since it gets populated most of the time
 	authorId: {
 		ref: USER,
 		required: true, // Ensure every puzzle has an author
@@ -57,11 +57,13 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		type: Date
 	},
 	solution: {
-		type: solutionSchema
+		type: solutionSchema,
+		select: false
 	},
 	puzzleMetrics: {
 		ref: METRICS,
-		type: mongoose.Schema.Types.ObjectId
+		type: mongoose.Schema.Types.ObjectId,
+		select: false
 	},
 	tags: [
 		{

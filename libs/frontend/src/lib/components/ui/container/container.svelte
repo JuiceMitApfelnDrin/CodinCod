@@ -10,7 +10,7 @@
 
 <div
 	class={cn(
-		"container mx-auto flex max-w-screen-lg flex-col gap-4 py-4 md:gap-8 md:py-8 lg:gap-12 xl:py-12",
+		"container mx-auto flex flex-col gap-4 py-4 md:gap-8 md:py-8 lg:gap-12 xl:py-12",
 		className
 	)}
 >

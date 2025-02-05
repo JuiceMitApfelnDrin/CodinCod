@@ -29,8 +29,8 @@
 		const currentDay = dayjs().subtract(index, "day");
 
 		return {
-			shortDayName: currentDay.format("ddd").toUpperCase(),
-			longDayName: currentDay.format("dddd")
+			longDayName: currentDay.format("dddd"),
+			shortDayName: currentDay.format("ddd").toUpperCase()
 		};
 	});
 

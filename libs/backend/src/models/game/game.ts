@@ -1,9 +1,9 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { GAME, PUZZLE, USER } from "../../utils/constants/model.js";
+import { GAME, PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
 import { DEFAULT_GAME_LENGTH_IN_MILLISECONDS, GameEntity } from "types";
 import gameOptionsSchema from "./game-config.js";
 
-interface GameDocument extends Document, Omit<GameEntity, "_id"> {}
+export interface GameDocument extends Document, Omit<GameEntity, "_id"> {}
 
 const gameSchema = new Schema<GameDocument>({
 	players: [
@@ -37,7 +37,14 @@ const gameSchema = new Schema<GameDocument>({
 		ref: PUZZLE,
 		required: true,
 		type: Schema.Types.ObjectId
-	}
+	},
+	playerSubmissions: [
+		{
+			ref: SUBMISSION,
+			required: false,
+			type: Schema.Types.ObjectId
+		}
+	]
 });
 
 const Game = mongoose.model<GameDocument>(GAME, gameSchema);

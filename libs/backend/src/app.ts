@@ -15,6 +15,7 @@ import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
 import piston from "./plugins/decorators/piston.js";
 import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
+import fastifyRateLimit from "@fastify/rate-limit";
 
 const server = Fastify({
 	logger: true // Boolean(process.env.NODE_ENV !== "development")
@@ -31,6 +32,11 @@ server.register(fastifyCookie, {
 	parseOptions: {}
 });
 
+// TODO: make this not show an error, appears to work tho, check wtf is going wrong
+server.register(fastifyRateLimit, {
+	max: 100,
+	timeWindow: "1 minute"
+});
 server.register(cors);
 server.register(swagger);
 server.register(jwt);

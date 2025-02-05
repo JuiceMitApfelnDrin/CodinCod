@@ -1,27 +1,17 @@
-import { WebSocket } from "@fastify/websocket";
-import { FastifyInstance, FastifyRequest } from "fastify";
-import { onConnection } from "../../websocket/on-connection.js";
-import { onMessage } from "../../websocket/on-message.js";
-import { updatePlayers } from "../../websocket/update-players.js";
-import { onClose } from "../../websocket/on-close.js";
-import { OpenGames } from "@/types/games.js";
-
-const games: OpenGames = {};
-const activePlayerList: WebSocket[] = [];
+import { FastifyInstance } from "fastify";
+import { webSocketUrls } from "types";
+import { waitingRoom } from "@/websocket/waiting-room/waiting-room.js";
+import { playGame } from "@/websocket/game/play-game.js";
+import { ParamsId } from "@/routes/puzzle/[id]/types.js";
 
 export async function setupWebSockets(fastify: FastifyInstance) {
 	// needs to happen before other routes in the whole flow
 
-	fastify.get("/", { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
-		onConnection({ players: activePlayerList, games, newPlayerSocket: socket });
+	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (...props) =>
+		waitingRoom(...props, fastify)
+	);
 
-		socket.on("message", (message) => {
-			onMessage({ message, games, socket, players: activePlayerList });
-			updatePlayers({ sockets: activePlayerList, games });
-		});
-
-		socket.on("close", (code, reason) => {
-			onClose({ code, reason, players: activePlayerList, playerSocketToRemove: socket, games });
-		});
-	});
+	fastify.get<ParamsId>(webSocketUrls.GAME, { websocket: true }, (...props) =>
+		playGame(...props, fastify)
+	);
 }

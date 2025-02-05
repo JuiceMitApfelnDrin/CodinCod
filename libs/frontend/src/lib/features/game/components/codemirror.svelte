@@ -5,16 +5,16 @@
 	// import { html } from "@codemirror/lang-html";
 	// import { css } from "@codemirror/lang-css";
 	import { oneDark } from "@codemirror/theme-one-dark";
-	import { DEFAULT_LANGUAGE, type LanguageLabel } from "types";
+	import { type PuzzleLanguage } from "types";
 
 	export let value = "";
-	export let language = DEFAULT_LANGUAGE;
+	export let language: PuzzleLanguage = "";
 
 	let lang;
 
 	$: lang = codeMirrorLanguageSupport(language);
 
-	function codeMirrorLanguageSupport(language: LanguageLabel) {
+	function codeMirrorLanguageSupport(language: PuzzleLanguage) {
 		switch (language) {
 			case "javascript":
 				return javascript();

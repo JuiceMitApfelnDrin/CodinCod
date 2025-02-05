@@ -4,10 +4,10 @@ export async function load({ params }: LoadEvent) {
 	const slug = params.slug;
 
 	try {
-		const post = await import(`../../../../../../docs/learn/${slug}/README.md`);
+		const post = await import(`../../../content/learn/${slug}/README.md`);
 
 		return { content: post.default, meta: post.metadata };
-	} catch (e) {
+	} catch {
 		error(404, `Could not find ${params.slug}`);
 	}
 }

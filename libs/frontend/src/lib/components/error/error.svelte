@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { frontendUrls } from "types";
+	import { frontendUrls, type FrontendUrl } from "types";
 	import Container from "../ui/container/container.svelte";
 	import * as Card from "../ui/card";
 	import H1 from "../typography/h1.svelte";
@@ -9,6 +9,10 @@
 	export let status: number = 500;
 	export let message: string | null = null;
 	export let header: string | null = null;
+	export let link: { href: FrontendUrl; message: string } = {
+		href: frontendUrls.ROOT,
+		message: "Go to Homepage"
+	};
 
 	type ErrorTypeDefaultInfo = { header: string; description: string };
 	const errorMap: Record<number, ErrorTypeDefaultInfo> = {
@@ -39,7 +43,7 @@
 		</Card.Content>
 
 		<Card.Footer>
-			<Button href={frontendUrls.ROOT} class="mt-4">Go to Homepage</Button>
+			<Button href={link.href} class="mt-4">{link.message}</Button>
 		</Card.Footer>
 	</Card.Root>
 </Container>

@@ -6,18 +6,14 @@
 	import Input from "@/components/ui/input/input.svelte";
 	import InlineCode from "@/components/typography/inlineCode.svelte";
 	import Button from "@/components/ui/button/button.svelte";
-	import {
-		DEFAULT_LANGUAGE,
-		languageLabels,
-		POST,
-		puzzleEntitySchema,
-		type LanguageLabel
-	} from "types";
+	import { POST, puzzleEntitySchema, type PuzzleLanguage } from "types";
 	import { page } from "$app/stores";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
+	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
+	import { onMount } from "svelte";
 
 	export let data;
 
@@ -60,10 +56,22 @@
 
 	let { enhance, form: formData, message } = form;
 
-	let language: LanguageLabel = $formData.solution.language ?? DEFAULT_LANGUAGE;
+	let languages: PuzzleLanguage[] = [];
+	let language: PuzzleLanguage = $formData.solution.language ?? "";
+
+	async function fetchLanguages() {
+		languages = await fetchSupportedLanguages();
+
+		const defaultLanguage = languages[0];
+		language = defaultLanguage;
+	}
+
+	onMount(() => {
+		fetchLanguages();
+	});
 </script>
 
-<form method={POST} use:enhance class="flex flex-col gap-4">
+<form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Title</Form.Label>
@@ -79,7 +87,7 @@
 			<Textarea {...attrs} bind:value={$formData.statement} />
 		</Form.Control>
 		<Form.Description>
-			This will be the description of the puzzle (markdown formatting supported, eventually).
+			This will be the description of the puzzle (markdown formatting supported).
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
@@ -91,8 +99,8 @@
 		</Form.Control>
 		<Form.Description>
 			Describe to the best of your abilities what the puzzle is limited to, e.g.:
-			<InlineCode>1 ≤ n ≤ 100; 1 ≤ h ≤ 15; 0 ≤ x1 &lt; x2 ≤ 200</InlineCode>. Markdown formatting
-			supported, eventually.
+			<InlineCode>1 ≤ n ≤ 100; 1 ≤ h ≤ 15; 0 ≤ x1 &lt; x2 ≤ 200</InlineCode>. (Markdown formatting
+			supported).
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
@@ -153,7 +161,7 @@
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
-							{#each languageLabels as language}
+							{#each languages as language}
 								<Select.Item value={language} label={language} />
 							{/each}
 						</Select.Group>

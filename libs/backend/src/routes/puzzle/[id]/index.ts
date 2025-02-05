@@ -1,12 +1,13 @@
 import { FastifyInstance } from "fastify";
 import Puzzle from "../../../models/puzzle/puzzle.js";
-import authenticated from "../../../plugins/middelware/authenticated.js";
+import authenticated from "../../../plugins/middleware/authenticated.js";
 import {
 	AuthenticatedInfo,
 	puzzleEntitySchema,
 	PuzzleVisibilityEnum,
 	isAuthor,
-	isAuthenticatedInfo
+	isAuthenticatedInfo,
+	DeletePuzzle
 } from "types";
 import { ParamsId } from "./types.js";
 
@@ -67,7 +68,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 		}
 	);
 
-	fastify.delete<ParamsId>(
+	fastify.delete<{ Params: DeletePuzzle }>(
 		"/",
 		{
 			onRequest: authenticated
