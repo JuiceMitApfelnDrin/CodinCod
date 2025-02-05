@@ -13,6 +13,7 @@ import { schemas } from "./config/schema.js";
 import fastifyCookie from "@fastify/cookie";
 import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
+import redis from "./plugins/config/redis.js";
 import piston from "./plugins/decorators/piston.js";
 import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
@@ -47,6 +48,7 @@ server.register(mongooseConnector);
 server.register(piston);
 server.register(websocket);
 server.register(setupWebSockets);
+server.register(redis);
 
 // register custom plugins
 

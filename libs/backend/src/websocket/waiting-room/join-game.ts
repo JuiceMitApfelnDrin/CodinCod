@@ -1,41 +1,37 @@
-import { GameEvent, GameEventEnum } from "types";
+import { GameEventEnum } from "types";
 import { updatePlayer } from "../common/update-player.js";
 import { updatePlayersInGame } from "./update-players-in-game.js";
-import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
+import { FastifyInstance } from "fastify";
+import { roomByIdPlayers } from "./redis-keys-functions.js";
 
-export function joinGame({
-	gameId,
+export async function joinGame({
+	roomId,
 	userId,
 	socket,
 	username,
-	event,
-	games
+	fastify
 }: {
-	gameId: string;
+	roomId: string;
 	socket: WebSocket;
-	event: GameEvent;
 	username: string;
 	userId: string;
-	games: OpenGames;
+	fastify: FastifyInstance;
 }) {
-	const game = games[gameId];
+	fastify.redis.sadd(roomByIdPlayers(roomId), JSON.stringify({ userId, username }));
 
-	// when a user tries to join the same game multiple times, possibly through a different tab
-	if (game[username]) {
-		return updatePlayer({
-			socket,
-			event: GameEventEnum.ALREADY_JOINED_GAME,
-			message: "you already joined this game"
-		});
-	}
+	// notify people someone joined
+	updatePlayer({
+		socket,
+		event: GameEventEnum.JOIN_GAME,
+		message: "user joined the waiting room",
+		data: {
+			userId,
+			username
+		}
+	});
 
-	// add a user to the game
-	if (game) {
-		game[username] = { joinedAt: new Date(), socket, userId, username };
+	// how can we identify which websocket belongs to who? :Thinkge:
 
-		// notify people someone joined
-		updatePlayer({ socket, event, message: gameId });
-		updatePlayersInGame({ game });
-	}
+	updatePlayersInGame({ game });
 }

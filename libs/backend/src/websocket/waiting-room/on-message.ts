@@ -4,23 +4,24 @@ import { hostGame } from "./host-game.js";
 import { joinGame } from "./join-game.js";
 import { leaveGame } from "./leave-game.js";
 import { startGame } from "./start-game.js";
-import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
 import { RawData } from "ws";
-import { removePlayerFromPlayers } from "../common/remove-player-from-players.js";
 import { addPlayerToPlayers } from "../common/add-player-to-players.js";
 import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
+import { FastifyInstance } from "fastify";
 
 export async function onMessage({
 	message,
 	socket,
-	games,
-	players
+	fastify,
+	username,
+	userId
 }: {
 	message: RawData;
 	socket: WebSocket;
-	games: OpenGames;
-	players: WebSocket[];
+	fastify: FastifyInstance;
+	username: string;
+	userId: string;
 }) {
 	let parsedMessage = parseRawDataMessage(message, socket);
 
@@ -28,7 +29,7 @@ export async function onMessage({
 		return;
 	}
 
-	const { event, gameId, username, userId } = parsedMessage;
+	const { event, roomId } = parsedMessage;
 
 	if (event === GameEventEnum.HOST_GAME) {
 		if (!isString(userId)) {
@@ -49,28 +50,22 @@ export async function onMessage({
 			return;
 		}
 
-		hostGame({ userId, socket, username, event, games });
-		removePlayerFromPlayers({ players, playerSocketToRemove: socket });
+		hostGame({ userId, socket, username, fastify });
 		return;
 	}
 
-	if (!gameId) {
+	if (!roomId) {
 		updatePlayer({
 			socket,
 			event: GameEventEnum.NONEXISTENT_GAME,
-			message: `game with id (${gameId}) doesn't exist`
+			message: `game with id (${roomId}) doesn't exist`
 		});
 		return;
 	}
 
 	switch (event) {
 		case GameEventEnum.JOIN_GAME: {
-			if (!username || !userId) {
-				return;
-			}
-
-			joinGame({ gameId, userId, socket, username, event, games });
-			removePlayerFromPlayers({ players, playerSocketToRemove: socket });
+			joinGame({ roomId, userId, socket, username, fastify });
 			return;
 		}
 		case GameEventEnum.LEAVE_GAME: {
@@ -83,12 +78,12 @@ export async function onMessage({
 				return;
 			}
 
-			leaveGame({ gameId, socket, username, games });
+			leaveGame({ roomId, socket, username, games });
 			addPlayerToPlayers({ players, playerSocketToAdd: socket });
 			return;
 		}
 		case GameEventEnum.START_GAME: {
-			startGame({ gameId, socket, games });
+			startGame({ roomId, socket });
 			return;
 		}
 		default:

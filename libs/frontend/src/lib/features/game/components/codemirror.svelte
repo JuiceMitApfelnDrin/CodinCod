@@ -37,7 +37,7 @@
 			display: "flex",
 			height: "100%"
 		},
-		".cm-scroller, .cm-gutters": { height: "70vh", minHeight: "300px", overflow: "auto" }
+		".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
 	}}
 	class="codemirror-default-height"
 />

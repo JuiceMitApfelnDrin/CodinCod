@@ -1,23 +1,38 @@
 import { WebSocket } from "@fastify/websocket";
 import { onConnection } from "./on-connection.js";
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { OpenGames } from "@/types/games.js";
 import { onMessage } from "./on-message.js";
-import { updatePlayers } from "./update-players.js";
 import { onClose } from "./on-close.js";
-
-const games: OpenGames = {};
-const activePlayerList: WebSocket[] = [];
+import { isAuthenticatedInfo } from "types";
 
 export function waitingRoom(socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance) {
-	onConnection({ players: activePlayerList, games, newPlayerSocket: socket });
+	onConnection({
+		newPlayerSocket: socket,
+		fastify
+	});
 
 	socket.on("message", (message) => {
-		onMessage({ message, games, socket, players: activePlayerList });
-		updatePlayers({ sockets: activePlayerList, games });
+		if (!req.user || !isAuthenticatedInfo(req.user)) {
+			return;
+		}
+
+		onMessage({
+			message,
+			socket,
+			fastify,
+			userId: req.user.userId,
+			username: req.user.username
+		});
 	});
 
 	socket.on("close", (code, reason) => {
-		onClose({ code, reason, players: activePlayerList, playerSocketToRemove: socket, games });
+		onClose({
+			code,
+			reason,
+			players: activePlayerList,
+			playerSocketToRemove: socket,
+			games,
+			fastify
+		});
 	});
 }

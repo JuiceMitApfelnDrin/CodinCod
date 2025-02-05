@@ -8,6 +8,6 @@ declare module "fastify" {
 		runtimes(): Promise<PistonRuntime[]>;
 	}
 	interface FastifyRequest {
-		user?: { userId: string }; // Extend the request type to include user
+		user?: { userId: string; username: string }; // Extend the request type to include user
 	}
 }

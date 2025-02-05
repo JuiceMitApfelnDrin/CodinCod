@@ -1,11 +1,13 @@
 import { WebSocket } from "@fastify/websocket";
+import { FastifyInstance } from "fastify";
 
 export function addPlayerToPlayers({
-	players,
-	playerSocketToAdd
+	playerSocketToAdd,
+	fastify
 }: {
-	players: WebSocket[];
 	playerSocketToAdd: WebSocket;
+	fastify: FastifyInstance;
 }) {
-	players.push(playerSocketToAdd);
+	
+	// fastify.redis.hset(`players:${playerSocketToAdd.}`)
 }

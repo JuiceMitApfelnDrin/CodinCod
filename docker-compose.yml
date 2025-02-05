@@ -1,4 +1,13 @@
 services:
+  cache:
+    image: redis:7.4.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
   piston:
     image: ghcr.io/engineer-man/piston
     container_name: piston
@@ -27,6 +36,7 @@ services:
       - PISTON_URI=http://piston:2000
     depends_on:
       - piston
+      - cache
   #   # optional for when you want to run mongodb locally
   #     - mongo
 
@@ -56,3 +66,7 @@ services:
 
 # volumes:
 #   mongo_data:
+
+volumes:
+  cache:
+    driver: local
