@@ -119,10 +119,6 @@
 	onMount(() => {
 		fetchLanguages();
 	});
-
-	$: {
-		console.log({ languages, language });
-	}
 </script>
 
 <PuzzleMetaInfo {puzzle} />
