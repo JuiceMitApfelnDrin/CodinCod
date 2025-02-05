@@ -21,6 +21,14 @@ export function joinGame({
 }) {
 	const game = games[gameId];
 
+	if (!game) {
+		return updatePlayer({
+			socket,
+			event: GameEventEnum.NONEXISTENT_GAME,
+			message: "trying to join a game that either doesn't exist or is already on-going"
+		});
+	}
+
 	// when a user tries to join the same game multiple times, possibly through a different tab
 	if (game[username]) {
 		return updatePlayer({
@@ -31,11 +39,9 @@ export function joinGame({
 	}
 
 	// add a user to the game
-	if (game) {
-		game[username] = { joinedAt: new Date(), socket, userId, username };
+	game[username] = { joinedAt: new Date(), socket, userId, username };
 
-		// notify people someone joined
-		updatePlayer({ socket, event, message: gameId });
-		updatePlayersInGame({ game });
-	}
+	// notify people someone joined
+	updatePlayer({ socket, event, message: gameId });
+	updatePlayersInGame({ game });
 }
