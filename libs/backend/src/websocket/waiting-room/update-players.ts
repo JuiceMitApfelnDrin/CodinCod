@@ -5,7 +5,7 @@ import { GameEventEnum } from "types";
 import { FastifyInstance } from "fastify";
 
 export function updatePlayers({ fastify }: { fastify: FastifyInstance }) {
-	fastify.redis.hg
+	fastify.redis.hg;
 
 	for (const socket of fastify.websocketServer.clients) {
 		updatePlayer({

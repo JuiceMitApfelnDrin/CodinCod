@@ -18,7 +18,7 @@ export async function onConnection({
 
 	updatePlayer({
 		socket: newPlayerSocket,
-		event: GameEventEnum.OVERVIEW_OF_GAMES,
+		event: GameEventEnum.OVERVIEW_OF_GAMES
 		// data: { rooms: allRooms }
 	});
 }

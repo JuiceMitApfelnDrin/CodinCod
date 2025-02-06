@@ -8,6 +8,5 @@ export function addPlayerToPlayers({
 	playerSocketToAdd: WebSocket;
 	fastify: FastifyInstance;
 }) {
-	
 	// fastify.redis.hset(`players:${playerSocketToAdd.}`)
 }
