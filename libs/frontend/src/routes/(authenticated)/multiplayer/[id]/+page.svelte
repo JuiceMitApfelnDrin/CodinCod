@@ -108,7 +108,10 @@
 				(endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)) ||
 				game?.playerSubmissions
 					?.filter((submission) => isSubmissionDto(submission))
-					.some((submission: SubmissionDto) => submission.userId === $authenticatedUserInfo?.userId)
+					.some(
+						(submission: SubmissionDto) =>
+							getUserIdFromUser(submission.user) === $authenticatedUserInfo?.userId
+					)
 		);
 	}
 
@@ -120,15 +123,8 @@
 		const playerSubmissions: SubmissionDto[] =
 			game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
 
-		return playerSubmissions?.find((submission) => submission.userId === playerId);
+		return playerSubmissions?.find((submission) => getUserIdFromUser(submission.user) === playerId);
 	};
-
-	$: {
-		console.log({
-			game,
-			puzzle
-		});
-	}
 </script>
 
 {#if errorMessage}

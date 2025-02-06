@@ -14,7 +14,7 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 			try {
 				const matchingSubmission = await Submission.findById<SubmissionEntity>(submissionId).exec();
 
-				if (!matchingSubmission || matchingSubmission.userId.toString() !== userId) {
+				if (!matchingSubmission || matchingSubmission.user.toString() !== userId) {
 					return reply.status(404).send({
 						error: `couldn't find a submission with id (${submissionId}) belonging to user with id (${userId})`
 					});

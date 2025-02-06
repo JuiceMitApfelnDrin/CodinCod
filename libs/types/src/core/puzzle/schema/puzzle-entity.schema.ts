@@ -21,7 +21,7 @@ export const puzzleEntitySchema = z.object({
 		.min(PUZZLE_CONFIG.minConstraintsLength)
 		.max(PUZZLE_CONFIG.maxConstraintsLength)
 		.optional(),
-	authorId: z
+	author: z
 		.string()
 		.or(userDtoSchema)
 		.default(() => ""),

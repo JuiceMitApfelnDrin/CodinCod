@@ -21,7 +21,13 @@ export async function updatePlayersOnGameState({
 	const game = await Game.findById(id)
 		.populate("creator")
 		.populate("players")
-		.populate("playerSubmissions")
+		/* deeply populated, for every playerSubmission populate the userId field with a user */
+		.populate({
+			path: "playerSubmissions",
+			populate: {
+				path: "userId"
+			}
+		})
 		.exec();
 
 	if (!game) {

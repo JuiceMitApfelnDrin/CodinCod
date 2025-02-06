@@ -2,11 +2,9 @@ import mongoose, { ObjectId, Schema } from "mongoose";
 import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
 import { SubmissionEntity } from "types";
 
-export interface SubmissionDocument
-	extends Document,
-		Omit<SubmissionEntity, "puzzleId" | "userId"> {
-	puzzleId: ObjectId;
-	userId: ObjectId;
+export interface SubmissionDocument extends Document, Omit<SubmissionEntity, "puzzle" | "user"> {
+	puzzle: ObjectId;
+	user: ObjectId;
 }
 
 const submissionSchema = new Schema<SubmissionDocument>({
@@ -19,7 +17,7 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		default: Date.now,
 		type: Date
 	},
-	puzzleId: {
+	puzzle: {
 		ref: PUZZLE,
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
@@ -28,7 +26,7 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		required: true,
 		type: String
 	},
-	userId: {
+	user: {
 		ref: USER,
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
@@ -41,13 +39,6 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		required: true,
 		type: String
 	}
-});
-
-submissionSchema.virtual("user", {
-	ref: USER,
-	localField: "userId",
-	foreignField: "_id",
-	justOne: true
 });
 
 const Submission = mongoose.model<SubmissionDocument>(SUBMISSION, submissionSchema);

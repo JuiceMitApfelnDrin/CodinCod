@@ -1,13 +1,12 @@
 <script lang="ts">
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
-	import { isSubmissionDto, isUserDto, type GameDto } from "types";
+	import { isSubmissionDto, isUserDto, type GameDto, type SubmissionDto } from "types";
 
 	export let game: GameDto;
 
-	let playerSubmissions;
-	$: playerSubmissions =
-		game.playerSubmissions?.filter((submission) => isSubmissionDto(submission)) ?? [];
+	let playerSubmissions: SubmissionDto[];
+	$: playerSubmissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
 </script>
 
 <div class="rounded-md border">
@@ -22,18 +21,16 @@
 		</Table.Header>
 		<Table.Body>
 			{#each playerSubmissions as submission}
-				<Table.Row>
-					<Table.Cell
-						>{isUserDto(submission.userId)
-							? submission.userId.username
-							: submission.userId}</Table.Cell
-					>
-					<Table.Cell>{submission.language}</Table.Cell>
-					<Table.Cell>
-						{new Intl.DateTimeFormat("en-uk").format(dayjs(submission.createdAt).toDate())}
-					</Table.Cell>
-					<Table.Cell>{submission.result}</Table.Cell>
-				</Table.Row>
+				{#if isUserDto(submission.user)}
+					<Table.Row>
+						<Table.Cell>{submission.user.username}</Table.Cell>
+						<Table.Cell>{submission.language}</Table.Cell>
+						<Table.Cell>
+							{new Intl.DateTimeFormat("en-uk").format(dayjs(submission.createdAt).toDate())}
+						</Table.Cell>
+						<Table.Cell>{submission.result}</Table.Cell>
+					</Table.Row>
+				{/if}
 			{/each}
 		</Table.Body>
 	</Table.Root>

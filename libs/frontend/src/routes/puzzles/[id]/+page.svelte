@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
-	import { buildFrontendUrl, frontendUrls, isAuthor } from "types";
+	import { buildFrontendUrl, frontendUrls, isAuthor, type PuzzleDto } from "types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/index.js";
 	import Button from "@/components/ui/button/button.svelte";
 	import Accordion from "@/components/ui/accordion/accordion.svelte";
@@ -9,10 +9,11 @@
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Markdown from "@/components/typography/markdown.svelte";
+	import { getUserIdFromUser } from "@/utils/get-user-id-from-user.js";
 
 	export let data;
 
-	const { puzzle } = data;
+	const { puzzle }: { puzzle: PuzzleDto } = data;
 
 	let puzzleId = $page.params.id;
 	const editUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: puzzleId });
@@ -24,7 +25,7 @@
 		<PuzzleMetaInfo {puzzle} />
 
 		<div class="flex flex-col gap-2 md:flex-row md:gap-4">
-			{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(puzzle.authorId._id, $authenticatedUserInfo?.userId)}
+			{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(getUserIdFromUser(puzzle.author), $authenticatedUserInfo?.userId)}
 				<Button variant="outline" href={editUrl}>Edit puzzle</Button>
 			{/if}
 
