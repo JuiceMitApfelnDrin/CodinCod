@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { formatToTwoDigits } from "@/utils/format-to-two-digits";
 	import LogicalUnit from "../logical-unit/logical-unit.svelte";
 	import { cn } from "@/utils/cn";
 	import { currentTime } from "@/stores/current-time";
@@ -37,6 +36,10 @@
 		showHours = showDays || timeRemaining.hours > 0;
 		showMinutes = showHours || timeRemaining.minutes > 0;
 		showSeconds = true;
+	}
+
+	function formatToTwoDigits(value: number | string) {
+		return value.toString().padStart(2, "0");
 	}
 </script>
 

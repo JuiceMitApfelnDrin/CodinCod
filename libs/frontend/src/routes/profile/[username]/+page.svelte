@@ -4,9 +4,23 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import ActivityGroup from "@/features/profile/components/activity-feed/activity-group.svelte";
 	import CalendarHeatmap from "@/features/profile/components/calendar-heatmap.svelte";
-	import { groupByCreatedAtDate } from "@/utils/group-activity-by-created-at-date.js";
 	import dayjs from "dayjs";
-	import { isUserDto, type Activity } from "types";
+	import { isUserDto, type Activity, type GroupedActivitiesByDate } from "types";
+
+	function groupByCreatedAtDate(items: Activity[]) {
+		return items.reduce<GroupedActivitiesByDate>((acc, item) => {
+			const dateKey = dayjs(item.createdAt).format("YYYY-MM-DD");
+
+			// Initialize the array for this date if it doesn't exist
+			if (!acc[dateKey]) {
+				acc[dateKey] = [];
+			}
+
+			acc[dateKey].push(item);
+
+			return acc;
+		}, {});
+	}
 
 	export let data;
 

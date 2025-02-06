@@ -21,7 +21,7 @@
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
-	import { getUserIdFromUser, isUserIdInUserList } from "@/utils/get-user-id-from-user";
+	import { getUserIdFromUser } from "@/utils/get-user-id-from-user";
 	import dayjs from "dayjs";
 	// import { EllipsisVertical, FileWarning, Settings } from "lucide-svelte";
 	import { onMount } from "svelte";
@@ -38,8 +38,13 @@
 		webSocketUrls,
 		type GameDto,
 		type PuzzleDto,
-		type SubmissionDto
+		type SubmissionDto,
+		type UserDto
 	} from "types";
+
+	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
+		return players.some((player) => getUserIdFromUser(player) === userId);
+	}
 
 	const gameId = $page.params.id;
 
