@@ -31,6 +31,7 @@
 		GameEventEnum,
 		httpRequestMethod,
 		httpResponseCodes,
+		isAuthor,
 		isString,
 		isSubmissionDto,
 		isUserDto,
@@ -108,16 +109,20 @@
 
 	$: {
 		const now = $currentTime;
-		isGameOver = Boolean(
-			isGameOver ||
-				(endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)) ||
-				game?.playerSubmissions
-					?.filter((submission) => isSubmissionDto(submission))
-					.some(
-						(submission: SubmissionDto) =>
-							getUserIdFromUser(submission.user) === $authenticatedUserInfo?.userId
-					)
-		);
+
+		const gameIsInThePast =
+			endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now);
+
+		const playerHasSubmitted = game.playerSubmissions.some((submission) => {
+			if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
+				return false;
+			}
+
+			const playerId = getUserIdFromUser(submission.user);
+			return isAuthor(playerId, $authenticatedUserInfo?.userId);
+		});
+
+		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
 	}
 
 	const findPlayerSubmission = (playerId: string | undefined) => {
