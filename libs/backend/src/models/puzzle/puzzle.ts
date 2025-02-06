@@ -6,8 +6,8 @@ import validatorSchema from "./validator.js";
 
 export interface PuzzleDocument
 	extends Document,
-		Omit<PuzzleEntity, "authorId" | "solution" | "_id"> {
-	authorId: ObjectId;
+		Omit<PuzzleEntity, "author" | "solution" | "_id"> {
+	author: ObjectId;
 	solution?: ObjectId;
 }
 
@@ -30,7 +30,7 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		type: String
 	},
 	// TODO: rename authorId this to author, since it gets populated most of the time
-	authorId: {
+	author: {
 		ref: USER,
 		required: true, // Ensure every puzzle has an author
 		type: mongoose.Schema.Types.ObjectId

@@ -1,8 +1,8 @@
 import { joinGame } from "./join-game.js";
 import { OpenGames } from "@/types/games.js";
 import { WebSocket } from "@fastify/websocket";
-import { generateRandomObjectIdString } from "@/utils/functions/generate-random-object-id-string.js";
 import { GameEvent } from "types";
+import mongoose from "mongoose";
 
 export function hostGame({
 	userId,
@@ -17,7 +17,7 @@ export function hostGame({
 	userId: string;
 	games: OpenGames;
 }) {
-	const randomId = generateRandomObjectIdString();
+	const randomId = new mongoose.Types.ObjectId().toString();
 
 	games[randomId] = {};
 

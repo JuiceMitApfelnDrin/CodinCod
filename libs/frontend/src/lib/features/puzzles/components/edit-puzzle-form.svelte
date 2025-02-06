@@ -23,7 +23,7 @@
 		resetForm: false,
 		validators: zodClient(
 			puzzleEntitySchema.omit({
-				authorId: true,
+				author: true,
 				createdAt: true,
 				updatedAt: true
 			})

@@ -16,13 +16,13 @@
 		</H1>
 
 		<dl class="flex gap-1 text-xs text-gray-400 dark:text-gray-600 lg:flex-row">
-			{#if isUserDto(puzzle.authorId)}
+			{#if isUserDto(puzzle.author)}
 				<dt class="font-semibold">Created by</dt>
 				<dd>
-					{#if puzzle.authorId._id}
-						<UserHoverCard user={puzzle.authorId} />
+					{#if puzzle.author._id}
+						<UserHoverCard user={puzzle.author} />
 					{:else}
-						{puzzle.authorId.username}
+						{puzzle.author.username}
 					{/if}
 				</dd>
 			{/if}

@@ -16,7 +16,7 @@
 
 	let isPuzzleAuthor = false;
 
-	const puzzleAuthorId = getUserIdFromUser(puzzle.authorId);
+	const puzzleAuthorId = getUserIdFromUser(puzzle.author);
 
 	if ($isAuthenticated && $authenticatedUserInfo != null) {
 		isPuzzleAuthor = isAuthor(puzzleAuthorId, $authenticatedUserInfo.userId);

@@ -21,7 +21,7 @@
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
-	import { getUserIdFromUser, isUserIdInUserList } from "@/utils/get-user-id-from-user";
+	import { getUserIdFromUser } from "@/utils/get-user-id-from-user";
 	import dayjs from "dayjs";
 	// import { EllipsisVertical, FileWarning, Settings } from "lucide-svelte";
 	import { onMount } from "svelte";
@@ -31,6 +31,7 @@
 		GameEventEnum,
 		httpRequestMethod,
 		httpResponseCodes,
+		isAuthor,
 		isString,
 		isSubmissionDto,
 		isUserDto,
@@ -38,8 +39,13 @@
 		webSocketUrls,
 		type GameDto,
 		type PuzzleDto,
-		type SubmissionDto
+		type SubmissionDto,
+		type UserDto
 	} from "types";
+
+	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
+		return players.some((player) => getUserIdFromUser(player) === userId);
+	}
 
 	const gameId = $page.params.id;
 
@@ -103,13 +109,20 @@
 
 	$: {
 		const now = $currentTime;
-		isGameOver = Boolean(
-			isGameOver ||
-				(endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now)) ||
-				game?.playerSubmissions
-					?.filter((submission) => isSubmissionDto(submission))
-					.some((submission: SubmissionDto) => submission.userId === $authenticatedUserInfo?.userId)
-		);
+
+		const gameIsInThePast =
+			endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now);
+
+		const playerHasSubmitted = game.playerSubmissions.some((submission) => {
+			if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
+				return false;
+			}
+
+			const playerId = getUserIdFromUser(submission.user);
+			return isAuthor(playerId, $authenticatedUserInfo?.userId);
+		});
+
+		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
 	}
 
 	const findPlayerSubmission = (playerId: string | undefined) => {
@@ -120,15 +133,8 @@
 		const playerSubmissions: SubmissionDto[] =
 			game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
 
-		return playerSubmissions?.find((submission) => submission.userId === playerId);
+		return playerSubmissions?.find((submission) => getUserIdFromUser(submission.user) === playerId);
 	};
-
-	$: {
-		console.log({
-			game,
-			puzzle
-		});
-	}
 </script>
 
 {#if errorMessage}

@@ -17,7 +17,7 @@ import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 export default async function submissionRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: SubmissionParams }>("/", async (request, reply) => {
 		const parseResult = submissionEntitySchema
-			.pick({ code: true, puzzleId: true })
+			.pick({ code: true, puzzle: true })
 			.safeParse(request.body);
 
 		if (!parseResult.success) {
@@ -97,7 +97,7 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 		try {
 			const submissionData: SubmissionEntity = {
 				...parseResult.data,
-				userId: userId,
+				user: userId,
 				createdAt: new Date(),
 				languageVersion: runtimeInfo.version,
 				result:

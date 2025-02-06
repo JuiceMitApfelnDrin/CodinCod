@@ -35,7 +35,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const { id } = request.params;
-			const parseResult = puzzleEntitySchema.omit({ authorId: true }).safeParse(request.body);
+			const parseResult = puzzleEntitySchema.omit({ author: true }).safeParse(request.body);
 
 			if (!parseResult.success) {
 				return reply.status(400).send({ error: parseResult.error.errors });
@@ -55,7 +55,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					return reply.status(404).send({ error: "Puzzle not found" });
 				}
 
-				if (puzzle.authorId.toString() !== userId) {
+				if (puzzle.author.toString() !== userId) {
 					return reply.status(403).send({ error: "Not authorized to edit this puzzle" });
 				}
 				Object.assign(puzzle, parseResult.data);
@@ -87,7 +87,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					return reply.status(404).send({ error: "Puzzle not found" });
 				}
 
-				const isAuthorOfPuzzle = isAuthor(puzzle.authorId.toString(), userId);
+				const isAuthorOfPuzzle = isAuthor(puzzle.author.toString(), userId);
 				const isNotAuthorOfPuzzle = !isAuthorOfPuzzle;
 
 				if (isNotAuthorOfPuzzle) {
