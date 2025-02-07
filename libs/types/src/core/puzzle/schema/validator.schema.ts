@@ -2,8 +2,8 @@ import { z } from "zod";
 import { pistonExecutionResponseSuccessSchema } from "../../piston/schema/execution-response/execution-success.js";
 
 export const validatorEntitySchema = z.object({
-	input: z.string(),
-	output: z.string(),
+	input: z.string().transform((s) => s.trimEnd()),
+	output: z.string().transform((s) => s.trimEnd()),
 	createdAt: z
 		.date()
 		.default(() => new Date())

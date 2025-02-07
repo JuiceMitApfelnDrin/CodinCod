@@ -77,14 +77,14 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 				}
 
 				if (isPistonExecutionResponseSuccess(response)) {
-					const expectedOutput = request.expectedOutput.trim();
+					const expectedOutput = request.expectedOutput.trimEnd();
 
 					return {
 						response,
 						stdin: request.stdin,
 						isMatch:
-							response.run.output.trim() === expectedOutput ||
-							response.run.stdout.trim() === expectedOutput
+							response.run.output.trimEnd() === expectedOutput ||
+							response.run.stdout.trimEnd() === expectedOutput
 					};
 				}
 
