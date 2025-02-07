@@ -51,9 +51,9 @@
 
 	let isGameOver = false;
 
-	let game: GameDto;
-	let puzzle: PuzzleDto;
-	let errorMessage: string;
+	let game: GameDto | undefined;
+	let puzzle: PuzzleDto | undefined;
+	let errorMessage: string | undefined;
 
 	let socket: WebSocket;
 	onMount(() => {
@@ -104,7 +104,7 @@
 		);
 	}
 
-	let endDate: Date;
+	let endDate: Date | undefined;
 	$: endDate = game && dayjs(game.endTime).toDate();
 
 	$: {
@@ -113,7 +113,7 @@
 		const gameIsInThePast =
 			endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now);
 
-		const playerHasSubmitted = game.playerSubmissions.some((submission) => {
+		const playerHasSubmitted = game?.playerSubmissions.some((submission) => {
 			if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
 				return false;
 			}
