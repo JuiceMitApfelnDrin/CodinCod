@@ -30,8 +30,8 @@ export default async function userByUsernameActivityRoutes(fastify: FastifyInsta
 			const userId = user._id;
 
 			const [puzzlesByUser, submissionsByUser] = await Promise.all([
-				Puzzle.find({ authorId: userId }),
-				Submission.find({ userId: userId })
+				Puzzle.find({ author: userId }),
+				Submission.find({ user: userId })
 			]);
 
 			return reply.status(200).send({

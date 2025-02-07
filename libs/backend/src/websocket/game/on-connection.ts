@@ -33,7 +33,7 @@ export async function onConnection({
 		.populate({
 			path: "playerSubmissions",
 			populate: {
-				path: "userId"
+				path: "user"
 			}
 		})
 		.exec();

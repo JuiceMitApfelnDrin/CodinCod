@@ -25,7 +25,7 @@ export async function updatePlayersOnGameState({
 		.populate({
 			path: "playerSubmissions",
 			populate: {
-				path: "userId"
+				path: "user"
 			}
 		})
 		.exec();

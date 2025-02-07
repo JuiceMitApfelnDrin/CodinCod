@@ -12,11 +12,6 @@
 	import { onMount } from "svelte";
 	import { buildFrontendUrl, frontendUrls, GameEventEnum, isAuthor, webSocketUrls } from "types";
 
-	function isCreator(authorId: any, currentUserId: string): boolean {
-		// for now the logic if it is a creator or author is identical, maybe could be renamed to isOwner later
-		return isAuthor(authorId, currentUserId);
-	}
-
 	let game:
 		| {
 				users: { username: string; userId: string; joinedAt: Date }[];
@@ -156,7 +151,7 @@
 						leave game
 					</Button>
 
-					{#if $authenticatedUserInfo?.userId && isCreator(game?.creator.userId, $authenticatedUserInfo?.userId)}
+					{#if $authenticatedUserInfo?.userId && isAuthor(game?.creator.userId, $authenticatedUserInfo?.userId)}
 						<Button
 							on:click={() => {
 								socket.send(
@@ -196,7 +191,7 @@
 				<ul>
 					{#each game.users as user}
 						<li class="list-inside list-disc">
-							{user.username}{#if isCreator(game.creator.userId, user.userId)}
+							{user.username}{#if isAuthor(game.creator.userId, user.userId)}
 								{` - Creator/host!`}{/if}
 						</li>
 					{/each}
