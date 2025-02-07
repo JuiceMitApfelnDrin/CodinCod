@@ -209,15 +209,11 @@
 							<div class="lg:flex">
 								<div class="space-y-2 lg:w-1/2">
 									<h3 class="text-lg font-semibold">Input</h3>
-									<pre>
-									{validator.input.trim()}
-								</pre>
+									<pre>{validator.input.trim()}</pre>
 								</div>
 								<div class="space-y-2 lg:w-1/2">
 									<h3 class="text-lg font-semibold">Expected output</h3>
-									<pre>
-									{validator.output}
-								</pre>
+									<pre>{validator.output}</pre>
 								</div>
 							</div>
 
@@ -254,10 +250,6 @@
 {/if}
 
 <style lang="postcss">
-	pre {
-		@apply whitespace-pre-line;
-	}
-
 	h2 {
 		@apply inline text-xl underline;
 	}
