@@ -185,13 +185,15 @@
 		</Form.Field>
 	</Form.Fieldset>
 
-	<GenericAlert
-		title={isHttpErrorCode($page.status)
-			? "Error whilst trying to updating the puzzle"
-			: "Updated the puzzle"}
-		status={$page.status}
-		message={$message}
-	/>
+	{#if $message}
+		<GenericAlert
+			title={isHttpErrorCode($page.status)
+				? "Error whilst trying to updating the puzzle"
+				: "Updated the puzzle"}
+			status={$page.status}
+			message={$message}
+		/>
+	{/if}
 
 	<Form.Button>Update Puzzle</Form.Button>
 </form>

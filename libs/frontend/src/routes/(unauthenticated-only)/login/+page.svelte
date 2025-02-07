@@ -5,9 +5,10 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import LoginForm from "@/features/authentication/login/components/login-form.svelte";
 	import { frontendUrls } from "types";
+	import type { ActionData, PageData } from "./$types";
 
-	export let data;
-	const { form: formData } = data;
+	export let data: PageData;
+	export let form: ActionData;
 </script>
 
 <Container class="items-center justify-center">
@@ -18,7 +19,7 @@
 		</Card.Header>
 
 		<Card.Content>
-			<LoginForm data={formData}></LoginForm>
+			<LoginForm message={form?.message} data={data.form}></LoginForm>
 		</Card.Content>
 
 		<Card.Footer>

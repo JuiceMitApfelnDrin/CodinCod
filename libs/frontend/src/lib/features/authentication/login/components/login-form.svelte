@@ -4,18 +4,19 @@
 	import { Input } from "@/components/ui/input";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import { type Login, loginSchema, PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
+	import { loginSchema, PASSWORD_CONFIG, POST, USERNAME_CONFIG, type Login } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
 
 	export let data: SuperValidated<Login>;
+	export let message: string | undefined;
 
-	const form = superForm(data.data, {
+	const form = superForm(data, {
 		validators: zodClient(loginSchema)
 	});
 
-	const { enhance, form: formData, message, validateForm } = form;
+	const { enhance, form: formData, validateForm } = form;
 
 	const handleFormInput = debounce(async () => {
 		await validateForm({ update: false });
@@ -55,11 +56,13 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<GenericAlert
-		title={isHttpErrorCode($page.status) ? "Unable to log-in" : "Login successful"}
-		status={$page.status}
-		message={$message}
-	/>
+	{#if message}
+		<GenericAlert
+			title={isHttpErrorCode($page.status) ? "Unable to log-in" : "Login successful"}
+			status={$page.status}
+			{message}
+		/>
+	{/if}
 
 	<Form.Button>Login</Form.Button>
 </form>
