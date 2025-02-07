@@ -10,7 +10,7 @@ export default async function mongooseConnector(fastify: FastifyInstance) {
 	}
 
 	try {
-		await mongoose.connect(uri, { dbName: dbName });
+		await mongoose.connect(uri, { dbName: dbName ?? "codincod" });
 		mongoose.connection.on("connected", () => {
 			fastify.log.info({ actor: "MongoDB" }, "connected");
 		});
