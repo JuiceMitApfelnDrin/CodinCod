@@ -2,8 +2,6 @@
 	import CodeMirror from "svelte-codemirror-editor";
 	import { javascript } from "@codemirror/lang-javascript";
 	import { python } from "@codemirror/lang-python";
-	// import { html } from "@codemirror/lang-html";
-	// import { css } from "@codemirror/lang-css";
 	import { oneDark } from "@codemirror/theme-one-dark";
 	import { type PuzzleLanguage } from "types";
 
@@ -39,5 +37,5 @@
 		},
 		".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
 	}}
-	class="codemirror-default-height"
+	class="h-[35vh] min-h-[300px]"
 />

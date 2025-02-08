@@ -19,6 +19,7 @@ export const backendUrls = {
 	HEALTH: `${baseRoute}/health`,
 	VALIDATOR: `${baseRoute}/validator`,
 	SUBMISSION: `${baseRoute}/submission`,
+	SUBMISSION_BY_ID: `${baseRoute}/submission/:id`,
 	SUBMISSION_GAME: `${baseRoute}/submission/game`,
 	REPORT: `${baseRoute}/report`
 } as const;
