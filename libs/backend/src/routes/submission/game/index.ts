@@ -1,8 +1,12 @@
 import { FastifyInstance } from "fastify";
 import {
 	GameSubmissionParams,
+	getUserIdFromUser,
 	httpResponseCodes,
+	isAuthor,
+	isString,
 	SUBMISSION_BUFFER_IN_MILLISECONDS,
+	SubmissionDto,
 	SubmissionEntity
 } from "types";
 import { isValidationError } from "../../../utils/functions/is-validation-error.js";
@@ -40,6 +44,20 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 				return reply
 					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
 					.send({ error: `game with id (${gameId}) already finished` });
+			}
+
+			const gameHasExistingUserSubmission = matchingGame.playerSubmissions.find((submission) => {
+				if (isString(submission)) {
+					return false;
+				}
+
+				return isAuthor(getUserIdFromUser(submission.user), userId);
+			});
+
+			if (gameHasExistingUserSubmission) {
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+					.send({ error: `game with id (${gameId}) has a game from user with id (${userId})` });
 			}
 
 			const uniquePlayerSubmissions = new Set([

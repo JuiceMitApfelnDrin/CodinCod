@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
-	import { buildFrontendUrl, frontendUrls, isAuthor, type PuzzleDto } from "types";
+	import {
+		buildFrontendUrl,
+		frontendUrls,
+		getUserIdFromUser,
+		isAuthor,
+		type PuzzleDto
+	} from "types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/index.js";
 	import Button from "@/components/ui/button/button.svelte";
 	import Accordion from "@/components/ui/accordion/accordion.svelte";
@@ -9,7 +15,6 @@
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Markdown from "@/components/typography/markdown.svelte";
-	import { getUserIdFromUser } from "@/utils/get-user-id-from-user.js";
 
 	export let data;
 

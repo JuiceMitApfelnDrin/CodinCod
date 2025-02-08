@@ -21,7 +21,6 @@
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
-	import { getUserIdFromUser } from "@/utils/get-user-id-from-user";
 	import dayjs from "dayjs";
 	// import { EllipsisVertical, FileWarning, Settings } from "lucide-svelte";
 	import { onMount } from "svelte";
@@ -41,7 +40,10 @@
 		type PuzzleDto,
 		type SubmissionDto,
 		type UserDto,
-		type GameSubmissionParams
+		type GameSubmissionParams,
+
+		getUserIdFromUser
+
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {

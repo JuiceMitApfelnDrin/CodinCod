@@ -1,4 +1,5 @@
-import { isString, type UserDto } from "types";
+import { UserDto } from "../../core/user/schema/user-dto.schema.js";
+import { isString } from "./is-string.js";
 
 export function getUserIdFromUser(user: UserDto | string) {
 	if (isString(user)) {

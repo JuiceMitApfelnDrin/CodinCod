@@ -95,7 +95,8 @@ export * from "./utils/constants/http-methods.js";
 
 // utils - functions
 export * from "./utils/functions/build-frontend-url.js";
-export * from "./utils/functions/getValues.js";
+export * from "./utils/functions/get-values.js";
+export * from "./utils/functions/get-user-id-from-user.js";
 export * from "./utils/functions/is-author.js";
 export * from "./utils/functions/is-email.js";
 export * from "./utils/functions/is-string.js";

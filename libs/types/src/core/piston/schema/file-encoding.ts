@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { PistonFileEncodingEnum } from "../enum/piston-file-encoding-enum.js";
-import { getValues } from "../../../utils/functions/getValues.js";
+import { getValues } from "../../../utils/functions/get-values.js";
 
 const pistonFileEncoding = z.enum(getValues(PistonFileEncodingEnum));
 export type PistonFileEncoding = z.infer<typeof pistonFileEncoding>;

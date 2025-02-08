@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getValues } from "../../../utils/functions/getValues.js";
+import { getValues } from "../../../utils/functions/get-values.js";
 import { PuzzleResultEnum } from "../../puzzle/enum/puzzle-result-enum.js";
 
 // TODO: find a better name for this schema
