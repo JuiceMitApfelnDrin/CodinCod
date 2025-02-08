@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ProblemTypeEnum } from "../enum/problem-type-enum.js";
 import { REPORT_CONFIG } from "../config/report-config.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 /**
  * @property {string} problematicIdentifier - The ID of the user or puzzle that is being reported. This field identifies which entity is problematic.
@@ -29,7 +30,7 @@ import { REPORT_CONFIG } from "../config/report-config.js";
 export const reportSchema = z.object({
 	problematicIdentifier: z.string(),
 	problemType: z.enum([ProblemTypeEnum.PUZZLE, ProblemTypeEnum.USER]),
-	userId: z.string(),
+	userId: objectIdSchema,
 	explanation: z
 		.string()
 		.min(REPORT_CONFIG.minLengthExplanation)

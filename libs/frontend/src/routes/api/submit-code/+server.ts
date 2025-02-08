@@ -3,7 +3,7 @@ import type { RequestEvent } from "./$types";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { buildBackendUrl } from "@/config/backend";
 
-export async function POST({ cookies, request }: RequestEvent) {
+export async function POST({ request }: RequestEvent) {
 	const body = await request.text();
 
 	const result = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION), {

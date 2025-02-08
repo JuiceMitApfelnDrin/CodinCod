@@ -5,6 +5,7 @@
 		isSubmissionDto,
 		type PuzzleDto,
 		type PuzzleLanguage,
+		type CodeSubmissionParams,
 		type ValidatorEntity
 	} from "types";
 	import * as Select from "$lib/components/ui/select";
@@ -78,13 +79,15 @@
 			return;
 		}
 
+		const submissionParams: CodeSubmissionParams = {
+			code,
+			language,
+			puzzleId,
+			userId: $authenticatedUserInfo.userId
+		};
+
 		const response = await fetch(buildApiUrl(apiUrls.SUBMIT_CODE), {
-			body: JSON.stringify({
-				code,
-				language,
-				puzzleId,
-				userId: $authenticatedUserInfo.userId
-			}),
+			body: JSON.stringify(submissionParams),
 			method: httpRequestMethod.POST
 		});
 

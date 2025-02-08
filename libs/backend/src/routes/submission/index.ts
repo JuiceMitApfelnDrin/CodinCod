@@ -6,8 +6,8 @@ import {
 	PistonExecutionResponse,
 	PuzzleResultEnum,
 	SubmissionEntity,
-	submissionEntitySchema,
-	SubmissionParams
+	CodeSubmissionParams,
+	codeSubmissionParamsSchema
 } from "types";
 import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
@@ -15,10 +15,8 @@ import { isValidationError } from "../../utils/functions/is-validation-error.js"
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: SubmissionParams }>("/", async (request, reply) => {
-		const parseResult = submissionEntitySchema
-			.pick({ code: true, puzzle: true })
-			.safeParse(request.body);
+	fastify.post<{ Body: CodeSubmissionParams }>("/", async (request, reply) => {
+		const parseResult = codeSubmissionParamsSchema.safeParse(request.body);
 
 		if (!parseResult.success) {
 			return reply.status(400).send({ error: parseResult.error.errors });
@@ -96,7 +94,8 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 		try {
 			const submissionData: SubmissionEntity = {
-				...parseResult.data,
+				code: code,
+				puzzle: puzzleId,
 				user: userId,
 				createdAt: new Date(),
 				languageVersion: runtimeInfo.version,
@@ -112,7 +111,7 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 			return reply.status(201).send(submission);
 		} catch (error) {
-			request.log.error("Error saving submission:", error);
+			fastify.log.error("Error saving submission:", error);
 
 			if (isValidationError(error)) {
 				return reply.status(400).send({ error: "Validation failed", details: error.errors });

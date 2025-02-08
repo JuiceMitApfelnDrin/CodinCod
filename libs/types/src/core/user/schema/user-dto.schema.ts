@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { userEntitySchema } from "./user-entity.schema.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 const baseUserDtoSchema = userEntitySchema.pick({
 	username: true,
@@ -8,7 +9,7 @@ const baseUserDtoSchema = userEntitySchema.pick({
 });
 
 export const userDtoSchema = baseUserDtoSchema.extend({
-	_id: z.string().optional()
+	_id: objectIdSchema.optional()
 });
 
 export type UserDto = z.infer<typeof userDtoSchema>;
