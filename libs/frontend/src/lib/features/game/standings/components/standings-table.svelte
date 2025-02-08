@@ -28,6 +28,7 @@
 						<Table.Cell>{user.username}</Table.Cell>
 						<Table.Cell>{language}</Table.Cell>
 						<Table.Cell>
+							<!-- todo: make this more readable for screen readers somehow -->
 							{dayjs.duration(dayjs(createdAt).diff(game.startTime)).format("HH:mm:ss")}
 						</Table.Cell>
 						<Table.Cell>{result}</Table.Cell>
