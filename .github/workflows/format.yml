@@ -2,6 +2,10 @@ name: Format
 
 on: push
 
+concurrency:
+  group: ci-${{ github.ref }}-formatting
+  cancel-in-progress: true
+
 jobs:
   format-code:
     runs-on: ubuntu-latest
@@ -27,12 +31,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install packages
         run: pnpm i
 
       - name: Format code
         run: pnpm format
-  
+
       - uses: stefanzweifel/git-auto-commit-action@v5
