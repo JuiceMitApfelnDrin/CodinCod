@@ -1,0 +1,1193 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "install": {
+      "curl": {
+        "pkg-path": "curl"
+      },
+      "docker": {
+        "pkg-path": "docker"
+      },
+      "jq": {
+        "pkg-path": "jq"
+      },
+      "just": {
+        "pkg-path": "just"
+      },
+      "mongodb-ce": {
+        "pkg-path": "mongodb-ce",
+        "version": "8.0.4"
+      },
+      "mongosh": {
+        "pkg-path": "mongosh"
+      },
+      "nodejs": {
+        "pkg-path": "nodejs"
+      },
+      "pnpm": {
+        "pkg-path": "pnpm_8"
+      },
+      "uv": {
+        "pkg-path": "uv"
+      }
+    },
+    "vars": {
+      "FASTIFY_HOST": "127.0.0.1",
+      "FASTIFY_PORT": "8888",
+      "FRONTEND_HOST": "127.0.0.1",
+      "FRONTEND_PORT": "5175",
+      "JWT_EXPIRY": "7d",
+      "JWT_SECRET": "your_jwt_secret_here",
+      "MONGO_DATA_DIRECTORY": "./data/db",
+      "MONGO_DB_NAME": "codincod-dev",
+      "MONGO_HOST": "127.0.0.1",
+      "MONGO_PORT": "27017",
+      "MONGO_URI": "mongodb://127.0.0.1:27017/codincod",
+      "NODE_ENV": "development",
+      "ORIGIN": "http://127.0.0.1:5173",
+      "PISTON_URI": "http://localhost:2000",
+      "VITE_BACKEND_URL": "http://127.0.0.1:8888",
+      "VITE_BACKEND_WEBSOCKET_MULTIPLAYER": "ws://127.0.0.1:8888"
+    },
+    "hook": {
+      "on-activate": "  mkdir -p $MONGO_DATA_DIRECTORY\n  echo \"MongoDB data: $MONGO_DATA_DIRECTORY/\"\n  echo \"Backend:  http://$FASTIFY_HOST:$FASTIFY_PORT\"\n  echo \"Frontend: http://$FRONTEND_HOST:$FRONTEND_PORT\"\n"
+    },
+    "profile": {
+      "fish": "  abbr -a -- fs 'flox services'\n  abbr -a -- fsl 'flox services logs'\n  abbr -a -- fss 'flox services status'\n"
+    },
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux",
+        "x86_64-darwin",
+        "x86_64-linux"
+      ],
+      "allow": {
+        "licenses": []
+      },
+      "semver": {}
+    },
+    "services": {
+      "devbackend": {
+        "command": "pnpm run --dir ./libs/backend dev"
+      },
+      "devfrontend": {
+        "command": "pnpm run --dir ./libs/frontend dev --host $FRONTEND_HOST --port $FRONTEND_PORT"
+      },
+      "devtypes": {
+        "command": "pnpm run --dir ./libs/types dev"
+      },
+      "mongodb": {
+        "command": "mongod --dbpath $MONGO_DATA_DIRECTORY --bind_ip $MONGO_HOST --port $MONGO_PORT"
+      },
+      "piston": {
+        "command": "docker-compose up piston"
+      }
+    }
+  },
+  "packages": [
+    {
+      "attr_path": "curl",
+      "broken": false,
+      "derivation": "/nix/store/1lgnzh1yajsvp07q1ylim8l4pf4xnpmh-curl-8.11.1.drv",
+      "description": "Command line tool for transferring files with URL syntax",
+      "install_id": "curl",
+      "license": "curl",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "curl-8.11.1",
+      "pname": "curl",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "8.11.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/4wb2gw5y4d1s9lmll744k7mdkgza1mz1-curl-8.11.1-bin",
+        "dev": "/nix/store/2qfdjp13bid9g5axp74q1sas73wk4kmv-curl-8.11.1-dev",
+        "devdoc": "/nix/store/l88q3phl5gvv848slpzp9j5kl3gb7qi2-curl-8.11.1-devdoc",
+        "man": "/nix/store/02mrnrg0mqps1x6sqaw5dp79gcr010rh-curl-8.11.1-man",
+        "out": "/nix/store/bqkra3fwg9jn301gi14gcizpyrmxqb20-curl-8.11.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "curl",
+      "broken": false,
+      "derivation": "/nix/store/k2yxygprsm0z17gxgc68rqr32mipsv1n-curl-8.11.1.drv",
+      "description": "Command line tool for transferring files with URL syntax",
+      "install_id": "curl",
+      "license": "curl",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "curl-8.11.1",
+      "pname": "curl",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "8.11.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/b4bfdh987ankyl4dl8hyqka0icbm7ch5-curl-8.11.1-bin",
+        "debug": "/nix/store/3nxwcrw2nz4psxfa298gz2rvxcxkgwrj-curl-8.11.1-debug",
+        "dev": "/nix/store/hmrxq7fax0jb25f0p6v77c9idl369wf3-curl-8.11.1-dev",
+        "devdoc": "/nix/store/xhyfvy56bpwk2xg0sjy0a72p86dbzzny-curl-8.11.1-devdoc",
+        "man": "/nix/store/cz541skcfa3sv96d7fgfl72jln28ai55-curl-8.11.1-man",
+        "out": "/nix/store/5nr2v31bm8zdxky9jci5m7kjqc5dqjvz-curl-8.11.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "curl",
+      "broken": false,
+      "derivation": "/nix/store/y5im64kq79xdsgb6sd5wy4qymzxh10fg-curl-8.11.1.drv",
+      "description": "Command line tool for transferring files with URL syntax",
+      "install_id": "curl",
+      "license": "curl",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "curl-8.11.1",
+      "pname": "curl",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "8.11.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/778ny8fq90spak0p7gwlfa78dxqj4x0s-curl-8.11.1-bin",
+        "dev": "/nix/store/j43v0gxd8n29mlm9v79fnwcnshc73kyg-curl-8.11.1-dev",
+        "devdoc": "/nix/store/mq7bgy6r8bjjj450b63p1l68k1pmr7lp-curl-8.11.1-devdoc",
+        "man": "/nix/store/w8wfvgpmpiyvmyn94x34bs2sl7w66iqk-curl-8.11.1-man",
+        "out": "/nix/store/05i854l3qagyd129f1fzg5ybz5fbs8lb-curl-8.11.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "curl",
+      "broken": false,
+      "derivation": "/nix/store/vb5xh6jx4if2zcx83zazn08045z6321r-curl-8.11.1.drv",
+      "description": "Command line tool for transferring files with URL syntax",
+      "install_id": "curl",
+      "license": "curl",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "curl-8.11.1",
+      "pname": "curl",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "8.11.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/wzlmn9jq15pbw61nmqcy5nnwv6dhpq09-curl-8.11.1-bin",
+        "debug": "/nix/store/nidhaw2lykjd4svj0xhh0a7p492r3n05-curl-8.11.1-debug",
+        "dev": "/nix/store/azfhp07yysbxvdhm78n43cjiwh1lb111-curl-8.11.1-dev",
+        "devdoc": "/nix/store/fb5dprl6p0rk1hv76wrg695yh2dzhrhv-curl-8.11.1-devdoc",
+        "man": "/nix/store/qabwv9rmysj9q6pxv9f85zavmw26y9dx-curl-8.11.1-man",
+        "out": "/nix/store/gj70mjxd5zy310wq81znzr73rx6badsl-curl-8.11.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "docker",
+      "broken": false,
+      "derivation": "/nix/store/v8w06cj9g4y0rxz7xcwfzmx6px51dlx7-docker-27.5.1.drv",
+      "description": "Open source project to pack, ship and run any application as a lightweight container",
+      "install_id": "docker",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "docker-27.5.1",
+      "pname": "docker",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "27.5.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/11c4wdv8m1pxrg6ymd5pwq6zw326wskk-docker-27.5.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "docker",
+      "broken": false,
+      "derivation": "/nix/store/s4ahymp0i7sl1abchvr07f69n6mfpjwk-docker-27.5.1.drv",
+      "description": "Open source project to pack, ship and run any application as a lightweight container",
+      "install_id": "docker",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "docker-27.5.1",
+      "pname": "docker",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "27.5.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/ksmj926px4bm84klmvmq10zi5dhdv57i-docker-27.5.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "docker",
+      "broken": false,
+      "derivation": "/nix/store/wa6fd0j5rkyvsnswij5g8f6gb00h4lds-docker-27.5.1.drv",
+      "description": "Open source project to pack, ship and run any application as a lightweight container",
+      "install_id": "docker",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "docker-27.5.1",
+      "pname": "docker",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "27.5.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/jdpzzccq8a9rajiqgjz58snjvbpg784m-docker-27.5.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "docker",
+      "broken": false,
+      "derivation": "/nix/store/3rgyia8n4r4pil840dcnp7fr9zkdg85j-docker-27.5.1.drv",
+      "description": "Open source project to pack, ship and run any application as a lightweight container",
+      "install_id": "docker",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "docker-27.5.1",
+      "pname": "docker",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "27.5.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/jnzrrks201f2abb205zs0n5dddj7az9r-docker-27.5.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "jq",
+      "broken": false,
+      "derivation": "/nix/store/0icmkwm3bm0bv72pcl6mfykxlk1z2l78-jq-1.7.1.drv",
+      "description": "Lightweight and flexible command-line JSON processor",
+      "install_id": "jq",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "jq-1.7.1",
+      "pname": "jq",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.7.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/ri8k487849v9b290iz384pi1lgw7n585-jq-1.7.1-bin",
+        "dev": "/nix/store/n7880d10c16s05bzg4xh4ak9j7fz9440-jq-1.7.1-dev",
+        "doc": "/nix/store/axim640z0z67x48qr8nq79qph5j3vj05-jq-1.7.1-doc",
+        "man": "/nix/store/l9nf6sjs9hyvjfkmm9njw00mmvh88f6n-jq-1.7.1-man",
+        "out": "/nix/store/sj86jzxi9p5pipih6fx7sw9pw6j54qbl-jq-1.7.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "jq",
+      "broken": false,
+      "derivation": "/nix/store/q9bpdclrmni47700722xgsrssychynb0-jq-1.7.1.drv",
+      "description": "Lightweight and flexible command-line JSON processor",
+      "install_id": "jq",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "jq-1.7.1",
+      "pname": "jq",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.7.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/z5vhfsyh4yh7f018q036q260h363a56w-jq-1.7.1-bin",
+        "dev": "/nix/store/6xqw0a045m2s6kg7bdx8f0y88x55iw18-jq-1.7.1-dev",
+        "doc": "/nix/store/7120g78wnwvhsazmd65g3v6hkn7fijj6-jq-1.7.1-doc",
+        "man": "/nix/store/hvb2dfhc1k02abmai7n3bxi2w7i85k3q-jq-1.7.1-man",
+        "out": "/nix/store/qky6im9rkx32bkngy05lgf2j2mhc9sa1-jq-1.7.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "jq",
+      "broken": false,
+      "derivation": "/nix/store/lzgq697l385dpm24wsjkngfidf9fbv47-jq-1.7.1.drv",
+      "description": "Lightweight and flexible command-line JSON processor",
+      "install_id": "jq",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "jq-1.7.1",
+      "pname": "jq",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.7.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/1g73qfq41vldzhaxz82f9dbw3pvsgr5g-jq-1.7.1-bin",
+        "dev": "/nix/store/xfa0x8yf8nqka5fjvknmwnbgsixx0rqf-jq-1.7.1-dev",
+        "doc": "/nix/store/3d3vbk2iwg3c2kgbmmr6r6707xkszhy4-jq-1.7.1-doc",
+        "man": "/nix/store/l9jl6mn6f7z8ki4wg4zqa28l3222wbdb-jq-1.7.1-man",
+        "out": "/nix/store/03q69wc4wg57w1i5bapd0671a8wimfhf-jq-1.7.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "jq",
+      "broken": false,
+      "derivation": "/nix/store/nvc0cv26k3bd8585czd34rx7cqq3mbzw-jq-1.7.1.drv",
+      "description": "Lightweight and flexible command-line JSON processor",
+      "install_id": "jq",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "jq-1.7.1",
+      "pname": "jq",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.7.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/69msxmwsxfbxx8mzigzrfppgz6qk1sx8-jq-1.7.1-bin",
+        "dev": "/nix/store/135pr45fck6iqk1mym8rlb9hz0vxn2cj-jq-1.7.1-dev",
+        "doc": "/nix/store/bnzrjq3bpagqhd55mz09i8lx6l2qzwq4-jq-1.7.1-doc",
+        "man": "/nix/store/0j2mhyyc4rp63wlqip4n9j356nlcqznv-jq-1.7.1-man",
+        "out": "/nix/store/rxy1z6zcwgrj59gn91r561s3dj0xgjqg-jq-1.7.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "just",
+      "broken": false,
+      "derivation": "/nix/store/v7jqq5hl2cabw29r25a3g2757n82qcyn-just-1.39.0.drv",
+      "description": "Handy way to save and run project-specific commands",
+      "install_id": "just",
+      "license": "CC0-1.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "just-1.39.0",
+      "pname": "just",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.39.0",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/vysi0rsapljs8nm13qd1q1m8x0rd1p70-just-1.39.0-doc",
+        "man": "/nix/store/pw81j3fwbq1agy0ai1cqzqffjbjffjm2-just-1.39.0-man",
+        "out": "/nix/store/p0008v5xghjbvinj1cb0drlpa3ljgwps-just-1.39.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "just",
+      "broken": false,
+      "derivation": "/nix/store/k2bwch0g6z46554lk545h61g8cg4q41g-just-1.39.0.drv",
+      "description": "Handy way to save and run project-specific commands",
+      "install_id": "just",
+      "license": "CC0-1.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "just-1.39.0",
+      "pname": "just",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.39.0",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/3i3dk8bjyz4q9wawm1dkv1vk0sl7gbzj-just-1.39.0-doc",
+        "man": "/nix/store/ji62wi00zgj4vrpwywkdl8kwykv19i6n-just-1.39.0-man",
+        "out": "/nix/store/k9586qna4zpwhnsn76x2p7g6nm0vhgbv-just-1.39.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "just",
+      "broken": false,
+      "derivation": "/nix/store/28b5rbi2ywh3ss9b24v336rkfsdzv49x-just-1.39.0.drv",
+      "description": "Handy way to save and run project-specific commands",
+      "install_id": "just",
+      "license": "CC0-1.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "just-1.39.0",
+      "pname": "just",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.39.0",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/rlv196k7vyi2g9gb0g0dbg34xh27nppg-just-1.39.0-doc",
+        "man": "/nix/store/06ppryxxfnzklbxka8ycz8cabbklscpr-just-1.39.0-man",
+        "out": "/nix/store/s4w13zxwnly9z9j499fypx7kx7iffzfq-just-1.39.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "just",
+      "broken": false,
+      "derivation": "/nix/store/3i0q9avxqj8mfffxx34bscq2fx7mimi3-just-1.39.0.drv",
+      "description": "Handy way to save and run project-specific commands",
+      "install_id": "just",
+      "license": "CC0-1.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "just-1.39.0",
+      "pname": "just",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.39.0",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/bnxwbxb6mlyi0x8xfgh05j82w5z2szaw-just-1.39.0-doc",
+        "man": "/nix/store/fsn8pwjpszqywx364njl1bx6zk5rgrhd-just-1.39.0-man",
+        "out": "/nix/store/vnyj5n5pgljwmwb9a4938hhry4w4fylk-just-1.39.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongodb-ce",
+      "broken": false,
+      "derivation": "/nix/store/azr2q3rywhxrc1ddpdjgyqn9wj6fzf8g-mongodb-ce-8.0.4.drv",
+      "description": "MongoDB is a general purpose, document-based, distributed database.",
+      "install_id": "mongodb-ce",
+      "license": "[ Server Side Public License ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongodb-ce-8.0.4",
+      "pname": "mongodb-ce",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": true,
+      "version": "8.0.4",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/m754km7333bwlz4a7ghhh3kh25dk7rcy-mongodb-ce-8.0.4"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongodb-ce",
+      "broken": false,
+      "derivation": "/nix/store/kl6hx9jg2087lwhx9rbrr7zqha4hfq1x-mongodb-ce-8.0.4.drv",
+      "description": "MongoDB is a general purpose, document-based, distributed database.",
+      "install_id": "mongodb-ce",
+      "license": "[ Server Side Public License ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongodb-ce-8.0.4",
+      "pname": "mongodb-ce",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": true,
+      "version": "8.0.4",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/x75mkj8ydzhz3rfgqs8zd1jxjikp08fa-mongodb-ce-8.0.4"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongodb-ce",
+      "broken": false,
+      "derivation": "/nix/store/jqpq7bqnw8ibihz33di11izay52zyakd-mongodb-ce-8.0.4.drv",
+      "description": "MongoDB is a general purpose, document-based, distributed database.",
+      "install_id": "mongodb-ce",
+      "license": "[ Server Side Public License ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongodb-ce-8.0.4",
+      "pname": "mongodb-ce",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": true,
+      "version": "8.0.4",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/a22vpmhzs7zxcpwlfvgzb548k30lcnpc-mongodb-ce-8.0.4"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongodb-ce",
+      "broken": false,
+      "derivation": "/nix/store/64p3hikc8d4fzb67xiy2nhbnr7shvibp-mongodb-ce-8.0.4.drv",
+      "description": "MongoDB is a general purpose, document-based, distributed database.",
+      "install_id": "mongodb-ce",
+      "license": "[ Server Side Public License ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongodb-ce-8.0.4",
+      "pname": "mongodb-ce",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": true,
+      "version": "8.0.4",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/z8v9nh1qa8dxjjv12i9mxmbhfivjxlys-mongodb-ce-8.0.4"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongosh",
+      "broken": false,
+      "derivation": "/nix/store/ghj5x0b3c90sp1s9sm917birchzliimx-mongosh-2.3.8.drv",
+      "description": "MongoDB Shell",
+      "install_id": "mongosh",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongosh-2.3.8",
+      "pname": "mongosh",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.3.8",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/z2fhsm982r1a122f0191cdxlvdfhdx8g-mongosh-2.3.8"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongosh",
+      "broken": false,
+      "derivation": "/nix/store/pmvd1jpwkqkz9wf16yiqvm7ki86agnma-mongosh-2.3.8.drv",
+      "description": "MongoDB Shell",
+      "install_id": "mongosh",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongosh-2.3.8",
+      "pname": "mongosh",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.3.8",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/wv3w76aqzfa9h9k461qnl1rcfqq5xxgb-mongosh-2.3.8"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongosh",
+      "broken": false,
+      "derivation": "/nix/store/gz85vpkcnnl74hhi7dfwwa7z30l2m9hh-mongosh-2.3.8.drv",
+      "description": "MongoDB Shell",
+      "install_id": "mongosh",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongosh-2.3.8",
+      "pname": "mongosh",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.3.8",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/mz0vns1n7zanscq9y29dinw1qj2f1gyb-mongosh-2.3.8"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "mongosh",
+      "broken": false,
+      "derivation": "/nix/store/9jy8106ya1a5rnlzz2sdy7fk2csjgs36-mongosh-2.3.8.drv",
+      "description": "MongoDB Shell",
+      "install_id": "mongosh",
+      "license": "Apache-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "mongosh-2.3.8",
+      "pname": "mongosh",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.3.8",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/n2090xmp7q2lv6i81jkblq1sb6wx898m-mongosh-2.3.8"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/3d63jxlp8q5k9j578l8y8kv66063id4i-nodejs-22.12.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "nodejs-22.12.0",
+      "pname": "nodejs",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.12.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "libv8": "/nix/store/hvpmcjbmsyknlpjjd7a8na891fv4a81i-nodejs-22.12.0-libv8",
+        "out": "/nix/store/ygk01vha6k5zxgn9rsxi3k6cm2kbnwsc-nodejs-22.12.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/4ikgm8yyp8zyylpfjkndmswphbps4kq4-nodejs-22.12.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "nodejs-22.12.0",
+      "pname": "nodejs",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.12.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "libv8": "/nix/store/48is8354i9qwj194id0ncczkvzvfqhim-nodejs-22.12.0-libv8",
+        "out": "/nix/store/jdgrvyf5l99rzjayicxjw7i6p98r0rlb-nodejs-22.12.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/8781n36mwvzx5d4mncvgf09pqlgx7gx3-nodejs-22.12.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "nodejs-22.12.0",
+      "pname": "nodejs",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.12.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "libv8": "/nix/store/gvys8kz8pdw62ch2x7k25rrmcw3mqnrw-nodejs-22.12.0-libv8",
+        "out": "/nix/store/6fnlali5gqihxs02adk1bdzjsya9cacp-nodejs-22.12.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/a73rv2rzsy47phyhbdnlnycpvda83z0c-nodejs-22.12.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "nodejs-22.12.0",
+      "pname": "nodejs",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.12.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "libv8": "/nix/store/n7x07hrc6sjhh6as6c75g15blq1c1ykh-nodejs-22.12.0-libv8",
+        "out": "/nix/store/k1r91cjalyc2mzzllpv5hklhqn8wvgjr-nodejs-22.12.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_8",
+      "broken": false,
+      "derivation": "/nix/store/m0gzsd56dw87b9gg7h7ld3xza4w9w2am-pnpm-8.15.9.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "pnpm-8.15.9",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/dfx93fwmqpjd4sgjam3349yzv36qkapx-pnpm-8.15.9"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_8",
+      "broken": false,
+      "derivation": "/nix/store/c9pw21s5gcshlxc3zpryb3xn3s5zrk4v-pnpm-8.15.9.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "pnpm-8.15.9",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/rnr28mk2znqb5pyx7lmyqbnbmfbrsfj9-pnpm-8.15.9"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_8",
+      "broken": false,
+      "derivation": "/nix/store/vsaqccxk6pal10w208par04cv73xl3rd-pnpm-8.15.9.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "pnpm-8.15.9",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/2dq42750qndcylmfq9vl320q5axarkzs-pnpm-8.15.9"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_8",
+      "broken": false,
+      "derivation": "/nix/store/4g9y9lh205d98difpvcvn4c3ljyysmsx-pnpm-8.15.9.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "pnpm-8.15.9",
+      "pname": "pnpm_8",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "pnpm-8.15.9",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/5l0vklq89jzsxsggsyr686bk6dlg24md-pnpm-8.15.9"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "uv",
+      "broken": false,
+      "derivation": "/nix/store/98n5p0vb6zqf10dl54gvwx013cvh7sbl-uv-0.5.27.drv",
+      "description": "Extremely fast Python package installer and resolver, written in Rust",
+      "install_id": "uv",
+      "license": "[ Apache-2.0, MIT ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "uv-0.5.27",
+      "pname": "uv",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.5.27",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/i19p7y8incwn8k5901vgj38gasgj3bmp-uv-0.5.27"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "uv",
+      "broken": false,
+      "derivation": "/nix/store/smy7b6l7qqi9x1v8dr9850142r0xvdvh-uv-0.5.27.drv",
+      "description": "Extremely fast Python package installer and resolver, written in Rust",
+      "install_id": "uv",
+      "license": "[ Apache-2.0, MIT ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "uv-0.5.27",
+      "pname": "uv",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.5.27",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/1lw6xas053w8vywfkl2axdf9si57ps1l-uv-0.5.27"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "uv",
+      "broken": false,
+      "derivation": "/nix/store/cfja78k0079id0d13992q0c93f8g1i7i-uv-0.5.27.drv",
+      "description": "Extremely fast Python package installer and resolver, written in Rust",
+      "install_id": "uv",
+      "license": "[ Apache-2.0, MIT ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "uv-0.5.27",
+      "pname": "uv",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.5.27",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/zgvgkyv7zxsfpvshakysjcnfilb02sg8-uv-0.5.27"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "uv",
+      "broken": false,
+      "derivation": "/nix/store/221hdqmfajx1vlg9hl0jy535h9rzaz6g-uv-0.5.27.drv",
+      "description": "Extremely fast Python package installer and resolver, written in Rust",
+      "install_id": "uv",
+      "license": "[ Apache-2.0, MIT ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=799ba5bffed04ced7067a91798353d360788b30d",
+      "name": "uv-0.5.27",
+      "pname": "uv",
+      "rev": "799ba5bffed04ced7067a91798353d360788b30d",
+      "rev_count": 747653,
+      "rev_date": "2025-02-04T14:46:40Z",
+      "scrape_date": "2025-02-05T00:30:07Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.5.27",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/kcj766nhvp8agd7k5hfmap0q2qx918q8-uv-0.5.27"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
