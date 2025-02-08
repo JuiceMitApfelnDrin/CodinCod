@@ -4,7 +4,8 @@ import {
 	PaginatedQueryResponse,
 	paginatedQuerySchema,
 	isAuthenticatedInfo,
-	createPuzzleSchema
+	createPuzzleSchema,
+	httpResponseCodes
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
@@ -49,7 +50,9 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 		const parseResult = paginatedQuerySchema.safeParse(request.query);
 
 		if (!parseResult.success) {
-			return reply.status(400).send({ error: parseResult.error.errors });
+			return reply
+				.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+				.send({ error: parseResult.error.errors });
 		}
 
 		const query = parseResult.data;
@@ -61,7 +64,7 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 
 			// Fetch puzzles from the database with pagination
 			const [puzzles, total] = await Promise.all([
-				Puzzle.find().skip(offsetSkip).limit(pageSize).exec(),
+				Puzzle.find().populate("author").skip(offsetSkip).limit(pageSize).exec(),
 				Puzzle.countDocuments()
 			]);
 
@@ -78,7 +81,9 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 
 			return reply.send(paginatedResponse);
 		} catch (error) {
-			return reply.status(500).send({ error: "Failed to fetch puzzles" });
+			return reply
+				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+				.send({ error: "Failed to fetch puzzles" });
 		}
 	});
 }

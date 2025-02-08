@@ -102,3 +102,7 @@ a:focus {
 	@apply inline-flex items-center justify-center rounded-full
            bg-stone-700 p-1 text-lg  text-white dark:bg-stone-200 dark:text-stone-700;
 }
+
+.link {
+	@apply hover:text-cyan-700 hover:underline hover:dark:text-cyan-300;
+}
