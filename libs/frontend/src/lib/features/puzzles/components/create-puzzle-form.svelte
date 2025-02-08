@@ -27,13 +27,15 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<GenericAlert
-		title={isHttpErrorCode($page.status)
-			? "Error whilst trying to create the puzzle"
-			: "Created the puzzle"}
-		status={$page.status}
-		message={$message}
-	/>
+	{#if $message}
+		<GenericAlert
+			title={isHttpErrorCode($page.status)
+				? "Error whilst trying to create the puzzle"
+				: "Created the puzzle"}
+			status={$page.status}
+			message={$message}
+		/>
+	{/if}
 
 	<Form.Button>Create Puzzle</Form.Button>
 </form>

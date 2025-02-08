@@ -11,12 +11,13 @@
 	import { page } from "$app/stores";
 
 	export let data: SuperValidated<RegisterForm>;
+	export let message: string | undefined;
 
 	const form = superForm(data.data, {
 		validators: zodClient(registerFormSchema)
 	});
 
-	const { enhance, form: formData, message, validateForm } = form;
+	const { enhance, form: formData, validateForm } = form;
 
 	const handleFormInput = debounce(async () => {
 		await validateForm({ update: false });
@@ -70,18 +71,24 @@
 		<Form.Description
 			>Password must be at least {PASSWORD_CONFIG.minPasswordLength} characters.
 			<span class="text-xs"
-				>(If you are interested to know
-				<a href="https://bitwarden.com/blog/how-long-should-my-password-be/">why</a>.)</span
+				>(If you are interested to
+				<a
+					class="underline"
+					href="https://bitwarden.com/blog/how-long-should-my-password-be/"
+					target="_blank">know why</a
+				>.)</span
 			></Form.Description
 		>
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<GenericAlert
-		title={isHttpErrorCode($page.status) ? "Unable to register" : "Registration successful"}
-		status={$page.status}
-		message={$message}
-	/>
+	{#if message}
+		<GenericAlert
+			title={isHttpErrorCode($page.status) ? "Unable to register" : "Registration successful"}
+			status={$page.status}
+			{message}
+		/>
+	{/if}
 
 	<Form.Button>Register</Form.Button>
 </form>

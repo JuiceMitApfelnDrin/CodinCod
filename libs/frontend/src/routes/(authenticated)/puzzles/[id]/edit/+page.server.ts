@@ -1,7 +1,14 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { buildBackendUrl } from "@/config/backend";
-import { backendUrls, deletePuzzleSchema, PUT, puzzleDtoSchema, type PuzzleDto } from "types";
+import {
+	backendUrls,
+	deletePuzzleSchema,
+	httpResponseCodes,
+	PUT,
+	puzzleDtoSchema,
+	type PuzzleDto
+} from "types";
 import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
@@ -35,8 +42,7 @@ export const actions = {
 		const form = await superValidate(request, zod(puzzleDtoSchema));
 
 		if (!form.valid) {
-			// Again, return { form } and things will just work.
-			fail(400, { form });
+			fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, { form });
 		}
 
 		const id = params.id;

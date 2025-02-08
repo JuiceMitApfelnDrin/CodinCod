@@ -31,7 +31,7 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 
 			const puzzleData = {
 				...parseResult.data,
-				authorId: userId
+				author: userId
 			};
 
 			try {

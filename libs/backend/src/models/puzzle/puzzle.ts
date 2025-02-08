@@ -29,7 +29,6 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		trim: true,
 		type: String
 	},
-	// TODO: rename authorId this to author, since it gets populated most of the time
 	author: {
 		ref: USER,
 		required: true, // Ensure every puzzle has an author

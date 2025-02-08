@@ -33,7 +33,7 @@ export async function onConnection({
 		.populate({
 			path: "playerSubmissions",
 			populate: {
-				path: "userId"
+				path: "user"
 			}
 		})
 		.exec();
@@ -57,7 +57,7 @@ export async function onConnection({
 		return;
 	}
 
-	const puzzle = await Puzzle.findById(game.puzzle).populate("authorId");
+	const puzzle = await Puzzle.findById(game.puzzle).populate("author");
 
 	if (puzzle) {
 		updatePlayer({

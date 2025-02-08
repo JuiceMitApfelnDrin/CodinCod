@@ -6,9 +6,10 @@
 	import { frontendUrls } from "types";
 	import * as Card from "@/components/ui/card";
 	import { websiteName } from "@/config/general.js";
+	import type { ActionData, PageData } from "./$types";
 
-	export let data;
-	const { form: formData } = data;
+	export let data: PageData;
+	export let form: ActionData;
 </script>
 
 <Container class="items-center justify-center">
@@ -19,7 +20,7 @@
 		</Card.Header>
 
 		<Card.Content>
-			<RegisterForm data={formData}></RegisterForm>
+			<RegisterForm message={form?.message} data={data.form}></RegisterForm>
 		</Card.Content>
 
 		<Card.Footer>
