@@ -1,5 +1,6 @@
 export const apiUrls = {
 	EXECUTE_CODE: "/api/execute-code",
+	SUBMISSION_BY_ID: "/api/submission/:id",
 	SUBMIT_CODE: "/api/submit-code",
 	SUBMIT_GAME: "/api/submit-game",
 	SUPPORTED_LANGUAGES: "/api/supported-languages",
