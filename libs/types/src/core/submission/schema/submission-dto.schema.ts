@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { submissionEntitySchema } from "./submission-entity.schema.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 const baseSubmissionDtoSchema = submissionEntitySchema;
 
 export const submissionDtoSchema = baseSubmissionDtoSchema.extend({
-	_id: z.string().optional()
+	_id: objectIdSchema.optional()
 });
 
 export type SubmissionDto = z.infer<typeof submissionDtoSchema>;

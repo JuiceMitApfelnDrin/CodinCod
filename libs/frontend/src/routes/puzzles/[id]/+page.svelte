@@ -25,7 +25,7 @@
 		<PuzzleMetaInfo {puzzle} />
 
 		<div class="flex flex-col gap-2 md:flex-row md:gap-4">
-			{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(getUserIdFromUser(puzzle.author), $authenticatedUserInfo?.userId)}
+			{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(getUserIdFromUser(puzzle.author), $authenticatedUserInfo.userId)}
 				<Button variant="outline" href={editUrl}>Edit puzzle</Button>
 			{/if}
 

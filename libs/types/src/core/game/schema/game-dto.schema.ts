@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { gameEntitySchema } from "./game-entity.schema.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 const baseGameDtoSchema = gameEntitySchema;
 
 export const gameDtoSchema = baseGameDtoSchema.extend({
-	_id: z.string().optional()
+	_id: objectIdSchema.optional()
 });
 
 export type GameDto = z.infer<typeof gameDtoSchema>;

@@ -40,7 +40,8 @@
 		type GameDto,
 		type PuzzleDto,
 		type SubmissionDto,
-		type UserDto
+		type UserDto,
+		type GameSubmissionParams
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
@@ -125,7 +126,7 @@
 		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
 	}
 
-	const findPlayerSubmission = (playerId: string | undefined) => {
+	function findPlayerSubmission(playerId: string | undefined) {
 		if (!game || !isString(playerId)) {
 			return undefined;
 		}
@@ -134,7 +135,35 @@
 			game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
 
 		return playerSubmissions?.find((submission) => getUserIdFromUser(submission.user) === playerId);
-	};
+	}
+
+	async function onPlayerSubmitCode(submissionId: string) {
+		if (!isGameOver && game?._id && $authenticatedUserInfo) {
+			const gameSubmissionParams: GameSubmissionParams = {
+				gameId,
+				submissionId,
+				userId: $authenticatedUserInfo.userId
+			};
+
+			console.log({ gameSubmissionParams });
+
+			await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.SUBMIT_GAME), {
+				body: JSON.stringify(gameSubmissionParams),
+
+				method: httpRequestMethod.POST
+			});
+
+			socket.send(
+				JSON.stringify({
+					event: GameEventEnum.SUBMITTED_PLAYER,
+					submissionId,
+					userId: $authenticatedUserInfo?.userId
+				})
+			);
+
+			isGameOver = true;
+		}
+	}
 </script>
 
 {#if errorMessage}
@@ -184,34 +213,7 @@
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane class="mr-4 flex flex-col gap-4 md:gap-8 lg:gap-12">
 				{#if puzzle._id}
-					<PlayPuzzle
-						puzzleId={puzzle._id}
-						{puzzle}
-						onPlayerSubmitCode={async (submissionId) => {
-							if (!isGameOver && game?._id && $authenticatedUserInfo) {
-								await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.SUBMIT_GAME), {
-									body: JSON.stringify({
-										gameId,
-										submissionId,
-										userId: $authenticatedUserInfo.userId
-									}),
-
-									method: httpRequestMethod.POST
-								});
-
-								socket.send(
-									JSON.stringify({
-										event: GameEventEnum.SUBMITTED_PLAYER,
-										submissionId,
-										userId: $authenticatedUserInfo?.userId
-									})
-								);
-
-								isGameOver = true;
-							}
-						}}
-						{endDate}
-					/>
+					<PlayPuzzle puzzleId={puzzle._id} {puzzle} {onPlayerSubmitCode} {endDate} />
 				{/if}
 			</Resizable.Pane>
 			<Resizable.Handle />

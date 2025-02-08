@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { userEntitySchema } from "../../user/schema/user-entity.schema.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const authenticatedInfoSchema = z.object({
-	userId: z.string(),
+	userId: objectIdSchema,
 	username: userEntitySchema.shape.username,
 	isAuthenticated: z.boolean()
 });
