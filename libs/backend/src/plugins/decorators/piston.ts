@@ -43,6 +43,10 @@ async function piston(fastify: FastifyInstance) {
 			}
 		});
 
+		if (!response.ok) {
+			throw new Error(`Failed to execute code: ${response.status} - ${response.statusText}`);
+		}
+
 		const pistonRuntimesResponse: PistonRuntime[] = await response.json();
 
 		return pistonRuntimesResponse;
