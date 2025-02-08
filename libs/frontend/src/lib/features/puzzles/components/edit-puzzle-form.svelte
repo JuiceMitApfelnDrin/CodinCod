@@ -1,12 +1,19 @@
 <script lang="ts">
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
 	import * as Form from "$lib/components/ui/form";
-	import { superForm } from "sveltekit-superforms";
+	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
 	import InlineCode from "@/components/typography/inlineCode.svelte";
 	import Button from "@/components/ui/button/button.svelte";
-	import { POST, puzzleEntitySchema, type PuzzleLanguage } from "types";
+	import {
+		POST,
+		puzzleEntitySchema,
+		PuzzleVisibilityEnum,
+		type EditPuzzle,
+		type PuzzleLanguage,
+		type PuzzleVisibility
+	} from "types";
 	import { page } from "$app/stores";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
@@ -15,7 +22,7 @@
 	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
 	import { onMount } from "svelte";
 
-	export let data;
+	export let data: SuperValidated<EditPuzzle>;
 
 	const form = superForm(data, {
 		dataType: "json",
@@ -69,6 +76,8 @@
 	onMount(() => {
 		fetchLanguages();
 	});
+
+	let visibilityStates: PuzzleVisibility[] = Object.values(PuzzleVisibilityEnum);
 </script>
 
 <form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
@@ -184,6 +193,37 @@
 			<Form.FieldErrors />
 		</Form.Field>
 	</Form.Fieldset>
+
+	<Form.Field {form} name="visibility">
+		<Form.Control let:attrs>
+			<Form.Label class="text-lg">Visibility</Form.Label>
+			<Select.Root
+				selected={{ label: $formData.visibility, value: $formData.visibility }}
+				onSelectedChange={(v) => {
+					if (v) {
+						$formData.visibility = v.value;
+					}
+				}}
+			>
+				<Select.Trigger class="w-[180px]" {...attrs}>
+					<Select.Value placeholder="Select a visibility" />
+				</Select.Trigger>
+				<Select.Content>
+					<Select.Group>
+						{#each visibilityStates as visibilityState}
+							<Select.Item value={visibilityState} label={visibilityState} />
+						{/each}
+					</Select.Group>
+				</Select.Content>
+				<Select.Input bind:value={$formData.visibility} name={attrs.name} />
+			</Select.Root>
+		</Form.Control>
+		<Form.Description
+			>At the moment it is a free for all, you decide the visibility of your puzzle, but in the
+			future this will become a process with review iterations and other stuff.</Form.Description
+		>
+		<Form.FieldErrors />
+	</Form.Field>
 
 	{#if $message}
 		<GenericAlert
