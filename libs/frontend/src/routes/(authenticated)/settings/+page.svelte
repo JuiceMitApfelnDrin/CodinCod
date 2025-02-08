@@ -1,8 +1,9 @@
 <script lang="ts">
-	let hi = "wassup";
-</script>
+	import { goto } from "$app/navigation";
+	import { onMount } from "svelte";
+	import { frontendUrls } from "types";
 
-<div class="container mx-auto">
-	Settings page salutes you!
-	{hi}
-</div>
+	onMount(() => {
+		goto(frontendUrls.SETTINGS_PROFILE);
+	});
+</script>

@@ -121,7 +121,7 @@
 {#if errorMessage}
 	<Container>
 		<Error
-			link={{ href: frontendUrls.PUZZLE_CREATE, message: "Go to create a puzzle" }}
+			link={{ href: frontendUrls.PUZZLE_CREATE, text: "Go to create a puzzle" }}
 			message={errorMessage}
 		/>
 	</Container>

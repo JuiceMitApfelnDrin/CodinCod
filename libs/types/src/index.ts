@@ -27,6 +27,8 @@ export * from "./core/common/schema/fetch-error.schema.js";
 export * from "./core/common/schema/message.schema.js";
 export * from "./core/common/schema/paginated-query-response.schema.js";
 export * from "./core/common/schema/paginated-query.schema.js";
+export * from "./core/common/types/link.js";
+export * from "./core/common/types/value-of.js";
 
 // game
 export * from "./core/game/config/game.js";

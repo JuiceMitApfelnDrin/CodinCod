@@ -1,11 +1,11 @@
 <script lang="ts">
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { buildFrontendUrl, frontendUrls } from "types";
+	import { buildFrontendUrl, frontendUrls, type FrontendLink, type Link } from "types";
 	import { authenticatedUserInfo } from "../../stores";
 	import Button from "../ui/button/button.svelte";
 
-	const dropdownLinksLoggedIn = $authenticatedUserInfo
+	const dropdownLinksLoggedIn: Link[] = $authenticatedUserInfo
 		? [
 				{
 					href: buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {

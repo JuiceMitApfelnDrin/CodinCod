@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { isAuthenticated } from "../../stores";
-	import { frontendUrls } from "types";
+	import { frontendUrls, type FrontendLink } from "types";
 	import { websiteName } from "@/config/general";
 	import ToggleTheme from "./toggle-theme.svelte";
 	import UserDropdown from "./user-dropdown.svelte";
 
-	const navigationLinks = [
+	const navigationLinks: FrontendLink[] = [
 		{
 			href: frontendUrls.MULTIPLAYER,
 			text: "Play"

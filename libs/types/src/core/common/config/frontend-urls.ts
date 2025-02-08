@@ -18,6 +18,12 @@ export const frontendUrls = {
 
 	// personal account settings
 	SETTINGS: "/settings",
+	SETTINGS_PROFILE: "/settings/profile",
+	SETTINGS_ACCOUNT: "/settings/account",
+	SETTINGS_APPEARANCE: "/settings/appearance",
+	SETTINGS_PREFERENCES: "/settings/preferences",
+	SETTINGS_COMMUNITY: "/settings/community",
+	SETTINGS_NOTIFICATIONS: "/settings/notifications",
 
 	// user profile
 	USER_PROFILE: "/profile",

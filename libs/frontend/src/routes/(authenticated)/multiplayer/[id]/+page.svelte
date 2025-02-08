@@ -167,7 +167,7 @@
 {#if errorMessage}
 	<Container>
 		<Error
-			link={{ href: frontendUrls.MULTIPLAYER, message: "Go to Multiplayer" }}
+			link={{ href: frontendUrls.MULTIPLAYER, text: "Go to Multiplayer" }}
 			status={httpResponseCodes.CLIENT_ERROR.NOT_FOUND}
 			message={errorMessage}
 		/>
