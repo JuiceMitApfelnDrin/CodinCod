@@ -18,7 +18,7 @@ import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
 
 const server = Fastify({
-	logger: true // Boolean(process.env.NODE_ENV !== "development")
+	logger: Boolean(process.env.NODE_ENV !== "development")
 });
 
 for (let schema of [...schemas]) {

@@ -3,13 +3,14 @@ import mongoose from "mongoose";
 
 export default async function mongooseConnector(fastify: FastifyInstance) {
 	const uri = process.env.MONGO_URI;
+	const dbName = process.env.MONGO_DB_NAME;
 
 	if (!uri) {
 		throw new Error("MONGO_URI is not defined in environment variables");
 	}
 
 	try {
-		await mongoose.connect(uri, { dbName: "codincod" });
+		await mongoose.connect(uri, { dbName: dbName ?? "codincod" });
 		mongoose.connection.on("connected", () => {
 			fastify.log.info({ actor: "MongoDB" }, "connected");
 		});
