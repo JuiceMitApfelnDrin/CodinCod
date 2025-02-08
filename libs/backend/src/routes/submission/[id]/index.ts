@@ -17,7 +17,6 @@ export default async function submissionByIdRoutes(fastify: FastifyInstance) {
 				const submission = await Submission.findById(id).select("+code");
 
 				if (!submission) {
-					console.log({ submission });
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
 						.send({ error: "Submission not found" });

@@ -59,6 +59,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					return reply.status(403).send({ error: "Not authorized to edit this puzzle" });
 				}
 				Object.assign(puzzle, parseResult.data);
+
 				await puzzle.save();
 
 				return reply.send(puzzle);

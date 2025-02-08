@@ -145,8 +145,6 @@
 				userId: $authenticatedUserInfo.userId
 			};
 
-			console.log({ gameSubmissionParams });
-
 			await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.SUBMIT_GAME), {
 				body: JSON.stringify(gameSubmissionParams),
 

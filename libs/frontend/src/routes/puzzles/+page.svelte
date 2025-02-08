@@ -13,8 +13,6 @@
 	export let data;
 
 	const { items, page, totalItems, totalPages } = data;
-
-	$: console.log({ items });
 </script>
 
 <Container>
