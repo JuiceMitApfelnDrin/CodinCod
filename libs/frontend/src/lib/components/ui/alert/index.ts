@@ -17,7 +17,7 @@ export const alertVariants = tv({
 			destructive:
 				"border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive dark:[&>svg]:text-red-500 dark:text-red-500 dark:border-red-500",
 			success:
-				"border-green-500/50 text-green-700 dark:border-green-500 dark:[&>svg]:text-green-300 [&>svg]:text-green-700 dark:text-green-300 dark:border-green-500"
+				"border-success/50 text-success dark:border-success [&>svg]:text-success dark:[&>svg]:text-green-500 dark:text-green-500 dark:border-green-500"
 		}
 	}
 });

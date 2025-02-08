@@ -5,3 +5,5 @@ export const PuzzleResultEnum = {
 	// TODO: probably want to get rid of unknown situations eventually :)
 	UNKNOWN: "unknown"
 } as const;
+
+export type PuzzleResult = keyof typeof PuzzleResultEnum;
