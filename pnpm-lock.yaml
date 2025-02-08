@@ -150,6 +150,9 @@ importers:
       dompurify:
         specifier: ^3.2.3
         version: 3.2.4
+      duration:
+        specifier: link:dayjs/plugin/duration
+        version: link:dayjs/plugin/duration
       formsnap:
         specifier: ^1.0.0
         version: 1.0.1(svelte@4.2.19)(sveltekit-superforms@2.23.1)
