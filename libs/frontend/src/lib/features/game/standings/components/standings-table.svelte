@@ -1,66 +1,47 @@
 <script lang="ts">
-	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import { isSubmissionDto, isUserDto, type GameDto, type SubmissionDto } from "types";
 	import duration from "dayjs/plugin/duration";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
-	import { Button } from "@/components/ui/button";
 	dayjs.extend(duration);
 
 	export let game: GameDto;
+	let submissions: SubmissionDto[] = game.playerSubmissions.filter((subm) => isSubmissionDto(subm));
+	let opened: boolean[] = new Array(submissions.length).fill(false);
 
-	let playerSubmissions: SubmissionDto[];
-	$: playerSubmissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
-
-	$: console.log({ playerSubmissions });
-
-	let somecode;
-	async function something(id: string) {
-		console.log(buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id }));
-		const response = await fetchWithAuthenticationCookie(
-			buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id })
-		);
-		const { code } = await response.json();
-		console.log(code);
-		somecode = code;
+	async function fetchCode(id: string) {
+		let url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
+		return await fetchWithAuthenticationCookie(url).then((res) => res.json());
 	}
 </script>
 
-<div class="rounded-md border">
-	<Table.Root>
-		<Table.Header>
-			<Table.Row>
-				<Table.Head>User</Table.Head>
-				<Table.Head>Language</Table.Head>
-				<Table.Head>Time to solve</Table.Head>
-				<Table.Head>Result</Table.Head>
-				<Table.Head>Code</Table.Head>
-			</Table.Row>
-		</Table.Header>
-		<Table.Body>
-			{#each playerSubmissions as { user, language, createdAt, result, _id }}
-				{#if isUserDto(user)}
-					<Table.Row>
-						<Table.Cell>{user.username}</Table.Cell>
-						<Table.Cell>{language}</Table.Cell>
-						<Table.Cell>
-							<!-- todo: make this more readable for screen readers somehow -->
-							{dayjs.duration(dayjs(createdAt).diff(game.startTime)).format("HH:mm:ss")}
-						</Table.Cell>
-						<Table.Cell>{result}</Table.Cell>
-						<Table.Cell
-							><Button
-								on:click={() => {
-									if (_id) something(_id);
-								}}
-							>
-								{somecode}
-							</Button></Table.Cell
-						>
-					</Table.Row>
+<div id="standings" class="flex flex-col gap-4">
+	{#each submissions as { user, language, createdAt, result, _id }, idx}
+		{#if isUserDto(user)}
+			<details
+				class="rounded-md border-4"
+				on:toggle={() => {
+					opened[idx] = true;
+				}}
+			>
+				<summary class="flex cursor-pointer flex-row gap-4 p-2">
+					<div>{idx + 1}.</div>
+					<div>{user.username}</div>
+					<div>{language}</div>
+					<div>{dayjs.duration(dayjs(createdAt).diff(game.startTime)).format("HH:mm:ss")}</div>
+					<div class={result == "success" ? "text-green-500" : "text-red-500"}>{result}</div>
+				</summary>
+				{#if opened[idx]}
+					{#await fetchCode(_id || "")}
+						<span class="p-2">Loading code...</span>
+					{:then { code }}
+						<code class="m-2 block whitespace-pre border-2 border-solid p-2">{code}</code>
+					{:catch}
+						<span class="p-2 text-red-500">Encountered an error while fetching submission</span>
+					{/await}
 				{/if}
-			{/each}
-		</Table.Body>
-	</Table.Root>
+			</details>
+		{/if}
+	{/each}
 </div>
