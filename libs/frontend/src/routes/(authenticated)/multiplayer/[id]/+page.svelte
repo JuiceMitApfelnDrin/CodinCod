@@ -41,9 +41,7 @@
 		type SubmissionDto,
 		type UserDto,
 		type GameSubmissionParams,
-
 		getUserIdFromUser
-
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
