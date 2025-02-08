@@ -9,7 +9,7 @@
 	<SideNavigationSettings />
 
 	<LogicalUnit
-		><WorkInProgress />, Eventually you'll be able to choose how your editor looks like, or which theme is default for
-		your account, ...</LogicalUnit
+		><WorkInProgress />, Eventually you'll be able to choose how your editor looks like, or which
+		theme is default for your account, ...</LogicalUnit
 	>
 </Container>
