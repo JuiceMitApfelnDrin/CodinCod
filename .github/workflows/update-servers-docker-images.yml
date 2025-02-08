@@ -1,0 +1,38 @@
+name: Deploy Build Script
+
+on:
+  workflow_run:
+    workflows: ["Build Docker Images"] # Name of the build workflow
+    types:
+      - completed # This triggers when the build workflow completes
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Only run if the build succeeded
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH into server and run build script
+         run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            echo "Going into /codincod"
+            cd codincod
+            echo "Pulling latest Docker images..."
+            docker compose pull
+            echo "Bringing down containers..."
+            docker compose down
+            echo "Bringing up containers..."
+            docker compose up -d
+            echo "Deployment complete!"
+          EOF
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          USER: ${{ secrets.USER }}
