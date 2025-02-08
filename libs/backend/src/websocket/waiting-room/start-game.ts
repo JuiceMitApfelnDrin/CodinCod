@@ -57,7 +57,7 @@ export async function startGame({
 		updatePlayer({
 			event: GameEventEnum.NOT_ENOUGH_GAMES,
 			socket,
-			message: "create a game and get it approved in order to play games"
+			message: "Create a puzzle and get it approved in order to play games"
 		});
 		return;
 	}
