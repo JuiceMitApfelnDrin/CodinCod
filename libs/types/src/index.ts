@@ -22,6 +22,7 @@ export * from "./core/common/config/frontend-urls.js";
 export * from "./core/common/config/web-socket-urls.js";
 export * from "./core/common/enum/http-response-codes.js";
 export * from "./core/common/schema/accepted-date.js";
+export * from "./core/common/schema/object-id.js";
 export * from "./core/common/schema/fetch-error.schema.js";
 export * from "./core/common/schema/message.schema.js";
 export * from "./core/common/schema/paginated-query-response.schema.js";
