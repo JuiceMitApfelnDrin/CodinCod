@@ -81,7 +81,7 @@ export * from "./core/puzzle/schema/validator.schema.js";
 
 // submission
 export * from "./core/submission/config/game-submission-params.js";
-export * from "./core/submission/config/submission-params.js";
+export * from "./core/submission/config/code-submission-params.js";
 export * from "./core/submission/schema/submission-dto.schema.js";
 export * from "./core/submission/schema/submission-entity.schema.js";
 
