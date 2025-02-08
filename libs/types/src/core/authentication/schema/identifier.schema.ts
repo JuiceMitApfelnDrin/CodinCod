@@ -10,4 +10,5 @@ export const identifierSchema = z.string().refine(
 		message: "Invalid username or email"
 	}
 );
+
 export type Identifier = z.infer<typeof identifierSchema>;

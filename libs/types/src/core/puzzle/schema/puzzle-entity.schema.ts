@@ -8,6 +8,7 @@ import { DifficultyEnum } from "../enum/difficulty-enum.js";
 import { PuzzleVisibilityEnum } from "../enum/puzzle-visibility-enum.js";
 import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const puzzleEntitySchema = z.object({
 	title: z.string().min(PUZZLE_CONFIG.minTitleLength).max(PUZZLE_CONFIG.maxTitleLength),
@@ -21,10 +22,7 @@ export const puzzleEntitySchema = z.object({
 		.min(PUZZLE_CONFIG.minConstraintsLength)
 		.max(PUZZLE_CONFIG.maxConstraintsLength)
 		.optional(),
-	author: z
-		.string()
-		.or(userDtoSchema)
-		.default(() => ""),
+	author: objectIdSchema.or(userDtoSchema).default(() => ""),
 	validators: z.array(validatorEntitySchema).optional(),
 	difficulty: difficultySchema.default(() => DifficultyEnum.INTERMEDIATE),
 	// TODO: later not now !
@@ -33,7 +31,7 @@ export const puzzleEntitySchema = z.object({
 	updatedAt: acceptedDateSchema.optional(),
 	solution: solutionSchema,
 	// TODO: later not now !
-	puzzleMetrics: z.string().optional(),
+	puzzleMetrics: objectIdSchema.optional(),
 	// TODO: later not now !
 	tags: z.array(z.string()).optional()
 });
