@@ -9,7 +9,7 @@
 	<SideNavigationSettings />
 
 	<LogicalUnit
-		><WorkInProgress />, Eventually you'll be able to choose how your editor feels like, or which language is filled in
-		by default for your account</LogicalUnit
+		><WorkInProgress />, Eventually you'll be able to choose how your editor feels like, or which
+		language is filled in by default for your account</LogicalUnit
 	>
 </Container>

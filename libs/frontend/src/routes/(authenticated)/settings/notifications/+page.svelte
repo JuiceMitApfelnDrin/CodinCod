@@ -8,5 +8,7 @@
 <Container class="flex md:flex-row">
 	<SideNavigationSettings />
 
-	<LogicalUnit><WorkInProgress />, Eventually update your personal information and such here</LogicalUnit>
+	<LogicalUnit
+		><WorkInProgress />, Eventually update your personal information and such here</LogicalUnit
+	>
 </Container>
