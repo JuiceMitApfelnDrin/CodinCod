@@ -9,13 +9,19 @@
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { Code, CodeXml, Hash, Hourglass } from "lucide-svelte";
+	import { cn } from "@/utils/cn";
 	dayjs.extend(duration);
 
 	export let game: GameDto;
 	let submissions: SubmissionDto[] = game.playerSubmissions.filter((submission) =>
 		isSubmissionDto(submission)
 	);
-	let opened: Record<string, boolean> = {};
+
+	// used to check whether a solution is being viewed
+	let isOpen: Record<string, boolean> = {};
+
+	// used for caching, check whether a solution was fetched
+	let hasBeenOpened: Record<string, boolean> = {};
 
 	async function fetchCode(id: string) {
 		let url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
@@ -55,14 +61,16 @@
 						<Table.Cell>
 							<Button
 								variant="secondary"
-								aria-expanded={opened[_id] ? "true" : "false"}
+								aria-expanded={isOpen[_id] ? "true" : "false"}
 								aria-controls={"code-" + _id}
-								on:click={() => (opened[_id] = true)}
-								disabled={opened[_id]}
-								aria-disabled={opened[_id] ? "true" : "false"}
+								on:click={() => {
+									hasBeenOpened[_id] = true;
+									isOpen[_id] = !isOpen[_id];
+								}}
+								class="w-[17ch]"
 							>
-								{#if opened[_id]}
-									<CodeXml aria-hidden="true" class="icon mr-2" /> Show code
+								{#if isOpen[_id]}
+									<CodeXml aria-hidden="true" class="icon mr-2" /> Hide code
 								{:else}
 									<Code aria-hidden="true" class="icon mr-2" /> Show code
 								{/if}
@@ -70,8 +78,12 @@
 						</Table.Cell>
 					</Table.Row>
 
-					{#if opened[_id]}
-						<Table.Row id={"code-" + index} aria-labelledby={"row-" + _id}>
+					{#if hasBeenOpened[_id]}
+						<Table.Row
+							id={"code-" + index}
+							aria-labelledby={"row-" + _id}
+							class={cn(!isOpen[_id] && "hidden")}
+						>
 							<Table.Cell colspan={6} aria-live="polite">
 								{#await fetchCode(_id)}
 									<span class="p-2">Loading code...</span>
