@@ -205,32 +205,51 @@
 						<div
 							class={cn(
 								calculatePuzzleResultColor(validator.testResult?.run.result),
-								"w-full space-y-8 rounded-lg border-2 p-4"
+								"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
 							)}
 							id={`validator-${index}`}
 						>
-							<div class="lg:flex">
-								<div class="space-y-2 lg:w-1/2">
+							<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
+								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
 									<h3 class="text-lg font-semibold">Input</h3>
-									<pre>{validator.input.trimEnd()}</pre>
-								</div>
-								<div class="space-y-2 lg:w-1/2">
+
+									<div class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4">
+										<pre><code>{validator.input.trimEnd()}</code></pre>
+									</div>
+								</LogicalUnit>
+
+								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
 									<h3 class="text-lg font-semibold">Expected output</h3>
-									<pre>{validator.output.trimEnd()}</pre>
-								</div>
+
+									<div class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4">
+										<pre><code>{validator.output.trimEnd()}</code></pre>
+									</div>
+								</LogicalUnit>
 							</div>
 
 							{#if validator.testResult}
-								<div class="space-y-2">
-									<h3 class="text-lg font-semibold">Latest result</h3>
-									<div class="lg:w-1/2">
+								<div class="flex flex-col gap-4 lg:gap-6">
+									<h3 class="text-xl font-semibold">Latest result</h3>
+
+									<LogicalUnit class="w-full space-y-2">
 										<h4 class="font-bold">Stdout:</h4>
-										<pre>{validator.testResult?.run.stdout}</pre>
-									</div>
-									<div class="lg:w-1/2">
+
+										<div
+											class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
+										>
+											<pre><code>{validator.testResult?.run.stdout}</code></pre>
+										</div>
+									</LogicalUnit>
+
+									<LogicalUnit class="w-full space-y-2">
 										<h4 class="font-bold">Stderr:</h4>
-										<pre>{validator.testResult?.run.stderr}</pre>
-									</div>
+
+										<div
+											class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
+										>
+											<pre><code>{validator.testResult?.run.stderr}</code></pre>
+										</div>
+									</LogicalUnit>
 								</div>
 							{/if}
 
