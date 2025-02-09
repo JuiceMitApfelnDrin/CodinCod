@@ -56,13 +56,25 @@
 	let puzzle: PuzzleDto | undefined;
 	let errorMessage: string | undefined;
 
-	let socket: WebSocket;
-	onMount(() => {
+	function connectWithWebsocket() {
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.GAME, { id: $page.params.id });
 		socket = new WebSocket(webSocketUrl);
 
 		socket.addEventListener("open", (message) => {
 			console.info("WebSocket connection opened");
+		});
+
+		socket.addEventListener("close", (message) => {
+			console.info("WebSocket connection closed");
+
+			setTimeout(function () {
+				connectWithWebsocket();
+			}, 1000);
+		});
+
+		socket.addEventListener("error", (message) => {
+			console.info("WebSocket connection error");
+			socket.close();
 		});
 
 		socket.addEventListener("message", async (message) => {
@@ -95,6 +107,11 @@
 					break;
 			}
 		});
+	}
+
+	let socket: WebSocket;
+	onMount(() => {
+		connectWithWebsocket();
 	});
 
 	let isNotPlayerInGame = true;
@@ -147,7 +164,6 @@
 
 			await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.SUBMIT_GAME), {
 				body: JSON.stringify(gameSubmissionParams),
-
 				method: httpRequestMethod.POST
 			});
 
@@ -196,7 +212,7 @@
 		{#if !game}
 			<Loader />
 		{:else if game.playerSubmissions}
-			<StandingsTable {game} />
+			<StandingsTable bind:game />
 			<!-- TODO: this is absolute shit, wtf are you doing? filtering this shit instead of something far more simple? search that simple solution! thinkge  -->
 		{:else}
 			<P>No player submissions for this game</P>

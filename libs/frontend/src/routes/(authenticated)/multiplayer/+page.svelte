@@ -10,7 +10,7 @@
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
-	import { buildFrontendUrl, frontendUrls, GameEventEnum, isAuthor, webSocketUrls } from "types";
+	import { frontendUrls, GameEventEnum, isAuthor, webSocketUrls } from "types";
 
 	let game:
 		| {
@@ -21,7 +21,6 @@
 	let games: { id: string; amountOfPlayersJoined: number }[];
 	let gameId: string | undefined;
 	let errorMessage: string | undefined;
-	let hasRoomIdOnMount = false;
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"
@@ -49,13 +48,10 @@
 					username: $authenticatedUserInfo?.username
 				})
 			);
-
-			hasRoomIdOnMount = true;
 		}
 	}
 
-	let socket: WebSocket;
-	onMount(() => {
+	function connectWithWebsocket() {
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.WAITING_ROOM);
 		socket = new WebSocket(webSocketUrl);
 
@@ -63,6 +59,14 @@
 			console.info("WebSocket connection opened");
 
 			checkForRoomId();
+		});
+
+		socket.addEventListener("close", (message) => {
+			console.info("WebSocket connection opened");
+
+			setTimeout(function () {
+				connectWithWebsocket();
+			}, 1000);
 		});
 
 		socket.addEventListener("message", async (message) => {
@@ -100,11 +104,6 @@
 					break;
 				case GameEventEnum.NONEXISTENT_GAME:
 					{
-						const roomId = query.get(queryParamKeys.ROOM_ID);
-
-						if (roomId) {
-							await goto(buildFrontendUrl(frontendUrls.MULTIPLAYER_ID, { id: roomId }));
-						}
 					}
 					break;
 				default:
@@ -113,7 +112,14 @@
 					break;
 			}
 		});
+	}
+
+	let socket: WebSocket;
+	onMount(() => {
+		connectWithWebsocket();
 	});
+
+	$: if (gameId) updateRoomIdInUrl();
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
 </script>

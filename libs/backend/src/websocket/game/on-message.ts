@@ -26,6 +26,7 @@ export async function onMessage({
 	switch (event) {
 		case GameEventEnum.SUBMITTED_PLAYER:
 			updatePlayersOnGameState({ id, players });
+
 			break;
 	}
 }
