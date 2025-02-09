@@ -57,10 +57,12 @@
 								variant="secondary"
 								aria-expanded={opened[_id] ? "true" : "false"}
 								aria-controls={"code-" + _id}
-								on:click={() => (opened[_id] = !opened[_id])}
+								on:click={() => (opened[_id] = true)}
+								disabled={opened[_id]}
+								aria-disabled={opened[_id] ? "true" : "false"}
 							>
 								{#if opened[_id]}
-									<CodeXml aria-hidden="true" class="icon mr-2" /> Hide code
+									<CodeXml aria-hidden="true" class="icon mr-2" /> Show code
 								{:else}
 									<Code aria-hidden="true" class="icon mr-2" /> Show code
 								{/if}
