@@ -25,6 +25,7 @@
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
 	import { onMount } from "svelte";
+	import ScrollArea from "@/components/ui/scroll-area/scroll-area.svelte";
 
 	export let puzzle: PuzzleDto;
 	export let puzzleId: string;
@@ -156,12 +157,16 @@
 				<Select.Value placeholder="Select a language" />
 			</Select.Trigger>
 			<Select.Content>
-				<Select.Group>
+				<ScrollArea class="h-40">
 					<Select.Label class="text-lg">Language</Select.Label>
-					{#each languages as language}
-						<Select.Item value={language} label={language} />
-					{/each}
-				</Select.Group>
+					<Select.Separator />
+
+					<Select.Group>
+						{#each languages as language}
+							<Select.Item value={language} label={language} />
+						{/each}
+					</Select.Group>
+				</ScrollArea>
 			</Select.Content>
 			<Select.Input bind:value={language} />
 		</Select.Root>

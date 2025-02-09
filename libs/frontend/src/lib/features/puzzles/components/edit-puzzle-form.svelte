@@ -21,6 +21,7 @@
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
 	import { onMount } from "svelte";
+	import { ScrollArea } from "@/components/ui/scroll-area";
 
 	export let data: SuperValidated<EditPuzzle>;
 
@@ -169,11 +170,16 @@
 						<Select.Value placeholder="Select a language" />
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Group>
-							{#each languages as language}
-								<Select.Item value={language} label={language} />
-							{/each}
-						</Select.Group>
+						<ScrollArea class="h-40">
+							<Select.Label class="text-lg">Language</Select.Label>
+							<Select.Separator />
+
+							<Select.Group>
+								{#each languages as language}
+									<Select.Item value={language} label={language} />
+								{/each}
+							</Select.Group>
+						</ScrollArea>
 					</Select.Content>
 					<Select.Input bind:value={$formData.solution.language} name={attrs.name} />
 				</Select.Root>
