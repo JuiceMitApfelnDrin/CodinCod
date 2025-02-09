@@ -13,9 +13,9 @@
 	dayjs.extend(duration);
 
 	export let game: GameDto;
-
-	let submissions: SubmissionDto[] = [];
-	$: submissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
+	let submissions: SubmissionDto[] = game.playerSubmissions.filter((submission) =>
+		isSubmissionDto(submission)
+	);
 
 	// used to check whether a solution is being viewed
 	let isOpen: Record<string, boolean> = {};
