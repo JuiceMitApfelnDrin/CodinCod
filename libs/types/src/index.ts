@@ -14,6 +14,10 @@ export * from "./core/authentication/schema/register-response.schema.js";
 export * from "./core/authentication/schema/register.schema.js";
 export * from "./core/authentication/schema/token.schema.js";
 
+// chat
+export * from "./core/chat/config/chat-message-config.js";
+export * from "./core/chat/schema/chat-message.schema.js";
+
 // common
 export * from "./core/common/config/backend-urls.js";
 export * from "./core/common/config/cookie.js";
