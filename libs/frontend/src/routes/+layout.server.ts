@@ -2,7 +2,7 @@ import { getAuthenticatedUserInfo } from "@/features/authentication/utils/get-au
 import type { ServerLoadEvent } from "@sveltejs/kit";
 import { cookieKeys } from "types";
 
-export async function load({ cookies, fetch, url }: ServerLoadEvent) {
+export async function load({ cookies, fetch }: ServerLoadEvent) {
 	const token = cookies.get(cookieKeys.TOKEN);
 
 	if (!token) {
