@@ -1,20 +1,22 @@
 import { WebSocket } from "@fastify/websocket";
 import { updatePlayer } from "../common/update-player.js";
-import { GameEventEnum } from "types";
+import { GameEvent, GameEventEnum } from "types";
 
 export function updatePlayers({
 	sockets,
 	data,
-	message
+	message,
+	event = GameEventEnum.OVERVIEW_GAME
 }: {
 	sockets: WebSocket[];
 	data?: any;
+	event: GameEvent;
 	message?: string;
 }) {
 	for (const socket of sockets) {
 		updatePlayer({
 			socket,
-			event: GameEventEnum.OVERVIEW_GAME,
+			event,
 			data,
 			message
 		});

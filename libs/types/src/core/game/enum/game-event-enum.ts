@@ -23,6 +23,7 @@ export const GameEventEnum = {
 	ALREADY_SUBMITTED_CODE: "code:already-submitted",
 
 	SEND_MESSAGE: "message:send",
+	SEND_MESSAGE_FAILED: "message:send:failed",
 
 	// can possibly be removed, check if used later, keeping it for now in case
 	UPDATE_PLAYERS: "player:update",
