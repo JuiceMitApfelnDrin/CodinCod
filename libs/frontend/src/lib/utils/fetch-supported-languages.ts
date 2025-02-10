@@ -7,5 +7,5 @@ export async function fetchSupportedLanguages() {
 	});
 
 	const { languages }: { languages: PuzzleLanguage[] } = await response.json();
-	return languages;
+	return languages.sort();
 }
