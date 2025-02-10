@@ -9,3 +9,6 @@ piston-list-installable:
 
 piston-install lang version:
     curl --no-progress-meter --json '{"language":"{{lang}}","version":"{{version}}"}' $PISTON_URI/api/v2/packages
+
+docker-update:
+    docker compose pull && docker compose up -d && docker image prune -f
