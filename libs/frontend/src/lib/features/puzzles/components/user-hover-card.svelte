@@ -3,7 +3,7 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import { buildFrontendUrl, frontendUrls, isUserDto, type UserDto } from "types";
-	import { Calendar } from "lucide-svelte";
+	import { Calendar, Smile } from "lucide-svelte";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { Button as ButtonPrimitive } from "bits-ui";
@@ -60,10 +60,9 @@
 							class="aspect-square rounded-full border-2 border-black dark:border-white"
 							variant="outline"
 						>
-							{#if user.profile}
-								<Avatar.Image class="rounded-full" src={user.profile.picture} alt={user.username} />
-								<Avatar.Fallback>{user.username}</Avatar.Fallback>
-							{/if}
+							<Avatar.Image class="rounded-full" src={user.profile?.picture} alt={user.username} />
+
+							<Avatar.Fallback />
 						</Button>
 					</Avatar.Root>
 					<div class="space-y-1">
@@ -74,7 +73,7 @@
 
 						<div class="flex items-center pt-2">
 							<Calendar class="mr-2 h-4 w-4 opacity-70" />
-							<span class="text-xs text-muted-foreground"
+							<span class="text-muted-foreground text-xs"
 								>Joined {dayjs(user.createdAt).format("MMMM YYYY")}</span
 							>
 						</div>
@@ -82,7 +81,7 @@
 				</div>
 			{/if}
 		{:catch}
-			something happened and we are unsure of what!
+			couldn't fetch user info
 		{/await}
 	</HoverCard.Content>
 </HoverCard.Root>

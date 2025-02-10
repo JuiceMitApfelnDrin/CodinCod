@@ -32,7 +32,7 @@
 				builders={[builder]}
 			>
 				<Avatar.Image class="rounded-full" src={undefined} alt={$authenticatedUserInfo?.username} />
-				<Avatar.Fallback>{$authenticatedUserInfo?.username}</Avatar.Fallback>
+				<Avatar.Fallback />
 			</Button>
 		</Avatar.Root>
 	</DropdownMenu.Trigger>
