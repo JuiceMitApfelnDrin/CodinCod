@@ -17,7 +17,7 @@ export function playGame(
 	onConnection({ socket, id, players: playersInCurrentGame });
 
 	socket.on("message", (message) => {
-		onMessage({ message, id, socket, players: playersInCurrentGame });
+		onMessage({ message, id, socket, players: playersInCurrentGame, fastify });
 	});
 
 	socket.on("close", (code, reason) => {

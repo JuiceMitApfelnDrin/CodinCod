@@ -19,10 +19,8 @@
 			{#if isUserDto(puzzle.author)}
 				<dt class="font-semibold">Created by</dt>
 				<dd>
-					{#if puzzle.author._id}
-						<UserHoverCard user={puzzle.author} />
-					{:else}
-						{puzzle.author.username}
+					{#if isUserDto(puzzle.author)}
+						<UserHoverCard username={puzzle.author.username} />
 					{/if}
 				</dd>
 			{/if}

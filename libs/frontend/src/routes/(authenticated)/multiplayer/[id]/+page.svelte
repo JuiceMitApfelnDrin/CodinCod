@@ -7,14 +7,13 @@
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
-	import Input from "@/components/ui/input/input.svelte";
-	import Label from "@/components/ui/label/label.svelte";
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+	import Chat from "@/features/chat/components/chat.svelte";
 	import JoinGameConfirmationDialog from "@/features/game/components/join-game-confirmation-dialog.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
@@ -22,7 +21,6 @@
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
-	// import { EllipsisVertical, FileWarning, Settings } from "lucide-svelte";
 	import { onMount } from "svelte";
 	import {
 		buildFrontendUrl,
@@ -41,7 +39,9 @@
 		type SubmissionDto,
 		type UserDto,
 		type GameSubmissionParams,
-		getUserIdFromUser
+		getUserIdFromUser,
+		type ChatMessage,
+		isChatMessage
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
@@ -55,6 +55,7 @@
 	let game: GameDto | undefined;
 	let puzzle: PuzzleDto | undefined;
 	let errorMessage: string | undefined;
+	let chatMessages: ChatMessage[] = [];
 
 	function connectWithWebsocket() {
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.GAME, { id: $page.params.id });
@@ -99,6 +100,15 @@
 					{
 						game = data.game;
 						isGameOver = true;
+					}
+					break;
+				case GameEventEnum.SEND_MESSAGE:
+					{
+						const { chatMessage } = data;
+
+						if (isChatMessage(chatMessage)) {
+							chatMessages = [...chatMessages, chatMessage];
+						}
 					}
 					break;
 				default:
@@ -178,9 +188,36 @@
 			isGameOver = true;
 		}
 	}
+
+	async function sendMessage(composedMessage: string) {
+		if (!$authenticatedUserInfo) {
+			return;
+		}
+
+		const newChatMessage: ChatMessage = {
+			createdAt: new Date().toISOString(),
+			message: composedMessage,
+			username: $authenticatedUserInfo?.username
+		};
+
+		socket.send(
+			JSON.stringify({
+				event: GameEventEnum.SEND_MESSAGE,
+				chatMessage: newChatMessage
+			})
+		);
+	}
 </script>
 
-{#if errorMessage}
+{#if !$authenticatedUserInfo}
+	<Container>
+		<Error
+			link={{ href: frontendUrls.LOGIN, text: "Go to login" }}
+			status={httpResponseCodes.CLIENT_ERROR.FORBIDDEN}
+			message={"You have to login in order to play!"}
+		/>
+	</Container>
+{:else if errorMessage}
 	<Container>
 		<Error
 			link={{ href: frontendUrls.MULTIPLAYER, text: "Go to Multiplayer" }}
@@ -195,7 +232,7 @@
 {:else if isGameOver}
 	<Container>
 		<LogicalUnit>
-			{#if getUserIdFromUser(game.creator) === $authenticatedUserInfo?.userId}
+			{#if getUserIdFromUser(game.creator) === $authenticatedUserInfo.userId}
 				<Button variant="outline">
 					<WorkInProgress />: Create a game with the same options
 					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?
@@ -232,80 +269,6 @@
 			</Resizable.Pane>
 			<Resizable.Handle />
 			<Resizable.Pane class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12">
-				<H2>Chat - <WorkInProgress /></H2>
-
-				<!-- <ol>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-					<li>
-						<UserHoverCard user={game.players[0]} />: bla bla bla <EllipsisVertical
-							class="inline"
-						/> report player button
-					</li>
-				</ol> -->
-
-				<LogicalUnit class="space-y-2">
-					<Label class="sr-only" for="msg-compose">compose message</Label>
-					<Input placeholder="message" id="msg-compose" />
-
-					<Button variant="outline">Send message</Button>
-				</LogicalUnit>
-
 				<H2>Standings - <WorkInProgress /></H2>
 
 				{#if game.players}
@@ -313,7 +276,7 @@
 						{#each game.players as player}
 							<li>
 								{#if isUserDto(player)}
-									<UserHoverCard user={player} />{` - using ${
+									<UserHoverCard username={player.username} />{` - using ${
 										findPlayerSubmission(player._id)?.language ?? "???"
 									} - ${findPlayerSubmission(player._id)?.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
@@ -323,6 +286,8 @@
 						{/each}
 					</ul>
 				{/if}
+
+				<Chat {chatMessages} {sendMessage} />
 			</Resizable.Pane>
 		</Resizable.PaneGroup>
 	</Container>

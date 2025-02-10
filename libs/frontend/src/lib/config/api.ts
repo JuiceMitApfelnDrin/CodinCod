@@ -5,6 +5,7 @@ export const apiUrls = {
 	SUBMIT_GAME: "/api/submit-game",
 	SUPPORTED_LANGUAGES: "/api/supported-languages",
 	USERNAME_IS_AVAILABLE: "/api/username-is-available/:username",
+	USER_BY_USERNAME: "/api/user/:username",
 	VERIFY_TOKEN: "/api/verify-token"
 } as const;
 export type ApiUrl = (typeof apiUrls)[keyof typeof apiUrls];

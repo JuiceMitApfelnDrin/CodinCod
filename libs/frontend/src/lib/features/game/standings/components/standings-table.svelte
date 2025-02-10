@@ -49,7 +49,7 @@
 				{#if isUserDto(user) && _id}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>
-						<Table.Cell><UserHoverCard {user} /></Table.Cell>
+						<Table.Cell><UserHoverCard username={user.username} /></Table.Cell>
 						<Table.Cell>{language}</Table.Cell>
 						<Table.Cell>
 							<!-- todo: make this more readable for screen readers somehow -->

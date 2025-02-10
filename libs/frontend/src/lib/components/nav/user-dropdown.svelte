@@ -24,22 +24,19 @@
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger asChild let:builder>
 		<Avatar.Root asChild>
-			<!-- TODO: fetch user profile picture -->
+			<!-- TODO: fetch user profile picture or get it from token -->
 			<Button
 				size="icon"
 				class="rounded-full border-2 border-black dark:border-white"
 				variant="outline"
 				builders={[builder]}
 			>
-				<Avatar.Image
-					class="rounded-full"
-					src={"https://github.com/juicemitapfelndrin.png"}
-					alt={$authenticatedUserInfo?.username}
-				/>
-				<Avatar.Fallback>{$authenticatedUserInfo?.username}</Avatar.Fallback>
+				<Avatar.Image class="rounded-full" src={undefined} alt={$authenticatedUserInfo?.username} />
+				<Avatar.Fallback />
 			</Button>
 		</Avatar.Root>
 	</DropdownMenu.Trigger>
+
 	<DropdownMenu.Content>
 		<DropdownMenu.Group>
 			{#each dropdownLinksLoggedIn as { text, href }}
