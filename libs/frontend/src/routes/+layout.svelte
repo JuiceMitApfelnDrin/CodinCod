@@ -6,7 +6,11 @@
 	export let data;
 
 	$: {
-		if (isAuthenticatedInfo(data)) setAuthenticatedUserInfo(data);
+		if (isAuthenticatedInfo(data)) {
+			setAuthenticatedUserInfo(data);
+		} else {
+			setAuthenticatedUserInfo(null);
+		}
 	}
 </script>
 

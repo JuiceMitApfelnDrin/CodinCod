@@ -45,7 +45,7 @@ export const authenticatedUserInfo = writable<AuthenticatedInfo | null>(null);
 export const isAuthenticated = derived(authenticatedUserInfo, (userInfo) => {
 	return userInfo?.isAuthenticated ?? false;
 });
-export const setAuthenticatedUserInfo = (userInfo: AuthenticatedInfo) => {
+export const setAuthenticatedUserInfo = (userInfo: AuthenticatedInfo | null) => {
 	authenticatedUserInfo.set(userInfo);
 };
 export const clearAuthenticatedUserInfo = () => {
