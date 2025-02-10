@@ -35,6 +35,8 @@
 	let languages: PuzzleLanguage[] = [];
 	let code: string = "";
 	let language: PuzzleLanguage = "";
+	let isExecutingTests = false;
+	let isSubmittingCode = false;
 
 	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
@@ -58,27 +60,33 @@
 		puzzle = puzzle;
 	}
 
+	async function patience() {
+		// little timeout has never hurt anyone, also indicates better that something actually happened, system is too fast otherwise
+		return new Promise((resolve) => setTimeout(resolve, 500));
+	}
+
 	async function runAllTests() {
 		if (puzzle.validators) {
-			puzzle.validators.forEach((validator: ValidatorEntity, index: number) => {
-				runSingularTestItem(index, validator.input, validator.output);
+			isExecutingTests = true;
+
+			const convertToPromises = puzzle.validators.map(
+				(validator: ValidatorEntity, index: number) => {
+					runSingularTestItem(index, validator.input, validator.output);
+				}
+			);
+
+			await Promise.all([...convertToPromises, patience()]).then(() => {
+				isExecutingTests = false;
 			});
 		}
 	}
-
-	// let amountCorrectTests = 0;
-	// $: {
-	// 	amountCorrectTests = (puzzle.validators ?? []).reduce((accumulator, currentValidator) => {
-	// 		return (
-	// 			accumulator + Number(currentValidator.testResult?.run.result === PuzzleResultEnum.SUCCESS)
-	// 		);
-	// 	}, 0);
-	// }
 
 	async function endPuzzleGame() {
 		if (!isAuthenticated || !$authenticatedUserInfo) {
 			return;
 		}
+
+		isSubmittingCode = true;
 
 		const submissionParams: CodeSubmissionParams = {
 			code,
@@ -97,6 +105,10 @@
 		if (isSubmissionDto(submission) && submission._id) {
 			onPlayerSubmitCode(submission._id);
 		}
+
+		await patience();
+
+		isSubmittingCode = false;
 	}
 
 	let endedGame = false;
@@ -108,7 +120,6 @@
 	}
 
 	let openTests = true;
-
 	function openTestsAccordion() {
 		openTests = true;
 	}
@@ -178,16 +189,21 @@
 
 	<div class="flex flex-row justify-end gap-2">
 		{#if puzzle.validators}
-			<Button variant="secondary" on:click={runAllTests}
-				>Run all tests
-				<!-- {#if amountCorrectTests > 0}
-					{`- ${amountCorrectTests}/${puzzle.validators.length} passed`}
-				{/if} -->
+			<Button
+				variant="secondary"
+				aria-live="polite"
+				on:click={runAllTests}
+				disabled={isExecutingTests || isSubmittingCode}
+				class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
+			>
+				Run all tests
 			</Button>
 		{/if}
 
 		<Button
 			variant="secondary"
+			disabled={isSubmittingCode}
+			class={cn(isSubmittingCode && "animate-pulse")}
 			on:click={async () => {
 				endPuzzleGame();
 			}}
@@ -260,7 +276,19 @@
 
 							<Button
 								variant="secondary"
-								on:click={() => runSingularTestItem(index, validator.input, validator.output)}
+								aria-live="polite"
+								disabled={isExecutingTests || isSubmittingCode}
+								class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
+								on:click={() => {
+									isExecutingTests = true;
+
+									Promise.all([
+										runSingularTestItem(index, validator.input, validator.output),
+										patience()
+									]).then(() => {
+										isExecutingTests = false;
+									});
+								}}
 							>
 								Run code
 							</Button>
