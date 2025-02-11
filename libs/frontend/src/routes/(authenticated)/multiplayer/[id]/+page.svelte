@@ -153,8 +153,8 @@
 		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
 	}
 
-	function findPlayerSubmission(playerId: string | undefined) {
-		if (!game || !isString(playerId)) {
+	function findPlayerSubmission(playerId: string) {
+		if (!game) {
 			return undefined;
 		}
 
