@@ -165,7 +165,7 @@
 	}
 
 	async function onPlayerSubmitCode(submissionId: string) {
-		if (!isGameOver && game?._id && $authenticatedUserInfo) {
+		if (!isGameOver && $authenticatedUserInfo) {
 			const gameSubmissionParams: GameSubmissionParams = {
 				gameId,
 				submissionId,
