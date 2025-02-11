@@ -101,7 +101,7 @@
 
 		const submission = await response.json();
 
-		if (isSubmissionDto(submission) && submission._id) {
+		if (isSubmissionDto(submission)) {
 			onPlayerSubmitCode(submission._id);
 		}
 

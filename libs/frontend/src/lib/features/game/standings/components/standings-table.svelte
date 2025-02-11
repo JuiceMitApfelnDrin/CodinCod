@@ -46,7 +46,7 @@
 		</Table.Header>
 		<Table.Body>
 			{#each submissions as { user, language, createdAt, result, _id }, index}
-				{#if isUserDto(user) && _id}
+				{#if isUserDto(user)}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>
 						<Table.Cell><UserHoverCard username={user.username} /></Table.Cell>
