@@ -6,6 +6,8 @@
 	import Input from "@/components/ui/input/input.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import {
+		buildFrontendUrl,
+		frontendUrls,
 		POST,
 		puzzleEntitySchema,
 		PuzzleVisibilityEnum,
@@ -23,6 +25,8 @@
 	import { ScrollArea } from "@/components/ui/scroll-area";
 
 	export let data: SuperValidated<EditPuzzle>;
+
+	const learnMarkdownUrl = buildFrontendUrl(frontendUrls.LEARN_MARKDOWN);
 
 	const form = superForm(data, {
 		dataType: "json",
@@ -101,7 +105,8 @@
 			Describe the puzzle in enough detail to make it possible for players to understand and solve
 			it. The description should contain answers to questions such as: What are the inputs of the
 			puzzle? How are they formatted? What are the outputs of the puzzle? If there are decimal
-			numbers, how should they be rounded? Markdown formatting is supported.
+			numbers, how should they be rounded?
+			<a class="link" href={learnMarkdownUrl}>Markdown formatting is supported.</a>
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
@@ -115,7 +120,7 @@
 			Constraints should describe the limits for the input values, for example "1 ≤ N ≤ 100" or "S
 			contains only letters a to z and numbers 0 to 9". Sometimes it is useful to give constraints
 			for the output as well, for example to clarify that the answer will fit in a 32-bit integer.
-			Markdown formatting is supported.
+			<a class="link" href={learnMarkdownUrl}>Markdown formatting is supported.</a>
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
