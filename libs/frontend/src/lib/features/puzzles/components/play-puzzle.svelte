@@ -28,7 +28,6 @@
 	import ScrollArea from "@/components/ui/scroll-area/scroll-area.svelte";
 
 	export let puzzle: PuzzleDto;
-	export let puzzleId: string;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
 	export let endDate: Date | undefined;
 
@@ -91,7 +90,7 @@
 		const submissionParams: CodeSubmissionParams = {
 			code,
 			language,
-			puzzleId,
+			puzzleId: puzzle._id,
 			userId: $authenticatedUserInfo.userId
 		};
 

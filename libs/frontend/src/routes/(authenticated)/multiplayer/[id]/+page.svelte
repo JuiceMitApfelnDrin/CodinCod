@@ -263,9 +263,7 @@
 	<Container>
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane class="mr-4 flex flex-col gap-4 md:gap-8 lg:gap-12">
-				{#if puzzle._id}
-					<PlayPuzzle puzzleId={puzzle._id} {puzzle} {onPlayerSubmitCode} {endDate} />
-				{/if}
+				<PlayPuzzle {puzzle} {onPlayerSubmitCode} {endDate} />
 			</Resizable.Pane>
 			<Resizable.Handle />
 			<Resizable.Pane class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12">

@@ -6,7 +6,7 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const activitySchema = z.object({
 	createdAt: acceptedDateSchema,
-	_id: objectIdSchema.optional(),
+	_id: objectIdSchema,
 	type: z.enum(getValues(ActivityTypeEnum))
 });
 
