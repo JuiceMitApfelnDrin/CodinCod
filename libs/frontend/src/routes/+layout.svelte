@@ -5,7 +5,7 @@
 
 	export let data;
 
-	$: authenticatedUserInfo.set(isAuthenticatedInfo(data) ? data : null)
+	$: authenticatedUserInfo.set(isAuthenticatedInfo(data) ? data : null);
 </script>
 
 <Nav />
