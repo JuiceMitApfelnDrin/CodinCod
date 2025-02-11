@@ -1,55 +1,49 @@
 <script lang="ts">
+	import { page } from "$app/stores";
 	import { DEFAULT_PAGE } from "types";
+	import { Button } from "../ui/button";
 
 	export let currentPage: number;
 	export let totalPages: number;
 
-	const changePage = (page: number) => {
-		const url = new URL(window.location.href);
-		url.searchParams.set("page", page.toString());
-		window.location.href = url.toString();
-	};
+	function createPaginatedUrl(newPage: number) {
+		let params = new URLSearchParams($page.url.searchParams.toString());
+		params.set("page", newPage.toString());
 
-	const nextPage = () => {
-		changePage(currentPage + 1);
-	};
-
-	const previousPage = () => {
-		changePage(currentPage - 1);
-	};
-
-	const firstPage = () => {
-		changePage(DEFAULT_PAGE);
-	};
-	const lastPage = () => {
-		changePage(totalPages);
-	};
+		return `?${params.toString()}`;
+	}
 </script>
 
 {#if totalPages > DEFAULT_PAGE}
-	<nav class="pagination">
-		<button on:click={firstPage} disabled={currentPage === DEFAULT_PAGE}>First</button>
-		{#if currentPage > DEFAULT_PAGE}
-			<button on:click={previousPage}>Previous</button>
-		{/if}
+	<nav class="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-8">
+		<div class="flex flex-1 justify-end gap-2">
+			{#if currentPage === DEFAULT_PAGE}
+				<Button disabled aria-hidden="true">First</Button>
+			{:else}
+				<Button href={createPaginatedUrl(DEFAULT_PAGE)}>First</Button>
+			{/if}
 
-		<span>Page {currentPage} of {totalPages}</span>
+			{#if currentPage > DEFAULT_PAGE}
+				<Button href={createPaginatedUrl(currentPage - 1)}>Previous</Button>
+			{:else}
+				<Button disabled aria-hidden="true">Previous</Button>
+			{/if}
+		</div>
 
-		{#if currentPage < totalPages}
-			<button on:click={nextPage}>Next</button>
-		{/if}
-		<button on:click={lastPage} disabled={currentPage === totalPages}>Last</button>
+		<p aria-live="polite" role="status">Page {currentPage} of {totalPages}</p>
+
+		<div class="flex flex-1 gap-2">
+			{#if currentPage < totalPages}
+				<Button href={createPaginatedUrl(currentPage + 1)}>Next</Button>
+			{:else}
+				<Button disabled aria-hidden="true">Next</Button>
+			{/if}
+
+			{#if currentPage === totalPages}
+				<Button disabled aria-hidden="true">Last</Button>
+			{:else}
+				<Button href={createPaginatedUrl(totalPages)}>Last</Button>
+			{/if}
+		</div>
 	</nav>
 {/if}
-
-<style>
-	.pagination {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-	}
-	button:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-</style>

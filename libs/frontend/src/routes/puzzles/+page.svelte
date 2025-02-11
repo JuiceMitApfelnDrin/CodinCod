@@ -4,7 +4,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import { buildFrontendUrl, frontendUrls } from "types";
+	import { buildFrontendUrl, frontendUrls, type PuzzleDto } from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
@@ -12,11 +12,20 @@
 
 	export let data;
 
-	const { items, page, totalItems, totalPages } = data;
+	let items: PuzzleDto[] = [];
+	let page: number;
+	let totalItems: number;
+	let totalPages: number;
+	$: {
+		items = data.items;
+		page = data.page;
+		totalItems = data.totalItems;
+		totalPages = data.totalPages;
+	}
 </script>
 
 <Container>
-	<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
+	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 		<H1>Puzzles</H1>
 
 		<Button href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button>
@@ -24,7 +33,7 @@
 
 	<!-- TODO: search should come here: -->
 	<!-- <Input placeholder="Search through puzzles" /> -->
-	<LogicalUnit class="flex flex-col gap-4">
+	<LogicalUnit class="flex flex-col gap-8">
 		{#if totalItems <= 0}
 			<P>Couldn't find any puzzles!</P>
 		{:else}
@@ -34,8 +43,6 @@
 
 			<div class="rounded-lg border">
 				<Table.Root>
-					<!-- <Table.Caption class="sr-only">Game submissions leaderboard</Table.Caption> -->
-
 					<Table.Header>
 						<Table.Row>
 							<Table.Head>Title</Table.Head>
