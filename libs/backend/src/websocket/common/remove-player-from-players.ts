@@ -1,15 +1,12 @@
-import { WebSocket } from "@fastify/websocket";
+import { MapUsernameToSocket } from "../waiting-room/waiting-room.js";
+import { AuthenticatedInfo } from "types";
 
 export async function removePlayerFromPlayers({
 	players,
-	playerSocketToRemove
+	user
 }: {
-	players: WebSocket[];
-	playerSocketToRemove: WebSocket;
+	players: MapUsernameToSocket;
+	user: AuthenticatedInfo;
 }) {
-	const socketIndex = players.findIndex((websocket) => websocket === playerSocketToRemove);
-
-	if (socketIndex !== -1) {
-		players.splice(socketIndex, 1);
-	}
+	delete players[user.username];
 }

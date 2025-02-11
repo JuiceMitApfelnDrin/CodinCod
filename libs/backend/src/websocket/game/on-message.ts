@@ -1,6 +1,6 @@
 import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
 import { WebSocket } from "@fastify/websocket";
-import { ChatMessage, GameEventEnum, isChatMessage } from "types";
+import { GameEventEnum, isChatMessage } from "types";
 import { RawData } from "ws";
 import { updatePlayersOnGameState } from "./update-players-on-game-state.js";
 import { updatePlayersOnChatMessage } from "./update-players-on-chat-message.js";

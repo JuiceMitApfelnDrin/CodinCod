@@ -1,11 +1,15 @@
 import { WebSocket } from "@fastify/websocket";
+import { MapUsernameToSocket } from "../waiting-room/waiting-room.js";
+import { AuthenticatedInfo } from "types";
 
 export function addPlayerToPlayers({
 	players,
-	playerSocketToAdd
+	playerSocketToAdd,
+	user
 }: {
-	players: WebSocket[];
+	players: MapUsernameToSocket;
 	playerSocketToAdd: WebSocket;
+	user: AuthenticatedInfo;
 }) {
-	players.push(playerSocketToAdd);
+	players[user.username] = playerSocketToAdd;
 }

@@ -1,29 +1,28 @@
-import { WebSocket } from "@fastify/websocket";
 import { removePlayerFromPlayers } from "../common/remove-player-from-players.js";
-import { removeStoppedPlayersFromGames } from "./remove-player-from-games.js";
 import { OpenGames } from "@/types/games.js";
 import { removeEmptyGames } from "./remove-empty-games.js";
+import { AuthenticatedInfo } from "types";
+import { removeStoppedPlayersFromGames } from "./remove-player-from-games.js";
+import { MapUsernameToSocket } from "./waiting-room.js";
 
 export async function onClose({
 	players,
-	playerSocketToRemove,
-	code,
-	reason,
-	games
+	games,
+	user
 }: {
-	players: WebSocket[];
-	playerSocketToRemove: WebSocket;
+	players: MapUsernameToSocket;
 	code: number;
 	reason: Buffer;
 	games: OpenGames;
+	user: AuthenticatedInfo;
 }) {
 	// TODO: when a player gets removed and is host/creator, move the ownership to second in line
 	await Promise.all([
 		removePlayerFromPlayers({
 			players,
-			playerSocketToRemove
+			user
 		}),
-		removeStoppedPlayersFromGames({ games }),
+		removeStoppedPlayersFromGames({ games, user }),
 		removeEmptyGames({ games })
 	]);
 }

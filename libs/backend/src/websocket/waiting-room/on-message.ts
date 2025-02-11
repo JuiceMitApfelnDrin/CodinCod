@@ -1,4 +1,4 @@
-import { GameEventEnum, isString } from "types";
+import { AuthenticatedInfo, GameEventEnum, isString } from "types";
 import { updatePlayer } from "../common/update-player.js";
 import { hostGame } from "./host-game.js";
 import { joinGame } from "./join-game.js";
@@ -10,17 +10,22 @@ import { RawData } from "ws";
 import { removePlayerFromPlayers } from "../common/remove-player-from-players.js";
 import { addPlayerToPlayers } from "../common/add-player-to-players.js";
 import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
+import { MapUsernameToGame, MapUsernameToSocket } from "./waiting-room.js";
 
 export async function onMessage({
 	message,
 	socket,
 	games,
-	players
+	players,
+	user,
+	gamesByUsername
 }: {
 	message: RawData;
 	socket: WebSocket;
 	games: OpenGames;
-	players: WebSocket[];
+	players: MapUsernameToSocket;
+	user: AuthenticatedInfo;
+	gamesByUsername: MapUsernameToGame;
 }) {
 	let parsedMessage = parseRawDataMessage(message, socket);
 
@@ -50,7 +55,7 @@ export async function onMessage({
 		}
 
 		hostGame({ userId, socket, username, event, games });
-		removePlayerFromPlayers({ players, playerSocketToRemove: socket });
+		removePlayerFromPlayers({ players, user });
 		return;
 	}
 
@@ -70,7 +75,7 @@ export async function onMessage({
 			}
 
 			joinGame({ gameId, userId, socket, username, event, games });
-			removePlayerFromPlayers({ players, playerSocketToRemove: socket });
+			removePlayerFromPlayers({ players, user });
 			return;
 		}
 		case GameEventEnum.LEAVE_GAME: {
@@ -84,7 +89,7 @@ export async function onMessage({
 			}
 
 			leaveGame({ gameId, socket, username, games });
-			addPlayerToPlayers({ players, playerSocketToAdd: socket });
+			addPlayerToPlayers({ players, user, playerSocketToAdd: socket });
 			return;
 		}
 		case GameEventEnum.START_GAME: {

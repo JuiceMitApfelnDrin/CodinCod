@@ -74,6 +74,8 @@
 
 			const { event } = receivedInformation;
 
+			console.log({ event, receivedInformation });
+
 			switch (event) {
 				case GameEventEnum.HOST_GAME:
 					{
