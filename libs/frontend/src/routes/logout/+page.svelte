@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { clearAuthenticatedUserInfo } from "@/stores";
+	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
 	import { frontendUrls } from "types";
 
@@ -8,7 +8,7 @@
 
 	onMount(() => {
 		if (data.loggedOut) {
-			clearAuthenticatedUserInfo();
+			authenticatedUserInfo.set(null);
 			goto(frontendUrls.ROOT);
 		}
 	});

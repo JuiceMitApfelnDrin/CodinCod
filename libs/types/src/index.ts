@@ -10,7 +10,6 @@ export * from "./core/authentication/schema/authenticated-info.schema.js";
 export * from "./core/authentication/schema/identifier.schema.js";
 export * from "./core/authentication/schema/login-response.schema.js";
 export * from "./core/authentication/schema/login.schema.js";
-export * from "./core/authentication/schema/register-response.schema.js";
 export * from "./core/authentication/schema/register.schema.js";
 export * from "./core/authentication/schema/token.schema.js";
 

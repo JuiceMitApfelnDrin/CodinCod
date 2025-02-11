@@ -9,7 +9,7 @@ const baseUserDtoSchema = userEntitySchema.pick({
 });
 
 export const userDtoSchema = baseUserDtoSchema.extend({
-	_id: objectIdSchema.optional()
+	_id: objectIdSchema
 });
 
 export type UserDto = z.infer<typeof userDtoSchema>;
