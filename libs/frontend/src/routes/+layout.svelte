@@ -1,17 +1,11 @@
 <script lang="ts">
 	import Nav from "@/components/nav/nav.svelte";
-	import { setAuthenticatedUserInfo } from "@/stores/index.js";
+	import { authenticatedUserInfo } from "@/stores/index.js";
 	import { isAuthenticatedInfo } from "types";
 
 	export let data;
 
-	$: {
-		if (isAuthenticatedInfo(data)) {
-			setAuthenticatedUserInfo(data);
-		} else {
-			setAuthenticatedUserInfo(null);
-		}
-	}
+	$: authenticatedUserInfo.set(isAuthenticatedInfo(data) ? data : null);
 </script>
 
 <Nav />

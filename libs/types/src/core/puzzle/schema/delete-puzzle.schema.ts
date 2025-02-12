@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { puzzleDtoSchema } from "./puzzle-dto.schema.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const deletePuzzleSchema = z.object({
-	id: puzzleDtoSchema.shape._id.unwrap()
+	id: objectIdSchema
 });
 
 export type DeletePuzzle = z.infer<typeof deletePuzzleSchema>;

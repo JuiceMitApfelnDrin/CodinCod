@@ -5,7 +5,7 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 const basePuzzleDtoSchema = puzzleEntitySchema;
 
 export const puzzleDtoSchema = basePuzzleDtoSchema.extend({
-	_id: objectIdSchema.optional()
+	_id: objectIdSchema
 });
 
 export type PuzzleDto = z.infer<typeof puzzleDtoSchema>;

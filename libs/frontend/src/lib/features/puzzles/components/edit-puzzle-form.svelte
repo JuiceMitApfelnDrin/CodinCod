@@ -4,9 +4,10 @@
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
-	import InlineCode from "@/components/typography/inlineCode.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import {
+		buildFrontendUrl,
+		frontendUrls,
 		POST,
 		puzzleEntitySchema,
 		PuzzleVisibilityEnum,
@@ -24,6 +25,8 @@
 	import { ScrollArea } from "@/components/ui/scroll-area";
 
 	export let data: SuperValidated<EditPuzzle>;
+
+	const learnMarkdownUrl = buildFrontendUrl(frontendUrls.LEARN_MARKDOWN);
 
 	const form = superForm(data, {
 		dataType: "json",
@@ -87,7 +90,9 @@
 			<Form.Label class="text-lg">Title</Form.Label>
 			<Input {...attrs} bind:value={$formData.title} />
 		</Form.Control>
-		<Form.Description>This will be the title of the puzzle.</Form.Description>
+		<Form.Description>
+			This will be shown as the name of the puzzle. A good title is both unique and descriptive.
+		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
 
@@ -97,7 +102,11 @@
 			<Textarea {...attrs} bind:value={$formData.statement} />
 		</Form.Control>
 		<Form.Description>
-			This will be the description of the puzzle (markdown formatting supported).
+			Describe the puzzle in enough detail to make it possible for players to understand and solve
+			it. The description should contain answers to questions such as: What are the inputs of the
+			puzzle? How are they formatted? What are the outputs of the puzzle? If there are decimal
+			numbers, how should they be rounded?
+			<a class="link" href={learnMarkdownUrl}>Markdown formatting is supported.</a>
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
@@ -108,9 +117,10 @@
 			<Textarea {...attrs} bind:value={$formData.constraints} />
 		</Form.Control>
 		<Form.Description>
-			Describe to the best of your abilities what the puzzle is limited to, e.g.:
-			<InlineCode>1 ≤ n ≤ 100; 1 ≤ h ≤ 15; 0 ≤ x1 &lt; x2 ≤ 200</InlineCode>. (Markdown formatting
-			supported).
+			Constraints should describe the limits for the input values, for example "1 ≤ N ≤ 100" or "S
+			contains only letters a to z and numbers 0 to 9". Sometimes it is useful to give constraints
+			for the output as well, for example to clarify that the answer will fit in a 32-bit integer.
+			<a class="link" href={learnMarkdownUrl}>Markdown formatting is supported.</a>
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
@@ -139,7 +149,10 @@
 				<Button type="button" on:click={addValidator}>Add Validator</Button>
 			</div>
 		</Form.Control>
-		<Form.Description>Input and output validators.</Form.Description>
+		<Form.Description>
+			Validators are the test cases for your puzzle. Please make sure that the validators cover all
+			the edge cases that are allowed by the constraints.
+		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
 
@@ -150,10 +163,7 @@
 	>
 		<Form.Legend class="px-4 text-3xl">Solution</Form.Legend>
 
-		<P>
-			This is where you create a solution to this puzzle. A way to solve and validate all
-			validators.
-		</P>
+		<P>Please provide a valid solution for your puzzle. It will be used to check the validators.</P>
 
 		<Form.Field {form} name="solution.language">
 			<Form.Control let:attrs>
@@ -184,9 +194,7 @@
 					<Select.Input bind:value={$formData.solution.language} name={attrs.name} />
 				</Select.Root>
 			</Form.Control>
-			<Form.Description
-				>This is the language the code to solve the puzzles will is written in.</Form.Description
-			>
+			<Form.Description>Programming language used for the solution.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 
@@ -224,10 +232,10 @@
 				<Select.Input bind:value={$formData.visibility} name={attrs.name} />
 			</Select.Root>
 		</Form.Control>
-		<Form.Description
-			>At the moment it is a free for all, you decide the visibility of your puzzle, but in the
-			future this will become a process with review iterations and other stuff.</Form.Description
-		>
+		<Form.Description>
+			At the moment you get to decide the visibility of your puzzle. In the future there will be a
+			review process to get a puzzle approved.
+		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
 
