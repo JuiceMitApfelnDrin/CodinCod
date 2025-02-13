@@ -1,7 +1,13 @@
 import { browser } from "$app/environment";
 import { localStorageKeys } from "@/config/local-storage";
 import { derived, writable } from "svelte/store";
-import { isAuthenticatedInfo, isThemeOption, themeOption, type AuthenticatedInfo, type ThemeOption } from "types";
+import {
+	isAuthenticatedInfo,
+	isThemeOption,
+	themeOption,
+	type AuthenticatedInfo,
+	type ThemeOption
+} from "types";
 
 /**
  * start dark-theme store
