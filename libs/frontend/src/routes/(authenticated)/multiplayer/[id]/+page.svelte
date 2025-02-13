@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
-	import Error from "@/components/error/error.svelte";
+	import DisplayError from "@/components/error/display-error.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
 	import H2 from "@/components/typography/h2.svelte";
 	import P from "@/components/typography/p.svelte";
@@ -232,7 +232,7 @@
 
 {#if !$authenticatedUserInfo}
 	<Container>
-		<Error
+		<DisplayError
 			link={{ href: frontendUrls.LOGIN, text: "Go to login" }}
 			status={httpResponseCodes.CLIENT_ERROR.FORBIDDEN}
 			message={"You have to login in order to play!"}
@@ -240,7 +240,7 @@
 	</Container>
 {:else if errorMessage}
 	<Container>
-		<Error
+		<DisplayError
 			link={{ href: frontendUrls.MULTIPLAYER, text: "Go to Multiplayer" }}
 			status={httpResponseCodes.CLIENT_ERROR.NOT_FOUND}
 			message={errorMessage}

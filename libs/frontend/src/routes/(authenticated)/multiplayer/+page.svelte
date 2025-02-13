@@ -2,7 +2,7 @@
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
-	import Error from "@/components/error/error.svelte";
+	import DisplayError from "@/components/error/display-error.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
@@ -129,7 +129,7 @@
 
 {#if errorMessage}
 	<Container>
-		<Error
+		<DisplayError
 			link={{ href: frontendUrls.PUZZLE_CREATE, text: "Go to create a puzzle" }}
 			message={errorMessage}
 		/>
