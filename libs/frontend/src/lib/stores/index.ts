@@ -76,8 +76,6 @@ if (browser) {
  * start waiting-room-websocket store
  */
 
-
-
 /**
  * end waiting-room-websocket store
  */
