@@ -71,11 +71,3 @@ if (browser) {
 /**
  * end user-info store
  */
-
-/**
- * start waiting-room-websocket store
- */
-
-/**
- * end waiting-room-websocket store
- */
