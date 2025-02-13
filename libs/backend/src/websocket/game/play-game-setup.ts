@@ -144,11 +144,11 @@ export function playGameSetup(
 	});
 
 	socket.on("close", (code, reason) => {
-		console.log("closed", req.user, code, reason);
-
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
+
+		console.log("closed", req.user.username);
 	});
 
 	socket.on("error", () => {
