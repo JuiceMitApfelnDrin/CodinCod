@@ -118,7 +118,12 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				break;
 			}
 			default:
-				socket.send("hi from server");
+				const data = JSON.stringify({
+					event: waitingRoomEventEnum.INCORRECT_VALUE,
+					message: `unknown event ${event}, add a way to handle this event first`
+				});
+
+				waitingRoom.updateUser(req.user.username, data);
 				break;
 		}
 
@@ -134,17 +139,15 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
-
-		console.log("close", req.user.username);
 		// waitingRoom.removeUserFromUsers(req.user.username);
 		// waitingRoom.removeEmptyRooms();
 	});
 
-	socket.on("error", () => {
+	socket.on("error", (e) => {
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
-		console.log("error", req.user.username);
+		fastify.log.info(`error occurred for user ${req.user.username}: ${e}`);
 
 		waitingRoom.removeUserFromUsers(req.user.username);
 		waitingRoom.removeEmptyRooms();
