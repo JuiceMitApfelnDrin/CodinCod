@@ -2,27 +2,18 @@ import { WebSocket } from "@fastify/websocket";
 
 type Username = string;
 
-export class PlayGame {
-	private static instance: PlayGame;
-
+export class UserWebSockets {
 	private socketByUsername: Record<Username, WebSocket>;
-
-	static getInstance() {
-		if (!PlayGame.instance) {
-			PlayGame.instance = new PlayGame();
-		}
-		return PlayGame.instance;
-	}
 
 	constructor() {
 		this.socketByUsername = {};
 	}
 
-	addUserToUsers(username: Username, socket: WebSocket) {
+	add(username: Username, socket: WebSocket) {
 		this.socketByUsername[username] = socket;
 	}
 
-	removeUserFromUsers(username: Username) {
+	remove(username: Username) {
 		delete this.socketByUsername[username];
 	}
 

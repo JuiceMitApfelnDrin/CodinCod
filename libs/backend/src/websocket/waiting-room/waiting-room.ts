@@ -7,18 +7,9 @@ type RoomId = ObjectId;
 type Room = Record<Username, GameUserInfo>;
 
 export class WaitingRoom {
-	private static instance: WaitingRoom;
-
 	private roomsByRoomId: Record<RoomId, Room>;
 	private socketByUsername: Record<Username, WebSocket>;
 	private roomsByUsername: Record<Username, RoomId>;
-
-	static getInstance() {
-		if (!WaitingRoom.instance) {
-			WaitingRoom.instance = new WaitingRoom();
-		}
-		return WaitingRoom.instance;
-	}
 
 	constructor() {
 		this.roomsByRoomId = {};

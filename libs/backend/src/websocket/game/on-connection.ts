@@ -2,15 +2,15 @@ import Game from "@/models/game/game.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import { WebSocket } from "@fastify/websocket";
 import { AuthenticatedInfo, GameEventEnum, ObjectId } from "types";
-import { PlayGame } from "./play-game.js";
+import { UserWebSockets } from "./user-web-sockets.js";
 
 export async function onConnection(
-	playGame: PlayGame,
+	playGame: UserWebSockets,
 	user: AuthenticatedInfo,
 	gameId: ObjectId,
 	socket: WebSocket
 ) {
-	playGame.addUserToUsers(user.username, socket);
+	playGame.add(user.username, socket);
 
 	const game = await Game.findById(gameId)
 		.populate("creator")

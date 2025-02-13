@@ -3,12 +3,12 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import { onConnection } from "./on-connection.js";
 import { ParamsId } from "@/routes/puzzle/[id]/types.js";
 import { ChatMessage, GameEventEnum, isAuthenticatedInfo, isChatMessage } from "types";
-import { PlayGame } from "./play-game.js";
 import { isValidObjectId } from "mongoose";
 import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
 import Game from "@/models/game/game.js";
+import { UserWebSockets } from "./user-web-sockets.js";
 
-const playGame = new PlayGame();
+const playGame = new UserWebSockets();
 
 export function playGameSetup(
 	socket: WebSocket,
@@ -158,6 +158,6 @@ export function playGameSetup(
 			return;
 		}
 
-		playGame.removeUserFromUsers(req.user.username);
+		playGame.remove(req.user.username);
 	});
 }
