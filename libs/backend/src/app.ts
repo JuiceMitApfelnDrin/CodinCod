@@ -41,7 +41,6 @@ server.register(cors);
 server.register(swagger);
 server.register(jwt);
 server.register(swaggerUi);
-// server.register(dbConnectorPlugin);
 server.register(fastifyFormbody);
 server.register(mongooseConnector);
 server.register(piston);
