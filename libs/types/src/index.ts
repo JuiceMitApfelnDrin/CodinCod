@@ -43,6 +43,8 @@ export * from "./core/game/schema/game-dto.schema.js";
 export * from "./core/game/schema/game-entity.schema.js";
 export * from "./core/game/schema/game-event.schema.js";
 export * from "./core/game/schema/game-user-info.schema.js";
+export * from "./core/game/schema/waiting-room-request.schema.js";
+export * from "./core/game/schema/waiting-room-response.schema.js";
 export * from "./core/game/schema/mode.schema.js";
 export * from "./core/game/schema/options.schema.js";
 export * from "./core/game/schema/visibility.schema.js";

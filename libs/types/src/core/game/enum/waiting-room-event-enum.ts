@@ -1,18 +1,18 @@
+import { z } from "zod";
+import { getValues } from "../../../utils/functions/get-values.js";
+
 export const waitingRoomEventEnum = {
 	START_GAME: "game:start",
-	GO_TO_GAME: "room:go-to",
 
 	HOST_ROOM: "room:host",
 	JOIN_ROOM: "room:join",
 	LEAVE_ROOM: "room:leave",
 	OVERVIEW_ROOM: "room:overview",
 
-	// error messages for room
-	NONEXISTENT_ROOM: "room:nonexistent",
 	NOT_ENOUGH_PUZZLES: "rooms:not-enough",
-
-	// error messages for value
-	INCORRECT_VALUE: "value:incorrect",
+	ERROR: "error",
 
 	OVERVIEW_OF_ROOMS: "rooms:overview"
 } as const;
+
+export const waitingRoomEventSchema = z.enum(getValues(waitingRoomEventEnum));
