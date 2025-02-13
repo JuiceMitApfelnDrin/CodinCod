@@ -100,7 +100,7 @@
 						goto(receivedInformation.message);
 					}
 					break;
-				case waitingRoomEventEnum.NOT_ENOUGH_ROOMS:
+				case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
 					{
 						errorMessage = receivedInformation.message;
 					}

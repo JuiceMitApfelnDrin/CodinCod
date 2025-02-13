@@ -56,7 +56,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 
 				if (randomPuzzles.length < 1) {
 					const data = JSON.stringify({
-						event: waitingRoomEventEnum.NOT_ENOUGH_ROOMS,
+						event: waitingRoomEventEnum.NOT_ENOUGH_PUZZLES,
 						socket,
 						message: "Create a puzzle and get it approved in order to play multiplayer games"
 					});
