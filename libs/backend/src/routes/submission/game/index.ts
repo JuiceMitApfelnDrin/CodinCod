@@ -6,7 +6,6 @@ import {
 	isAuthor,
 	isString,
 	SUBMISSION_BUFFER_IN_MILLISECONDS,
-	SubmissionDto,
 	SubmissionEntity
 } from "types";
 import { isValidationError } from "../../../utils/functions/is-validation-error.js";
