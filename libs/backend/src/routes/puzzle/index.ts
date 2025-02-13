@@ -24,7 +24,7 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 			}
 
 			if (!isAuthenticatedInfo(request.user)) {
-				return reply.status(401).send({ error: "Not right credentials" });
+				return reply.status(401).send({ error: "Invalid credentials" });
 			}
 
 			const user = request.user;

@@ -17,7 +17,8 @@ const userSchema = new Schema<UserDocument>({
 		trim: true,
 		type: String,
 		unique: true,
-		select: false
+		select: false,
+		index: true
 	},
 	password: {
 		required: true,
@@ -32,7 +33,8 @@ const userSchema = new Schema<UserDocument>({
 		required: true,
 		trim: true,
 		type: String,
-		unique: true
+		unique: true,
+		index: true
 	},
 	profile: {
 		type: profileSchema,
