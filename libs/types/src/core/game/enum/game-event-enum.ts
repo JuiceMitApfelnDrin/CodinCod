@@ -22,6 +22,8 @@ export const GameEventEnum = {
 	SUBMIT_CODE: "code:submit",
 	ALREADY_SUBMITTED_CODE: "code:already-submitted",
 
+	CHANGE_LANGUAGE: "language:change",
+
 	SEND_MESSAGE: "message:send",
 	SEND_MESSAGE_FAILED: "message:send:failed",
 

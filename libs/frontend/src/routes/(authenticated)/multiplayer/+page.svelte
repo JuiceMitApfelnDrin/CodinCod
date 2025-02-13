@@ -48,17 +48,21 @@
 					username: $authenticatedUserInfo?.username
 				})
 			);
+
+			updateRoomIdInUrl();
 		}
 	}
 
 	function connectWithWebsocket() {
+		if (socket) {
+			socket.close();
+		}
+
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.WAITING_ROOM);
 		socket = new WebSocket(webSocketUrl);
 
 		socket.onopen = (message) => {
 			console.info("WebSocket connection opened");
-
-			console.log({ message });
 
 			checkForRoomId();
 		};
@@ -68,9 +72,7 @@
 		};
 
 		socket.onclose = (message) => {
-			console.info("WebSocket connection close");
-
-			console.log({ message });
+			console.info("WebSocket connection closed:", message.code, message.reason);
 
 			setTimeout(function () {
 				connectWithWebsocket();
@@ -81,8 +83,6 @@
 			const receivedInformation = JSON.parse(message.data);
 
 			const { event } = receivedInformation;
-
-			console.log({ event, receivedInformation });
 
 			switch (event) {
 				case waitingRoomEventEnum.OVERVIEW_OF_ROOMS:
@@ -125,10 +125,6 @@
 	$: if (room?.roomId) updateRoomIdInUrl();
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
-
-	$: {
-		console.log({ room });
-	}
 </script>
 
 {#if errorMessage}
@@ -215,7 +211,6 @@
 					<li>
 						<Button
 							on:click={() => {
-								console.log({ joinableRoom });
 								socket.send(
 									JSON.stringify({
 										event: waitingRoomEventEnum.JOIN_ROOM,

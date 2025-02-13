@@ -1,5 +1,5 @@
-import { RawData } from "ws";
 import { WebSocket } from "@fastify/websocket";
+import { RawData } from "ws";
 
 function convertRawDataToString(message: RawData): string | null {
 	if (Buffer.isBuffer(message)) {

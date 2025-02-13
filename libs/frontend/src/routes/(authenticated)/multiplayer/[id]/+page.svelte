@@ -56,8 +56,13 @@
 	let puzzle: PuzzleDto | undefined;
 	let errorMessage: string | undefined;
 	let chatMessages: ChatMessage[] = [];
+	const playerLanguages: Record<string, string> = {};
 
 	function connectWithWebsocket() {
+		if (socket) {
+			socket.close();
+		}
+
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.GAME, { id: $page.params.id });
 		socket = new WebSocket(webSocketUrl);
 
@@ -80,16 +85,16 @@
 
 		socket.addEventListener("message", async (message) => {
 			const receivedInformation = JSON.parse(message.data);
-			const { data, event } = receivedInformation;
+			const { event } = receivedInformation;
 
 			switch (event) {
 				case GameEventEnum.OVERVIEW_GAME:
 					{
-						if (data.game) {
-							game = data.game;
+						if (receivedInformation.game) {
+							game = receivedInformation.game;
 						}
-						if (data.puzzle) {
-							puzzle = data.puzzle;
+						if (receivedInformation.puzzle) {
+							puzzle = receivedInformation.puzzle;
 						}
 					}
 					break;
@@ -98,17 +103,24 @@
 					break;
 				case GameEventEnum.FINISHED_GAME:
 					{
-						game = data.game;
+						game = receivedInformation.game;
 						isGameOver = true;
 					}
 					break;
 				case GameEventEnum.SEND_MESSAGE:
 					{
-						const { chatMessage } = data;
+						const { chatMessage } = receivedInformation;
 
 						if (isChatMessage(chatMessage)) {
 							chatMessages = [...chatMessages, chatMessage];
 						}
+					}
+					break;
+				case GameEventEnum.CHANGE_LANGUAGE:
+					{
+						const { username, language } = receivedInformation;
+
+						playerLanguages[username] = language;
 					}
 					break;
 				default:
@@ -207,6 +219,15 @@
 			})
 		);
 	}
+
+	function onPlayerChangeLanguage(language: string) {
+		const data = JSON.stringify({
+			event: GameEventEnum.CHANGE_LANGUAGE,
+			language
+		});
+
+		socket.send(data);
+	}
 </script>
 
 {#if !$authenticatedUserInfo}
@@ -263,7 +284,7 @@
 	<Container>
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane class="mr-4 flex flex-col gap-4 md:gap-8 lg:gap-12">
-				<PlayPuzzle {puzzle} {onPlayerSubmitCode} {endDate} />
+				<PlayPuzzle {puzzle} {onPlayerSubmitCode} {onPlayerChangeLanguage} {endDate} />
 			</Resizable.Pane>
 			<Resizable.Handle />
 			<Resizable.Pane class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12">
@@ -275,7 +296,9 @@
 							<li>
 								{#if isUserDto(player)}
 									<UserHoverCard username={player.username} />{` - using ${
-										findPlayerSubmission(player._id)?.language ?? "???"
+										findPlayerSubmission(player._id)?.language ??
+										playerLanguages[player.username] ??
+										"???"
 									} - ${findPlayerSubmission(player._id)?.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
 									{player}

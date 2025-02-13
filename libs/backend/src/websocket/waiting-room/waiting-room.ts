@@ -71,9 +71,6 @@ export class WaitingRoom {
 		this.roomsByUsername[user.username] = roomId;
 
 		this.updateUsersOnRoomState(roomId);
-
-		// no notifications related to all rooms available and changing state within them
-		delete this.socketByUsername[user.username];
 	}
 
 	leaveRoom(username: Username, roomId: RoomId) {
@@ -150,7 +147,6 @@ export class WaitingRoom {
 		const socket = this.socketByUsername[username];
 
 		if (!socket) {
-			console.log({ socket });
 			return;
 		}
 
@@ -158,8 +154,6 @@ export class WaitingRoom {
 	}
 
 	removeEmptyRooms() {
-		console.log("remove empty rooms");
-
 		const rooms = Object.entries(this.roomsByRoomId).filter(([_roomId, room]) => {
 			return Object.keys(room).length === 0;
 		});

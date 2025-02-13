@@ -17,15 +17,12 @@ const waitingRoom = new WaitingRoom();
 
 export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance) {
 	if (!isAuthenticatedInfo(req.user)) {
-		console.log("no authentication info madge");
 		return;
 	}
 	onConnection(waitingRoom, socket, req.user);
 
 	socket.on("message", async (message) => {
 		if (!isAuthenticatedInfo(req.user)) {
-			console.log("no authentication info madge");
-
 			return;
 		}
 
@@ -36,8 +33,6 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 		}
 
 		const { event, roomId } = parsedMessage;
-
-		console.log({ parsedMessage });
 
 		switch (event) {
 			case waitingRoomEventEnum.HOST_ROOM: {
@@ -137,23 +132,19 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 
 	socket.on("close", (code, reason) => {
 		if (!isAuthenticatedInfo(req.user)) {
-			console.log("no authentication info madge");
-
 			return;
 		}
 
-		console.log({ close: true, req: req.user.username });
+		console.log("close", req.user.username);
 		// waitingRoom.removeUserFromUsers(req.user.username);
 		// waitingRoom.removeEmptyRooms();
 	});
 
 	socket.on("error", () => {
 		if (!isAuthenticatedInfo(req.user)) {
-			console.log("no authentication info madge");
-
 			return;
 		}
-		console.log({ error: true, req: req.user.username });
+		console.log("error", req.user.username);
 
 		waitingRoom.removeUserFromUsers(req.user.username);
 		waitingRoom.removeEmptyRooms();
