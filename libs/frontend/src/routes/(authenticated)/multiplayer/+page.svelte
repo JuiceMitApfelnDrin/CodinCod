@@ -10,16 +10,18 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
-	import { frontendUrls, isAuthor, waitingRoomEventEnum, webSocketUrls } from "types";
+	import {
+		frontendUrls,
+		isAuthor,
+		isWaitingRoomResponse,
+		waitingRoomEventEnum,
+		webSocketUrls,
+		type RoomOverviewResponse,
+		type RoomStateResponse
+	} from "types";
 
-	let room:
-		| {
-				users: { username: string; userId: string; joinedAt: Date }[];
-				creator: { username: string; userId: string; joinedAt: Date };
-				roomId: string;
-		  }
-		| undefined;
-	let rooms: { roomId: string; amountOfPlayersJoined: number }[];
+	let room: RoomStateResponse | undefined;
+	let rooms: RoomOverviewResponse[] = [];
 	let errorMessage: string | undefined;
 
 	const queryParamKeys = {
@@ -43,9 +45,7 @@
 			socket.send(
 				JSON.stringify({
 					event: waitingRoomEventEnum.JOIN_ROOM,
-					roomId: query.get(queryParamKeys.ROOM_ID),
-					userId: $authenticatedUserInfo?.userId,
-					username: $authenticatedUserInfo?.username
+					roomId: query.get(queryParamKeys.ROOM_ID)
 				})
 			);
 
@@ -82,6 +82,12 @@
 		socket.onmessage = (message) => {
 			const receivedInformation = JSON.parse(message.data);
 
+			console.log({ receivedInformation });
+
+			if (!isWaitingRoomResponse(receivedInformation)) {
+				throw new Error("unknown / unhandled waiting room response");
+			}
+
 			const { event } = receivedInformation;
 
 			switch (event) {
@@ -95,9 +101,9 @@
 						room = receivedInformation.room;
 					}
 					break;
-				case waitingRoomEventEnum.GO_TO_GAME:
+				case waitingRoomEventEnum.START_GAME:
 					{
-						goto(receivedInformation.message);
+						goto(receivedInformation.gameUrl);
 					}
 					break;
 				case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
@@ -105,13 +111,14 @@
 						errorMessage = receivedInformation.message;
 					}
 					break;
-				case waitingRoomEventEnum.NONEXISTENT_ROOM:
+				case waitingRoomEventEnum.ERROR:
 					{
+						console.error(receivedInformation.message);
 					}
 					break;
-				default:
-					console.warn("unknown / unhandled event: ", { event });
-
+				case waitingRoomEventEnum.HOST_ROOM:
+				case waitingRoomEventEnum.LEAVE_ROOM:
+				case waitingRoomEventEnum.JOIN_ROOM:
 					break;
 			}
 		};
@@ -147,8 +154,7 @@
 								socket.send(
 									JSON.stringify({
 										event: waitingRoomEventEnum.LEAVE_ROOM,
-										roomId: room.roomId,
-										username: $authenticatedUserInfo?.username
+										roomId: room.roomId
 									})
 								);
 
@@ -159,7 +165,7 @@
 						Leave room
 					</Button>
 
-					{#if $authenticatedUserInfo?.userId && isAuthor(room?.creator.userId, $authenticatedUserInfo?.userId)}
+					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
 							on:click={() => {
 								if (room?.roomId) {
@@ -180,9 +186,7 @@
 						on:click={() => {
 							socket.send(
 								JSON.stringify({
-									event: waitingRoomEventEnum.HOST_ROOM,
-									userId: $authenticatedUserInfo?.userId,
-									username: $authenticatedUserInfo?.username
+									event: waitingRoomEventEnum.HOST_ROOM
 								})
 							);
 						}}
@@ -200,7 +204,7 @@
 			<ul>
 				{#each room.users as user}
 					<li class="list-inside list-disc">
-						{user.username}{#if isAuthor(room.creator.userId, user.userId)}
+						{user.username}{#if isAuthor(room.owner.userId, user.userId)}
 							{` - Creator/host!`}{/if}
 					</li>
 				{/each}
@@ -214,9 +218,7 @@
 								socket.send(
 									JSON.stringify({
 										event: waitingRoomEventEnum.JOIN_ROOM,
-										roomId: joinableRoom.roomId,
-										userId: $authenticatedUserInfo?.userId,
-										username: $authenticatedUserInfo?.username
+										roomId: joinableRoom.roomId
 									})
 								);
 							}}

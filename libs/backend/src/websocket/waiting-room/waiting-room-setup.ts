@@ -26,13 +26,20 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 			return;
 		}
 
-		let parsedMessage = parseRawDataMessage(message, socket);
+		let parsedMessage;
 
-		if (!parsedMessage) {
-			return;
+		try {
+			parsedMessage = parseRawDataMessage(message);
+		} catch (e) {
+			const error = e as Error;
+
+			return waitingRoom.updateUser(req.user.username, {
+				event: waitingRoomEventEnum.ERROR,
+				message: error.message
+			});
 		}
 
-		const { event, roomId } = parsedMessage;
+		const { event } = parsedMessage;
 
 		switch (event) {
 			case waitingRoomEventEnum.HOST_ROOM: {
@@ -40,11 +47,11 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				break;
 			}
 			case waitingRoomEventEnum.JOIN_ROOM: {
-				waitingRoom.joinRoom(req.user, roomId);
+				waitingRoom.joinRoom(req.user, parsedMessage.roomId);
 				break;
 			}
 			case waitingRoomEventEnum.LEAVE_ROOM: {
-				waitingRoom.leaveRoom(req.user.username, roomId);
+				waitingRoom.leaveRoom(req.user.username, parsedMessage.roomId);
 				waitingRoom.addUserToUsers(req.user.username, socket);
 				break;
 			}
@@ -55,43 +62,34 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				]).exec();
 
 				if (randomPuzzles.length < 1) {
-					const data = JSON.stringify({
+					waitingRoom.updateUser(req.user.username, {
 						event: waitingRoomEventEnum.NOT_ENOUGH_PUZZLES,
-						socket,
 						message: "Create a puzzle and get it approved in order to play multiplayer games"
 					});
-
-					waitingRoom.updateUser(req.user.username, data);
 					return;
 				}
 
 				const randomPuzzle = randomPuzzles[0];
 
-				const room = waitingRoom.getRoom(roomId);
+				const room = waitingRoom.getRoom(parsedMessage.roomId);
 
 				if (!room) {
-					const data = JSON.stringify({
-						event: waitingRoomEventEnum.NONEXISTENT_ROOM,
-						socket,
-						message: `Couldn't find room with id (${roomId})`
+					waitingRoom.updateUser(req.user.username, {
+						event: waitingRoomEventEnum.ERROR,
+						message: `Couldn't find room with id (${parsedMessage.roomId})`
 					});
-
-					waitingRoom.updateUser(req.user.username, data);
 					return;
 				}
 
 				const players = Object.values(room).map((player) => player.userId);
 
 				if (players.length <= 0) {
-					const data = JSON.stringify({
-						event: waitingRoomEventEnum.INCORRECT_VALUE,
-						socket,
-						message: `Couldn't find anyone in room with id (${roomId})`
-					});
-
 					waitingRoom.removeEmptyRooms();
 
-					waitingRoom.updateUser(req.user.username, data);
+					waitingRoom.updateUser(req.user.username, {
+						event: waitingRoomEventEnum.ERROR,
+						message: `Couldn't find anyone in room with id (${parsedMessage.roomId})`
+					});
 					return;
 				}
 
@@ -106,24 +104,19 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				const usernamesOfUsersInRoom = Object.keys(room);
 
 				usernamesOfUsersInRoom.forEach((username) => {
-					waitingRoom.updateUser(
-						username,
-						JSON.stringify({
-							event: waitingRoomEventEnum.GO_TO_GAME,
-							message: buildFrontendUrl(frontendUrls.MULTIPLAYER_ID, { id: newlyCreatedGame.id })
-						})
-					);
+					waitingRoom.updateUser(username, {
+						event: waitingRoomEventEnum.START_GAME,
+						gameUrl: buildFrontendUrl(frontendUrls.MULTIPLAYER_ID, { id: newlyCreatedGame.id })
+					});
 					waitingRoom.removeUserFromUsers(username);
 				});
 				break;
 			}
 			default:
-				const data = JSON.stringify({
-					event: waitingRoomEventEnum.INCORRECT_VALUE,
+				waitingRoom.updateUser(req.user.username, {
+					event: waitingRoomEventEnum.ERROR,
 					message: `unknown event ${event}, add a way to handle this event first`
 				});
-
-				waitingRoom.updateUser(req.user.username, data);
 				break;
 		}
 

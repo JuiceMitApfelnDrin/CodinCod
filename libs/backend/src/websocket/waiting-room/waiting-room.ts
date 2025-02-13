@@ -1,6 +1,12 @@
 import { WebSocket } from "@fastify/websocket";
 import mongoose from "mongoose";
-import { AuthenticatedInfo, GameUserInfo, ObjectId, waitingRoomEventEnum } from "types";
+import {
+	AuthenticatedInfo,
+	GameUserInfo,
+	ObjectId,
+	waitingRoomEventEnum,
+	WaitingRoomResponse
+} from "types";
 
 type Username = string;
 type RoomId = ObjectId;
@@ -99,11 +105,11 @@ export class WaitingRoom {
 
 		const usersInRoom = Object.values(room);
 
-		const data = JSON.stringify({
+		this.updateUsersInRoom(roomId, {
 			event: waitingRoomEventEnum.OVERVIEW_ROOM,
 			room: {
 				users: usersInRoom,
-				creator: usersInRoom.sort((userA, userB) => {
+				owner: usersInRoom.sort((userA, userB) => {
 					const userAJoinDate = new Date(userA.joinedAt).getTime();
 					const userBJoinDate = new Date(userB.joinedAt).getTime();
 
@@ -112,11 +118,9 @@ export class WaitingRoom {
 				roomId
 			}
 		});
-
-		this.updateUsersInRoom(roomId, data);
 	}
 
-	updateUsersInRoom(roomId: RoomId, data: string) {
+	updateUsersInRoom(roomId: RoomId, data: WaitingRoomResponse) {
 		const room = this.getRoom(roomId);
 
 		if (!room) {
@@ -134,14 +138,16 @@ export class WaitingRoom {
 		});
 	}
 
-	updateUser(username: string, data: string) {
+	updateUser(username: string, data: WaitingRoomResponse) {
 		const socket = this.socketByUsername[username];
 
 		if (!socket) {
 			return;
 		}
 
-		socket.send(data);
+		const stringData = JSON.stringify(data);
+
+		socket.send(stringData);
 	}
 
 	removeEmptyRooms() {

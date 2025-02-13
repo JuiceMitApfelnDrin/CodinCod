@@ -6,10 +6,9 @@ export function onConnection(waitingRoom: WaitingRoom, socket: WebSocket, user: 
 	waitingRoom.addUserToUsers(user.username, socket);
 
 	const openRooms = waitingRoom.getRooms();
-	const data = JSON.stringify({
+
+	waitingRoom.updateUser(user.username, {
 		event: waitingRoomEventEnum.OVERVIEW_OF_ROOMS,
 		rooms: openRooms
 	});
-
-	waitingRoom.updateUser(user.username, data);
 }

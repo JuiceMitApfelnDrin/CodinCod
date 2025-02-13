@@ -1,7 +1,7 @@
-import { WebSocket } from "@fastify/websocket";
+import { isWaitingRoomRequest, WaitingRoomRequest } from "types";
 import { RawData } from "ws";
 
-function convertRawDataToString(message: RawData): string | null {
+function convertRawDataToString(message: RawData): string {
 	if (Buffer.isBuffer(message)) {
 		return message.toString("utf-8");
 	} else if (Array.isArray(message)) {
@@ -13,14 +13,14 @@ function convertRawDataToString(message: RawData): string | null {
 	}
 }
 
-export function parseRawDataMessage(message: RawData, socket: WebSocket) {
+export function parseRawDataMessage(message: RawData): WaitingRoomRequest {
 	const messageString = convertRawDataToString(message);
 
-	if (messageString) {
-		try {
-			return JSON.parse(messageString);
-		} catch (error) {
-			socket.send("Failed to parse message:" + error);
-		}
+	const receivedMessageData = JSON.parse(messageString);
+
+	if (!isWaitingRoomRequest(receivedMessageData)) {
+		throw new Error("parsing message failed");
 	}
+
+	return receivedMessageData;
 }
