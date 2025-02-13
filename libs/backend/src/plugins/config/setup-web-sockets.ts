@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { webSocketUrls } from "types";
-import { waitingRoom } from "@/websocket/waiting-room/waiting-room.js";
-import { playGame } from "@/websocket/game/play-game.js";
+import { waitingRoomSetup } from "@/websocket/waiting-room/waiting-room-setup.js";
+import { playGameSetup } from "@/websocket/game/play-game-setup.js";
 import { ParamsId } from "@/routes/puzzle/[id]/types.js";
 import authenticated from "../middleware/authenticated.js";
 
@@ -10,11 +10,11 @@ export async function setupWebSockets(fastify: FastifyInstance) {
 
 	fastify.addHook("preValidation", authenticated);
 	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (...props) =>
-		waitingRoom(...props, fastify)
+		waitingRoomSetup(...props, fastify)
 	);
 
 	fastify.addHook("preValidation", authenticated);
 	fastify.get<ParamsId>(webSocketUrls.GAME, { websocket: true }, (...props) =>
-		playGame(...props, fastify)
+		playGameSetup(...props, fastify)
 	);
 }

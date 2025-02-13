@@ -7,7 +7,7 @@ import { onMessage } from "./on-message.js";
 
 const playersInCurrentGame: WebSocket[] = [];
 
-export function playGame(
+export function playGameSetup(
 	socket: WebSocket,
 	req: FastifyRequest<ParamsId>,
 	fastify: FastifyInstance

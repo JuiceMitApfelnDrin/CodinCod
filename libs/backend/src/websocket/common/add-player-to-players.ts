@@ -1,5 +1,5 @@
 import { WebSocket } from "@fastify/websocket";
-import { MapUsernameToSocket } from "../waiting-room/waiting-room.js";
+import { MapUsernameToSocket } from "../waiting-room/waiting-room-setup.js";
 import { AuthenticatedInfo } from "types";
 
 export function addPlayerToPlayers({

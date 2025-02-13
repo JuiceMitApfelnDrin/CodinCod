@@ -1,23 +1,15 @@
-import { OpenGames } from "@/types/games.js";
-import { addPlayerToPlayers } from "../common/add-player-to-players.js";
-import { updatePlayers } from "./update-players.js";
 import { WebSocket } from "@fastify/websocket";
-import { MapUsernameToSocket } from "./waiting-room.js";
-import { AuthenticatedInfo } from "types";
+import { AuthenticatedInfo, waitingRoomEventEnum } from "types";
+import { WaitingRoom } from "./waiting-room.js";
 
-export function onConnection({
-	players,
-	newPlayerSocket,
-	games,
-	user
-}: {
-	players: MapUsernameToSocket;
-	newPlayerSocket: WebSocket;
-	games: OpenGames;
-	user: AuthenticatedInfo;
-}) {
-	addPlayerToPlayers({ players: players, playerSocketToAdd: newPlayerSocket, user });
+export function onConnection(waitingRoom: WaitingRoom, socket: WebSocket, user: AuthenticatedInfo) {
+	waitingRoom.addUserToUsers(user.username, socket);
 
-	const singleUserToUpdate = { [user.username]: newPlayerSocket };
-	updatePlayers({ sockets: singleUserToUpdate, games });
+	const openRooms = waitingRoom.getRooms();
+	const data = JSON.stringify({
+		event: waitingRoomEventEnum.OVERVIEW_OF_ROOMS,
+		rooms: openRooms
+	});
+
+	waitingRoom.updateUser(user.username, data);
 }
