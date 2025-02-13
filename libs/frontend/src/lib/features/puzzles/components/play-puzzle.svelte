@@ -26,6 +26,7 @@
 	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
 	import { onMount } from "svelte";
 	import ScrollArea from "@/components/ui/scroll-area/scroll-area.svelte";
+	import OutputBox from "./output-box.svelte";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
@@ -141,7 +142,7 @@
 	<Accordion open={true} id="statement">
 		<h2 slot="title">Statement</h2>
 		<div slot="content">
-			<Markdown markdown={puzzle.statement} fallbackText="No constraints" />
+			<Markdown markdown={puzzle.statement} fallbackText="No statement" />
 		</div>
 	</Accordion>
 
@@ -231,19 +232,11 @@
 						>
 							<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
 								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-									<h3 class="text-lg font-semibold">Input</h3>
-
-									<div class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4">
-										<pre><code>{validator.input.trimEnd()}</code></pre>
-									</div>
+									<OutputBox title="Input">{validator.input.trimEnd()}</OutputBox>
 								</LogicalUnit>
 
 								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-									<h3 class="text-lg font-semibold">Expected output</h3>
-
-									<div class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4">
-										<pre><code>{validator.output.trimEnd()}</code></pre>
-									</div>
+									<OutputBox title="Expected output">{validator.output.trimEnd()}</OutputBox>
 								</LogicalUnit>
 							</div>
 
@@ -252,23 +245,11 @@
 									<h3 class="text-xl font-semibold">Latest result</h3>
 
 									<LogicalUnit class="w-full space-y-2">
-										<h4 class="font-bold">Stdout:</h4>
-
-										<div
-											class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
-										>
-											<pre><code>{validator.testResult?.run.stdout}</code></pre>
-										</div>
+										<OutputBox title="Stdout:">{validator.testResult?.run.stdout}</OutputBox>
 									</LogicalUnit>
 
 									<LogicalUnit class="w-full space-y-2">
-										<h4 class="font-bold">Stderr:</h4>
-
-										<div
-											class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
-										>
-											<pre><code>{validator.testResult?.run.stderr}</code></pre>
-										</div>
+										<OutputBox title="Stderr:">{validator.testResult?.run.stderr}</OutputBox>
 									</LogicalUnit>
 								</div>
 							{/if}
