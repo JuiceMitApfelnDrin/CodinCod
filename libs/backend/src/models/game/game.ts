@@ -17,7 +17,7 @@ const gameSchema = new Schema<GameDocument>({
 		default: Date.now,
 		type: Date
 	},
-	creator: {
+	owner: {
 		ref: USER,
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
