@@ -1,11 +1,13 @@
 import { z } from "zod";
 import { puzzleEntitySchema } from "./puzzle-entity.schema.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
+import { solutionSchema } from "./solution.schema.js";
 
 const basePuzzleDtoSchema = puzzleEntitySchema;
 
 export const puzzleDtoSchema = basePuzzleDtoSchema.extend({
-	_id: objectIdSchema
+	_id: objectIdSchema,
+	solution: solutionSchema.optional()
 });
 
 export type PuzzleDto = z.infer<typeof puzzleDtoSchema>;
