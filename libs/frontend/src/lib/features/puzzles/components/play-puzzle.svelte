@@ -231,6 +231,8 @@
 							id={`validator-${index}`}
 						>
 							<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
+								<h3 class="sr-only">Test case</h3>
+
 								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
 									<OutputBox title="Input">{validator.input.trimEnd()}</OutputBox>
 								</LogicalUnit>
@@ -242,7 +244,7 @@
 
 							{#if validator.testResult}
 								<div class="flex flex-col gap-4 lg:gap-6">
-									<h3 class="text-xl font-semibold">Latest result</h3>
+									<h3 class="text-xl font-semibold">Latest execution details</h3>
 
 									<LogicalUnit class="w-full space-y-2">
 										<OutputBox title="Stdout:">{validator.testResult?.run.stdout}</OutputBox>
