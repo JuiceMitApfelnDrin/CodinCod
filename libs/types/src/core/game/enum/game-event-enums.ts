@@ -1,4 +1,7 @@
-export const GameEventEnum = {
+import { z } from "zod";
+import { getValues } from "../../../utils/functions/get-values.js";
+
+export const gameEventEnum = {
 	JOIN_GAME: "game:join",
 	OVERVIEW_GAME: "game:overview",
 
@@ -6,13 +9,13 @@ export const GameEventEnum = {
 	NONEXISTENT_GAME: "game:nonexistent",
 	FINISHED_GAME: "game:finished",
 
-	// error messages for value
-	INCORRECT_VALUE: "value:incorrect",
+	ERROR: "error",
 
 	CHANGE_LANGUAGE: "language:change",
 
 	SEND_MESSAGE: "message:send",
-	SEND_MESSAGE_FAILED: "message:send:failed",
 
 	SUBMITTED_PLAYER: "player:submitted"
 } as const;
+
+export const gameEventSchema = z.enum(getValues(gameEventEnum));
