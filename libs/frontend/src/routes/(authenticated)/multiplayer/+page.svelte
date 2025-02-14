@@ -82,8 +82,6 @@
 		socket.onmessage = (message) => {
 			const receivedInformation = JSON.parse(message.data);
 
-			console.log({ receivedInformation });
-
 			if (!isWaitingRoomResponse(receivedInformation)) {
 				throw new Error("unknown / unhandled waiting room response");
 			}
