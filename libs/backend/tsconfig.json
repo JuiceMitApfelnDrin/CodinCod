@@ -17,6 +17,7 @@
 		"isolatedModules": true,
 		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true,
+		"exactOptionalPropertyTypes": true,
 		"lib": ["ESNext"],
 
 		"paths": {
