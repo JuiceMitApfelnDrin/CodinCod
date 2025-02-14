@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import DisplayError from "@/components/error/display-error.svelte";
@@ -25,7 +26,6 @@
 	import {
 		buildFrontendUrl,
 		frontendUrls,
-		GameEventEnum,
 		httpRequestMethod,
 		httpResponseCodes,
 		isAuthor,
@@ -41,7 +41,8 @@
 		type GameSubmissionParams,
 		getUserIdFromUser,
 		type ChatMessage,
-		isChatMessage
+		isGameResponse,
+		gameEventEnum
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
@@ -85,56 +86,58 @@
 
 		socket.addEventListener("message", async (message) => {
 			const receivedInformation = JSON.parse(message.data);
+
+			if (!isGameResponse(receivedInformation)) {
+				throw new Error("unknown / unhandled game response");
+			}
+
 			const { event } = receivedInformation;
 
 			switch (event) {
-				case GameEventEnum.OVERVIEW_GAME:
+				case gameEventEnum.OVERVIEW_GAME:
 					{
-						if (receivedInformation.game) {
-							game = receivedInformation.game;
-						}
+						game = receivedInformation.game;
+
 						if (receivedInformation.puzzle) {
 							puzzle = receivedInformation.puzzle;
 						}
 					}
 					break;
-				case GameEventEnum.NONEXISTENT_GAME:
+				case gameEventEnum.NONEXISTENT_GAME:
 					errorMessage = receivedInformation.message;
 					break;
-				case GameEventEnum.FINISHED_GAME:
+				case gameEventEnum.FINISHED_GAME:
 					{
 						game = receivedInformation.game;
 						isGameOver = true;
 					}
 					break;
-				case GameEventEnum.SEND_MESSAGE:
+				case gameEventEnum.SEND_MESSAGE:
 					{
-						const { chatMessage } = receivedInformation;
-
-						if (isChatMessage(chatMessage)) {
-							chatMessages = [...chatMessages, chatMessage];
-						}
+						chatMessages = [...chatMessages, receivedInformation.chatMessage];
 					}
 					break;
-				case GameEventEnum.CHANGE_LANGUAGE:
+				case gameEventEnum.CHANGE_LANGUAGE:
 					{
-						const { username, language } = receivedInformation;
-
-						playerLanguages[username] = language;
+						playerLanguages[receivedInformation.username] = receivedInformation.language;
+					}
+					break;
+				case gameEventEnum.ERROR:
+					{
+						console.error(receivedInformation.message);
 					}
 					break;
 				default:
-					console.warn("unknown / unhandled event: ", { event });
-
+					receivedInformation satisfies never;
 					break;
 			}
 		});
 	}
 
 	let socket: WebSocket;
-	onMount(() => {
+	if (browser) {
 		connectWithWebsocket();
-	});
+	}
 
 	let isNotPlayerInGame = true;
 	$: {
@@ -191,7 +194,7 @@
 
 			socket.send(
 				JSON.stringify({
-					event: GameEventEnum.SUBMITTED_PLAYER,
+					event: gameEventEnum.SUBMITTED_PLAYER,
 					submissionId,
 					userId: $authenticatedUserInfo?.userId
 				})
@@ -214,19 +217,19 @@
 
 		socket.send(
 			JSON.stringify({
-				event: GameEventEnum.SEND_MESSAGE,
+				event: gameEventEnum.SEND_MESSAGE,
 				chatMessage: newChatMessage
 			})
 		);
 	}
 
 	function onPlayerChangeLanguage(language: string) {
-		const data = JSON.stringify({
-			event: GameEventEnum.CHANGE_LANGUAGE,
-			language
-		});
-
-		socket.send(data);
+		socket.send(
+			JSON.stringify({
+				event: gameEventEnum.CHANGE_LANGUAGE,
+				language
+			})
+		);
 	}
 </script>
 
@@ -253,7 +256,7 @@
 {:else if isGameOver}
 	<Container>
 		<LogicalUnit>
-			{#if getUserIdFromUser(game.creator) === $authenticatedUserInfo.userId}
+			{#if getUserIdFromUser(game.owner) === $authenticatedUserInfo.userId}
 				<Button variant="outline">
 					<WorkInProgress />: Create a game with the same options
 					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?

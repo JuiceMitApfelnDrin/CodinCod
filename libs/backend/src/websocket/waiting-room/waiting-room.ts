@@ -109,18 +109,24 @@ export class WaitingRoom {
 			event: waitingRoomEventEnum.OVERVIEW_ROOM,
 			room: {
 				users: usersInRoom,
-				owner: usersInRoom.sort((userA, userB) => {
-					const userAJoinDate = new Date(userA.joinedAt).getTime();
-					const userBJoinDate = new Date(userB.joinedAt).getTime();
-
-					return userAJoinDate - userBJoinDate;
-				})[0],
+				owner: this.findRoomOwner(room),
 				roomId
 			}
 		});
 	}
 
-	updateUsersInRoom(roomId: RoomId, data: WaitingRoomResponse) {
+	findRoomOwner(room: Room) {
+		const usersInRoom = Object.values(room);
+
+		return usersInRoom.sort((userA, userB) => {
+			const userAJoinDate = new Date(userA.joinedAt).getTime();
+			const userBJoinDate = new Date(userB.joinedAt).getTime();
+
+			return userAJoinDate - userBJoinDate;
+		})[0];
+	}
+
+	updateUsersInRoom(roomId: RoomId, response: WaitingRoomResponse) {
 		const room = this.getRoom(roomId);
 
 		if (!room) {
@@ -128,7 +134,7 @@ export class WaitingRoom {
 		}
 
 		Object.keys(room).forEach((username) => {
-			this.updateUser(username, data);
+			this.updateUser(username, response);
 		});
 	}
 
@@ -138,16 +144,16 @@ export class WaitingRoom {
 		});
 	}
 
-	updateUser(username: string, data: WaitingRoomResponse) {
+	updateUser(username: string, response: WaitingRoomResponse) {
 		const socket = this.socketByUsername[username];
 
 		if (!socket) {
 			return;
 		}
 
-		const stringData = JSON.stringify(data);
+		const data = JSON.stringify(response);
 
-		socket.send(stringData);
+		socket.send(data);
 	}
 
 	removeEmptyRooms() {

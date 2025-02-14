@@ -2,15 +2,19 @@ import { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import {
 	buildFrontendUrl,
+	DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
 	frontendUrls,
+	GameEntity,
+	GameModeEnum,
+	GameVisibilityEnum,
 	isAuthenticatedInfo,
 	PuzzleVisibilityEnum,
 	waitingRoomEventEnum
 } from "types";
 import { WaitingRoom } from "./waiting-room.js";
 import { onConnection } from "./on-connection.js";
-import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
-import Puzzle, { PuzzleDocument } from "@/models/puzzle/puzzle.js";
+import { parseRawDataWaitingRoomRequest } from "@/utils/functions/parse-raw-data-message.js";
+import Puzzle from "@/models/puzzle/puzzle.js";
 import Game from "@/models/game/game.js";
 
 const waitingRoom = new WaitingRoom();
@@ -29,7 +33,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 		let parsedMessage;
 
 		try {
-			parsedMessage = parseRawDataMessage(message);
+			parsedMessage = parseRawDataWaitingRoomRequest(message);
 		} catch (e) {
 			const error = e as Error;
 
@@ -56,7 +60,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				break;
 			}
 			case waitingRoomEventEnum.START_GAME: {
-				const randomPuzzles = await Puzzle.aggregate<PuzzleDocument>([
+				const randomPuzzles = await Puzzle.aggregate([
 					{ $match: { visibility: PuzzleVisibilityEnum.APPROVED } },
 					{ $sample: { size: 1 } }
 				]).exec();
@@ -93,11 +97,26 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 					return;
 				}
 
-				const databaseGame = new Game({
+				const randomPuzzleId = randomPuzzle._id.toString();
+				const now = new Date();
+
+				const createGameEntity: GameEntity = {
 					players: players,
-					creator: players[0],
-					puzzle: randomPuzzle._id
-				});
+					owner: waitingRoom.findRoomOwner(room).userId,
+					puzzle: randomPuzzleId,
+					createdAt: now,
+					startTime: now,
+					endTime: new Date(now.getTime() + DEFAULT_GAME_LENGTH_IN_MILLISECONDS),
+					options: {
+						allowedLanguages: [],
+						maxGameDurationInSeconds: DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
+						mode: GameModeEnum.RATED,
+						visibility: GameVisibilityEnum.PUBLIC
+					},
+					playerSubmissions: []
+				};
+
+				const databaseGame = new Game(createGameEntity);
 
 				const newlyCreatedGame = await databaseGame.save();
 
@@ -113,10 +132,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				break;
 			}
 			default:
-				waitingRoom.updateUser(req.user.username, {
-					event: waitingRoomEventEnum.ERROR,
-					message: `unknown event ${event}, add a way to handle this event first`
-				});
+				event satisfies never;
 				break;
 		}
 

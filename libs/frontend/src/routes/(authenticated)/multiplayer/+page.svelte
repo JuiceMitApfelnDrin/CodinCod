@@ -114,9 +114,8 @@
 						console.error(receivedInformation.message);
 					}
 					break;
-				case waitingRoomEventEnum.HOST_ROOM:
-				case waitingRoomEventEnum.LEAVE_ROOM:
-				case waitingRoomEventEnum.JOIN_ROOM:
+				default:
+					receivedInformation satisfies never;
 					break;
 			}
 		};
@@ -203,7 +202,7 @@
 				{#each room.users as user}
 					<li class="list-inside list-disc">
 						{user.username}{#if isAuthor(room.owner.userId, user.userId)}
-							{` - Creator/host!`}{/if}
+							{` - Host!`}{/if}
 					</li>
 				{/each}
 			</ul>

@@ -1,4 +1,5 @@
 import { WebSocket } from "@fastify/websocket";
+import { GameResponse } from "types";
 
 type Username = string;
 
@@ -17,18 +18,20 @@ export class UserWebSockets {
 		delete this.socketByUsername[username];
 	}
 
-	updateAllUsers(data: string) {
-		Object.values(this.socketByUsername).forEach((socket) => {
-			socket.send(data);
+	updateAllUsers(response: GameResponse) {
+		Object.keys(this.socketByUsername).forEach((username) => {
+			this.updateUser(username, response);
 		});
 	}
 
-	updateUser(username: string, data: string) {
+	updateUser(username: string, response: GameResponse) {
 		const socket = this.socketByUsername[username];
 
 		if (!socket) {
 			return;
 		}
+
+		const data = JSON.stringify(response);
 
 		socket.send(data);
 	}

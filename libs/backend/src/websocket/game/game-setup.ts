@@ -2,15 +2,15 @@ import { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { onConnection } from "./on-connection.js";
 import { ParamsId } from "@/routes/puzzle/[id]/types.js";
-import { ChatMessage, GameEventEnum, isAuthenticatedInfo, isChatMessage } from "types";
+import { ChatMessage, gameEventEnum, isAuthenticatedInfo, isGameDto } from "types";
 import { isValidObjectId } from "mongoose";
-import { parseRawDataMessage } from "@/utils/functions/parse-raw-data-message.js";
+import { parseRawDataGameRequest } from "@/utils/functions/parse-raw-data-message.js";
 import Game from "@/models/game/game.js";
 import { UserWebSockets } from "./user-web-sockets.js";
 
-const playGame = new UserWebSockets();
+const userWebSockets = new UserWebSockets();
 
-export function playGameSetup(
+export function gameSetup(
 	socket: WebSocket,
 	req: FastifyRequest<ParamsId>,
 	fastify: FastifyInstance
@@ -24,7 +24,7 @@ export function playGameSetup(
 		socket.send(
 			JSON.stringify({
 				socket,
-				event: GameEventEnum.NONEXISTENT_GAME,
+				event: gameEventEnum.NONEXISTENT_GAME,
 				message: "invalid id"
 			})
 		);
@@ -33,7 +33,7 @@ export function playGameSetup(
 		socket.close();
 		return;
 	}
-	onConnection(playGame, req.user, id, socket);
+	onConnection(userWebSockets, req.user, id, socket);
 
 	if (!isAuthenticatedInfo(req.user)) {
 		return;
@@ -43,29 +43,33 @@ export function playGameSetup(
 			return;
 		}
 
-		let parsedMessage = parseRawDataMessage(message, socket);
+		let parsedMessage;
 
-		if (!parsedMessage) {
-			return;
+		try {
+			parsedMessage = parseRawDataGameRequest(message);
+		} catch (e) {
+			const error = e as Error;
+
+			return userWebSockets.updateUser(req.user.username, {
+				event: gameEventEnum.ERROR,
+				message: error.message
+			});
 		}
 
 		const { event } = parsedMessage;
 
 		switch (event) {
-			case GameEventEnum.SUBMITTED_PLAYER:
+			case gameEventEnum.JOIN_GAME:
 				{
-					if (!isValidObjectId(id)) {
-						const data = JSON.stringify({
-							event: GameEventEnum.INCORRECT_VALUE,
-							message: "invalid id"
-						});
+					userWebSockets.add(req.user.username, socket);
 
-						playGame.updateUser(req.user.username, data);
-						return;
-					}
-
+					// TODO: something needs to happen here, for users who join late
+				}
+				break;
+			case gameEventEnum.SUBMITTED_PLAYER:
+				{
 					const game = await Game.findById(id)
-						.populate("creator")
+						.populate("owner")
 						.populate("players")
 						/* deeply populated, for every playerSubmission populate the userId field with a user */
 						.populate({
@@ -76,54 +80,35 @@ export function playGameSetup(
 						})
 						.exec();
 
-					if (!game) {
-						const data = JSON.stringify({
-							event: GameEventEnum.NONEXISTENT_GAME,
+					if (!isGameDto(game)) {
+						return userWebSockets.updateUser(req.user.username, {
+							event: gameEventEnum.NONEXISTENT_GAME,
 							message: "game couldn't be found"
 						});
-
-						playGame.updateUser(req.user.username, data);
-						return;
 					}
 
-					const data = JSON.stringify({
-						event: GameEventEnum.OVERVIEW_GAME,
+					userWebSockets.updateAllUsers({
+						event: gameEventEnum.OVERVIEW_GAME,
 						game
 					});
-
-					playGame.updateAllUsers(data);
 				}
 				break;
 
-			case GameEventEnum.SEND_MESSAGE:
+			case gameEventEnum.SEND_MESSAGE:
 				{
-					const { chatMessage } = parsedMessage;
-
-					if (!isChatMessage(chatMessage)) {
-						const data = JSON.stringify({
-							event: GameEventEnum.SEND_MESSAGE_FAILED,
-							message: "Message failed to send (invalid format)"
-						});
-
-						playGame.updateUser(req.user.username, data);
-						return;
-					}
-
 					const updatedChatMessage: ChatMessage = {
-						...chatMessage,
+						...parsedMessage.chatMessage,
 						createdAt: new Date().toISOString()
 					};
 
-					const data = JSON.stringify({
-						event: GameEventEnum.SEND_MESSAGE,
+					userWebSockets.updateAllUsers({
+						event: gameEventEnum.SEND_MESSAGE,
 						chatMessage: updatedChatMessage
 					});
-
-					playGame.updateAllUsers(data);
 				}
 				break;
 
-			case GameEventEnum.CHANGE_LANGUAGE:
+			case gameEventEnum.CHANGE_LANGUAGE:
 				{
 					const language = parsedMessage.language;
 
@@ -131,14 +116,15 @@ export function playGameSetup(
 						return;
 					}
 
-					const data = JSON.stringify({
-						event: GameEventEnum.CHANGE_LANGUAGE,
+					userWebSockets.updateAllUsers({
+						event: gameEventEnum.CHANGE_LANGUAGE,
 						language,
 						username: req.user.username
 					});
-
-					playGame.updateAllUsers(data);
 				}
+				break;
+			default:
+				parsedMessage satisfies never;
 				break;
 		}
 	});
@@ -158,6 +144,6 @@ export function playGameSetup(
 			return;
 		}
 
-		playGame.remove(req.user.username);
+		userWebSockets.remove(req.user.username);
 	});
 }

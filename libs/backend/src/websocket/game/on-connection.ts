@@ -1,19 +1,24 @@
 import Game from "@/models/game/game.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
-import { WebSocket } from "@fastify/websocket";
-import { AuthenticatedInfo, GameEventEnum, ObjectId } from "types";
+import {
+	AuthenticatedInfo,
+	gameEventEnum,
+	getUserIdFromUser,
+	isGameDto,
+	isPuzzleDto,
+	ObjectId
+} from "types";
 import { UserWebSockets } from "./user-web-sockets.js";
+import { WebSocket } from "@fastify/websocket";
 
 export async function onConnection(
-	playGame: UserWebSockets,
+	userWebSockets: UserWebSockets,
 	user: AuthenticatedInfo,
 	gameId: ObjectId,
 	socket: WebSocket
 ) {
-	playGame.add(user.username, socket);
-
 	const game = await Game.findById(gameId)
-		.populate("creator")
+		.populate("owner")
 		.populate("players")
 		/* deeply populated, for every playerSubmission populate the userId field with a user */
 		.populate({
@@ -24,37 +29,49 @@ export async function onConnection(
 		})
 		.exec();
 
-	if (!game) {
-		const data = JSON.stringify({
-			event: GameEventEnum.NONEXISTENT_GAME,
-			message: "game couldn't be found"
-		});
-
-		playGame.updateUser(user.username, data);
-		return;
+	if (!isGameDto(game)) {
+		return socket.send(
+			JSON.stringify({
+				event: gameEventEnum.NONEXISTENT_GAME,
+				message: "game couldn't be found"
+			})
+		);
 	}
+
+	const currentPlayerIndex = game.players.findIndex((player) => {
+		return getUserIdFromUser(player) === user.userId;
+	});
+	if (currentPlayerIndex === -1) {
+		return socket.send(
+			JSON.stringify({
+				event: gameEventEnum.ERROR,
+				message: `user with id (${user.userId}) didn't join game`
+			})
+		);
+	}
+
+	userWebSockets.add(user.username, socket);
 
 	const currentTime = new Date();
 	if (game.endTime < currentTime) {
-		playGame.updateUser(
-			user.username,
-			JSON.stringify({
-				event: GameEventEnum.FINISHED_GAME,
-				game
-			})
-		);
-		return;
+		return userWebSockets.updateUser(user.username, {
+			event: gameEventEnum.FINISHED_GAME,
+			game
+		});
 	}
 
 	const puzzle = await Puzzle.findById(game.puzzle).populate("author");
 
-	if (puzzle) {
-		const data = JSON.stringify({
-			event: GameEventEnum.OVERVIEW_GAME,
-			game,
-			puzzle
+	if (!isPuzzleDto(puzzle)) {
+		return userWebSockets.updateUser(user.username, {
+			event: gameEventEnum.ERROR,
+			message: "puzzle couldn't be found"
 		});
-
-		playGame.updateUser(user.username, data);
 	}
+
+	userWebSockets.updateUser(user.username, {
+		event: gameEventEnum.OVERVIEW_GAME,
+		game,
+		puzzle
+	});
 }
