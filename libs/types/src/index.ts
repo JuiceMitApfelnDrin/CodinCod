@@ -64,6 +64,8 @@ export * from "./core/piston/schema/request.js";
 export * from "./core/piston/schema/runtime.js";
 
 // preferences
+export * from "./core/preferences/config/ide-config.js";
+export * from "./core/preferences/enum/key-binding.js";
 export * from "./core/preferences/enum/theme-option.js";
 export * from "./core/preferences/schema/preferences-dto.schema.js";
 export * from "./core/preferences/schema/preferences-entity.schema.js";
