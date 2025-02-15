@@ -242,15 +242,16 @@
 
 							{#if validator.testResult}
 								<div class="flex flex-col gap-4 lg:gap-6">
-									<h3 class="text-xl font-semibold">Latest execution details</h3>
+									<h3 class="text-xl font-semibold">Actual output</h3>
 
 									<LogicalUnit class="w-full space-y-2">
 										<OutputBox title="Stdout:">{validator.testResult?.run.stdout}</OutputBox>
 									</LogicalUnit>
-
-									<LogicalUnit class="w-full space-y-2">
-										<OutputBox title="Stderr:">{validator.testResult?.run.stderr}</OutputBox>
-									</LogicalUnit>
+									{#if validator.testResult?.run.stderr}
+										<LogicalUnit class="w-full space-y-2">
+											<OutputBox title="Stderr:">{validator.testResult?.run.stderr}</OutputBox>
+										</LogicalUnit>
+									{/if}
 								</div>
 							{/if}
 
