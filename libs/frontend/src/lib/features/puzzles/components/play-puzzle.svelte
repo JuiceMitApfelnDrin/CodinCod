@@ -23,6 +23,7 @@
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
