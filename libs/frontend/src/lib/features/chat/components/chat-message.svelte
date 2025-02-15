@@ -11,9 +11,16 @@
 	if ($authenticatedUserInfo) {
 		highlight = chatMessage.message.includes("@" + $authenticatedUserInfo.username);
 	}
+
+	function scrollIntoView(element: HTMLElement) {
+		element.scrollIntoView({ block: "nearest" });
+	}
 </script>
 
-<li class={cn("chat-message w-full rounded-lg px-2 py-1", highlight && "highlight")}>
+<li
+	class={cn("chat-message w-full rounded-lg px-2 py-1", highlight && "highlight")}
+	use:scrollIntoView
+>
 	<dl>
 		<dt class="sr-only">Time send</dt>
 		<dd class="mr-1 inline opacity-60">
