@@ -1,6 +1,6 @@
 import { backendUrls, httpRequestMethod } from "types";
 import type { RequestEvent } from "./$types";
-import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+import { fetchWithAuthenticationCookie, getCookieHeader } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { buildBackendUrl } from "@/config/backend";
 
 export async function POST({ request }: RequestEvent) {
@@ -8,6 +8,7 @@ export async function POST({ request }: RequestEvent) {
 
 	return await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION_GAME), {
 		body: body,
+		headers: getCookieHeader(request),
 		method: httpRequestMethod.POST
 	});
 }
