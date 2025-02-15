@@ -1,13 +1,8 @@
 import { browser } from "$app/environment";
 import { localStorageKeys } from "@/config/local-storage";
 import { derived, writable } from "svelte/store";
-import {
-	isAuthenticatedInfo,
-	isThemeOption,
-	themeOption,
-	type AuthenticatedInfo,
-	type ThemeOption
-} from "types";
+import { isThemeOption, themeOption, type AuthenticatedInfo, type ThemeOption } from "types";
+import { preferences } from "./preferences";
 
 /**
  * start dark-theme store
@@ -16,9 +11,14 @@ import {
 const theme = writable<ThemeOption>();
 export const isDarkTheme = derived(theme, (currentTheme) => currentTheme === themeOption.DARK);
 export const toggleDarkTheme = () =>
-	theme.update((oldValue) =>
-		oldValue === themeOption.DARK ? themeOption.LIGHT : themeOption.DARK
-	);
+	theme.update((oldValue) => {
+		const newTheme = oldValue === themeOption.DARK ? themeOption.LIGHT : themeOption.DARK;
+
+		// Update backend
+		preferences.updatePreferences({ theme: newTheme });
+
+		return newTheme;
+	});
 
 if (browser) {
 	const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -33,6 +33,7 @@ if (browser) {
 		} else {
 			document.documentElement.classList.remove(themeOption.DARK);
 		}
+
 		localStorage.setItem(localStorageKeys.THEME, newTheme);
 	});
 }
@@ -51,28 +52,28 @@ export const isAuthenticated = derived(authenticatedUserInfo, (userInfo) => {
 	return userInfo?.isAuthenticated ?? false;
 });
 
-// Load user info from local storage (if any)
+/**
+ * end user-info store
+ */
+
+/**
+ * start integrate preferences store
+ */
+
 if (browser) {
-	const storedUserInfo = localStorage.getItem(localStorageKeys.AUTHENTICATED_USER_INFO);
-
-	if (storedUserInfo) {
-		const parsedUserInfo = JSON.parse(storedUserInfo);
-
-		if (parsedUserInfo.isAuthenticated && isAuthenticatedInfo(parsedUserInfo)) {
-			authenticatedUserInfo.set(parsedUserInfo);
+	authenticatedUserInfo.subscribe((user) => {
+		if (user?.isAuthenticated) {
+			preferences.loadPreferences();
 		}
-	}
+	});
 
-	// Update local storage whenever user info changes
-	authenticatedUserInfo.subscribe(($userInfo) => {
-		if ($userInfo) {
-			localStorage.setItem(localStorageKeys.AUTHENTICATED_USER_INFO, JSON.stringify($userInfo));
-		} else {
-			localStorage.removeItem(localStorageKeys.AUTHENTICATED_USER_INFO);
+	preferences.subscribe((preferences) => {
+		if (preferences?.theme) {
+			theme.set(preferences.theme);
 		}
 	});
 }
 
 /**
- * end user-info store
+ * end integrate preferences store
  */
