@@ -7,7 +7,6 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import {
 		buildFrontendUrl,
-		DEFAULT_LANGUAGE,
 		frontendUrls,
 		POST,
 		puzzleEntitySchema,
@@ -21,7 +20,6 @@
 	import P from "@/components/typography/p.svelte";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { ScrollArea } from "@/components/ui/scroll-area";
 	import LanguageSelect from "./language-select.svelte";
 
 	export let data: SuperValidated<EditPuzzle>;

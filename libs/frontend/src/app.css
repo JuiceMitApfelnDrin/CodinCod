@@ -37,6 +37,8 @@
 
 		--success: 120 60% 45%;
 		--success-foreground: 120 100% 97%;
+
+		--code-block-line-height: 1.25;
 	}
 
 	.dark {

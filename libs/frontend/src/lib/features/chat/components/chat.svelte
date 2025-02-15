@@ -4,7 +4,7 @@
 	import Input from "@/components/ui/input/input.svelte";
 	import Label from "@/components/ui/label/label.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
-	import { ScrollArea } from "@/components/ui/scroll-area";
+	import * as ScrollArea from "@/components/ui/scroll-area";
 	import { CHAT_MESSAGE_CONFIG, type ChatMessage } from "types";
 	import Message from "./chat-message.svelte";
 
@@ -22,7 +22,7 @@
 <LogicalUnit class="flex h-full flex-col gap-4">
 	<H2>Chat</H2>
 
-	<ScrollArea class="h-full max-h-[33%]">
+	<ScrollArea.Root class="h-[33vh]">
 		{#if chatMessages.length > 0}
 			<ol class="flex h-full flex-col gap-1 rounded-lg">
 				{#each chatMessages as chatMessage}
@@ -30,9 +30,9 @@
 				{/each}
 			</ol>
 		{/if}
-	</ScrollArea>
+	</ScrollArea.Root>
 
-	<form class="flex flex-col justify-end gap-2" on:submit|preventDefault={executeSend}>
+	<form class="flex flex-col justify-end gap-2 px-1" on:submit|preventDefault={executeSend}>
 		<Label class="sr-only" for="msg-compose">Compose message</Label>
 		<Input
 			maxlength={CHAT_MESSAGE_CONFIG.maxChatMessageLength}
