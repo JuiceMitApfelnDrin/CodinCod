@@ -9,6 +9,7 @@ export const backendUrls = {
 	USER_BY_USERNAME_ACTIVITY: `${baseRoute}/user/:username/activity`,
 	USER_BY_USERNAME_IS_AVAILABLE: `${baseRoute}/user/:username/isAvailable`,
 	ACCOUNT: `${baseRoute}/account`,
+	ACCOUNT_PREFERENCES: `${baseRoute}/account/preferences`,
 	EXECUTE: `${baseRoute}/execute`,
 
 	// puzzle routes

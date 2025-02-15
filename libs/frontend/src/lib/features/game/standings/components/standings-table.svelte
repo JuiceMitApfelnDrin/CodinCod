@@ -23,7 +23,8 @@
 	let hasBeenOpened: Record<string, boolean> = {};
 
 	async function fetchCode(id: string) {
-		let url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
+		const url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
+
 		return await fetchWithAuthenticationCookie(url).then((res) => res.json());
 	}
 </script>

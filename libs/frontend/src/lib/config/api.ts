@@ -1,4 +1,5 @@
 export const apiUrls = {
+	ACCOUNT_PREFERENCES: "/api/account/preferences",
 	EXECUTE_CODE: "/api/execute-code",
 	SUBMISSION_BY_ID: "/api/submission/:id",
 	SUBMIT_CODE: "/api/submit-code",

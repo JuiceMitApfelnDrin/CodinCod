@@ -1,5 +1,10 @@
 import { defaultFetchOptions } from "@/config/default-fetch-options";
 
+export function getCookieHeader(request: Request): Record<string, string> {
+	const cookie = request.headers.get("cookie");
+	return cookie ? { cookie } : {};
+}
+
 export async function fetchWithAuthenticationCookie(
 	url: string | URL | globalThis.Request,
 	options: RequestInit = {}
