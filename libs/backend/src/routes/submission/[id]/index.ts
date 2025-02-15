@@ -1,5 +1,5 @@
 import Submission from "@/models/submission/submission.js";
-// import authenticated from "@/plugins/middleware/authenticated.js";
+import authenticated from "@/plugins/middleware/authenticated.js";
 import { ParamsId } from "@/routes/puzzle/[id]/types.js";
 import { FastifyInstance } from "fastify";
 import { httpResponseCodes } from "types";
@@ -7,9 +7,9 @@ import { httpResponseCodes } from "types";
 export default async function submissionByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>(
 		"/",
-		// {
-		// 	onRequest: authenticated
-		// },
+		{
+			onRequest: authenticated
+		},
 		async (request, reply) => {
 			const { id } = request.params;
 
