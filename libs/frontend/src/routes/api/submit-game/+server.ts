@@ -1,6 +1,9 @@
 import { backendUrls, httpRequestMethod } from "types";
 import type { RequestEvent } from "./$types";
-import { fetchWithAuthenticationCookie, getCookieHeader } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+import {
+	fetchWithAuthenticationCookie,
+	getCookieHeader
+} from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { buildBackendUrl } from "@/config/backend";
 
 export async function POST({ request }: RequestEvent) {
