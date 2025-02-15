@@ -8,7 +8,6 @@
 		type CodeSubmissionParams,
 		type ValidatorEntity
 	} from "types";
-	import * as Select from "$lib/components/ui/select";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
 	import { calculatePuzzleResultColor } from "@/features/puzzles/utils/calculate-puzzle-result-color.js";
@@ -23,15 +22,12 @@
 	import Markdown from "@/components/typography/markdown.svelte";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
-	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
-	import { onMount } from "svelte";
-	import ScrollArea from "@/components/ui/scroll-area/scroll-area.svelte";
+	import LanguageSelect from "./language-select.svelte";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
 	export let endDate: Date | undefined;
 
-	let languages: PuzzleLanguage[] = [];
 	let code: string = "";
 	let language: PuzzleLanguage = "";
 	let isExecutingTests = false;
@@ -123,16 +119,9 @@
 		openTests = true;
 	}
 
-	async function fetchLanguages() {
-		languages = await fetchSupportedLanguages();
-
-		const defaultLanguage = languages[0];
-		language = defaultLanguage;
+	function setLanguage(newLanguage: PuzzleLanguage) {
+		language = newLanguage;
 	}
-
-	onMount(() => {
-		fetchLanguages();
-	});
 </script>
 
 <PuzzleMetaInfo {puzzle} />
@@ -155,31 +144,7 @@
 
 <LogicalUnit class="space-y-4">
 	<LogicalUnit class="flex flex-col justify-between gap-2 md:flex-row">
-		<Select.Root
-			selected={{ label: language, value: language }}
-			onSelectedChange={(v) => {
-				if (v) {
-					language = v.value;
-				}
-			}}
-		>
-			<Select.Trigger class="w-[180px]">
-				<Select.Value placeholder="Select a language" />
-			</Select.Trigger>
-			<Select.Content>
-				<ScrollArea class="h-40">
-					<Select.Label class="text-lg">Language</Select.Label>
-					<Select.Separator />
-
-					<Select.Group>
-						{#each languages as language}
-							<Select.Item value={language} label={language} />
-						{/each}
-					</Select.Group>
-				</ScrollArea>
-			</Select.Content>
-			<Select.Input bind:value={language} />
-		</Select.Root>
+		<LanguageSelect {language} {setLanguage} />
 
 		<CountdownTimer {endDate} />
 	</LogicalUnit>
