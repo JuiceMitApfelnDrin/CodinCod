@@ -21,7 +21,7 @@
 	import dayjs from "dayjs";
 	import Markdown from "@/components/typography/markdown.svelte";
 	import { apiUrls, buildApiUrl } from "@/config/api";
-	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
 
 	export let puzzle: PuzzleDto;
@@ -130,7 +130,7 @@
 	<Accordion open={true} id="statement">
 		<h2 slot="title">Statement</h2>
 		<div slot="content">
-			<Markdown markdown={puzzle.statement} fallbackText="No constraints" />
+			<Markdown markdown={puzzle.statement} fallbackText="No statement" />
 		</div>
 	</Accordion>
 
@@ -196,45 +196,26 @@
 						>
 							<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
 								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-									<h3 class="text-lg font-semibold">Input</h3>
-
-									<div class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4">
-										<pre><code>{validator.input.trimEnd()}</code></pre>
-									</div>
+									<OutputBox title="Input">{validator.input.trimEnd()}</OutputBox>
 								</LogicalUnit>
 
 								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-									<h3 class="text-lg font-semibold">Expected output</h3>
-
-									<div class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4">
-										<pre><code>{validator.output.trimEnd()}</code></pre>
-									</div>
+									<OutputBox title="Expected output">{validator.output.trimEnd()}</OutputBox>
 								</LogicalUnit>
 							</div>
 
 							{#if validator.testResult}
 								<div class="flex flex-col gap-4 lg:gap-6">
-									<h3 class="text-xl font-semibold">Latest result</h3>
+									<h3 class="text-xl font-semibold">Actual output</h3>
 
 									<LogicalUnit class="w-full space-y-2">
-										<h4 class="font-bold">Stdout:</h4>
-
-										<div
-											class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
-										>
-											<pre><code>{validator.testResult?.run.stdout}</code></pre>
-										</div>
+										<OutputBox title="Stdout:">{validator.testResult?.run.stdout}</OutputBox>
 									</LogicalUnit>
-
-									<LogicalUnit class="w-full space-y-2">
-										<h4 class="font-bold">Stderr:</h4>
-
-										<div
-											class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
-										>
-											<pre><code>{validator.testResult?.run.stderr}</code></pre>
-										</div>
-									</LogicalUnit>
+									{#if validator.testResult?.run.stderr}
+										<LogicalUnit class="w-full space-y-2">
+											<OutputBox title="Stderr:">{validator.testResult?.run.stderr}</OutputBox>
+										</LogicalUnit>
+									{/if}
 								</div>
 							{/if}
 
