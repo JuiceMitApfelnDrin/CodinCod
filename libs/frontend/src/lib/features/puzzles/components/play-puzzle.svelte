@@ -6,7 +6,8 @@
 		type PuzzleDto,
 		type PuzzleLanguage,
 		type CodeSubmissionParams,
-		type ValidatorEntity
+		type ValidatorEntity,
+		DEFAULT_LANGUAGE
 	} from "types";
 	import * as Select from "$lib/components/ui/select";
 	import Button from "@/components/ui/button/button.svelte";
@@ -126,8 +127,13 @@
 	async function fetchLanguages() {
 		languages = await fetchSupportedLanguages();
 
-		const defaultLanguage = languages[0];
-		language = defaultLanguage;
+		const containsDefaultLanguage = languages.includes(DEFAULT_LANGUAGE);
+
+		if (containsDefaultLanguage) {
+			language = DEFAULT_LANGUAGE;
+		} else {
+			language = languages[0];
+		}
 	}
 
 	onMount(() => {

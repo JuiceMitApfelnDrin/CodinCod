@@ -7,6 +7,7 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import {
 		buildFrontendUrl,
+		DEFAULT_LANGUAGE,
 		frontendUrls,
 		POST,
 		puzzleEntitySchema,
@@ -73,8 +74,13 @@
 	async function fetchLanguages() {
 		languages = await fetchSupportedLanguages();
 
-		const defaultLanguage = languages[0];
-		language = defaultLanguage;
+		const containsDefaultLanguage = languages.includes(DEFAULT_LANGUAGE);
+
+		if (containsDefaultLanguage) {
+			language = DEFAULT_LANGUAGE;
+		} else {
+			language = languages[0];
+		}
 	}
 
 	onMount(() => {
