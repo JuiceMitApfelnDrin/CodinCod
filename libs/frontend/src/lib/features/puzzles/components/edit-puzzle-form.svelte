@@ -21,9 +21,8 @@
 	import P from "@/components/typography/p.svelte";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
-	import { onMount } from "svelte";
 	import { ScrollArea } from "@/components/ui/scroll-area";
+	import LanguageSelect from "./language-select.svelte";
 
 	export let data: SuperValidated<EditPuzzle>;
 
@@ -68,24 +67,14 @@
 
 	let { enhance, form: formData, message } = form;
 
-	let languages: PuzzleLanguage[] = [];
-	let language: PuzzleLanguage = $formData.solution.language ?? "";
-
-	async function fetchLanguages() {
-		languages = await fetchSupportedLanguages();
-
-		const containsDefaultLanguage = languages.includes(DEFAULT_LANGUAGE);
-
-		if (containsDefaultLanguage) {
-			language = DEFAULT_LANGUAGE;
-		} else {
-			language = languages[0];
-		}
+	let language: PuzzleLanguage = "";
+	$: {
+		language = $formData.solution.language;
 	}
 
-	onMount(() => {
-		fetchLanguages();
-	});
+	function setLanguage(newLanguage: PuzzleLanguage) {
+		language = newLanguage;
+	}
 
 	let visibilityStates: PuzzleVisibility[] = Object.values(PuzzleVisibilityEnum);
 </script>
@@ -174,31 +163,8 @@
 		<Form.Field {form} name="solution.language">
 			<Form.Control let:attrs>
 				<Form.Label class="text-lg">Language</Form.Label>
-				<Select.Root
-					selected={{ label: language, value: language }}
-					onSelectedChange={(v) => {
-						if (v) {
-							language = v.value;
-						}
-					}}
-				>
-					<Select.Trigger class="w-[180px]" {...attrs}>
-						<Select.Value placeholder="Select a language" />
-					</Select.Trigger>
-					<Select.Content>
-						<ScrollArea class="h-40">
-							<Select.Label class="text-lg">Language</Select.Label>
-							<Select.Separator />
 
-							<Select.Group>
-								{#each languages as language}
-									<Select.Item value={language} label={language} />
-								{/each}
-							</Select.Group>
-						</ScrollArea>
-					</Select.Content>
-					<Select.Input bind:value={$formData.solution.language} name={attrs.name} />
-				</Select.Root>
+				<LanguageSelect formAttributes={attrs} {language} {setLanguage} />
 			</Form.Control>
 			<Form.Description>Programming language used for the solution.</Form.Description>
 			<Form.FieldErrors />
