@@ -67,6 +67,11 @@ export * from "./core/piston/schema/puzzle-result.js";
 export * from "./core/piston/schema/request.js";
 export * from "./core/piston/schema/runtime.js";
 
+// preferences
+export * from "./core/preferences/enum/theme-option.js";
+export * from "./core/preferences/schema/preferences-dto.schema.js";
+export * from "./core/preferences/schema/preferences-entity.schema.js";
+
 // profile
 export * from "./core/profile/schema/profile-dto.schema.js";
 export * from "./core/profile/schema/profile-entity.schema.js";
