@@ -1,8 +1,16 @@
 <script lang="ts">
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
-	import { isSubmissionDto, isUserDto, type GameDto, type SubmissionDto } from "types";
+	import {
+		DEFAULT_GAME_LENGTH_IN_SECONDS,
+		isSubmissionDto,
+		isUserDto,
+		type AcceptedDate,
+		type GameDto,
+		type SubmissionDto
+	} from "types";
 	import duration from "dayjs/plugin/duration";
+	import minMax from "dayjs/plugin/minMax";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import PuzzleResultBadge from "@/features/puzzles/components/puzzle-result-badge.svelte";
@@ -11,6 +19,7 @@
 	import { Code, CodeXml, Hash, Hourglass } from "lucide-svelte";
 	import { cn } from "@/utils/cn";
 	dayjs.extend(duration);
+	dayjs.extend(minMax);
 
 	export let game: GameDto;
 	let submissions: SubmissionDto[] = [];
@@ -26,6 +35,21 @@
 		const url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
 
 		return await fetchWithAuthenticationCookie(url).then((res) => res.json());
+	}
+
+	function formatDuration(submissionDate: AcceptedDate) {
+		const gameStartTime = dayjs(game.startTime);
+		const maxAllowedDurationSeconds =
+			game.options?.maxGameDurationInSeconds ?? DEFAULT_GAME_LENGTH_IN_SECONDS;
+		const maximumGameEndTime = gameStartTime.add(maxAllowedDurationSeconds, "s");
+
+		// determine the display end time (either submission date or max allowed end time)
+		// context: users are allowed to go over the max end time by X seconds for connection issues
+		const clampedSubmissionDate = dayjs.min(dayjs(submissionDate), maximumGameEndTime);
+
+		const gameplayDurationMs = clampedSubmissionDate.diff(gameStartTime);
+
+		return dayjs.duration(gameplayDurationMs).format("HH:mm:ss");
 	}
 </script>
 
@@ -55,7 +79,7 @@
 						<Table.Cell>
 							<!-- todo: make this more readable for screen readers somehow -->
 							<Hourglass aria-hidden="true" class="icon mr-1" />
-							{dayjs.duration(dayjs(createdAt).diff(game.startTime)).format("HH:mm:ss")}
+							{formatDuration(createdAt)}
 						</Table.Cell>
 						<Table.Cell><PuzzleResultBadge {result} /></Table.Cell>
 						<Table.Cell>
