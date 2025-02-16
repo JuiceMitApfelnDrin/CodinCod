@@ -4,7 +4,7 @@ import { preferencesEntitySchema } from "./preferences-entity.schema.js";
 const basePreferencesDtoSchema = preferencesEntitySchema;
 
 export const preferencesDtoSchema = basePreferencesDtoSchema.omit({
-	author: true,
+	owner: true,
 	updatedAt: true,
 	createdAt: true
 });

@@ -1,112 +1,129 @@
 <script lang="ts">
 	import CodeMirror from "svelte-codemirror-editor";
 	import { oneDark } from "@codemirror/theme-one-dark";
-	import { type PuzzleLanguage } from "types";
-	import { StreamLanguage, type LanguageSupport } from "@codemirror/language";
-	import type { Extension } from "@codemirror/state";
+	import { keymap, type PuzzleLanguage } from "types";
+	import { StreamLanguage } from "@codemirror/language";
+	import { type Extension } from "@codemirror/state";
+	import { preferences } from "@/stores/preferences";
+	import { keymap as codemirrorKeymap } from "@codemirror/view";
 
 	export let value = "";
 	export let language: PuzzleLanguage = "";
 
-	let lang: LanguageSupport | null = null;
-	let extensions: Extension[] = [];
+	let editorExtensions: Extension[] = [];
 
-	$: loadLanguageSupport(language);
+	$: {
+		getEditorExtensions(language, $preferences?.editor?.keymap);
+	}
 
-	async function loadLanguageSupport(language: PuzzleLanguage) {
-		let newExtensions: Extension[] = [];
+	async function getEditorExtensions(language: string, keymapPreference?: string) {
+		editorExtensions = [
+			oneDark,
+			await getKeymapExtensions(keymapPreference),
+			...(await getLanguageExtensions(language))
+		];
+	}
+
+	async function getLanguageExtensions(
+		language: PuzzleLanguage
+	): Promise<Extension[] | StreamLanguage<unknown>[]> {
+		let chosenLanguageExtension: Extension[] = [];
 
 		switch (language) {
-			// awk         - No legacy mode available
-			// raku        - No legacy mode available
 			case "javascript":
-				lang = (await import("@codemirror/lang-javascript")).javascript();
-				break;
+				return [(await import("@codemirror/lang-javascript")).javascript()];
 
 			case "python":
-				lang = (await import("@codemirror/lang-python")).python();
-				break;
+				return [(await import("@codemirror/lang-python")).python()];
 
 			case "typescript":
-				lang = (await import("@codemirror/lang-javascript")).javascript({ typescript: true });
-				break;
+				return [
+					(await import("@codemirror/lang-javascript")).javascript({
+						typescript: true
+					})
+				];
 
 			case "rust":
-				lang = (await import("@codemirror/lang-rust")).rust();
-				break;
+				return [(await import("@codemirror/lang-rust")).rust()];
 
 			case "c++":
-				lang = (await import("@codemirror/lang-cpp")).cpp();
-				break;
+				return [(await import("@codemirror/lang-cpp")).cpp()];
 
 			case "elixir":
-				lang = (await import("codemirror-lang-elixir")).elixir();
-				break;
+				return [(await import("codemirror-lang-elixir")).elixir()];
 
 			case "ruby":
 				const { ruby } = await import("@codemirror/legacy-modes/mode/ruby");
-				newExtensions.push(StreamLanguage.define(ruby));
-				lang = null;
-				break;
+				return [StreamLanguage.define(ruby)];
+
 			case "brainfuck":
 				const { brainfuck } = await import("@codemirror/legacy-modes/mode/brainfuck");
-				newExtensions.push(StreamLanguage.define(brainfuck));
-				lang = null;
-				break;
+				return [StreamLanguage.define(brainfuck)];
 
 			case "dart":
 				const { dart } = await import("@codemirror/legacy-modes/mode/clike");
-				newExtensions.push(StreamLanguage.define(dart));
-				break;
+				return [StreamLanguage.define(dart)];
 
 			case "c":
 				const { c } = await import("@codemirror/legacy-modes/mode/clike");
-				newExtensions.push(StreamLanguage.define(c));
-				break;
+				return [StreamLanguage.define(c)];
 
 			case "d":
 				const { d } = await import("@codemirror/legacy-modes/mode/d");
-				newExtensions.push(StreamLanguage.define(d));
-				break;
+				return [StreamLanguage.define(d)];
 
 			case "fortran":
 				const { fortran } = await import("@codemirror/legacy-modes/mode/fortran");
-				newExtensions.push(StreamLanguage.define(fortran));
-				break;
+				return [StreamLanguage.define(fortran)];
 
 			case "haskell":
 				const { haskell } = await import("@codemirror/legacy-modes/mode/haskell");
-				newExtensions.push(StreamLanguage.define(haskell));
-				break;
+				return [StreamLanguage.define(haskell)];
 
 			case "julia":
 				const { julia } = await import("@codemirror/legacy-modes/mode/julia");
-				newExtensions.push(StreamLanguage.define(julia));
-				break;
+				return [StreamLanguage.define(julia)];
 
 			case "lisp":
 				const { commonLisp } = await import("@codemirror/legacy-modes/mode/commonlisp");
-				newExtensions.push(StreamLanguage.define(commonLisp));
-				break;
+				return [StreamLanguage.define(commonLisp)];
 
 			case "perl":
 				const { perl } = await import("@codemirror/legacy-modes/mode/perl");
-				newExtensions.push(StreamLanguage.define(perl));
-				break;
+				return [StreamLanguage.define(perl)];
 
-			default:
-				lang = null;
+			case "awk":
+				// awk - No legacy mode available
+				break;
+			case "raku":
+				// raku - No legacy mode available
+				break;
 		}
 
-		extensions = newExtensions;
+		return chosenLanguageExtension;
+	}
+
+	async function getKeymapExtensions(requestedKeymap?: string): Promise<Extension> {
+		switch (requestedKeymap) {
+			case keymap.EMACS:
+				const { emacs } = await import("@replit/codemirror-emacs");
+				return emacs();
+
+			case keymap.VIM:
+				const { vim } = await import("@replit/codemirror-vim");
+				return vim();
+
+			default:
+				const { vscodeKeymap } = await import("@replit/codemirror-vscode-keymap");
+				return codemirrorKeymap.of(vscodeKeymap);
+		}
 	}
 </script>
 
 <CodeMirror
 	bind:value
-	{lang}
 	theme={oneDark}
-	{extensions}
+	extensions={editorExtensions}
 	basic={true}
 	styles={{
 		".cm-editor": {
@@ -115,5 +132,4 @@
 		},
 		".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
 	}}
-	class="h-[35vh] min-h-[300px]"
 />

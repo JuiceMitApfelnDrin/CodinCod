@@ -67,9 +67,13 @@ if (browser) {
 		}
 	});
 
-	preferences.subscribe((preferences) => {
-		if (preferences?.theme) {
-			theme.set(preferences.theme);
+	preferences.subscribe((newPreferences) => {
+		if (newPreferences) {
+			localStorage.setItem(localStorageKeys.PREFERENCES, JSON.stringify(newPreferences));
+		}
+
+		if (newPreferences?.theme) {
+			theme.set(newPreferences.theme);
 		}
 	});
 }
