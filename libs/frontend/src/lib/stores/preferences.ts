@@ -14,6 +14,15 @@ const createPreferencesStore = () => {
 		async loadPreferences() {
 			if (!browser) return;
 
+			const storedPreferences = localStorage.getItem(localStorageKeys.PREFERENCES);
+
+			if (storedPreferences) {
+				const preferences = JSON.parse(storedPreferences);
+
+				set(preferences);
+				return;
+			}
+
 			try {
 				const response = await fetchWithAuthenticationCookie(url);
 				const data = await response.json();
