@@ -48,7 +48,7 @@ export default [
 		},
 		rules: {
 			"@typescript-eslint/no-unused-vars": "off", // Disable no-unused-vars rule
-			"no-undef": "off", // Disable no-undef rule
+			"no-undef": "warn", // Disable no-undef rule
 			"no-unused-vars": "warn", // Disable no-unused-vars rule
 			"sort-destructure-keys/sort-destructure-keys": [2, { caseSensitive: true }], // Sort destructure keys rule
 			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],

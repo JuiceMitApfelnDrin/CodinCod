@@ -35,13 +35,17 @@ export * from "./core/common/types/value-of.js";
 
 // game
 export * from "./core/game/config/game.js";
-export * from "./core/game/enum/game-event-enum.js";
+export * from "./core/game/enum/waiting-room-event-enum.js";
+export * from "./core/game/enum/game-event-enums.js";
 export * from "./core/game/enum/game-mode-enum.js";
 export * from "./core/game/enum/game-visibility-enum.js";
 export * from "./core/game/schema/game-dto.schema.js";
 export * from "./core/game/schema/game-entity.schema.js";
-export * from "./core/game/schema/game-event.schema.js";
 export * from "./core/game/schema/game-user-info.schema.js";
+export * from "./core/game/schema/waiting-room-request.schema.js";
+export * from "./core/game/schema/waiting-room-response.schema.js";
+export * from "./core/game/schema/game-request.schema.js";
+export * from "./core/game/schema/game-response.schema.js";
 export * from "./core/game/schema/mode.schema.js";
 export * from "./core/game/schema/options.schema.js";
 export * from "./core/game/schema/visibility.schema.js";

@@ -10,7 +10,7 @@ import fastifyFormbody from "@fastify/formbody";
 import mongooseConnector from "./plugins/config/mongoose.js";
 import router from "./router.js";
 import { schemas } from "./config/schema.js";
-import fastifyCookie from "@fastify/cookie";
+import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 import swagger from "./plugins/config/swagger.js";
 import swaggerUi from "./plugins/config/swagger-ui.js";
 import piston from "./plugins/decorators/piston.js";
@@ -30,7 +30,7 @@ server.register(fastifyCookie, {
 	secret: process.env.COOKIE_SECRET,
 	hook: "onRequest",
 	parseOptions: {}
-});
+} as FastifyCookieOptions);
 
 // TODO: make this not show an error, appears to work tho, check wtf is going wrong
 server.register(fastifyRateLimit, {
@@ -41,7 +41,6 @@ server.register(cors);
 server.register(swagger);
 server.register(jwt);
 server.register(swaggerUi);
-// server.register(dbConnectorPlugin);
 server.register(fastifyFormbody);
 server.register(mongooseConnector);
 server.register(piston);
@@ -50,7 +49,7 @@ server.register(setupWebSockets);
 
 // register custom plugins
 
-// middelware
+// middleware
 // server.decorate("authenticate", authenticate.bind(null, server));
 
 // routes
