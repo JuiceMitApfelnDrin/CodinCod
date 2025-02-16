@@ -1,147 +1,122 @@
 <script lang="ts">
 	import CodeMirror from "svelte-codemirror-editor";
 	import { oneDark } from "@codemirror/theme-one-dark";
-	import { type PuzzleLanguage } from "types";
+	import { keymap, type PuzzleLanguage } from "types";
 	import { StreamLanguage } from "@codemirror/language";
-	import { Compartment, type Extension } from "@codemirror/state";
+	import { type Extension } from "@codemirror/state";
 	import { preferences } from "@/stores/preferences";
-	import { keymap } from "@codemirror/view";
+	import { keymap as codemirrorKeymap } from "@codemirror/view";
 
 	export let value = "";
 	export let language: PuzzleLanguage = "";
 
 	let editorExtensions: Extension[] = [];
 
-	const langCompartment = new Compartment();
-	const keymapCompartment = new Compartment();
+	$: {
+		getEditorExtensions(language, $preferences?.editor?.keymap);
+	}
 
-	$: getEditorExtensions(language, $preferences?.ide?.keyBinding);
-
-	async function getEditorExtensions(language: string, keyBinding?: string) {
-		const baseExtensions = [oneDark];
-
+	async function getEditorExtensions(language: string, keymapPreference?: string) {
 		editorExtensions = [
-			...baseExtensions,
-			...(await getLanguageExtensions(language)),
-			...(await getKeyBindingExtensions(keyBinding))
+			oneDark,
+			await getKeymapExtensions(keymapPreference),
+			...(await getLanguageExtensions(language))
 		];
 	}
 
-	async function getLanguageExtensions(language: PuzzleLanguage) {
-		let languageExtensions;
+	async function getLanguageExtensions(
+		language: PuzzleLanguage
+	): Promise<Extension[] | StreamLanguage<unknown>[]> {
+		let chosenLanguageExtension: Extension[] = [];
 
 		switch (language) {
 			case "javascript":
-				languageExtensions = (await import("@codemirror/lang-javascript")).javascript();
-				break;
+				return [(await import("@codemirror/lang-javascript")).javascript()];
 
 			case "python":
-				languageExtensions = (await import("@codemirror/lang-python")).python();
-				break;
+				return [(await import("@codemirror/lang-python")).python()];
 
 			case "typescript":
-				languageExtensions = (await import("@codemirror/lang-javascript")).javascript({
-					typescript: true
-				});
-				break;
+				return [
+					(await import("@codemirror/lang-javascript")).javascript({
+						typescript: true
+					})
+				];
 
 			case "rust":
-				languageExtensions = (await import("@codemirror/lang-rust")).rust();
-				break;
+				return [(await import("@codemirror/lang-rust")).rust()];
 
 			case "c++":
-				languageExtensions = (await import("@codemirror/lang-cpp")).cpp();
-				break;
+				return [(await import("@codemirror/lang-cpp")).cpp()];
 
 			case "elixir":
-				languageExtensions = (await import("codemirror-lang-elixir")).elixir();
-				break;
+				return [(await import("codemirror-lang-elixir")).elixir()];
 
 			case "ruby":
 				const { ruby } = await import("@codemirror/legacy-modes/mode/ruby");
-				languageExtensions = StreamLanguage.define(ruby);
+				return [StreamLanguage.define(ruby)];
+
 			case "brainfuck":
 				const { brainfuck } = await import("@codemirror/legacy-modes/mode/brainfuck");
-				languageExtensions = StreamLanguage.define(brainfuck);
-				break;
+				return [StreamLanguage.define(brainfuck)];
 
 			case "dart":
 				const { dart } = await import("@codemirror/legacy-modes/mode/clike");
-				languageExtensions = StreamLanguage.define(dart);
-				break;
+				return [StreamLanguage.define(dart)];
 
 			case "c":
 				const { c } = await import("@codemirror/legacy-modes/mode/clike");
-				languageExtensions = StreamLanguage.define(c);
-				break;
+				return [StreamLanguage.define(c)];
 
 			case "d":
 				const { d } = await import("@codemirror/legacy-modes/mode/d");
-				languageExtensions = StreamLanguage.define(d);
-				break;
+				return [StreamLanguage.define(d)];
 
 			case "fortran":
 				const { fortran } = await import("@codemirror/legacy-modes/mode/fortran");
-				languageExtensions = StreamLanguage.define(fortran);
-				break;
+				return [StreamLanguage.define(fortran)];
 
 			case "haskell":
 				const { haskell } = await import("@codemirror/legacy-modes/mode/haskell");
-				languageExtensions = StreamLanguage.define(haskell);
-				break;
+				return [StreamLanguage.define(haskell)];
 
 			case "julia":
 				const { julia } = await import("@codemirror/legacy-modes/mode/julia");
-				languageExtensions = StreamLanguage.define(julia);
-				break;
+				return [StreamLanguage.define(julia)];
 
 			case "lisp":
 				const { commonLisp } = await import("@codemirror/legacy-modes/mode/commonlisp");
-				languageExtensions = StreamLanguage.define(commonLisp);
-				break;
+				return [StreamLanguage.define(commonLisp)];
 
 			case "perl":
 				const { perl } = await import("@codemirror/legacy-modes/mode/perl");
-				languageExtensions = StreamLanguage.define(perl);
-				break;
+				return [StreamLanguage.define(perl)];
 
 			case "awk":
-				// awk         - No legacy mode available
+				// awk - No legacy mode available
 				break;
 			case "raku":
-				// raku        - No legacy mode available
+				// raku - No legacy mode available
 				break;
 		}
 
-		if (languageExtensions) {
-			return [langCompartment.of(languageExtensions)];
-		}
-
-		return [];
+		return chosenLanguageExtension;
 	}
 
-	async function getKeyBindingExtensions(keyBinding?: string) {
-		let chosenKeyBinding;
-
-		switch (keyBinding) {
-			case "emacs":
+	async function getKeymapExtensions(requestedKeymap?: string): Promise<Extension> {
+		switch (requestedKeymap) {
+			case keymap.EMACS:
 				const { emacs } = await import("@replit/codemirror-emacs");
-				chosenKeyBinding = emacs();
+				return emacs();
 
-			case "vim":
+			case keymap.VIM:
 				const { vim } = await import("@replit/codemirror-vim");
-				chosenKeyBinding = vim();
+				return vim();
 
-			case "vscode":
+			default:
 				const { vscodeKeymap } = await import("@replit/codemirror-vscode-keymap");
-				chosenKeyBinding = keymap.of(vscodeKeymap);
+				return codemirrorKeymap.of(vscodeKeymap);
 		}
-
-		if (chosenKeyBinding) {
-			return [keymapCompartment.of(chosenKeyBinding)];
-		}
-
-		return [];
 	}
 </script>
 
@@ -157,5 +132,4 @@
 		},
 		".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
 	}}
-	class="h-[35vh] min-h-[300px]"
 />
