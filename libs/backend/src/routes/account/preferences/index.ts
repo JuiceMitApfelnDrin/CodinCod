@@ -19,7 +19,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 			const userId = request.user.userId;
 
 			try {
-				const preferences = await Preferences.findOne({ author: userId });
+				const preferences = await Preferences.findOne({ owner: userId });
 
 				return preferences
 					? reply.send(preferences)
@@ -58,8 +58,8 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 			try {
 				const preferences = await Preferences.findOneAndUpdate(
-					{ author: userId },
-					{ ...parseResult.data, author: userId },
+					{ owner: userId },
+					{ ...parseResult.data, owner: userId },
 					{ new: true, runValidators: true, upsert: true }
 				);
 
@@ -87,7 +87,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 			const userId = request.user.userId;
 
 			try {
-				const deleted = await Preferences.findOneAndDelete({ author: userId });
+				const deleted = await Preferences.findOneAndDelete({ owner: userId });
 				return deleted
 					? reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send()
 					: reply
@@ -125,7 +125,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 			try {
 				const preferences = await Preferences.findOneAndUpdate(
-					{ author: userId },
+					{ owner: userId },
 					{ $set: parseResult.data },
 					{ new: true, runValidators: true, upsert: true }
 				);
