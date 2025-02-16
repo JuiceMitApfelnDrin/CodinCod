@@ -15,8 +15,8 @@ importers:
   libs/backend:
     dependencies:
       '@fastify/cookie':
-        specifier: 7.4.0
-        version: 7.4.0
+        specifier: ^9.3.1
+        version: 9.4.0
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
@@ -1138,10 +1138,10 @@ packages:
       fast-uri: 2.4.0
     dev: false
 
-  /@fastify/cookie@7.4.0:
-    resolution: {integrity: sha512-82MUHsZJY/Wl+rG2E+bnYxSifOtNRChm2M+8xnZHnKtYmyNfLvy/37ElCtqD3KzUyTycR+GE7v7uiDD/tY4TkA==}
+  /@fastify/cookie@9.4.0:
+    resolution: {integrity: sha512-Th+pt3kEkh4MQD/Q2q1bMuJIB5NX/D5SwSpOKu3G/tjoGbwfpurIMJsWSPS0SJJ4eyjtmQ8OipDQspf8RbUOlg==}
     dependencies:
-      cookie: 0.5.0
+      cookie-signature: 1.2.2
       fastify-plugin: 4.5.1
     dev: false
 
@@ -2583,9 +2583,9 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /cookie@0.5.0:
-    resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
-    engines: {node: '>= 0.6'}
+  /cookie-signature@1.2.2:
+    resolution: {integrity: sha512-D76uU73ulSXrD1UXF4KE2TMxVVwhsnCgfAyTg9k8P6KGZjlXKrOLe4dJQKI3Bxi5wjesZoFXJWElNWBjPZMbhg==}
+    engines: {node: '>=6.6.0'}
     dev: false
 
   /cookie@0.6.0:
