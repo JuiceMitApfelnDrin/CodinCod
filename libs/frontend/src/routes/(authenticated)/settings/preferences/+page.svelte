@@ -34,7 +34,7 @@
 			<H2>Preferred programming language</H2>
 
 			<LanguageSelect {language} setLanguage={updatePreferredLanguage} fetchOnMount={false} />
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted-foreground">
 				This is your default language when joining a game.
 			</p>
 		</LogicalUnit>
@@ -75,13 +75,13 @@
 				<Select.Input bind:value={preferredKeymap} />
 			</Select.Root>
 
-			<p class="text-muted-foreground text-sm">Keymap</p>
+			<p class="text-sm text-muted-foreground">Keymap</p>
 		</LogicalUnit>
 
 		<LogicalUnit class="flex flex-col gap-4">
 			<H2>Try out your configuration</H2>
 
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted-foreground">
 				All your changes will be reflected in this code editor
 			</p>
 
