@@ -6,7 +6,9 @@
 		type PuzzleDto,
 		type PuzzleLanguage,
 		type CodeSubmissionParams,
-		type ValidatorEntity
+		type ValidatorEntity,
+		type PistonExecutionResponse,
+		isPistonExecutionResponseSuccess
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -33,6 +35,7 @@
 	let language: PuzzleLanguage = "";
 	let isExecutingTests = false;
 	let isSubmittingCode = false;
+	const testResults: Record<number, PistonExecutionResponse> = {};
 
 	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
@@ -44,12 +47,12 @@
 			}),
 			method: httpRequestMethod.POST
 		});
-		const testResult = await response.json();
+		const testResult: PistonExecutionResponse = await response.json();
 
 		const validator = puzzle.validators?.[itemInList];
 
 		if (validator) {
-			validator.testResult = testResult;
+			testResults[itemInList] = testResult;
 		}
 
 		// necessary since svelte has a weird way to do reactivity, you have to set the object that changed again, this ensures that
@@ -190,7 +193,8 @@
 					<li class="relative">
 						<div
 							class={cn(
-								calculatePuzzleResultColor(validator.testResult?.run.result),
+								isPistonExecutionResponseSuccess(testResults[index]) &&
+									calculatePuzzleResultColor(testResults[index]?.run.result),
 								"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
 							)}
 							id={`validator-${index}`}
@@ -205,16 +209,16 @@
 								</LogicalUnit>
 							</div>
 
-							{#if validator.testResult}
+							{#if isPistonExecutionResponseSuccess(testResults[index])}
 								<div class="flex flex-col gap-4 lg:gap-6">
 									<h3 class="text-xl font-semibold">Actual output</h3>
 
 									<LogicalUnit class="w-full space-y-2">
-										<OutputBox title="Stdout:">{validator.testResult?.run.stdout}</OutputBox>
+										<OutputBox title="Stdout:">{testResults[index]?.run.stdout}</OutputBox>
 									</LogicalUnit>
-									{#if validator.testResult?.run.stderr}
+									{#if testResults[index]?.run.stderr}
 										<LogicalUnit class="w-full space-y-2">
-											<OutputBox title="Stderr:">{validator.testResult?.run.stderr}</OutputBox>
+											<OutputBox title="Stderr:">{testResults[index]?.run.stderr}</OutputBox>
 										</LogicalUnit>
 									{/if}
 								</div>
@@ -240,8 +244,11 @@
 							</Button>
 						</div>
 
-						{#if validator.testResult}
-							<ValidatorStatus class="absolute right-0 top-0 mr-4 mt-4 p-0" {validator} />
+						{#if isPistonExecutionResponseSuccess(testResults[index])}
+							<ValidatorStatus
+								class="absolute right-0 top-0 mr-4 mt-4 p-0"
+								testResult={testResults[index]}
+							/>
 						{/if}
 					</li>
 				{/each}
