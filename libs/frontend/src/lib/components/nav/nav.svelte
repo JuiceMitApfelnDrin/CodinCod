@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { isAuthenticated } from "../../stores";
-	import { frontendUrls, type FrontendLink } from "types";
-	import { websiteName } from "@/config/general";
+	import { frontendUrls, websiteName, type FrontendLink } from "types";
 	import ToggleTheme from "./toggle-theme.svelte";
 	import UserDropdown from "./user-dropdown.svelte";
 

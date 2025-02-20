@@ -1,3 +1,6 @@
+// top level
+export * from "./general.js";
+
 // activity
 export * from "./core/activity/enum/activity-type-enum.js";
 export * from "./core/activity/schema/activity.schema.js";
