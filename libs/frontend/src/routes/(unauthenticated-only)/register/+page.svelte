@@ -3,9 +3,8 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import RegisterForm from "@/features/authentication/register/components/register-form.svelte";
 	import P from "@/components/typography/p.svelte";
-	import { frontendUrls } from "types";
+	import { frontendUrls, websiteName } from "types";
 	import * as Card from "@/components/ui/card";
-	import { websiteName } from "@/config/general.js";
 	import type { ActionData, PageData } from "./$types";
 
 	export let data: PageData;
