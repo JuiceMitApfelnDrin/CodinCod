@@ -75,7 +75,10 @@
 				<Select.Input bind:value={preferredKeymap} />
 			</Select.Root>
 
-			<p class="text-sm text-muted-foreground">Keymap</p>
+			<p class="text-sm text-muted-foreground">
+				Choose your preferred keymap to customize keyboard shortcuts for a smoother coding
+				experience in the editor.
+			</p>
 		</LogicalUnit>
 
 		<LogicalUnit class="flex flex-col gap-4">
