@@ -16,6 +16,7 @@
 		"noFallthroughCasesInSwitch": true,
 		"isolatedModules": true,
 		"forceConsistentCasingInFileNames": true,
+		"exactOptionalPropertyTypes": true,
 		"skipLibCheck": true,
 		"lib": ["ESNext"],
 

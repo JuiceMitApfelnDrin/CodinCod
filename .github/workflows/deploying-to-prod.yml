@@ -1,0 +1,21 @@
+name: Post Docker Deploy
+
+on:
+  workflow_run:
+    workflows: ["Docker Image CI"]
+    types: [completed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into cave
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd codincod/
+            just docker-update
+            docker ps
