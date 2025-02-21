@@ -11,14 +11,9 @@ import { preferences } from "./preferences";
 const theme = writable<ThemeOption>();
 export const isDarkTheme = derived(theme, (currentTheme) => currentTheme === themeOption.DARK);
 export const toggleDarkTheme = () =>
-	theme.update((oldValue) => {
-		const newTheme = oldValue === themeOption.DARK ? themeOption.LIGHT : themeOption.DARK;
-
-		// Update backend
-		preferences.updatePreferences({ theme: newTheme });
-
-		return newTheme;
-	});
+	theme.update((oldValue) =>
+		oldValue === themeOption.DARK ? themeOption.LIGHT : themeOption.DARK
+	);
 
 if (browser) {
 	const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -61,8 +56,8 @@ export const isAuthenticated = derived(authenticatedUserInfo, (userInfo) => {
  */
 
 if (browser) {
-	authenticatedUserInfo.subscribe((user) => {
-		if (user?.isAuthenticated) {
+	isAuthenticated.subscribe((isAuthenticated) => {
+		if (isAuthenticated) {
 			preferences.loadPreferences();
 		}
 	});
@@ -74,6 +69,14 @@ if (browser) {
 
 		if (newPreferences?.theme) {
 			theme.set(newPreferences.theme);
+		}
+	});
+
+	derived([theme, isAuthenticated], ([theme, isAuthenticated]) => {
+		return { isAuthenticated, theme };
+	}).subscribe(({ isAuthenticated, theme }) => {
+		if (isAuthenticated) {
+			preferences.updatePreferences({ theme });
 		}
 	});
 }
