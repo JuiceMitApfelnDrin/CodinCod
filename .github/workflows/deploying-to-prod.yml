@@ -18,3 +18,4 @@ jobs:
           script: |
             cd /codincod
             just docker-update
+            docker ps
