@@ -5,7 +5,8 @@ import {
 	paginatedQuerySchema,
 	isAuthenticatedInfo,
 	createPuzzleSchema,
-	httpResponseCodes
+	httpResponseCodes,
+	CreatePuzzleBackend
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
@@ -30,7 +31,7 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 			const user = request.user;
 			const userId = user.userId;
 
-			const puzzleData = {
+			const puzzleData: CreatePuzzleBackend = {
 				...parseResult.data,
 				author: userId
 			};
