@@ -52,6 +52,9 @@
 			case "elixir":
 				return [(await import("codemirror-lang-elixir")).elixir()];
 
+			case "prolog":
+				return [(await import("codemirror-lang-prolog")).prolog()];
+
 			case "ruby":
 				const { ruby } = await import("@codemirror/legacy-modes/mode/ruby");
 				return [StreamLanguage.define(ruby)];
@@ -67,6 +70,22 @@
 			case "c":
 				const { c } = await import("@codemirror/legacy-modes/mode/clike");
 				return [StreamLanguage.define(c)];
+
+			case "crystal":
+				const { crystal } = await import("@codemirror/legacy-modes/mode/crystal");
+				return [StreamLanguage.define(crystal)];
+
+			case "lua":
+				const { lua } = await import("@codemirror/legacy-modes/mode/lua");
+				return [StreamLanguage.define(lua)];
+
+			case "go":
+				const { go } = await import("@codemirror/legacy-modes/mode/go");
+				return [StreamLanguage.define(go)];
+
+			case "cobol":
+				const { cobol } = await import("@codemirror/legacy-modes/mode/cobol");
+				return [StreamLanguage.define(cobol)];
 
 			case "d":
 				const { d } = await import("@codemirror/legacy-modes/mode/d");
@@ -97,6 +116,7 @@
 				break;
 			case "raku":
 				// raku - No legacy mode available
+				// @code-golf has a raku implementation - https://github.com/code-golf/code-golf/blob/master/js/vendor/codemirror-raku.js
 				break;
 		}
 
