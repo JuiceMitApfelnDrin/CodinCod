@@ -5,7 +5,9 @@ import {
 	SubmissionEntity,
 	CodeSubmissionParams,
 	codeSubmissionParamsSchema,
-	PistonExecutionRequest
+	PistonExecutionRequest,
+	ErrorResponse,
+	arePistonRuntimes
 } from "types";
 import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
@@ -41,6 +43,13 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 			// prepare the execution of tests
 			const runtimes = await fastify.runtimes();
+
+			if (!arePistonRuntimes(runtimes)) {
+				const error: ErrorResponse = runtimes;
+
+				return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
+			}
+
 			const runtimeInfo = findRuntime(runtimes, language);
 
 			if (!runtimeInfo) {
@@ -79,15 +88,13 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			});
 
 			try {
-				const { result } = calculateResults(expectedOutputs, pistonExecutionResults);
-
 				const submissionData: SubmissionEntity = {
 					code: code,
 					puzzle: puzzleId,
 					user: userId,
 					createdAt: new Date(),
 					languageVersion: runtimeInfo.version,
-					result: result,
+					resultInfo: calculateResults(expectedOutputs, pistonExecutionResults),
 					language: runtimeInfo.language
 				};
 
