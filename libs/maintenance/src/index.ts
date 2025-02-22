@@ -3,19 +3,10 @@ import { websiteUrl } from 'types';
 
 export default {
 	async fetch(request, env, ctx) {
-		// Avoid loop: if header set, fetch main page normally.
-		if (request.headers.get('x-skip-check')) {
-			return fetch(request);
-		}
-
 		try {
-			const mainResponse = await fetch(
-				new Request(websiteUrl, {
-					headers: { 'x-skip-check': 'true' },
-				}),
-			);
+			const mainResponse = await fetch(websiteUrl);
 
-			if (mainResponse.ok) return mainResponse;
+			if (mainResponse.ok) return fetch(request);
 		} catch (e) {}
 
 		return new Response(maintenanceHtml, {
