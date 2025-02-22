@@ -18,7 +18,7 @@ import { handleDeletePuzzleForm } from "../../../../api/handle-delete-puzzle-for
 export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
 
-	const url = buildBackendUrl(backendUrls.PUZZLE_DETAIL, { id });
+	const url = buildBackendUrl(backendUrls.PUZZLE_DETAIL_SOLUTION, { id });
 	const response = await fetch(url);
 
 	if (!response.ok) {

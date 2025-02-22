@@ -67,13 +67,9 @@
 
 	let { enhance, form: formData, message } = form;
 
-	let language: PuzzleLanguage = "";
-	$: {
-		language = $formData.solution.language;
-	}
-
+	// TODO: try to use bind:language, instead of using a setLanguage function
 	function setLanguage(newLanguage: PuzzleLanguage) {
-		language = newLanguage;
+		$formData.solution.language = newLanguage;
 	}
 
 	let visibilityStates: PuzzleVisibility[] = Object.values(PuzzleVisibilityEnum);
@@ -164,7 +160,11 @@
 			<Form.Control let:attrs>
 				<Form.Label class="text-lg">Language</Form.Label>
 
-				<LanguageSelect formAttributes={attrs} {language} {setLanguage} />
+				<LanguageSelect
+					formAttributes={attrs}
+					language={$formData.solution.language}
+					{setLanguage}
+				/>
 			</Form.Control>
 			<Form.Description>Programming language used for the solution.</Form.Description>
 			<Form.FieldErrors />

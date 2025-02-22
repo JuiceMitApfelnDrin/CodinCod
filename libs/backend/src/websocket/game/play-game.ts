@@ -1,7 +1,7 @@
 import { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { onConnection } from "./on-connection.js";
-import { ParamsId } from "@/routes/puzzle/[id]/types.js";
+import { ParamsId } from "@/types/types.js";
 import { onClose } from "./on-close.js";
 import { onMessage } from "./on-message.js";
 

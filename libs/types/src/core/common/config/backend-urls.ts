@@ -15,6 +15,7 @@ export const backendUrls = {
 	// puzzle routes
 	PUZZLE: `${baseRoute}/puzzle`,
 	PUZZLE_DETAIL: `${baseRoute}/puzzle/:id`,
+	PUZZLE_DETAIL_SOLUTION: `${baseRoute}/puzzle/:id/solution`,
 	PUZZLE_LANGUAGES: `${baseRoute}/puzzle/languages`,
 
 	HEALTH: `${baseRoute}/health`,
