@@ -1,15 +1,16 @@
 import { FastifyInstance } from "fastify";
 import {
 	CodeExecutionParams,
+	ErrorResponse,
 	httpResponseCodes,
 	isFetchError,
 	isPistonExecutionResponseSuccess,
 	PistonExecutionRequest,
 	PistonExecutionResponse
 } from "types";
-import { calculateResult } from "../../utils/functions/calculate-result.js";
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import { calculateResults } from "@/utils/functions/calculate-result.js";
 
 export default async function executeRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: CodeExecutionParams }>(
@@ -24,9 +25,12 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 			const runtimeInfo = findRuntime(runtimes, language);
 
 			if (!runtimeInfo) {
-				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
-					error: "Unsupported language"
-				});
+				const error: ErrorResponse = {
+					error: "Unsupported language",
+					message: "At the moment we don't support this language."
+				};
+
+				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send(error);
 			}
 
 			const requestObject: PistonExecutionRequest = {
@@ -49,33 +53,41 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 				);
 
 				if (isFetchError(err) && err.cause?.code === "ECONNREFUSED") {
-					return reply.status(503).send({
+					const error: ErrorResponse = {
 						error: "Service unavailable",
 						message: "Unable to reach piston code execution service"
-					});
+					};
+
+					return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
 				}
 
-				return reply.status(500).send({
+				const error: ErrorResponse = {
 					error: "Internal Server Error",
 					message: "Something went wrong during piston code execution"
-				});
+				};
+
+				return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(error);
 			}
 
 			if (!isPistonExecutionResponseSuccess(executionRes)) {
-				return reply
-					.status(500)
-					.send({ error: "Error with piston.", message: executionRes.message });
+				const error: ErrorResponse = {
+					error: "Error with piston.",
+					message: executionRes.message
+				};
+
+				return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(error);
 			}
 
 			let run = executionRes.run;
 			let compile = executionRes.compile;
 
-			run.result = calculateResult(run.output, testOutput);
-
-			return reply.status(200).send({
+			const codeExecutionResponse = {
 				run,
-				compile
-			});
+				compile,
+				puzzleResultInformation: calculateResults([testOutput], [executionRes])
+			};
+
+			return reply.status(200).send(codeExecutionResponse);
 		}
 	);
 }
