@@ -30,10 +30,10 @@ export function calculateResults(
 	}, 0);
 
 	const totalTests = executionResponses.length;
-	const amountOfSuccessfulTests = successfulTests / totalTests;
+	const successRate = successfulTests / totalTests;
 
 	return {
 		result: successfulTests === totalTests ? PuzzleResultEnum.SUCCESS : PuzzleResultEnum.ERROR,
-		amountOfSuccessfulTests
+		successRate
 	};
 }
