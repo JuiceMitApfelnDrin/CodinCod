@@ -7,8 +7,9 @@
 		type PuzzleLanguage,
 		type CodeSubmissionParams,
 		type ValidatorEntity,
-		type PistonExecutionResponse,
-		isPistonExecutionResponseSuccess
+		type CodeExecutionResponse,
+		isCodeExecutionSuccessResponse,
+		PuzzleResultEnum
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -35,7 +36,7 @@
 	let language: PuzzleLanguage = "";
 	let isExecutingTests = false;
 	let isSubmittingCode = false;
-	const testResults: Record<number, PistonExecutionResponse> = {};
+	let testResults: Record<number, CodeExecutionResponse> = {};
 
 	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
@@ -47,16 +48,13 @@
 			}),
 			method: httpRequestMethod.POST
 		});
-		const testResult: PistonExecutionResponse = await response.json();
 
-		const validator = puzzle.validators?.[itemInList];
+		const testResult: CodeExecutionResponse = await response.json();
 
-		if (validator) {
-			testResults[itemInList] = testResult;
-		}
-
-		// necessary since svelte has a weird way to do reactivity, you have to set the object that changed again, this ensures that
-		puzzle = puzzle;
+		testResults = {
+			...testResults,
+			[itemInList]: testResult
+		};
 	}
 
 	async function patience() {
@@ -183,7 +181,18 @@
 
 {#if puzzle.validators}
 	<LogicalUnit>
-		<TestProgressBar {openTestsAccordion} validators={puzzle.validators} class="my-7" />
+		<TestProgressBar
+			{openTestsAccordion}
+			puzzleResults={[...puzzle.validators].map((_, index) => {
+				const testResult = testResults[index];
+				if (!isCodeExecutionSuccessResponse(testResult)) {
+					return PuzzleResultEnum.ERROR;
+				}
+
+				return testResult.puzzleResultInformation.result;
+			})}
+			class="my-7"
+		/>
 
 		<Accordion bind:open={openTests} id="tests">
 			<h2 slot="title">Tests</h2>
@@ -193,8 +202,8 @@
 					<li class="relative">
 						<div
 							class={cn(
-								isPistonExecutionResponseSuccess(testResults[index]) &&
-									calculatePuzzleResultColor(testResults[index]?.run.result),
+								isCodeExecutionSuccessResponse(testResults[index]) &&
+									calculatePuzzleResultColor(testResults[index].puzzleResultInformation.result),
 								"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
 							)}
 							id={`validator-${index}`}
@@ -209,16 +218,16 @@
 								</LogicalUnit>
 							</div>
 
-							{#if isPistonExecutionResponseSuccess(testResults[index])}
+							{#if isCodeExecutionSuccessResponse(testResults[index])}
 								<div class="flex flex-col gap-4 lg:gap-6">
 									<h3 class="text-xl font-semibold">Actual output</h3>
 
 									<LogicalUnit class="w-full space-y-2">
-										<OutputBox title="Stdout:">{testResults[index]?.run.stdout}</OutputBox>
+										<OutputBox title="Stdout:">{testResults[index].run.stdout}</OutputBox>
 									</LogicalUnit>
-									{#if testResults[index]?.run.stderr}
+									{#if testResults[index].run.stderr}
 										<LogicalUnit class="w-full space-y-2">
-											<OutputBox title="Stderr:">{testResults[index]?.run.stderr}</OutputBox>
+											<OutputBox title="Stderr:">{testResults[index].run.stderr}</OutputBox>
 										</LogicalUnit>
 									{/if}
 								</div>
@@ -244,10 +253,10 @@
 							</Button>
 						</div>
 
-						{#if isPistonExecutionResponseSuccess(testResults[index])}
+						{#if isCodeExecutionSuccessResponse(testResults[index])}
 							<ValidatorStatus
 								class="absolute right-0 top-0 mr-4 mt-4 p-0"
-								testResult={testResults[index]}
+								puzzleResult={testResults[index].puzzleResultInformation.result}
 							/>
 						{/if}
 					</li>
