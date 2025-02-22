@@ -4,6 +4,6 @@
 	import { frontendUrls } from "types";
 
 	onMount(() => {
-		goto(frontendUrls.SETTINGS_PROFILE);
+		goto(frontendUrls.SETTINGS_PROFILE, { replaceState: true });
 	});
 </script>
