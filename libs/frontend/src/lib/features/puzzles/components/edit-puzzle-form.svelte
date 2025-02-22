@@ -47,7 +47,9 @@
 
 			$form.validators.push({
 				input: "",
-				output: ""
+				output: "",
+				createdAt: new Date(),
+				updatedAt: new Date()
 			});
 
 			return $form;
