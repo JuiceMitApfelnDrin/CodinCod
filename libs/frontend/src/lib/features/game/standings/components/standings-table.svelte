@@ -18,6 +18,7 @@
 	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "lucide-svelte";
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
+	import Codemirror from "../../components/codemirror.svelte";
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
@@ -120,14 +121,14 @@
 							aria-labelledby={"row-" + _id}
 							class={cn(!isOpen[_id] && "hidden")}
 						>
-							<Table.Cell colspan={6} aria-live="polite">
+							<Table.Cell colspan={6} aria-live="polite" class="m-0 p-0">
 								{#await fetchCode(_id)}
 									<span class="p-2">Loading code...</span>
 								{:then { code }}
-									<pre><code class="block whitespace-pre p-4">{code}</code></pre>
+									<Codemirror {language} value={code} readonly={true} />
 								{:catch}
 									<span class="p-2 text-red-500"
-										>Encountered an error while fetching submission</span
+										>Encountered an error while fetching the submission</span
 									>
 								{/await}
 							</Table.Cell>

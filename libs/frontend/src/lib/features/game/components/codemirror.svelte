@@ -7,6 +7,7 @@
 	import { preferences } from "@/stores/preferences";
 	import { keymap as codemirrorKeymap } from "@codemirror/view";
 
+	export let readonly = false;
 	export let value = "";
 	export let language: PuzzleLanguage = "";
 
@@ -143,6 +144,7 @@
 <CodeMirror
 	bind:value
 	theme={oneDark}
+	{readonly}
 	extensions={editorExtensions}
 	basic={true}
 	styles={{
