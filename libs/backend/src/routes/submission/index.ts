@@ -1,19 +1,18 @@
 import { FastifyInstance } from "fastify";
 import {
 	httpResponseCodes,
-	isPistonExecutionResponseError,
-	isPistonExecutionResponseSuccess,
 	PistonExecutionResponse,
-	PuzzleResultEnum,
 	SubmissionEntity,
 	CodeSubmissionParams,
-	codeSubmissionParamsSchema
+	codeSubmissionParamsSchema,
+	PistonExecutionRequest
 } from "types";
 import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import { calculateResults } from "@/utils/functions/calculate-result.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: CodeSubmissionParams }>(
@@ -58,57 +57,37 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 				});
 			}
 
-			const pistonExecutionRequests = puzzle.validators.map((validator) => {
-				return {
+			const pistonExecutionResults: PistonExecutionResponse[] = [];
+			const expectedOutputs: string[] = [];
+
+			const promises = puzzle.validators.map(async (validator) => {
+				const pistonRequest: PistonExecutionRequest = {
 					language: runtimeInfo.language,
 					version: runtimeInfo.version,
 					files: [{ content: code }],
-					stdin: validator.input,
-					expectedOutput: validator.output
+					stdin: validator.input
 				};
+				const executionResponse = await fastify.piston(pistonRequest);
+				return { executionResponse, output: validator.output };
 			});
 
-			const pistonExecutionResponses = await Promise.all(
-				pistonExecutionRequests.map(async (request) => {
-					const response: PistonExecutionResponse = await fastify.piston(request);
+			const results = await Promise.all(promises);
 
-					if (isPistonExecutionResponseError(response)) {
-						return {
-							response,
-							stdin: request.stdin,
-							isMatch: false
-						};
-					}
-
-					if (isPistonExecutionResponseSuccess(response)) {
-						const expectedOutput = request.expectedOutput.trimEnd();
-
-						return {
-							response,
-							stdin: request.stdin,
-							isMatch:
-								response.run.output.trimEnd() === expectedOutput ||
-								response.run.stdout.trimEnd() === expectedOutput
-						};
-					}
-
-					return { isMatch: false };
-				})
-			);
-
-			const matchCount = pistonExecutionResponses.filter((res) => res.isMatch).length;
+			results.forEach(({ executionResponse, output }) => {
+				pistonExecutionResults.push(executionResponse);
+				expectedOutputs.push(output);
+			});
 
 			try {
+				const { result } = calculateResults(expectedOutputs, pistonExecutionResults);
+
 				const submissionData: SubmissionEntity = {
 					code: code,
 					puzzle: puzzleId,
 					user: userId,
 					createdAt: new Date(),
 					languageVersion: runtimeInfo.version,
-					result:
-						puzzle.validators.length === matchCount
-							? PuzzleResultEnum.SUCCESS
-							: PuzzleResultEnum.ERROR,
+					result: result,
 					language: runtimeInfo.language
 				};
 

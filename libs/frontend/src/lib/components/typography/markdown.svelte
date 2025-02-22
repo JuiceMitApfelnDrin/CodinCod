@@ -3,7 +3,7 @@
 	import P from "./p.svelte";
 	import DOMPurify from "dompurify";
 
-	export let markdown: string | null = null;
+	export let markdown: string | undefined = undefined;
 	export let fallbackText: string = "no fallback provided";
 
 	const parseMarkdown = async (markdown: string) => {
@@ -12,7 +12,7 @@
 	};
 </script>
 
-{#if markdown !== null}
+{#if markdown !== undefined}
 	{#await parseMarkdown(markdown)}
 		<P>Loading...</P>
 	{:then parsedMarkdown}
