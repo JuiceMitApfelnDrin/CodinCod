@@ -2,12 +2,10 @@
 	import * as Select from "$lib/components/ui/select";
 	import { ScrollArea } from "@/components/ui/scroll-area";
 	import { preferences } from "@/stores/preferences";
-	import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
-	import { onMount } from "svelte";
-	import { DEFAULT_LANGUAGE, type PuzzleLanguage } from "types";
+	import { DEFAULT_LANGUAGE } from "types";
 
 	export let language: string = "";
-	export let setLanguage: (language: PuzzleLanguage) => void = () => {};
+	export let languages: string[] = [];
 	export let formAttributes:
 		| {
 				name: string;
@@ -19,34 +17,23 @@
 				"data-fs-control": string;
 		  }
 		| undefined = undefined;
-	export let fetchOnMount = true;
 
-	async function fetchLanguages() {
-		const languages = await fetchSupportedLanguages();
-
+	if (!language) {
 		if ($preferences?.preferredLanguage && languages.includes($preferences.preferredLanguage)) {
-			setLanguage($preferences.preferredLanguage);
+			language = $preferences.preferredLanguage;
 		} else if (languages.includes(DEFAULT_LANGUAGE)) {
-			setLanguage(DEFAULT_LANGUAGE);
+			language = DEFAULT_LANGUAGE;
 		} else {
-			setLanguage(languages[0]);
+			language = languages[0];
 		}
-
-		return languages;
 	}
-
-	onMount(() => {
-		if (fetchOnMount) {
-			fetchLanguages();
-		}
-	});
 </script>
 
 <Select.Root
 	selected={{ label: language, value: language }}
 	onSelectedChange={(v) => {
 		if (v) {
-			setLanguage(v.value);
+			language = v.value;
 		}
 	}}
 >
@@ -60,13 +47,9 @@
 			<Select.Separator />
 
 			<Select.Group>
-				{#await fetchLanguages()}
-					loading...
-				{:then languages}
-					{#each languages as language}
-						<Select.Item value={language} label={language} />
-					{/each}
-				{/await}
+				{#each languages as language}
+					<Select.Item value={language} label={language} />
+				{/each}
 			</Select.Group>
 		</ScrollArea>
 	</Select.Content>

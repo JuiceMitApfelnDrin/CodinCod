@@ -27,6 +27,7 @@
 	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import { languages } from "@/stores/languages";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
@@ -120,10 +121,6 @@
 	function openTestsAccordion() {
 		openTests = true;
 	}
-
-	function setLanguage(newLanguage: PuzzleLanguage) {
-		language = newLanguage;
-	}
 </script>
 
 <PuzzleMetaInfo {puzzle} />
@@ -146,7 +143,7 @@
 
 <LogicalUnit class="space-y-4">
 	<LogicalUnit class="flex flex-col justify-between gap-2 md:flex-row">
-		<LanguageSelect {language} {setLanguage} />
+		<LanguageSelect bind:language languages={$languages ?? []} />
 
 		<CountdownTimer {endDate} />
 	</LogicalUnit>

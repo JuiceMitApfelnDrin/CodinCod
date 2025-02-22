@@ -9,6 +9,7 @@
 	import { ScrollArea } from "@/components/ui/scroll-area";
 	import { DEFAULT_LANGUAGE, keymap, keymaps, type PuzzleLanguage } from "types";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
+	import { languages } from "@/stores/languages";
 
 	let language: PuzzleLanguage = $preferences?.preferredLanguage ?? DEFAULT_LANGUAGE;
 	let preferredKeymap: string = $preferences?.editor?.keymap ?? keymap.VSCODE;
@@ -19,9 +20,10 @@
 			preferences.updatePreferences({
 				preferredLanguage: newPreferredLanguage
 			});
-			language = newPreferredLanguage;
 		}
 	}
+
+	$: updatePreferredLanguage(language);
 </script>
 
 <h1 class="sr-only">Preferences</h1>
@@ -33,8 +35,8 @@
 		<LogicalUnit class="flex flex-col gap-4">
 			<H2>Preferred programming language</H2>
 
-			<LanguageSelect {language} setLanguage={updatePreferredLanguage} fetchOnMount={false} />
-			<p class="text-sm text-muted-foreground">
+			<LanguageSelect bind:language languages={$languages ?? []} />
+			<p class="text-muted-foreground text-sm">
 				This is your default language when joining a game.
 			</p>
 		</LogicalUnit>
@@ -75,7 +77,7 @@
 				<Select.Input bind:value={preferredKeymap} />
 			</Select.Root>
 
-			<p class="text-sm text-muted-foreground">
+			<p class="text-muted-foreground text-sm">
 				Choose your preferred keymap to customize keyboard shortcuts for a smoother coding
 				experience in the editor.
 			</p>
@@ -84,7 +86,7 @@
 		<LogicalUnit class="flex flex-col gap-4">
 			<H2>Try out your configuration</H2>
 
-			<p class="text-sm text-muted-foreground">
+			<p class="text-muted-foreground text-sm">
 				All your changes will be reflected in this code editor
 			</p>
 
