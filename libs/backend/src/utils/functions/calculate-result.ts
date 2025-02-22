@@ -1,16 +1,39 @@
-import { PuzzleResult, PuzzleResultEnum } from "types";
+import {
+	isPistonExecutionResponseSuccess,
+	PistonExecutionResponse,
+	PuzzleResultEnum,
+	PuzzleResultInformation
+} from "types";
 
-export function calculateResult(output?: string, expectedOutput?: string): PuzzleResult {
-	if (!output || !expectedOutput) {
-		return PuzzleResultEnum.UNKNOWN;
-	}
+function compareOutputWithExpectedOutput(expectedOutput: string, output: string) {
+	return expectedOutput.trimEnd() === output.trimEnd();
+}
 
-	const trimmedOutput = output.trim();
-	const trimmedExpectedOutput = expectedOutput.trim();
+export function calculateResults(
+	expectedOutput: string[],
+	executionResponses: PistonExecutionResponse[]
+): PuzzleResultInformation {
+	const successfulTests = executionResponses.reduce((previous, executionResponse, index) => {
+		if (isPistonExecutionResponseSuccess(executionResponse)) {
+			const currentExpectedOutput = expectedOutput[index];
 
-	if (trimmedExpectedOutput === trimmedOutput) {
-		return PuzzleResultEnum.SUCCESS;
-	}
+			return (
+				previous +
+				Number(
+					compareOutputWithExpectedOutput(currentExpectedOutput, executionResponse.run.output) ||
+						compareOutputWithExpectedOutput(currentExpectedOutput, executionResponse.run.stdout)
+				)
+			);
+		}
 
-	return PuzzleResultEnum.ERROR;
+		return previous;
+	}, 0);
+
+	const totalTests = executionResponses.length;
+	const amountOfSuccessfulTests = successfulTests / totalTests;
+
+	return {
+		result: successfulTests === totalTests ? PuzzleResultEnum.SUCCESS : PuzzleResultEnum.ERROR,
+		amountOfSuccessfulTests
+	};
 }
