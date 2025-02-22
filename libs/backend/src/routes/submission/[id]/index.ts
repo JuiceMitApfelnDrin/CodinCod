@@ -1,6 +1,6 @@
 import Submission from "@/models/submission/submission.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
-import { ParamsId } from "@/routes/puzzle/[id]/types.js";
+import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
 import { httpResponseCodes } from "types";
 
