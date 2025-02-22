@@ -12,7 +12,6 @@
 		puzzleEntitySchema,
 		PuzzleVisibilityEnum,
 		type EditPuzzle,
-		type PuzzleLanguage,
 		type PuzzleVisibility
 	} from "types";
 	import { page } from "$app/stores";
@@ -21,6 +20,7 @@
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import LanguageSelect from "./language-select.svelte";
+	import { languages } from "@/stores/languages";
 
 	export let data: SuperValidated<EditPuzzle>;
 
@@ -66,11 +66,6 @@
 	}
 
 	let { enhance, form: formData, message } = form;
-
-	// TODO: try to use bind:language, instead of using a setLanguage function
-	function setLanguage(newLanguage: PuzzleLanguage) {
-		$formData.solution.language = newLanguage;
-	}
 
 	let visibilityStates: PuzzleVisibility[] = Object.values(PuzzleVisibilityEnum);
 </script>
@@ -162,8 +157,8 @@
 
 				<LanguageSelect
 					formAttributes={attrs}
-					language={$formData.solution.language}
-					{setLanguage}
+					bind:language={$formData.solution.language}
+					languages={$languages ?? []}
 				/>
 			</Form.Control>
 			<Form.Description>Programming language used for the solution.</Form.Description>
