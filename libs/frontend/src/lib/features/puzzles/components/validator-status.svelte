@@ -7,7 +7,7 @@
 	let className: HTMLInputAttributes["class"] = undefined;
 	export { className as class };
 
-	export let puzzleResult: PuzzleResult;
+	export let puzzleResult: PuzzleResult | undefined;
 </script>
 
 {#if puzzleResult === PuzzleResultEnum.SUCCESS}

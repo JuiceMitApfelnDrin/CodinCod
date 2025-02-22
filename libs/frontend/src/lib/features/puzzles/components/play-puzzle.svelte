@@ -185,6 +185,9 @@
 			{openTestsAccordion}
 			puzzleResults={puzzle.validators.map((_, index) => {
 				const testResult = testResults[index];
+				if (testResult === undefined) {
+					return undefined;
+				}
 				if (!isCodeExecutionSuccessResponse(testResult)) {
 					return PuzzleResultEnum.ERROR;
 				}

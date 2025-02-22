@@ -7,14 +7,14 @@
 	let className: HTMLInputAttributes["class"] = undefined;
 	export { className as class };
 
-	export let puzzleResults: PuzzleResult[];
+	export let puzzleResults: (PuzzleResult | undefined)[];
 	export let openTestsAccordion;
 </script>
 
 {#if puzzleResults}
 	<ul
 		class={cn(
-			"hidden gap-4 rounded-full border-2 border-gray-300 px-8 py-4 dark:border-gray-300 lg:flex lg:flex-wrap",
+			"hidden gap-4 rounded-full border-2 border-gray-300 px-8 py-4 lg:flex lg:flex-wrap dark:border-gray-300",
 			className
 		)}
 	>
