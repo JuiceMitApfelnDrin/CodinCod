@@ -183,7 +183,7 @@
 	<LogicalUnit>
 		<TestProgressBar
 			{openTestsAccordion}
-			puzzleResults={[...puzzle.validators].map((_, index) => {
+			puzzleResults={puzzle.validators.map((_, index) => {
 				const testResult = testResults[index];
 				if (!isCodeExecutionSuccessResponse(testResult)) {
 					return PuzzleResultEnum.ERROR;
