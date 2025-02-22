@@ -276,7 +276,7 @@
 								{#if isUserDto(player)}
 									<UserHoverCard username={player.username} />{` - using ${
 										findPlayerSubmission(player._id)?.language ?? "???"
-									} - ${findPlayerSubmission(player._id)?.result ?? "still busy solving the puzzle"}!`}
+									} - ${findPlayerSubmission(player._id)?.resultInfo.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
 									{player}
 								{/if}

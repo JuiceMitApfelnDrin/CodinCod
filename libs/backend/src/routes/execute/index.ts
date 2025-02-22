@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import {
+	arePistonRuntimes,
 	CodeExecutionParams,
 	ErrorResponse,
 	httpResponseCodes,
@@ -22,6 +23,13 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 			const { code, language, testInput, testOutput } = request.body;
 
 			const runtimes = await fastify.runtimes();
+
+			if (!arePistonRuntimes(runtimes)) {
+				const error: ErrorResponse = runtimes;
+
+				return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
+			}
+
 			const runtimeInfo = findRuntime(runtimes, language);
 
 			if (!runtimeInfo) {
