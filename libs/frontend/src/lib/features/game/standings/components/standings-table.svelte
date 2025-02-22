@@ -91,7 +91,7 @@
 						</Table.Cell>
 						<Table.Cell>
 							<!-- todo: make this more readable for screen readers somehow -->
-							<Hourglass aria-hidden="true" class="icon default default mr-1" />
+							<Hourglass aria-hidden="true" class="icon default mr-1" />
 							{formatDuration(createdAt)}
 						</Table.Cell>
 						<Table.Cell>
@@ -106,9 +106,9 @@
 								class="w-[17ch]"
 							>
 								{#if isOpen[_id]}
-									<CodeXml aria-hidden="true" class="icon default default mr-2" /> Hide code
+									<CodeXml aria-hidden="true" class="icon default mr-2" /> Hide code
 								{:else}
-									<Code aria-hidden="true" class="icon default default mr-2" /> Show code
+									<Code aria-hidden="true" class="icon default mr-2" /> Show code
 								{/if}
 							</Button>
 						</Table.Cell>
