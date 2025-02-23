@@ -160,7 +160,7 @@
 		bind:value
 		theme={oneDark}
 		basic={true}
-    {readonly}
+		{readonly}
 		{...editorConfig}
 		styles={{
 			".cm-editor": {
