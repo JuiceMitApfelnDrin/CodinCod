@@ -11,18 +11,30 @@
 	export let value = "";
 	export let language: PuzzleLanguage = "";
 
-	let editorExtensions: Extension[] = [];
-
-	$: {
-		getEditorExtensions(language, $preferences?.editor?.keymap);
-	}
-
-	async function getEditorExtensions(language: string, keymapPreference?: string) {
-		editorExtensions = [
-			oneDark,
-			await getKeymapExtensions(keymapPreference),
-			...(await getLanguageExtensions(language))
-		];
+	async function getEditorConfig(language: string) {
+		return {
+			extensions: [
+				oneDark,
+				await getKeymapExtensions($preferences?.editor?.keymap),
+				...(await getLanguageExtensions(language))
+			],
+			useTab: language === "go",
+			tabSize: (() => {
+				switch (language) {
+					case "javascript":
+					case "typescript":
+					case "dart":
+					case "ruby":
+					case "crystal":
+					case "nim":
+					case "elixir":
+					case "lua":
+						return 2;
+					default:
+						return 4;
+				}
+			})()
+		};
 	}
 
 	async function getLanguageExtensions(
@@ -141,17 +153,21 @@
 	}
 </script>
 
-<CodeMirror
-	bind:value
-	theme={oneDark}
-	{readonly}
-	extensions={editorExtensions}
-	basic={true}
-	styles={{
-		".cm-editor": {
-			display: "flex",
-			height: "100%"
-		},
-		".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
-	}}
-/>
+{#await getEditorConfig(language)}
+	<p>loading the editor...</p>
+{:then editorConfig}
+	<CodeMirror
+		bind:value
+		theme={oneDark}
+		basic={true}
+    {readonly}
+		{...editorConfig}
+		styles={{
+			".cm-editor": {
+				display: "flex",
+				height: "100%"
+			},
+			".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
+		}}
+	/>
+{/await}
