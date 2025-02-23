@@ -7,6 +7,7 @@
 	import { preferences } from "@/stores/preferences";
 	import { keymap as codemirrorKeymap } from "@codemirror/view";
 
+	export let readonly = false;
 	export let value = "";
 	export let language: PuzzleLanguage = "";
 
@@ -159,13 +160,16 @@
 		bind:value
 		theme={oneDark}
 		basic={true}
+		{readonly}
 		{...editorConfig}
 		styles={{
 			".cm-editor": {
 				display: "flex",
 				height: "100%"
 			},
-			".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
+			".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" },
+			// TODO: fix this fr fr, since setting maxWidth can only be a temporary solution
+			".cm-content": { maxWidth: "90vw" }
 		}}
 	/>
 {/await}
