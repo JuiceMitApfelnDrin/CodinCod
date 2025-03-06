@@ -18,7 +18,6 @@
 		"forceConsistentCasingInFileNames": true,
 		"exactOptionalPropertyTypes": true,
 		"skipLibCheck": true,
-		"exactOptionalPropertyTypes": true,
 		"lib": ["ESNext"],
 
 		"paths": {
