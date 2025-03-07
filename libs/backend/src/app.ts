@@ -24,8 +24,6 @@ server.register(fastifyCookie, {
 	hook: "onRequest",
 	parseOptions: {}
 } as FastifyCookieOptions);
-
-// TODO: make this not show an error, appears to work tho, check wtf is going wrong
 server.register(fastifyRateLimit, {
 	max: 100,
 	timeWindow: "1 minute"
@@ -37,11 +35,6 @@ server.register(mongooseConnector);
 server.register(piston);
 server.register(websocket);
 server.register(setupWebSockets);
-
-// register custom plugins
-
-// middleware
-// server.decorate("authenticate", authenticate.bind(null, server));
 
 // routes
 server.register(router);
