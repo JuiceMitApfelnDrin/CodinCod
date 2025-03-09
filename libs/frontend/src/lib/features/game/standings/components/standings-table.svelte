@@ -13,11 +13,12 @@
 	import minMax from "dayjs/plugin/minMax";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
-	import PuzzleResultBadge from "@/features/puzzles/components/puzzle-result-badge.svelte";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
-	import { Code, CodeXml, Hash, Hourglass } from "lucide-svelte";
+	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "lucide-svelte";
 	import { cn } from "@/utils/cn";
+	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
+	import Codemirror from "../../components/codemirror.svelte";
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
@@ -64,24 +65,36 @@
 				>
 				<Table.Head>User</Table.Head>
 				<Table.Head>Language</Table.Head>
+				<Table.Head>Score</Table.Head>
 				<Table.Head>Time</Table.Head>
-				<Table.Head>Result</Table.Head>
 				<Table.Head class="w-0"><span class="sr-only">Actions</span></Table.Head>
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each submissions as { user, language, createdAt, result, _id }, index}
+			{#each submissions as { user, language, createdAt, resultInfo, _id }, index}
 				{#if isUserDto(user)}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>
 						<Table.Cell><UserHoverCard username={user.username} /></Table.Cell>
 						<Table.Cell>{language}</Table.Cell>
 						<Table.Cell>
+							{#if resultInfo.successRate === 1}
+								<FishIcon
+									aria-hidden="true"
+									class={cn("icon mr-1", calculatePuzzleResultIconColor(resultInfo.result))}
+								/>
+							{:else}
+								<FishOffIcon
+									aria-hidden="true"
+									class={cn("icon mr-1", calculatePuzzleResultIconColor(resultInfo.result))}
+								/>
+							{/if}{Math.round(resultInfo.successRate * 100)}%
+						</Table.Cell>
+						<Table.Cell>
 							<!-- todo: make this more readable for screen readers somehow -->
-							<Hourglass aria-hidden="true" class="icon mr-1" />
+							<Hourglass aria-hidden="true" class="icon default mr-1" />
 							{formatDuration(createdAt)}
 						</Table.Cell>
-						<Table.Cell><PuzzleResultBadge {result} /></Table.Cell>
 						<Table.Cell>
 							<Button
 								variant="secondary"
@@ -94,9 +107,9 @@
 								class="w-[17ch]"
 							>
 								{#if isOpen[_id]}
-									<CodeXml aria-hidden="true" class="icon mr-2" /> Hide code
+									<CodeXml aria-hidden="true" class="icon default mr-2" /> Hide code
 								{:else}
-									<Code aria-hidden="true" class="icon mr-2" /> Show code
+									<Code aria-hidden="true" class="icon default mr-2" /> Show code
 								{/if}
 							</Button>
 						</Table.Cell>
@@ -108,14 +121,14 @@
 							aria-labelledby={"row-" + _id}
 							class={cn(!isOpen[_id] && "hidden")}
 						>
-							<Table.Cell colspan={6} aria-live="polite">
+							<Table.Cell colspan={6} aria-live="polite" class="m-0 p-0">
 								{#await fetchCode(_id)}
 									<span class="p-2">Loading code...</span>
 								{:then { code }}
-									<pre><code class="block whitespace-pre p-4">{code}</code></pre>
+									<Codemirror {language} value={code} readonly={true} />
 								{:catch}
 									<span class="p-2 text-red-500"
-										>Encountered an error while fetching submission</span
+										>Encountered an error while fetching the submission</span
 									>
 								{/await}
 							</Table.Cell>

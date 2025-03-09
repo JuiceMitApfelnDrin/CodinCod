@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
-import { webSocketUrls } from "types";
 import { waitingRoomSetup } from "@/websocket/waiting-room/waiting-room-setup.js";
 import { gameSetup } from "@/websocket/game/game-setup.js";
-import { ParamsId } from "@/routes/puzzle/[id]/types.js";
 import authenticated from "../middleware/authenticated.js";
+import { webSocketUrls } from "types";
+import { ParamsId } from "@/types/types.js";
 
 export async function setupWebSockets(fastify: FastifyInstance) {
 	// needs to happen before other routes in the whole flow

@@ -6,7 +6,10 @@
 		type PuzzleDto,
 		type PuzzleLanguage,
 		type CodeSubmissionParams,
-		type ValidatorEntity
+		type ValidatorEntity,
+		type CodeExecutionResponse,
+		isCodeExecutionSuccessResponse,
+		PuzzleResultEnum
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -24,6 +27,7 @@
 	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import { languages } from "@/stores/languages";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
@@ -34,6 +38,7 @@
 	let language: PuzzleLanguage = "";
 	let isExecutingTests = false;
 	let isSubmittingCode = false;
+	let testResults: Record<number, CodeExecutionResponse> = {};
 
 	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
@@ -45,16 +50,13 @@
 			}),
 			method: httpRequestMethod.POST
 		});
-		const testResult = await response.json();
 
-		const validator = puzzle.validators?.[itemInList];
+		const testResult: CodeExecutionResponse = await response.json();
 
-		if (validator) {
-			validator.testResult = testResult;
-		}
-
-		// necessary since svelte has a weird way to do reactivity, you have to set the object that changed again, this ensures that
-		puzzle = puzzle;
+		testResults = {
+			...testResults,
+			[itemInList]: testResult
+		};
 	}
 
 	async function patience() {
@@ -124,10 +126,6 @@
 	$: {
 		onPlayerChangeLanguage(language);
 	}
-
-	function setLanguage(newLanguage: PuzzleLanguage) {
-		language = newLanguage;
-	}
 </script>
 
 <PuzzleMetaInfo {puzzle} />
@@ -150,7 +148,7 @@
 
 <LogicalUnit class="space-y-4">
 	<LogicalUnit class="flex flex-col justify-between gap-2 md:flex-row">
-		<LanguageSelect {language} {setLanguage} />
+		<LanguageSelect bind:language languages={$languages ?? []} />
 
 		<CountdownTimer {endDate} />
 	</LogicalUnit>
@@ -185,7 +183,21 @@
 
 {#if puzzle.validators}
 	<LogicalUnit>
-		<TestProgressBar {openTestsAccordion} validators={puzzle.validators} class="my-7" />
+		<TestProgressBar
+			{openTestsAccordion}
+			puzzleResults={puzzle.validators.map((_, index) => {
+				const testResult = testResults[index];
+				if (testResult === undefined) {
+					return undefined;
+				}
+				if (!isCodeExecutionSuccessResponse(testResult)) {
+					return PuzzleResultEnum.ERROR;
+				}
+
+				return testResult.puzzleResultInformation.result;
+			})}
+			class="my-7"
+		/>
 
 		<Accordion bind:open={openTests} id="tests">
 			<h2 slot="title">Tests</h2>
@@ -195,7 +207,8 @@
 					<li class="relative">
 						<div
 							class={cn(
-								calculatePuzzleResultColor(validator.testResult?.run.result),
+								isCodeExecutionSuccessResponse(testResults[index]) &&
+									calculatePuzzleResultColor(testResults[index].puzzleResultInformation.result),
 								"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
 							)}
 							id={`validator-${index}`}
@@ -210,16 +223,16 @@
 								</LogicalUnit>
 							</div>
 
-							{#if validator.testResult}
+							{#if isCodeExecutionSuccessResponse(testResults[index])}
 								<div class="flex flex-col gap-4 lg:gap-6">
 									<h3 class="text-xl font-semibold">Actual output</h3>
 
 									<LogicalUnit class="w-full space-y-2">
-										<OutputBox title="Stdout:">{validator.testResult?.run.stdout}</OutputBox>
+										<OutputBox title="Stdout:">{testResults[index].run.stdout}</OutputBox>
 									</LogicalUnit>
-									{#if validator.testResult?.run.stderr}
+									{#if testResults[index].run.stderr}
 										<LogicalUnit class="w-full space-y-2">
-											<OutputBox title="Stderr:">{validator.testResult?.run.stderr}</OutputBox>
+											<OutputBox title="Stderr:">{testResults[index].run.stderr}</OutputBox>
 										</LogicalUnit>
 									{/if}
 								</div>
@@ -245,8 +258,11 @@
 							</Button>
 						</div>
 
-						{#if validator.testResult}
-							<ValidatorStatus class="absolute right-0 top-0 mr-4 mt-4 p-0" {validator} />
+						{#if isCodeExecutionSuccessResponse(testResults[index])}
+							<ValidatorStatus
+								class="absolute right-0 top-0 mr-4 mt-4 p-0"
+								puzzleResult={testResults[index].puzzleResultInformation.result}
+							/>
 						{/if}
 					</li>
 				{/each}

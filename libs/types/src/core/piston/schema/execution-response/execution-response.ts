@@ -6,3 +6,7 @@ export const pistonExecutionResponseSchema = pistonExecutionResponseSuccessSchem
 	pistonExecutionResponseErrorSchema
 );
 export type PistonExecutionResponse = z.infer<typeof pistonExecutionResponseSchema>;
+
+export function isPistonExecutionResponse(data: unknown): data is PistonExecutionResponse {
+	return pistonExecutionResponseSchema.safeParse(data).success;
+}

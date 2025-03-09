@@ -40,16 +40,14 @@
 	<DropdownMenu.Content>
 		<DropdownMenu.Group>
 			{#each dropdownLinksLoggedIn as { text, href }}
-				<DropdownMenu.Item>
-					<a class="h-full w-full" {href}>{text}</a>
+				<DropdownMenu.Item {href}>
+					{text}
 				</DropdownMenu.Item>
 			{/each}
 
 			<DropdownMenu.Separator></DropdownMenu.Separator>
 
-			<DropdownMenu.Item>
-				<a class="h-full w-full" href="/logout"> Log out </a>
-			</DropdownMenu.Item>
+			<DropdownMenu.Item href={frontendUrls.LOGOUT}>Log out</DropdownMenu.Item>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

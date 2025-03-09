@@ -1,3 +1,6 @@
+// top level
+export * from "./general.js";
+
 // activity
 export * from "./core/activity/enum/activity-type-enum.js";
 export * from "./core/activity/schema/activity.schema.js";
@@ -30,6 +33,7 @@ export * from "./core/common/schema/fetch-error.schema.js";
 export * from "./core/common/schema/message.schema.js";
 export * from "./core/common/schema/paginated-query-response.schema.js";
 export * from "./core/common/schema/paginated-query.schema.js";
+export * from "./core/common/schema/error-response.schema.js";
 export * from "./core/common/types/link.js";
 export * from "./core/common/types/value-of.js";
 
@@ -66,6 +70,8 @@ export * from "./core/piston/schema/file-encoding.js";
 export * from "./core/piston/schema/puzzle-result.js";
 export * from "./core/piston/schema/request.js";
 export * from "./core/piston/schema/runtime.js";
+export * from "./core/piston/schema/puzzle-result-information.schema.js";
+export * from "./core/piston/schema/code-execution-response.js";
 
 // preferences
 export * from "./core/preferences/config/editor-config.js";

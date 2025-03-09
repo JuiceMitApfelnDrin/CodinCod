@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
 import bcrypt from "bcrypt";
-import { cookieKeys, isEmail, loginSchema } from "types";
 import User from "../../models/user/user.js";
 import { generateToken } from "../../utils/functions/generate-token.js";
+import { cookieKeys, loginSchema } from "types";
 
 export default async function loginRoutes(fastify: FastifyInstance) {
 	fastify.post("/", async (request, reply) => {

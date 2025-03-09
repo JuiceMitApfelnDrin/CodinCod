@@ -2,7 +2,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
-	import { getUserIdFromUser, isAuthor, type PuzzleDto } from "types";
+	import { getUserIdFromUser, isAuthenticatedInfo, isAuthor, type PuzzleDto } from "types";
 	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
@@ -17,8 +17,10 @@
 
 	const puzzleAuthorId = getUserIdFromUser(puzzle.author);
 
-	if ($isAuthenticated && $authenticatedUserInfo != null) {
-		isPuzzleAuthor = isAuthor(puzzleAuthorId, $authenticatedUserInfo.userId);
+	$: {
+		if ($isAuthenticated && isAuthenticatedInfo($authenticatedUserInfo)) {
+			isPuzzleAuthor = isAuthor(puzzleAuthorId, $authenticatedUserInfo.userId);
+		}
 	}
 </script>
 

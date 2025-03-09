@@ -16,6 +16,7 @@ import submissionGameRoutes from "./routes/submission/game/index.js";
 import puzzleLanguagesRoutes from "./routes/puzzle/languages/index.js";
 import submissionByIdRoutes from "./routes/submission/[id]/index.js";
 import preferencesRoutes from "./routes/account/preferences/index.js";
+import puzzleByIdSolutionRoutes from "./routes/puzzle/[id]/solution/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
@@ -35,5 +36,6 @@ export default async function router(fastify: FastifyInstance) {
 	fastify.register(submissionGameRoutes, { prefix: backendUrls.SUBMISSION_GAME });
 	fastify.register(puzzleLanguagesRoutes, { prefix: backendUrls.PUZZLE_LANGUAGES });
 	fastify.register(puzzleByIdRoutes, { prefix: backendUrls.PUZZLE_DETAIL });
+	fastify.register(puzzleByIdSolutionRoutes, { prefix: backendUrls.PUZZLE_DETAIL_SOLUTION });
 	fastify.register(preferencesRoutes, { prefix: backendUrls.ACCOUNT_PREFERENCES });
 }

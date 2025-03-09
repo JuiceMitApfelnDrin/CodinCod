@@ -9,10 +9,7 @@ import jwt from "./plugins/config/jwt.js";
 import fastifyFormbody from "@fastify/formbody";
 import mongooseConnector from "./plugins/config/mongoose.js";
 import router from "./router.js";
-import { schemas } from "./config/schema.js";
 import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
-import swagger from "./plugins/config/swagger.js";
-import swaggerUi from "./plugins/config/swagger-ui.js";
 import piston from "./plugins/decorators/piston.js";
 import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
@@ -20,10 +17,6 @@ import fastifyRateLimit from "@fastify/rate-limit";
 const server = Fastify({
 	logger: Boolean(process.env.NODE_ENV !== "development")
 });
-
-for (let schema of [...schemas]) {
-	server.addSchema(schema);
-}
 
 // register fastify ecosystem plugins
 server.register(fastifyCookie, {
@@ -38,9 +31,7 @@ server.register(fastifyRateLimit, {
 	timeWindow: "1 minute"
 });
 server.register(cors);
-server.register(swagger);
 server.register(jwt);
-server.register(swaggerUi);
 server.register(fastifyFormbody);
 server.register(mongooseConnector);
 server.register(piston);

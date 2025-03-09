@@ -7,21 +7,34 @@
 	import { preferences } from "@/stores/preferences";
 	import { keymap as codemirrorKeymap } from "@codemirror/view";
 
+	export let readonly = false;
 	export let value = "";
 	export let language: PuzzleLanguage = "";
 
-	let editorExtensions: Extension[] = [];
-
-	$: {
-		getEditorExtensions(language, $preferences?.editor?.keymap);
-	}
-
-	async function getEditorExtensions(language: string, keymapPreference?: string) {
-		editorExtensions = [
-			oneDark,
-			await getKeymapExtensions(keymapPreference),
-			...(await getLanguageExtensions(language))
-		];
+	async function getEditorConfig(language: string) {
+		return {
+			extensions: [
+				oneDark,
+				await getKeymapExtensions($preferences?.editor?.keymap),
+				...(await getLanguageExtensions(language))
+			],
+			useTab: language === "go",
+			tabSize: (() => {
+				switch (language) {
+					case "javascript":
+					case "typescript":
+					case "dart":
+					case "ruby":
+					case "crystal":
+					case "nim":
+					case "elixir":
+					case "lua":
+						return 2;
+					default:
+						return 4;
+				}
+			})()
+		};
 	}
 
 	async function getLanguageExtensions(
@@ -52,6 +65,9 @@
 			case "elixir":
 				return [(await import("codemirror-lang-elixir")).elixir()];
 
+			case "prolog":
+				return [(await import("codemirror-lang-prolog")).prolog()];
+
 			case "ruby":
 				const { ruby } = await import("@codemirror/legacy-modes/mode/ruby");
 				return [StreamLanguage.define(ruby)];
@@ -67,6 +83,22 @@
 			case "c":
 				const { c } = await import("@codemirror/legacy-modes/mode/clike");
 				return [StreamLanguage.define(c)];
+
+			case "crystal":
+				const { crystal } = await import("@codemirror/legacy-modes/mode/crystal");
+				return [StreamLanguage.define(crystal)];
+
+			case "lua":
+				const { lua } = await import("@codemirror/legacy-modes/mode/lua");
+				return [StreamLanguage.define(lua)];
+
+			case "go":
+				const { go } = await import("@codemirror/legacy-modes/mode/go");
+				return [StreamLanguage.define(go)];
+
+			case "cobol":
+				const { cobol } = await import("@codemirror/legacy-modes/mode/cobol");
+				return [StreamLanguage.define(cobol)];
 
 			case "d":
 				const { d } = await import("@codemirror/legacy-modes/mode/d");
@@ -97,6 +129,7 @@
 				break;
 			case "raku":
 				// raku - No legacy mode available
+				// @code-golf has a raku implementation - https://github.com/code-golf/code-golf/blob/master/js/vendor/codemirror-raku.js
 				break;
 		}
 
@@ -120,16 +153,23 @@
 	}
 </script>
 
-<CodeMirror
-	bind:value
-	theme={oneDark}
-	extensions={editorExtensions}
-	basic={true}
-	styles={{
-		".cm-editor": {
-			display: "flex",
-			height: "100%"
-		},
-		".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
-	}}
-/>
+{#await getEditorConfig(language)}
+	<p>loading the editor...</p>
+{:then editorConfig}
+	<CodeMirror
+		bind:value
+		theme={oneDark}
+		basic={true}
+		{readonly}
+		{...editorConfig}
+		styles={{
+			".cm-editor": {
+				display: "flex",
+				height: "100%"
+			},
+			".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" },
+			// TODO: fix this fr fr, since setting maxWidth can only be a temporary solution
+			".cm-content": { maxWidth: "90vw" }
+		}}
+	/>
+{/await}

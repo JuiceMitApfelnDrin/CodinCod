@@ -38,8 +38,16 @@ export const puzzleEntitySchema = z.object({
 
 export type PuzzleEntity = z.infer<typeof puzzleEntitySchema>;
 
-export const createPuzzleSchema = puzzleEntitySchema.pick({ title: true });
+export const createPuzzleSchema = puzzleEntitySchema.pick({
+	title: true
+});
 export type CreatePuzzle = z.infer<typeof createPuzzleSchema>;
+
+export const createPuzzleBackendSchema = puzzleEntitySchema.pick({
+	title: true,
+	author: true
+});
+export type CreatePuzzleBackend = z.infer<typeof createPuzzleBackendSchema>;
 
 export const editPuzzleSchema = puzzleEntitySchema.pick({
 	title: true,

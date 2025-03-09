@@ -65,6 +65,7 @@
 		"@tsconfig/recommended": "^1.0.7",
 		"clsx": "^2.1.1",
 		"codemirror-lang-elixir": "^4.0.0",
+		"codemirror-lang-prolog": "^0.1.0",
 		"dayjs": "^1.11.13",
 		"dompurify": "^3.2.3",
 		"formsnap": "^1.0.0",
