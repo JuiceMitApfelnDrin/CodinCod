@@ -1,4 +1,5 @@
 import type { Cookies } from "@sveltejs/kit";
+import { env } from '$env/dynamic/private';
 
 export function setCookie(result: Response, cookies: Cookies) {
 	const setCookieHeader = result.headers.get("set-cookie");
@@ -11,10 +12,11 @@ export function setCookie(result: Response, cookies: Cookies) {
 
 		// Set the cookie using SvelteKit's cookies API
 		cookies.set(name, value, {
+			domain: env.NODE_ENV === "production" ? ".codincod.com" : "localhost",
 			httpOnly: true,
 			path: "/",
-			sameSite: "strict",
-			secure: process.env.NODE_ENV === "production"
+			sameSite: env.NODE_ENV === "production" ? "none" : "lax",
+			secure: env.NODE_ENV === "production"
 		});
 	}
 }

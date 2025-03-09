@@ -10,6 +10,9 @@ const games: OpenGames = {};
 const activePlayerList: WebSocket[] = [];
 
 export function waitingRoom(socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance) {
+	const frontendUrl = req.headers.origin;
+	console.log({ frontendUrl });
+
 	onConnection({ players: activePlayerList, games, newPlayerSocket: socket });
 
 	socket.on("message", (message) => {
