@@ -1,5 +1,5 @@
 import type { Cookies } from "@sveltejs/kit";
-import { env } from '$env/dynamic/private';
+import { env } from "$env/dynamic/private";
 
 export function setCookie(result: Response, cookies: Cookies) {
 	const setCookieHeader = result.headers.get("set-cookie");
