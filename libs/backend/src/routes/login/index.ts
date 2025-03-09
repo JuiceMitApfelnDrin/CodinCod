@@ -41,6 +41,7 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 					path: "/",
 					httpOnly: true,
 					secure: process.env.NODE_ENV === "production",
+					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 					maxAge: 3600
 				})
 				.send({ message: "Login successful" });

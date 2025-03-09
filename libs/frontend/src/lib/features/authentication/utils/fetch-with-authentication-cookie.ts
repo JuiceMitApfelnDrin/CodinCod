@@ -15,5 +15,8 @@ export async function fetchWithAuthenticationCookie(
 		...options.headers
 	});
 
-	return await fetch(url, { ...defaultFetchOptions, ...options });
+	return await fetch(url, {
+		...defaultFetchOptions,
+		...options
+	});
 }

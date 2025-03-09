@@ -13,7 +13,7 @@ export function setCookie(result: Response, cookies: Cookies) {
 		cookies.set(name, value, {
 			httpOnly: true,
 			path: "/",
-			sameSite: "strict",
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 			secure: process.env.NODE_ENV === "production"
 		});
 	}
