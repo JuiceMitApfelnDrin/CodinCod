@@ -20,6 +20,7 @@
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import LanguageSelect from "./language-select.svelte";
+	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages";
 
 	export let data: SuperValidated<EditPuzzle>;
@@ -63,6 +64,22 @@
 			}
 			return $form;
 		});
+	}
+
+	$: {
+		if (!$formData.solution) {
+			$formData.solution = {
+				code: "",
+				language: "",
+				languageVersion: ""
+			};
+		}
+		if (!$formData.solution?.language) {
+			$formData.solution.language = "";
+		}
+		if (!$formData.solution?.code) {
+			$formData.solution.code = "";
+		}
 	}
 
 	let { enhance, form: formData, message } = form;
@@ -168,7 +185,9 @@
 		<Form.Field {form} name="solution.code">
 			<Form.Control let:attrs>
 				<Form.Label class="text-lg">Code</Form.Label>
-				<Textarea {...attrs} bind:value={$formData.solution.code} />
+
+				<Codemirror language={$formData.solution.language} bind:value={$formData.solution.code} />
+				<Input class="sr-only" aria-hidden="true" {...attrs} bind:value={$formData.solution.code} />
 			</Form.Control>
 			<Form.Description>This is for the code that tests the puzzle.</Form.Description>
 			<Form.FieldErrors />

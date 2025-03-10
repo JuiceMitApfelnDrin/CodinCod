@@ -2,8 +2,7 @@
 	import { buttonVariants } from "@/components/ui/button";
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Dialog from "@/components/ui/dialog";
-	import { authenticatedUserInfo } from "@/stores";
-	import { GameEventEnum } from "types";
+	import { gameEventEnum } from "types";
 
 	export let socket: WebSocket;
 	export let gameId: string;
@@ -25,10 +24,8 @@
 				on:click={() =>
 					socket.send(
 						JSON.stringify({
-							event: GameEventEnum.JOIN_GAME,
-							gameId: gameId,
-							userId: $authenticatedUserInfo?.userId,
-							username: $authenticatedUserInfo?.username
+							event: gameEventEnum.JOIN_GAME,
+							gameId: gameId
 						})
 					)}
 			>

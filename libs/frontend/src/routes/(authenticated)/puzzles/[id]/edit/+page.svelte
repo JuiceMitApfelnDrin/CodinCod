@@ -3,10 +3,10 @@
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import { getUserIdFromUser, isAuthenticatedInfo, isAuthor, type PuzzleDto } from "types";
-	import Error from "@/components/error/error.svelte";
 	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
+	import DisplayError from "@/components/error/display-error.svelte";
 
 	export let data;
 
@@ -35,5 +35,5 @@
 		<EditPuzzleForm data={formData}></EditPuzzleForm>
 	</Container>
 {:else}
-	<Error status={401} />
+	<DisplayError status={401} />
 {/if}

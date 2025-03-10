@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
-	import Error from "@/components/error/error.svelte";
+	import DisplayError from "@/components/error/display-error.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
 	import H2 from "@/components/typography/h2.svelte";
 	import P from "@/components/typography/p.svelte";
@@ -25,7 +26,6 @@
 	import {
 		buildFrontendUrl,
 		frontendUrls,
-		GameEventEnum,
 		httpRequestMethod,
 		httpResponseCodes,
 		isAuthor,
@@ -41,7 +41,8 @@
 		type GameSubmissionParams,
 		getUserIdFromUser,
 		type ChatMessage,
-		isChatMessage
+		isGameResponse,
+		gameEventEnum
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
@@ -56,8 +57,13 @@
 	let puzzle: PuzzleDto | undefined;
 	let errorMessage: string | undefined;
 	let chatMessages: ChatMessage[] = [];
+	const playerLanguages: Record<string, string> = {};
 
 	function connectWithWebsocket() {
+		if (socket) {
+			socket.close();
+		}
+
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.GAME, { id: $page.params.id });
 		socket = new WebSocket(webSocketUrl);
 
@@ -80,49 +86,58 @@
 
 		socket.addEventListener("message", async (message) => {
 			const receivedInformation = JSON.parse(message.data);
-			const { data, event } = receivedInformation;
+
+			if (!isGameResponse(receivedInformation)) {
+				throw new Error("unknown / unhandled game response");
+			}
+
+			const { event } = receivedInformation;
 
 			switch (event) {
-				case GameEventEnum.OVERVIEW_GAME:
+				case gameEventEnum.OVERVIEW_GAME:
 					{
-						if (data.game) {
-							game = data.game;
-						}
-						if (data.puzzle) {
-							puzzle = data.puzzle;
+						game = receivedInformation.game;
+
+						if (receivedInformation.puzzle) {
+							puzzle = receivedInformation.puzzle;
 						}
 					}
 					break;
-				case GameEventEnum.NONEXISTENT_GAME:
+				case gameEventEnum.NONEXISTENT_GAME:
 					errorMessage = receivedInformation.message;
 					break;
-				case GameEventEnum.FINISHED_GAME:
+				case gameEventEnum.FINISHED_GAME:
 					{
-						game = data.game;
+						game = receivedInformation.game;
 						isGameOver = true;
 					}
 					break;
-				case GameEventEnum.SEND_MESSAGE:
+				case gameEventEnum.SEND_MESSAGE:
 					{
-						const { chatMessage } = data;
-
-						if (isChatMessage(chatMessage)) {
-							chatMessages = [...chatMessages, chatMessage];
-						}
+						chatMessages = [...chatMessages, receivedInformation.chatMessage];
+					}
+					break;
+				case gameEventEnum.CHANGE_LANGUAGE:
+					{
+						playerLanguages[receivedInformation.username] = receivedInformation.language;
+					}
+					break;
+				case gameEventEnum.ERROR:
+					{
+						console.error(receivedInformation.message);
 					}
 					break;
 				default:
-					console.warn("unknown / unhandled event: ", { event });
-
+					receivedInformation satisfies never;
 					break;
 			}
 		});
 	}
 
 	let socket: WebSocket;
-	onMount(() => {
+	if (browser) {
 		connectWithWebsocket();
-	});
+	}
 
 	let isNotPlayerInGame = true;
 	$: {
@@ -179,7 +194,7 @@
 
 			socket.send(
 				JSON.stringify({
-					event: GameEventEnum.SUBMITTED_PLAYER,
+					event: gameEventEnum.SUBMITTED_PLAYER,
 					submissionId,
 					userId: $authenticatedUserInfo?.userId
 				})
@@ -202,8 +217,17 @@
 
 		socket.send(
 			JSON.stringify({
-				event: GameEventEnum.SEND_MESSAGE,
+				event: gameEventEnum.SEND_MESSAGE,
 				chatMessage: newChatMessage
+			})
+		);
+	}
+
+	function onPlayerChangeLanguage(language: string) {
+		socket.send(
+			JSON.stringify({
+				event: gameEventEnum.CHANGE_LANGUAGE,
+				language
 			})
 		);
 	}
@@ -211,7 +235,7 @@
 
 {#if !$authenticatedUserInfo}
 	<Container>
-		<Error
+		<DisplayError
 			link={{ href: frontendUrls.LOGIN, text: "Go to login" }}
 			status={httpResponseCodes.CLIENT_ERROR.FORBIDDEN}
 			message={"You have to login in order to play!"}
@@ -219,7 +243,7 @@
 	</Container>
 {:else if errorMessage}
 	<Container>
-		<Error
+		<DisplayError
 			link={{ href: frontendUrls.MULTIPLAYER, text: "Go to Multiplayer" }}
 			status={httpResponseCodes.CLIENT_ERROR.NOT_FOUND}
 			message={errorMessage}
@@ -232,7 +256,7 @@
 {:else if isGameOver}
 	<Container>
 		<LogicalUnit>
-			{#if getUserIdFromUser(game.creator) === $authenticatedUserInfo.userId}
+			{#if getUserIdFromUser(game.owner) === $authenticatedUserInfo.userId}
 				<Button variant="outline">
 					<WorkInProgress />: Create a game with the same options
 					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?
@@ -263,7 +287,7 @@
 	<Container>
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane class="mr-4 flex flex-col gap-4 md:gap-8 lg:gap-12">
-				<PlayPuzzle {puzzle} {onPlayerSubmitCode} {endDate} />
+				<PlayPuzzle {puzzle} {onPlayerSubmitCode} {onPlayerChangeLanguage} {endDate} />
 			</Resizable.Pane>
 			<Resizable.Handle />
 			<Resizable.Pane class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12">
@@ -275,8 +299,10 @@
 							<li>
 								{#if isUserDto(player)}
 									<UserHoverCard username={player.username} />{` - using ${
-										findPlayerSubmission(player._id)?.language ?? "???"
-									} - ${findPlayerSubmission(player._id)?.resultInfo.result ?? "still busy solving the puzzle"}!`}
+										findPlayerSubmission(player._id)?.language ??
+										playerLanguages[player.username] ??
+										"???"
+									} - ${findPlayerSubmission(player._id)?.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
 									{player}
 								{/if}

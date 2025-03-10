@@ -9,7 +9,7 @@ import jwt from "./plugins/config/jwt.js";
 import fastifyFormbody from "@fastify/formbody";
 import mongooseConnector from "./plugins/config/mongoose.js";
 import router from "./router.js";
-import fastifyCookie from "@fastify/cookie";
+import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 import piston from "./plugins/decorators/piston.js";
 import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
@@ -23,7 +23,7 @@ server.register(fastifyCookie, {
 	secret: process.env.COOKIE_SECRET,
 	hook: "onRequest",
 	parseOptions: {}
-});
+} as FastifyCookieOptions);
 
 // TODO: make this not show an error, appears to work tho, check wtf is going wrong
 server.register(fastifyRateLimit, {
@@ -40,7 +40,7 @@ server.register(setupWebSockets);
 
 // register custom plugins
 
-// middelware
+// middleware
 // server.decorate("authenticate", authenticate.bind(null, server));
 
 // routes

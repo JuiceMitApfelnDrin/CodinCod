@@ -31,6 +31,7 @@
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
+	export let onPlayerChangeLanguage: (language: string) => void = () => {};
 	export let endDate: Date | undefined;
 
 	let code: string = "";
@@ -120,6 +121,10 @@
 	let openTests = true;
 	function openTestsAccordion() {
 		openTests = true;
+	}
+
+	$: {
+		onPlayerChangeLanguage(language);
 	}
 </script>
 
