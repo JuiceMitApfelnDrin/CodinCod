@@ -1,7 +1,7 @@
 export const webSocketUrls = {
-	ROOT: "/",
-	WAITING_ROOM: "/",
-	GAME: "/game/:id"
+	ROOT: "/ws",
+	WAITING_ROOM: "/ws",
+	GAME: "/ws/game/:id"
 } as const;
 
 export type WebSocketUrl = (typeof webSocketUrls)[keyof typeof webSocketUrls];
