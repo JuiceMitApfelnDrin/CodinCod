@@ -4,7 +4,14 @@
 	import { Input } from "@/components/ui/input";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import { loginSchema, PASSWORD_CONFIG, POST, USERNAME_CONFIG, type Login } from "types";
+	import {
+		loginSchema,
+		PASSWORD_CONFIG,
+		POST,
+		USERNAME_CONFIG,
+		IDENTIFIER_CONFIG,
+		type Login
+	} from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
@@ -35,9 +42,8 @@
 			<Input
 				{...attrs}
 				bind:value={$formData.identifier}
-				minlength={USERNAME_CONFIG.minUsernameLength}
-				maxlength={USERNAME_CONFIG.maxUsernameLength}
-				pattern={USERNAME_CONFIG.allowedCharacters.source}
+				minlength={IDENTIFIER_CONFIG.minIdentifierLength}
+				maxlength={IDENTIFIER_CONFIG.maxIdentifierLength}
 			/>
 		</Form.Control>
 		<Form.FieldErrors />

@@ -7,6 +7,7 @@ export * from "./core/activity/schema/activity.schema.js";
 export * from "./core/activity/types/grouped-activities-by-date.js";
 
 // authentication
+export * from "./core/authentication/config/identifier-config.js";
 export * from "./core/authentication/config/password-config.js";
 export * from "./core/authentication/config/username-config.js";
 export * from "./core/authentication/schema/authenticated-info.schema.js";
