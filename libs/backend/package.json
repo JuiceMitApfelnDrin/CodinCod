@@ -39,14 +39,15 @@
 		"@types/node": "^22.13.0",
 		"@types/ws": "^8.5.12",
 		"eslint": "9.x",
-		"eslint-plugin-sort-destructure-keys": "^2.0.0",
 		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-sort-destructure-keys": "^2.0.0",
 		"globals": "^15.8.0",
 		"pkgroll": "^2.4.1",
 		"prettier": "3.3.3",
 		"tsx": "^4.16.2",
 		"types": "workspace:*",
-		"typescript": "^5.5.4"
+		"typescript": "^5.5.4",
+		"vitest": "^3.0.8"
 	},
 	"lint-staged": {
 		"**/*": "prettier --write --ignore-unknown"
