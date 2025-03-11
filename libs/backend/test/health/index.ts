@@ -9,12 +9,12 @@ beforeAll(async () => await fastify.ready());
 afterAll(async () => await fastify.close());
 
 it("POST /user creates a user", async () => {
-  const res = await fastify.inject({
-    method: "POST",
-    url: "/user",
-    payload: { name: "John" },
-  });
+	const res = await fastify.inject({
+		method: "POST",
+		url: "/user",
+		payload: { name: "John" }
+	});
 
-  expect(res.statusCode).toBe(201);
-  expect(res.json()).toHaveProperty("id");
+	expect(res.statusCode).toBe(201);
+	expect(res.json()).toHaveProperty("id");
 });
