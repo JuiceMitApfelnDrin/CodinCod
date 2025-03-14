@@ -125,3 +125,4 @@ export * from "./utils/functions/is-author.js";
 export * from "./utils/functions/is-email.js";
 export * from "./utils/functions/is-string.js";
 export * from "./utils/functions/is-username.js";
+export * from "./utils/functions/send-message-of-type.js";

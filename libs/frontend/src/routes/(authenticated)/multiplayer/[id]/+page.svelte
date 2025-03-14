@@ -15,14 +15,12 @@
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import Chat from "@/features/chat/components/chat.svelte";
-	import JoinGameConfirmationDialog from "@/features/game/components/join-game-confirmation-dialog.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
-	import { onMount } from "svelte";
 	import {
 		buildFrontendUrl,
 		frontendUrls,
@@ -42,7 +40,11 @@
 		getUserIdFromUser,
 		type ChatMessage,
 		isGameResponse,
-		gameEventEnum
+		gameEventEnum,
+		sendMessageOfType,
+		type GameRequest,
+		gameRequestSchema,
+		isGameRequest
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
@@ -192,13 +194,9 @@
 				method: httpRequestMethod.POST
 			});
 
-			socket.send(
-				JSON.stringify({
-					event: gameEventEnum.SUBMITTED_PLAYER,
-					submissionId,
-					userId: $authenticatedUserInfo?.userId
-				})
-			);
+			sendGameMessage(socket, {
+				event: gameEventEnum.SUBMITTED_PLAYER
+			});
 
 			isGameOver = true;
 		}
@@ -215,22 +213,24 @@
 			username: $authenticatedUserInfo?.username
 		};
 
-		socket.send(
-			JSON.stringify({
-				event: gameEventEnum.SEND_MESSAGE,
-				chatMessage: newChatMessage
-			})
-		);
+		sendGameMessage(socket, {
+			event: gameEventEnum.SEND_MESSAGE,
+			chatMessage: newChatMessage
+		});
 	}
 
 	function onPlayerChangeLanguage(language: string) {
-		socket.send(
-			JSON.stringify({
-				event: gameEventEnum.CHANGE_LANGUAGE,
-				language
-			})
-		);
+		sendGameMessage(socket, {
+			event: gameEventEnum.CHANGE_LANGUAGE,
+			language
+		});
 	}
+
+	export function sendGameMessage(socket: WebSocket, data: GameRequest) {
+		sendMessageOfType<GameRequest>(socket, data);
+	}
+
+	$: console.log({ game });
 </script>
 
 {#if !$authenticatedUserInfo}
@@ -281,7 +281,14 @@
 	</Container>
 {:else if isNotPlayerInGame}
 	<Container>
-		<JoinGameConfirmationDialog {gameId} {socket} />
+		<Button
+			on:click={() => {
+				console.log("hi");
+				sendGameMessage(socket, {
+					event: gameEventEnum.JOIN_GAME
+				});
+			}}>Would you like to join this ongoing game?</Button
+		>
 	</Container>
 {:else if puzzle && game}
 	<Container>

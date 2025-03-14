@@ -1,14 +1,27 @@
 import { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { onConnection } from "./on-connection.js";
-import { ParamsId } from "@/routes/puzzle/[id]/types.js";
-import { ChatMessage, gameEventEnum, isAuthenticatedInfo, isGameDto } from "types";
+import {
+	ChatMessage,
+	gameEventEnum,
+	getUserIdFromUser,
+	isAuthenticatedInfo,
+	isGameDto,
+	isPuzzleDto,
+	ObjectId
+} from "types";
 import { isValidObjectId } from "mongoose";
 import { parseRawDataGameRequest } from "@/utils/functions/parse-raw-data-message.js";
-import Game from "@/models/game/game.js";
+import Game, { GameDocument } from "@/models/game/game.js";
 import { UserWebSockets } from "./user-web-sockets.js";
+import { ParamsId } from "@/types/types.js";
+import Puzzle from "@/models/puzzle/puzzle.js";
 
 const userWebSockets = new UserWebSockets();
+
+function isPlayerInGame(game: GameDocument, userId: ObjectId) {
+	return game.players.some((player) => getUserIdFromUser(player) === userId);
+}
 
 export function gameSetup(
 	socket: WebSocket,
@@ -63,7 +76,53 @@ export function gameSetup(
 				{
 					userWebSockets.add(req.user.username, socket);
 
-					// TODO: something needs to happen here, for users who join late
+					const gameToUpdate = await Game.findById(id);
+
+					if (!isGameDto(gameToUpdate)) {
+						return userWebSockets.updateUser(req.user.username, {
+							event: gameEventEnum.NONEXISTENT_GAME,
+							message: "game couldn't be found"
+						});
+					}
+
+					if (!isPlayerInGame(gameToUpdate, req.user.userId)) {
+						gameToUpdate.players.push(req.user.userId);
+						await gameToUpdate.save();
+					}
+
+					const game = await Game.findById(id)
+						.populate("owner")
+						.populate("players")
+						/* deeply populated, for every playerSubmission populate the userId field with a user */
+						.populate({
+							path: "playerSubmissions",
+							populate: {
+								path: "user"
+							}
+						})
+						.exec();
+
+					if (!isGameDto(game)) {
+						return userWebSockets.updateUser(req.user.username, {
+							event: gameEventEnum.NONEXISTENT_GAME,
+							message: "game couldn't be found"
+						});
+					}
+
+					const puzzle = await Puzzle.findById(game.puzzle).populate("author");
+
+					if (!isPuzzleDto(puzzle)) {
+						return userWebSockets.updateUser(req.user.username, {
+							event: gameEventEnum.ERROR,
+							message: "puzzle couldn't be found"
+						});
+					}
+
+					userWebSockets.updateAllUsers({
+						event: gameEventEnum.OVERVIEW_GAME,
+						game,
+						puzzle
+					});
 				}
 				break;
 			case gameEventEnum.SUBMITTED_PLAYER:
