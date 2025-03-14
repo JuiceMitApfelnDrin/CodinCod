@@ -1,4 +1,24 @@
-# CodinCod project overview
+# CodinCod
+
+## Table of contents
+
+- [Introduction](#introduction)
+- [Project overview](#project-overview)
+- [Getting started](#getting-started)
+
+## Introduction
+
+Learning to code often feels like assembling IKEA furniture without the manual — frustrating and confusing. We’re here to change that.
+
+CodinCod is your stress-free coding playground where:
+
+- Open-source = no paywalls 🚫 – A free toolkit for everyone, from teens to retirees.
+- Learn at your pace 🐢⚡ – Race through lessons or rewind tricky bits. Progress is progress!
+- Gamified challenges = actual fun 🎯 – Unlock achievements by solving coding puzzles.
+
+Think Duolingo or LEGO for coding. Less "*textbook lecture*", more "*aha!*" moments.
+
+## Project overview
 
 The [docs](./docs/README.md) repo exists to:
 
