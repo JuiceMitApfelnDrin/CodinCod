@@ -14,10 +14,12 @@
 		frontendUrls,
 		isAuthor,
 		isWaitingRoomResponse,
+		sendMessageOfType,
 		waitingRoomEventEnum,
 		webSocketUrls,
 		type RoomOverviewResponse,
-		type RoomStateResponse
+		type RoomStateResponse,
+		type WaitingRoomRequest
 	} from "types";
 
 	let room: RoomStateResponse | undefined;
@@ -41,16 +43,18 @@
 	}
 
 	function checkForRoomId() {
-		if (query.has(queryParamKeys.ROOM_ID)) {
-			socket.send(
-				JSON.stringify({
-					event: waitingRoomEventEnum.JOIN_ROOM,
-					roomId: query.get(queryParamKeys.ROOM_ID)
-				})
-			);
+		const roomId = query.get(queryParamKeys.ROOM_ID);
 
-			updateRoomIdInUrl();
+		if (!roomId) {
+			return;
 		}
+
+		sendWaitingRoomMessage(socket, {
+			event: waitingRoomEventEnum.JOIN_ROOM,
+			roomId
+		});
+
+		updateRoomIdInUrl();
 	}
 
 	function connectWithWebsocket() {
@@ -129,6 +133,10 @@
 	$: if (room?.roomId) updateRoomIdInUrl();
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
+
+	export function sendWaitingRoomMessage(socket: WebSocket, data: WaitingRoomRequest) {
+		sendMessageOfType<WaitingRoomRequest>(socket, data);
+	}
 </script>
 
 {#if errorMessage}
@@ -144,19 +152,19 @@
 			<H1>Multiplayer</H1>
 
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
-				{#if room?.roomId}
+				{#if room && room.roomId}
 					<Button
 						on:click={() => {
-							if (room?.roomId) {
-								socket.send(
-									JSON.stringify({
-										event: waitingRoomEventEnum.LEAVE_ROOM,
-										roomId: room.roomId
-									})
-								);
-
-								room = undefined;
+							if (!room?.roomId) {
+								return;
 							}
+
+							sendWaitingRoomMessage(socket, {
+								event: waitingRoomEventEnum.LEAVE_ROOM,
+								roomId: room.roomId
+							});
+
+							room = undefined;
 						}}
 					>
 						Leave room
@@ -165,14 +173,14 @@
 					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
 							on:click={() => {
-								if (room?.roomId) {
-									socket.send(
-										JSON.stringify({
-											event: waitingRoomEventEnum.START_GAME,
-											roomId: room.roomId
-										})
-									);
+								if (!room?.roomId) {
+									return;
 								}
+
+								sendWaitingRoomMessage(socket, {
+									event: waitingRoomEventEnum.START_GAME,
+									roomId: room.roomId
+								});
 							}}
 						>
 							Start room
@@ -181,11 +189,9 @@
 				{:else}
 					<Button
 						on:click={() => {
-							socket.send(
-								JSON.stringify({
-									event: waitingRoomEventEnum.HOST_ROOM
-								})
-							);
+							sendWaitingRoomMessage(socket, {
+								event: waitingRoomEventEnum.HOST_ROOM
+							});
 						}}
 					>
 						Host room
@@ -212,12 +218,10 @@
 					<li>
 						<Button
 							on:click={() => {
-								socket.send(
-									JSON.stringify({
-										event: waitingRoomEventEnum.JOIN_ROOM,
-										roomId: joinableRoom.roomId
-									})
-								);
+								sendWaitingRoomMessage(socket, {
+									event: waitingRoomEventEnum.JOIN_ROOM,
+									roomId: joinableRoom.roomId
+								});
 							}}
 						>
 							Join a room with {joinableRoom.amountOfPlayersJoined} other players!

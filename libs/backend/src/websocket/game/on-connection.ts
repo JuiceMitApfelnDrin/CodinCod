@@ -3,6 +3,7 @@ import Puzzle from "@/models/puzzle/puzzle.js";
 import {
 	AuthenticatedInfo,
 	gameEventEnum,
+	GameResponse,
 	getUserIdFromUser,
 	isGameDto,
 	isPuzzleDto,
@@ -30,24 +31,32 @@ export async function onConnection(
 		.exec();
 
 	if (!isGameDto(game)) {
-		return socket.send(
-			JSON.stringify({
-				event: gameEventEnum.NONEXISTENT_GAME,
-				message: "game couldn't be found"
-			})
-		);
+		const response: GameResponse = {
+			event: gameEventEnum.NONEXISTENT_GAME,
+			message: "game couldn't be found"
+		};
+
+		return socket.send(JSON.stringify(response));
 	}
 
 	const currentPlayerIndex = game.players.findIndex((player) => {
 		return getUserIdFromUser(player) === user.userId;
 	});
+
 	if (currentPlayerIndex === -1) {
-		return socket.send(
-			JSON.stringify({
-				event: gameEventEnum.ERROR,
-				message: `user with id (${user.userId}) didn't join game`
-			})
-		);
+		const gameOverviewResponse: GameResponse = {
+			event: gameEventEnum.OVERVIEW_GAME,
+			game
+		};
+
+		socket.send(JSON.stringify(gameOverviewResponse));
+
+		const errorResponse: GameResponse = {
+			event: gameEventEnum.ERROR,
+			message: `user with id (${user.userId}) didn't join game`
+		};
+
+		return socket.send(JSON.stringify(errorResponse));
 	}
 
 	userWebSockets.add(user.username, socket);
