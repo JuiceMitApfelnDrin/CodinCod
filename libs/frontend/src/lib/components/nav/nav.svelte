@@ -26,7 +26,7 @@
 	>
 		<div class="container mx-auto flex flex-row flex-wrap items-end gap-8">
 			<a href={frontendUrls.ROOT}>
-				<span class="self-center whitespace-nowrap text-4xl font-bold">{websiteName}</span>
+				<span class="self-center whitespace-nowrap text-4xl font-bold font-mono">{websiteName}</span>
 			</a>
 
 			<ul class="flex flex-1 flex-row gap-4">
