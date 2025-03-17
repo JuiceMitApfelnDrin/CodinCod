@@ -72,6 +72,8 @@
 		editorPreferences.foldKeymap && keymaps.push(...foldKeymap);
 		editorPreferences.completionKeymap && keymaps.push(...completionKeymap);
 		editorPreferences.lintKeymap && keymaps.push(...lintKeymap);
+		editorPreferences.closeBrackets && keymaps.push(...closeBracketsKeymap);
+		editorPreferences.history && keymaps.push(...historyKeymap);
 
 		extensions.push(codemirrorKeymap.of(keymaps));
 
