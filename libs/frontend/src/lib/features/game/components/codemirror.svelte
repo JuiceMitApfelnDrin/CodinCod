@@ -234,7 +234,6 @@
 {#await getEditorConfig(language, $preferences)}
 	<p>loading the editor...</p>
 {:then editorConfig}
-	{console.log({ editorConfig })}
 	<CodeMirror
 		bind:value
 		theme={oneDark}
