@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wdth,wght@50..200,200..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -109,4 +111,15 @@ a:focus {
 
 .link {
 	@apply hover:text-cyan-700 hover:underline hover:dark:text-cyan-300;
+}
+
+* {
+	font-family: "Nunito Sans", sans-serif;
+}
+
+code,
+pre,
+.monospaced,
+.font-mono {
+	font-family: "Inconsolata", monospace;
 }

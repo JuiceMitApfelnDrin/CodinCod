@@ -44,9 +44,9 @@
 			{href}
 			class={cn(
 				"relative",
-				"block w-full rounded-md px-4 py-2 hover:bg-stone-700 hover:underline",
+				"block w-full rounded-md px-4 py-2 hover:bg-stone-200 hover:underline hover:dark:bg-stone-800",
 				$page.url.pathname === href &&
-					"settings-link bg-stone-900 font-bold text-cyan-600 dark:text-cyan-300"
+					"settings-link bg-stone-100 font-bold text-cyan-600 hover:text-cyan-800 dark:bg-stone-900 dark:text-cyan-300 hover:dark:text-cyan-100"
 			)}
 		>
 			{#if Icon}
@@ -59,7 +59,7 @@
 
 <style lang="postcss">
 	.settings-link::after {
-		@apply absolute -left-2.5 top-0 h-full w-1.5 rounded-full bg-cyan-700 hover:bg-cyan-500;
+		@apply absolute -left-2.5 top-0 h-full w-1.5 rounded-full bg-cyan-500 hover:bg-cyan-800 dark:bg-cyan-300 dark:hover:bg-cyan-100;
 		content: "";
 	}
 </style>
