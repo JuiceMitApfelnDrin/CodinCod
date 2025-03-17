@@ -229,8 +229,6 @@
 	export function sendGameMessage(socket: WebSocket, data: GameRequest) {
 		sendMessageOfType<GameRequest>(socket, data);
 	}
-
-	$: console.log({ game });
 </script>
 
 {#if !$authenticatedUserInfo}
@@ -283,7 +281,6 @@
 	<Container>
 		<Button
 			on:click={() => {
-				console.log("hi");
 				sendGameMessage(socket, {
 					event: gameEventEnum.JOIN_GAME
 				});

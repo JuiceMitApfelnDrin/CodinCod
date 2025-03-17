@@ -1,22 +1,98 @@
 <script lang="ts">
 	import CodeMirror from "svelte-codemirror-editor";
 	import { oneDark } from "@codemirror/theme-one-dark";
-	import { keymap, type PuzzleLanguage } from "types";
-	import { StreamLanguage } from "@codemirror/language";
-	import { type Extension } from "@codemirror/state";
+	import { keymap, type EditorPreferences, type PreferencesDto, type PuzzleLanguage } from "types";
+	import {
+		bracketMatching,
+		defaultHighlightStyle,
+		foldGutter,
+		foldKeymap,
+		indentOnInput,
+		StreamLanguage,
+		syntaxHighlighting
+	} from "@codemirror/language";
+	import { basicSetup } from "codemirror";
+	import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+	import { lintKeymap } from "@codemirror/lint";
+	import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
+	import {
+		autocompletion,
+		completionKeymap,
+		closeBrackets,
+		closeBracketsKeymap
+	} from "@codemirror/autocomplete";
+	import { EditorState, type Extension } from "@codemirror/state";
 	import { preferences } from "@/stores/preferences";
-	import { keymap as codemirrorKeymap } from "@codemirror/view";
+	import {
+		keymap as codemirrorKeymap,
+		crosshairCursor,
+		drawSelection,
+		dropCursor,
+		highlightActiveLine,
+		highlightActiveLineGutter,
+		highlightSpecialChars,
+		lineNumbers,
+		rectangularSelection
+	} from "@codemirror/view";
 
 	export let readonly = false;
 	export let value = "";
 	export let language: PuzzleLanguage = "";
 
-	async function getEditorConfig(language: string) {
+	function createBasicExtensions(editorPreferences: EditorPreferences): Extension[] {
+		const extensions: Extension[] = [];
+
+		function add(condition: boolean, ext: Extension) {
+			condition && extensions.push(ext);
+		}
+
+		// Add all extensions from basicSetup with conditional checks
+		add(editorPreferences.lineNumbers, lineNumbers());
+		add(editorPreferences.highlightActiveLineGutter, highlightActiveLineGutter());
+		add(editorPreferences.highlightSpecialChars, highlightSpecialChars());
+		add(editorPreferences.history, history());
+		add(editorPreferences.foldGutter, foldGutter());
+		add(editorPreferences.drawSelection, drawSelection());
+		add(editorPreferences.dropCursor, dropCursor());
+		add(editorPreferences.allowMultipleSelections, EditorState.allowMultipleSelections.of(true));
+		add(editorPreferences.indentOnInput, indentOnInput());
+		add(true, syntaxHighlighting(defaultHighlightStyle, { fallback: true }));
+		add(editorPreferences.bracketMatching, bracketMatching());
+		add(editorPreferences.closeBrackets, closeBrackets());
+		add(editorPreferences.autocompletion, autocompletion());
+		add(editorPreferences.rectangularSelection, rectangularSelection());
+		add(editorPreferences.crosshairCursor, crosshairCursor());
+		add(editorPreferences.highlightActiveLine, highlightActiveLine());
+		add(editorPreferences.highlightSelectionMatches, highlightSelectionMatches());
+
+		// Keymaps
+		const keymaps = [];
+		editorPreferences.defaultKeymap && keymaps.push(...defaultKeymap);
+		editorPreferences.searchKeymap && keymaps.push(...searchKeymap);
+		editorPreferences.foldKeymap && keymaps.push(...foldKeymap);
+		editorPreferences.completionKeymap && keymaps.push(...completionKeymap);
+		editorPreferences.lintKeymap && keymaps.push(...lintKeymap);
+
+		extensions.push(codemirrorKeymap.of(keymaps));
+
+		return extensions;
+	}
+
+	async function getEditorConfig(language: string, preferences: PreferencesDto | null) {
+		let defaultConfiguration = [basicSetup];
+
+		if (preferences?.editor) {
+			defaultConfiguration = createBasicExtensions(preferences?.editor);
+		}
+
+		const languageExtensions = await getLanguageExtensions(language);
+
 		return {
 			extensions: [
+				...defaultConfiguration,
 				oneDark,
-				await getKeymapExtensions($preferences?.editor?.keymap),
-				...(await getLanguageExtensions(language))
+				await getKeymapExtensions(preferences?.editor?.keymap),
+				...languageExtensions
 			],
 			useTab: language === "go",
 			tabSize: (() => {
@@ -153,15 +229,16 @@
 	}
 </script>
 
-{#await getEditorConfig(language)}
+{#await getEditorConfig(language, $preferences)}
 	<p>loading the editor...</p>
 {:then editorConfig}
+	{console.log({ editorConfig })}
 	<CodeMirror
 		bind:value
 		theme={oneDark}
-		basic={true}
 		{readonly}
 		{...editorConfig}
+		basic={false}
 		styles={{
 			".cm-editor": {
 				display: "flex",
