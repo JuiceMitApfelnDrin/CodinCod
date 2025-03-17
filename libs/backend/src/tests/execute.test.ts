@@ -42,7 +42,7 @@ describe("Execute Endpoint", () => {
 			url: backendUrls.EXECUTE,
 			payload
 		});
-		console.log({ response });
+
 		expect(response.statusCode).toBe(expectedStatus);
 		expect(response.json()).toEqual(expectedResponse);
 	});
