@@ -59,7 +59,7 @@
 
 <style lang="postcss">
 	.settings-link::after {
-		@apply dark:bg-cyan-300 absolute -left-2.5 top-0 h-full w-1.5 rounded-full bg-cyan-500 hover:bg-cyan-800 dark:hover:bg-cyan-100;
+		@apply absolute -left-2.5 top-0 h-full w-1.5 rounded-full bg-cyan-500 hover:bg-cyan-800 dark:bg-cyan-300 dark:hover:bg-cyan-100;
 		content: "";
 	}
 </style>
