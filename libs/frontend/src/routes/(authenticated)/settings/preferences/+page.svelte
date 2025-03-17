@@ -47,7 +47,7 @@
 			<H2>Preferred programming language</H2>
 
 			<LanguageSelect bind:language languages={$languages ?? []} />
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted-foreground">
 				This is your default language when joining a game.
 			</p>
 		</LogicalUnit>
@@ -86,7 +86,7 @@
 							</ScrollArea>
 						</Select.Content>
 					</Select.Root>
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						Choose between different keyboard shortcut presets (VSCode, Vim, Emacs). Affects
 						navigation, selection, and editing shortcuts.
 					</p>
@@ -102,7 +102,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Line Numbers</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Show numbered lines in the gutter for easy reference and navigation
 							</p>
 						</div>
@@ -115,7 +115,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Active Line Highlight</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Highlight the background of the line containing the cursor
 							</p>
 						</div>
@@ -128,7 +128,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Gutter Highlights</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Highlight line number gutter for the current active line
 							</p>
 						</div>
@@ -145,7 +145,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Bracket Matching</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Automatically highlight matching brackets and parentheses
 							</p>
 						</div>
@@ -158,7 +158,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Auto-Close Brackets</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Automatically close brackets, quotes, and other paired characters
 							</p>
 						</div>
@@ -171,7 +171,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Smart Indentation</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Automatically adjust indentation when creating new lines
 							</p>
 						</div>
@@ -188,7 +188,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Special Characters</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Show invisible characters like spaces, tabs, and line breaks
 							</p>
 						</div>
@@ -201,7 +201,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Selection Matching</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Highlight other occurrences of selected text in the document
 							</p>
 						</div>
@@ -214,7 +214,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Crosshair Cursor</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Show horizontal and vertical lines extending from the cursor
 							</p>
 						</div>
@@ -231,7 +231,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Multiple Selections</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Allow creating multiple cursors for simultaneous editing
 							</p>
 						</div>
@@ -244,7 +244,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Rectangular Selection</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Enable column-based text selection (Alt+drag)
 							</p>
 						</div>
@@ -257,7 +257,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Drag-and-Drop</h4>
-							<p class="text-muted-foreground text-sm">Show visual indicator when dragging text</p>
+							<p class="text-sm text-muted-foreground">Show visual indicator when dragging text</p>
 						</div>
 						<Checkbox
 							checked={$preferences.editor.dropCursor}
@@ -272,7 +272,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Edit History</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Maintain undo/redo history for document changes
 							</p>
 						</div>
@@ -285,7 +285,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Code Folding</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Show controls for collapsing/expanding code blocks
 							</p>
 						</div>
@@ -302,7 +302,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Auto-completion</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Show intelligent code suggestions while typing
 							</p>
 						</div>
@@ -315,7 +315,7 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<h4 class="text-sm font-medium underline">Linting</h4>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Enable real-time code analysis and error checking
 							</p>
 						</div>
@@ -331,7 +331,7 @@
 		<LogicalUnit class="flex flex-col gap-4">
 			<H2>Try out your configuration</H2>
 
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted-foreground">
 				All your changes will be reflected in this code editor
 			</p>
 
