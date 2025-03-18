@@ -14,7 +14,7 @@
 					text: "Profile"
 				},
 				{
-					href: frontendUrls.SETTINGS,
+					href: frontendUrls.SETTINGS_PROFILE,
 					text: "Settings"
 				}
 			]

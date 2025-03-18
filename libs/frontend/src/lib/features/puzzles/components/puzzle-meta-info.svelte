@@ -1,10 +1,10 @@
 <script lang="ts">
 	import H1 from "@/components/typography/h1.svelte";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { isUserDto, type PuzzleDto } from "types";
+	import { isUserDto, type EditPuzzle, type PuzzleDto } from "types";
 	import UserHoverCard from "./user-hover-card.svelte";
 
-	export let puzzle: PuzzleDto | null;
+	export let puzzle: PuzzleDto | EditPuzzle | null;
 
 	const hasBeenUpdated = puzzle && puzzle.updatedAt !== puzzle.createdAt;
 </script>

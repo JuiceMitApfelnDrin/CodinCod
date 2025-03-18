@@ -71,24 +71,24 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each submissions as { user, language, createdAt, resultInfo, _id }, index}
+			{#each submissions as { user, language, createdAt, result, _id }, index}
 				{#if isUserDto(user)}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>
 						<Table.Cell><UserHoverCard username={user.username} /></Table.Cell>
 						<Table.Cell>{language}</Table.Cell>
 						<Table.Cell>
-							{#if resultInfo.successRate === 1}
+							{#if result.successRate === 1}
 								<FishIcon
 									aria-hidden="true"
-									class={cn("icon mr-1", calculatePuzzleResultIconColor(resultInfo.result))}
+									class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
 								/>
 							{:else}
 								<FishOffIcon
 									aria-hidden="true"
-									class={cn("icon mr-1", calculatePuzzleResultIconColor(resultInfo.result))}
+									class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
 								/>
-							{/if}{Math.round(resultInfo.successRate * 100)}%
+							{/if}{Math.round(result.successRate * 100)}%
 						</Table.Cell>
 						<Table.Cell>
 							<!-- todo: make this more readable for screen readers somehow -->
