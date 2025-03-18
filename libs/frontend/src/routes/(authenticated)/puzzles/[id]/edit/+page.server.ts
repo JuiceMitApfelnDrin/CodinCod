@@ -4,10 +4,10 @@ import { buildBackendUrl } from "@/config/backend";
 import {
 	backendUrls,
 	deletePuzzleSchema,
+	editPuzzleSchema,
 	httpResponseCodes,
 	PUT,
-	puzzleDtoSchema,
-	type PuzzleDto
+	type EditPuzzle
 } from "types";
 import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
@@ -25,9 +25,9 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 		fail(response.status, { error: "Failed to fetch the puzzle." });
 	}
 
-	const puzzle: PuzzleDto = await response.json();
+	const puzzle: EditPuzzle = await response.json();
 
-	const validate = await superValidate(puzzle, zod(puzzleDtoSchema));
+	const validate = await superValidate(puzzle, zod(editPuzzleSchema));
 	const validateDeletePuzzle = await superValidate({ id }, zod(deletePuzzleSchema));
 
 	return {
@@ -39,7 +39,7 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 export const actions = {
 	deletePuzzle: handleDeletePuzzleForm,
 	editPuzzle: async ({ params, request }: RequestEvent) => {
-		const form = await superValidate(request, zod(puzzleDtoSchema));
+		const form = await superValidate(request, zod(editPuzzleSchema));
 
 		if (!form.valid) {
 			fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, { form });

@@ -55,6 +55,13 @@ export const editPuzzleSchema = puzzleEntitySchema.pick({
 	constraints: true,
 	validators: true,
 	solution: true,
-	visibility: true
+	visibility: true,
+	author: true,
+	createdAt: true,
+	updatedAt: true
 });
 export type EditPuzzle = z.infer<typeof editPuzzleSchema>;
+
+export function isEditPuzzle(data: unknown): data is EditPuzzle {
+	return editPuzzleSchema.safeParse(data).success;
+}

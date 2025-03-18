@@ -1,10 +1,10 @@
 <script lang="ts">
 	import H1 from "@/components/typography/h1.svelte";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { isUserDto, type PuzzleDto } from "types";
+	import { isUserDto, type EditPuzzle, type PuzzleDto } from "types";
 	import UserHoverCard from "./user-hover-card.svelte";
 
-	export let puzzle: PuzzleDto | null;
+	export let puzzle: PuzzleDto | EditPuzzle | null;
 
 	const hasBeenUpdated = puzzle && puzzle.updatedAt !== puzzle.createdAt;
 </script>
@@ -15,7 +15,7 @@
 			{puzzle.title}
 		</H1>
 
-		<dl class="flex gap-1 text-xs text-gray-400 dark:text-gray-600 lg:flex-row">
+		<dl class="flex gap-1 text-xs text-gray-400 lg:flex-row dark:text-gray-600">
 			{#if isUserDto(puzzle.author)}
 				<dt class="font-semibold">Created by</dt>
 				<dd>

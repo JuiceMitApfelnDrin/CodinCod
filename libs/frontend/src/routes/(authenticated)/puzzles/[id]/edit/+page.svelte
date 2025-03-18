@@ -2,7 +2,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
-	import { getUserIdFromUser, isAuthenticatedInfo, isAuthor, type PuzzleDto } from "types";
+	import { getUserIdFromUser, isAuthenticatedInfo, isAuthor, type EditPuzzle } from "types";
 	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
@@ -11,7 +11,7 @@
 	export let data;
 
 	const { deletePuzzle: deletePuzzleFormData, form: formData } = data;
-	const puzzle: PuzzleDto = formData.data;
+	const puzzle: EditPuzzle = formData.data;
 
 	let isPuzzleAuthor = false;
 
