@@ -28,6 +28,8 @@
 	import LanguageSelect from "./language-select.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import { languages } from "@/stores/languages";
+	import { toast } from "svelte-sonner";
+	import { calculatePercentage } from "@/utils/calculate-percentage";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
@@ -40,7 +42,12 @@
 	let isSubmittingCode = false;
 	let testResults: Record<number, CodeExecutionResponse> = {};
 
-	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
+	async function runSingularTestItem(
+		itemInList: number,
+		testInput: string,
+		testOutput: string,
+		isMultipleTests: boolean = false
+	) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
 			body: JSON.stringify({
 				code,
@@ -57,6 +64,17 @@
 			...testResults,
 			[itemInList]: testResult
 		};
+
+		if (isMultipleTests) {
+			return;
+		}
+
+		if (isCodeExecutionSuccessResponse(testResult)) {
+			const successPercentage = testResult.puzzleResultInformation.successRate * 100;
+			showToastWhenTestRan(successPercentage);
+		} else {
+			showToastWhenTestRan(0);
+		}
 	}
 
 	async function patience() {
@@ -64,19 +82,52 @@
 		return new Promise((resolve) => setTimeout(resolve, 500));
 	}
 
+	function showToastWhenTestRan(successPercentage: number, isMultipleTests: boolean = false) {
+		if (isMultipleTests) {
+			if (successPercentage === 100) {
+				toast.success("All tests passed!");
+			} else if (successPercentage >= 35) {
+				toast.warning(`${successPercentage}% of the tests passed`);
+			} else if (successPercentage >= 0) {
+				toast.error(`${successPercentage}% of the tests passed`);
+			} else {
+				toast.error("Invalid success percentage");
+			}
+		} else {
+			if (successPercentage === 100) {
+				toast.success("Test passed!");
+			} else {
+				toast.error("Test failed!");
+			}
+		}
+	}
+
 	async function runAllTests() {
 		if (puzzle.validators) {
+			const isMultipleTests = true;
 			isExecutingTests = true;
 
 			const convertToPromises = puzzle.validators.map(
 				(validator: ValidatorEntity, index: number) => {
-					runSingularTestItem(index, validator.input, validator.output);
+					runSingularTestItem(index, validator.input, validator.output, isMultipleTests);
 				}
 			);
 
 			await Promise.all([...convertToPromises, patience()]).then(() => {
 				isExecutingTests = false;
 			});
+
+			const totalTests = Object.keys(testResults).length;
+			const combinedSuccessRate = Object.values(testResults).reduce((sum, res) => {
+				if (isCodeExecutionSuccessResponse(res)) {
+					return sum + res.puzzleResultInformation.successRate;
+				}
+
+				return sum;
+			}, 0);
+
+			const successPercentage = calculatePercentage(0, totalTests, combinedSuccessRate) * 100;
+			showToastWhenTestRan(successPercentage, isMultipleTests);
 		}
 	}
 
