@@ -2,6 +2,7 @@ import z from "zod";
 import { USERNAME_CONFIG } from "../../authentication/config/username-config.js";
 import { PASSWORD_CONFIG } from "../../authentication/config/password-config.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { userProfileSchema } from "./user-profile.schema.js";
 
 export const userEntitySchema = z.object({
 	username: z
@@ -25,14 +26,7 @@ export const userEntitySchema = z.object({
 			`Password must be at least ${PASSWORD_CONFIG.minPasswordLength} characters long`
 		),
 	email: z.string().email("Invalid email address"),
-	profile: z
-		.object({
-			picture: z.ostring(),
-			bio: z.ostring(),
-			location: z.ostring(),
-			socials: z.array(z.string()).nonempty().optional()
-		})
-		.optional(),
+	profile: userProfileSchema.optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional()
 });

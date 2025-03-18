@@ -10,7 +10,10 @@
 <Toggle
 	pressed={checked}
 	onPressedChange={onChecked}
-	class={cn("border border-white", checked ? "" : "border-opacity-50")}
+	class={cn(
+		"border-2 border-black dark:border-white",
+		checked ? "border-opacity-75" : "border-opacity-25"
+	)}
 >
-	<CheckIcon class={cn(!checked && "invisible")} aria-hidden="true" />
+	<CheckIcon class={cn("size-4", !checked && "invisible")} aria-hidden="true" />
 </Toggle>

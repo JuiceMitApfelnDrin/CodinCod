@@ -8,8 +8,8 @@
 <Container class="flex md:flex-row">
 	<SideNavigationSettings />
 
-	<LogicalUnit
-		><WorkInProgress />, Eventually you'll be able to adjust your profile, update your bio, add
-		links, and so much more...</LogicalUnit
-	>
+	<LogicalUnit>
+		<WorkInProgress />, Eventually you'll be able to adjust your profile, update your bio, add
+		links, and so much more...
+	</LogicalUnit>
 </Container>

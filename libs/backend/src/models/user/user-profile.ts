@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
+import { UserProfile } from "types";
 
-export const profileSchema = new Schema({
+export const profileSchema = new Schema<UserProfile>({
 	picture: {
 		type: String,
 		required: false,

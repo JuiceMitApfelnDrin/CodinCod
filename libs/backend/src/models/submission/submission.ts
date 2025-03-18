@@ -23,7 +23,7 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
 	},
-	resultInfo: {
+	result: {
 		required: true,
 		type: resultInfoSchema
 	},

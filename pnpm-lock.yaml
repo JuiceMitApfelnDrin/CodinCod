@@ -230,8 +230,8 @@ importers:
         specifier: ^10.4.16
         version: 10.4.21(postcss@8.5.3)
       bits-ui:
-        specifier: ^0.21.16
-        version: 0.21.16(svelte@4.2.19)
+        specifier: ^0.22.0
+        version: 0.22.0(svelte@4.2.19)
       eslint:
         specifier: ~9.10.0
         version: 9.10.0
@@ -2710,10 +2710,10 @@ packages:
     resolution: {integrity: sha512-37FHE8rqsYM5JEKCnXFyHpBCzvgHEExwVVTq+nUmloInU7l8ezD1TpOhKpS8oe1DTYFqEK27rFZVKG43oTqXRA==}
     dev: true
 
-  /bits-ui@0.21.16(svelte@4.2.19):
-    resolution: {integrity: sha512-XFZ7/bK7j/K+5iktxX/ZpmoFHjYjpPzP5EOO/4bWiaFg5TG1iMcfjDhlBTQnJxD6BoVoHuqeZPHZvaTgF4Iv3Q==}
+  /bits-ui@0.22.0(svelte@4.2.19):
+    resolution: {integrity: sha512-r7Fw1HNgA4YxZBRcozl7oP0bheQ8EHh+kfMBZJgyFISix8t4p/nqDcHLmBgIiJ3T5XjYnJRorYDjIWaCfhb5fw==}
     peerDependencies:
-      svelte: ^4.0.0 || ^5.0.0-next.118
+      svelte: ^4.0.0 || ^5.0.0
     dependencies:
       '@internationalized/date': 3.7.0
       '@melt-ui/svelte': 0.76.2(svelte@4.2.19)
