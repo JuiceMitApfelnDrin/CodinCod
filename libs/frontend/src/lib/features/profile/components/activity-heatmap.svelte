@@ -108,7 +108,7 @@
 		<tbody>
 			{#each Array(totalDays) as _, rowIndex}
 				<tr class="h-3">
-					<td class="w-0 pr-1 text-xs font-bold">
+					<td class="w-0 pr-1 text-right text-xs font-bold">
 						<span class="sr-only">{dayNames[rowIndex].long}</span>
 						<span aria-hidden="true">{dayNames[rowIndex].short}</span>
 					</td>
@@ -125,7 +125,7 @@
 	</table>
 
 	<div
-		class="legend lg:lex-row mt-4 flex flex-col-reverse items-center justify-between gap-4 py-2 text-sm"
+		class="legend mt-4 flex flex-col-reverse items-center justify-between gap-4 py-2 text-sm lg:flex-row"
 	>
 		<a
 			href={frontendUrls.DOCS_ACTIVITY}
