@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ActivityTypeEnum } from "../enum/activity-type-enum.js";
+import { activityTypeEnum, activityTypes } from "../enum/activity-type-enum.js";
 import { getValues } from "../../../utils/functions/get-values.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
@@ -7,7 +7,7 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 export const activitySchema = z.object({
 	createdAt: acceptedDateSchema,
 	_id: objectIdSchema,
-	type: z.enum(getValues(ActivityTypeEnum))
+	type: activityTypes
 });
 
 export type Activity = z.infer<typeof activitySchema>;
