@@ -91,8 +91,8 @@
 	}
 </script>
 
-<div class="rounded-lg border border-stone-300 p-6 shadow-sm">
-	<table class="mb-2 w-full border-separate border-spacing-0.5">
+<div class="overflow-x-scroll rounded-lg border border-stone-300 p-6 shadow-sm">
+	<table class="mb-2 w-full border-separate border-spacing-1">
 		<caption class="sr-only">Activity Calendar</caption>
 		<thead>
 			<tr>
@@ -115,7 +115,7 @@
 					{#each Array(totalWeeks) as _, weekIndex}
 						{@const cellIndex = weekIndex * totalDays + rowIndex}
 						<td
-							class={cn(calcDayStyle(days[cellIndex]), "activity-cell")}
+							class={cn(calcDayStyle(days[cellIndex]), "activity-cell", "square-cell")}
 							title={getCellTitle(weekIndex, rowIndex, days[cellIndex])}
 						/>
 					{/each}
@@ -124,7 +124,9 @@
 		</tbody>
 	</table>
 
-	<div class="legend mt-4 flex items-center justify-between gap-4 py-2 text-sm">
+	<div
+		class="legend lg:lex-row mt-4 flex flex-col-reverse items-center justify-between gap-4 py-2 text-sm"
+	>
 		<a
 			href={frontendUrls.DOCS_ACTIVITY}
 			class="text-sm text-cyan-600 no-underline hover:underline dark:text-cyan-400"
@@ -138,6 +140,7 @@
 				<div
 					class={cn(
 						"activity-cell",
+						"rounded-full",
 						"bg-gradient-to-r from-stone-100 via-cyan-200 via-25% to-cyan-700 dark:from-stone-800 dark:via-cyan-700 dark:to-cyan-200"
 					)}
 				/>
@@ -149,9 +152,15 @@
 
 <style>
 	.activity-cell {
-		@apply h-3 w-3 rounded-sm hover:scale-110 hover:shadow-md motion-safe:transition-transform;
+		@apply h-4 min-h-4 w-4 min-w-4 hover:scale-110 hover:shadow-md motion-safe:transition-transform;
 	}
 	.legend .activity-cell {
 		@apply w-32;
+	}
+	.square-cell {
+		@apply aspect-square max-h-4 max-w-4 rounded-sm;
+	}
+	td {
+		line-height: 0;
 	}
 </style>
