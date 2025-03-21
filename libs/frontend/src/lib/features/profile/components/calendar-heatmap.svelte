@@ -2,7 +2,7 @@
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { cn } from "@/utils/cn";
 	import dayjs from "dayjs";
-	import type { GroupedActivitiesByDate } from "types";
+	import { frontendUrls, type GroupedActivitiesByDate } from "types";
 
 	export let activitiesGroupedByDate: GroupedActivitiesByDate;
 	export let minAmount = 0;
@@ -102,7 +102,7 @@
 	</table>
 
 	<div>
-		<a href="docs/activity">Learn how we measure activity</a>
+		<a href={frontendUrls.DOCS_ACTIVITY}>Learn how we measure activity</a>
 	</div>
 </div>
 
