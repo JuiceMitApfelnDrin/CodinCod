@@ -1,130 +1,157 @@
 <script lang="ts">
-	import { calculatePercentage } from "@/utils/calculate-percentage";
-	import { cn } from "@/utils/cn";
 	import dayjs from "dayjs";
+	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { frontendUrls, type GroupedActivitiesByDate } from "types";
+	import { cn } from "@/utils/cn";
 
 	export let activitiesGroupedByDate: GroupedActivitiesByDate;
-	export let minAmount = 0;
-	export let maxAmount = 8;
+	let minAmount = 0;
+	let maxAmount = 0;
 
-	// Create an array for the previous 365 days and count activities for each day
-	let days: number[] = Array.from({ length: 364 })
-		.map((_, i) => {
-			const date = dayjs().subtract(i, "day").format("YYYY-MM-DD");
-			return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
-		})
-		.reverse(); // reverse to start with the oldest day
+	const totalDays = 7;
+	const totalWeeks = 54;
+	const minNumberOfDays = totalWeeks * totalDays;
 
-	const calcDayStyle = (activity: number): string => {
-		if (activity > 0)
-			return `background: rgba(217, 70, 239, ${
-				calculatePercentage(minAmount, maxAmount, activity) + 0.15
-			});`;
+	const now = dayjs();
+	const startDate = now.subtract(minNumberOfDays, "day");
+	const endDate = now;
 
-		return `background: rgba(64, 64, 64, 1)`;
-	};
-
-	const dayNames = Array.from({ length: 7 }).map((_, index) => {
-		const currentDay = dayjs().subtract(index, "day");
-
-		return {
-			longDayName: currentDay.format("dddd"),
-			shortDayName: currentDay.format("ddd").toUpperCase()
-		};
+	$: days = Array.from({ length: minNumberOfDays }, (_, i) => {
+		const date = startDate.add(i, "day").format("YYYY-MM-DD");
+		return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
 	});
 
-	const months = Array.from({ length: 12 })
-		.map((_, index) => {
-			const currentMonth = dayjs().subtract(index, "month");
+	let monthGroups: Array<{ month: string; colspan: number }> = [];
 
-			return {
-				longMonthName: currentMonth.format("MMMM"),
-				shortMonthName: currentMonth.format("MMM")
-			};
-		})
-		.reverse(); // reverse to start with the oldest month
+	$: {
+		const nonZeroDays = days.filter((count) => count > 0);
+		minAmount = nonZeroDays.length > 0 ? Math.min(...nonZeroDays) : 0;
+		maxAmount = Math.max(...days);
+
+		// Calculate month groups
+		const groups = [];
+		let currentYearMonth: string | null = null;
+		let currentGroup: { month: string; colspan: number; yearMonth: string } | null = null;
+
+		for (let weekIndex = 0; weekIndex < totalWeeks; weekIndex++) {
+			const weekStartDate = startDate.add(weekIndex * totalDays, "day");
+			const yearMonth = weekStartDate.format("YYYY-MM");
+
+			if (yearMonth !== currentYearMonth) {
+				if (currentGroup) groups.push(currentGroup);
+				currentGroup = {
+					month: weekStartDate.format("MMM"),
+					colspan: 1,
+					yearMonth: yearMonth
+				};
+				currentYearMonth = yearMonth;
+			} else if (currentGroup) {
+				currentGroup.colspan += 1;
+			}
+		}
+
+		monthGroups = currentGroup ? [...groups, currentGroup] : groups;
+	}
+
+	$: dayNames = Array.from({ length: totalDays }, (_, i) => {
+		const d = dayjs().startOf("week").add(i, "day");
+		return { long: d.format("dddd"), short: d.format("ddd").toUpperCase() };
+	});
+
+	function calcDayStyle(count: number): string {
+		if (count <= 0) {
+			return "bg-stone-100 dark:bg-stone-800";
+		}
+
+		const opacity = (calculatePercentage(minAmount, maxAmount, count) + 0.15) * 100;
+
+		if (opacity <= 20) {
+			return "bg-cyan-200 dark:bg-cyan-700";
+		} else if (opacity <= 40) {
+			return "bg-cyan-300 dark:bg-cyan-600";
+		} else if (opacity <= 60) {
+			return "bg-cyan-400 dark:bg-cyan-500";
+		} else if (opacity <= 80) {
+			return "bg-cyan-500 dark:bg-cyan-400";
+		} else if (opacity <= 90) {
+			return "bg-cyan-600 dark:bg-cyan-300";
+		} else {
+			return "bg-cyan-700 dark:bg-cyan-200";
+		}
+	}
+
+	function getDateFromWeekWithOffset(weekIndex: number, dayOffset: number) {
+		return startDate.add(weekIndex * totalDays + dayOffset, "day");
+	}
+
+	function getCellTitle(weekIndex: number, dayOffset: number, count: number): string {
+		const cellDate = getDateFromWeekWithOffset(weekIndex, dayOffset).format("MMMM DD, YYYY");
+
+		return `Solved ${count} puzzles on ${cellDate}`;
+	}
 </script>
 
-<div
-	class="dark:border-primary-500 border-primary-700 h-full w-full flex-col rounded-lg border p-4"
->
-	<!-- TODO: possibly make this a table instead, with a tooltips and sr-only text -->
-	<table class="overflow-x-scroll">
-		<caption class="sr-only hidden">Activity graph</caption>
+<div class="rounded-lg border border-stone-300 p-6 shadow-sm">
+	<table class="mb-2 w-full border-separate border-spacing-0.5">
+		<caption class="sr-only">Activity Calendar</caption>
 		<thead>
 			<tr>
-				<th></th>
-				{#each months as monthName}
-					<th
-						colspan="4"
-						class="month-header dark:text-primary-300 text-primary-600 text-center font-bold"
-					>
-						<span class="sr-only">
-							{monthName.longMonthName}
-						</span>
-						<span aria-hidden="true">
-							{monthName.shortMonthName}
-						</span>
+				<th colspan={1} class="w-0" />
+				{#each monthGroups as group}
+					<th colspan={group.colspan} class="p-0 text-center font-bold">
+						<span class="sr-only">{group.month}</span>
+						<span aria-hidden="true">{group.month}</span>
 					</th>
 				{/each}
 			</tr>
 		</thead>
-
 		<tbody>
-			{#each dayNames as dayName, index}
-				<tr class="calendar">
-					<td
-						class="day-header dark:text-primary-300 text-primary-600 flex w-full items-center justify-center text-left font-bold"
-					>
-						<span class="sr-only">
-							{dayName.longDayName}
-						</span>
-						<span aria-hidden="true" class={cn(index % 2 !== 0 && "hidden")}>
-							{dayName.shortDayName}
-						</span>
+			{#each Array(totalDays) as _, rowIndex}
+				<tr class="h-3">
+					<td class="w-0 pr-1 text-xs font-bold">
+						<span class="sr-only">{dayNames[rowIndex].long}</span>
+						<span aria-hidden="true">{dayNames[rowIndex].short}</span>
 					</td>
-
-					{#each days as activity, dayIndex}
-						{#if dayIndex % 7 === index}
-							<td
-								class="day rounded shadow-sm shadow-neutral-700"
-								style={calcDayStyle(activity)}
-								title="Solved {activity} puzzles on {dayjs()
-									.subtract(dayIndex, 'day')
-									.format('MMMM DD, YYYY')}"
-							/>
-						{/if}
+					{#each Array(totalWeeks) as _, weekIndex}
+						{@const cellIndex = weekIndex * totalDays + rowIndex}
+						<td
+							class={cn(calcDayStyle(days[cellIndex]), "activity-cell")}
+							title={getCellTitle(weekIndex, rowIndex, days[cellIndex])}
+						/>
 					{/each}
 				</tr>
 			{/each}
 		</tbody>
 	</table>
 
-	<div>
-		<a href={frontendUrls.DOCS_ACTIVITY}>Learn how we measure activity</a>
+	<div class="legend mt-4 flex items-center justify-between gap-4 py-2 text-sm">
+		<a
+			href={frontendUrls.DOCS_ACTIVITY}
+			class="text-sm text-cyan-600 no-underline hover:underline dark:text-cyan-400"
+		>
+			Learn how we measure activity
+		</a>
+
+		<div class="flex items-center gap-2">
+			<span class="text-xs">Less</span>
+			<div class="flex h-4 overflow-hidden rounded-sm">
+				<div
+					class={cn(
+						"activity-cell",
+						"bg-gradient-to-r from-stone-100 via-cyan-200 via-25% to-cyan-700 dark:from-stone-800 dark:via-cyan-700 dark:to-cyan-200"
+					)}
+				/>
+			</div>
+			<span class="text-xs">More</span>
+		</div>
 	</div>
 </div>
 
 <style>
-	table {
-		border-spacing: 0.25rem;
-		border-collapse: separate;
+	.activity-cell {
+		@apply h-3 w-3 rounded-sm hover:scale-110 hover:shadow-md motion-safe:transition-transform;
 	}
-
-	:root {
-		--square-size: 0.75rem;
-	}
-
-	.day-header {
-		font-size: calc(var(--square-size) - 0.05rem);
-	}
-
-	tr {
-		height: var(--square-size);
-	}
-	td {
-		line-height: 0;
-		width: var(--square-size);
+	.legend .activity-cell {
+		@apply w-32;
 	}
 </style>

@@ -31,7 +31,7 @@
 
 <Container class="gap-8">
 	{#if user && isUserDto(user)}
-		<Card.Root class="w-full">
+		<Card.Root class="w-full border border-stone-300">
 			<Card.Header>
 				<H1 class="flex w-full justify-center">{user.username}</H1>
 			</Card.Header>
