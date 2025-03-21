@@ -44,9 +44,11 @@
 					</li>
 				{/if}
 			</ul>
+
 			{#if $isAuthenticated}
 				<UserDropdown></UserDropdown>
 			{/if}
+
 			<ToggleTheme />
 		</div>
 	</nav>
