@@ -94,7 +94,7 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 					user: userId,
 					createdAt: new Date(),
 					languageVersion: runtimeInfo.version,
-					resultInfo: calculateResults(expectedOutputs, pistonExecutionResults),
+					result: calculateResults(expectedOutputs, pistonExecutionResults),
 					language: runtimeInfo.language
 				};
 

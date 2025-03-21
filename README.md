@@ -20,7 +20,7 @@ Think Duolingo or LEGO for coding. Less "*textbook lecture*", more "*aha!*" mome
 
 ## Project overview
 
-The [docs](./docs/README.md) repo exists to:
+The [docs](./docs/README.md) exist to:
 
 1. get up to speed quickly;
 2. create a general shared understanding;

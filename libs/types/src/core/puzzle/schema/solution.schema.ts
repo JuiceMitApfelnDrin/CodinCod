@@ -6,3 +6,4 @@ export const solutionSchema = z.object({
 	language: puzzleLanguage,
 	languageVersion: puzzleLanguageVersion
 });
+export type Solution = z.infer<typeof solutionSchema>;

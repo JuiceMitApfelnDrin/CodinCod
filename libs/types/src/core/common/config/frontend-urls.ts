@@ -44,7 +44,10 @@ export const frontendUrls = {
 	FORUM: "/forum",
 	FRIENDS: "/friends",
 	PLAYERS: "/players",
-	BLOG: "/blog"
+	BLOG: "/blog",
+
+	// docs
+	DOCS_ACTIVITY: "/docs/activity"
 } as const;
 
 export type FrontendUrl = (typeof frontendUrls)[keyof typeof frontendUrls];

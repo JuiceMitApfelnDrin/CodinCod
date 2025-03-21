@@ -113,6 +113,7 @@ export * from "./core/submission/schema/submission-entity.schema.js";
 export * from "./core/user/schema/user-activity.schema.js";
 export * from "./core/user/schema/user-dto.schema.js";
 export * from "./core/user/schema/user-entity.schema.js";
+export * from "./core/user/schema/user-profile.schema.js";
 
 // utils - constants
 export * from "./utils/constants/http-methods.js";

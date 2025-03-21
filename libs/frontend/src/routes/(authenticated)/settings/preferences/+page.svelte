@@ -46,10 +46,12 @@
 		<LogicalUnit class="flex flex-col gap-4">
 			<H2>Preferred programming language</H2>
 
-			<LanguageSelect bind:language languages={$languages ?? []} />
-			<p class="text-sm text-muted-foreground">
-				This is your default language when joining a game.
-			</p>
+			<div class="flex flex-col gap-2">
+				<p class="text-sm text-muted-foreground">
+					This is your default language when joining a game.
+				</p>
+				<LanguageSelect bind:language languages={$languages ?? []} />
+			</div>
 		</LogicalUnit>
 
 		{#if $preferences && $preferences.editor}
@@ -58,6 +60,11 @@
 
 				<!-- Keymap Selection -->
 				<div class="flex flex-col gap-2">
+					<p class="text-sm text-muted-foreground">
+						Choose between different keyboard shortcut presets (VSCode, Vim, Emacs). Affects
+						navigation, selection, and editing shortcuts.
+					</p>
+
 					<Select.Root
 						selected={{ label: $preferences.editor.keymap, value: $preferences.editor.keymap }}
 						onSelectedChange={(v) => {
@@ -86,10 +93,6 @@
 							</ScrollArea>
 						</Select.Content>
 					</Select.Root>
-					<p class="text-sm text-muted-foreground">
-						Choose between different keyboard shortcut presets (VSCode, Vim, Emacs). Affects
-						navigation, selection, and editing shortcuts.
-					</p>
 				</div>
 			</LogicalUnit>
 
@@ -99,7 +102,7 @@
 				<div class="flex flex-col gap-4">
 					<h3 class="text-lg font-bold">Display & Layout</h3>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Line Numbers</h4>
 							<p class="text-sm text-muted-foreground">
@@ -112,7 +115,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Active Line Highlight</h4>
 							<p class="text-sm text-muted-foreground">
@@ -125,7 +128,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Gutter Highlights</h4>
 							<p class="text-sm text-muted-foreground">
@@ -142,7 +145,7 @@
 				<div class="flex flex-col gap-4">
 					<h3 class="text-lg font-bold">Code Editing</h3>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Bracket Matching</h4>
 							<p class="text-sm text-muted-foreground">
@@ -155,7 +158,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Auto-Close Brackets</h4>
 							<p class="text-sm text-muted-foreground">
@@ -168,7 +171,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Smart Indentation</h4>
 							<p class="text-sm text-muted-foreground">
@@ -185,7 +188,7 @@
 				<div class="flex flex-col gap-4">
 					<h3 class="text-lg font-bold">Visual Aids</h3>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Special Characters</h4>
 							<p class="text-sm text-muted-foreground">
@@ -198,7 +201,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Selection Matching</h4>
 							<p class="text-sm text-muted-foreground">
@@ -211,7 +214,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Crosshair Cursor</h4>
 							<p class="text-sm text-muted-foreground">
@@ -228,7 +231,7 @@
 				<div class="flex flex-col gap-4">
 					<h3 class="text-lg font-bold">Advanced Editing</h3>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Multiple Selections</h4>
 							<p class="text-sm text-muted-foreground">
@@ -241,7 +244,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Rectangular Selection</h4>
 							<p class="text-sm text-muted-foreground">
@@ -254,7 +257,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Drag-and-Drop</h4>
 							<p class="text-sm text-muted-foreground">Show visual indicator when dragging text</p>
@@ -269,7 +272,7 @@
 				<div class="flex flex-col gap-4">
 					<h3 class="text-lg font-bold">History & Navigation</h3>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Edit History</h4>
 							<p class="text-sm text-muted-foreground">
@@ -282,7 +285,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Code Folding</h4>
 							<p class="text-sm text-muted-foreground">
@@ -299,7 +302,7 @@
 				<div class="flex flex-col gap-4">
 					<h3 class="text-lg font-bold">Code Assistance</h3>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Auto-completion</h4>
 							<p class="text-sm text-muted-foreground">
@@ -312,7 +315,7 @@
 						/>
 					</div>
 
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<div>
 							<h4 class="text-sm font-medium underline">Linting</h4>
 							<p class="text-sm text-muted-foreground">
