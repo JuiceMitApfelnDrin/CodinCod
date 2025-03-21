@@ -7,10 +7,12 @@
 <Container>
 	<P>
 		<WorkInProgress />
-		Activity can be seen as the following things:
+		Activity can be accumulated through the following actions:
 	</P>
+
 	<ul class="list-inside list-disc">
-		<li>A solved puzzle</li>
+		<li>Solving a puzzle</li>
 		<li>Creating a puzzle</li>
+		<li>Creating your account</li>
 	</ul>
 </Container>
