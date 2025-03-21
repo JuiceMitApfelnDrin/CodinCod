@@ -110,7 +110,7 @@ a:focus {
 }
 
 .link {
-	@apply hover:text-cyan-700 hover:underline hover:dark:text-cyan-300;
+	@apply hover:text-teal-700 hover:underline hover:dark:text-teal-300;
 }
 
 * {

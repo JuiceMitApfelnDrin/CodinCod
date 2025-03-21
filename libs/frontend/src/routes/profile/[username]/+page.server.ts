@@ -1,5 +1,5 @@
 import { getUserActivityByUsername } from "../../api/get-user-activity-by-username.js";
-import { ActivityTypeEnum, type PuzzleDto, type SubmissionDto } from "types";
+import { activityTypeEnum, type PuzzleDto, type SubmissionDto } from "types";
 import type { PageServerLoadEvent } from "./$types";
 
 export async function load({ params }: PageServerLoadEvent) {
@@ -17,15 +17,15 @@ export async function load({ params }: PageServerLoadEvent) {
 
 	const puzzlesWithType = puzzles.map((puzzle: PuzzleDto) => ({
 		...puzzle,
-		type: ActivityTypeEnum.CREATE_PUZZLE
+		type: activityTypeEnum.CREATE_PUZZLE
 	}));
 
 	const submissionsWithType = submissions.map((submission: SubmissionDto) => ({
 		...submission,
-		type: ActivityTypeEnum.ADD_SUBMISSION
+		type: activityTypeEnum.ADD_SUBMISSION
 	}));
 
-	const userWithType = { ...user, type: ActivityTypeEnum.CREATE_ACCOUNT };
+	const userWithType = { ...user, type: activityTypeEnum.CREATE_ACCOUNT };
 
 	return {
 		puzzles: puzzlesWithType,

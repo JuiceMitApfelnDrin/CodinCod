@@ -2,8 +2,8 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
-	import ActivityGroup from "@/features/profile/components/activity-feed/activity-group.svelte";
-	import CalendarHeatmap from "@/features/profile/components/calendar-heatmap.svelte";
+	import ActivityGroup from "@/features/profile/components/activity-group.svelte";
+	import ActivityHeatmap from "@/features/profile/components/activity-heatmap.svelte";
 	import dayjs from "dayjs";
 	import { isUserDto, type Activity, type GroupedActivitiesByDate } from "types";
 
@@ -56,7 +56,7 @@
 		</Card.Root>
 	{/if}
 
-	<CalendarHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
+	<ActivityHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
 
 	{#each Object.entries(activitiesGroupedByCreatedAtDate).sort((a, b) => {
 		const aDate = a[0];
