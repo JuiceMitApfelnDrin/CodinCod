@@ -66,17 +66,17 @@
 		const opacity = (calculatePercentage(minAmount, maxAmount, count) + 0.15) * 100;
 
 		if (opacity <= 20) {
-			return "bg-cyan-200 dark:bg-cyan-700";
+			return "bg-teal-200 dark:bg-teal-700";
 		} else if (opacity <= 40) {
-			return "bg-cyan-300 dark:bg-cyan-600";
+			return "bg-teal-300 dark:bg-teal-600";
 		} else if (opacity <= 60) {
-			return "bg-cyan-400 dark:bg-cyan-500";
+			return "bg-teal-400 dark:bg-teal-500";
 		} else if (opacity <= 80) {
-			return "bg-cyan-500 dark:bg-cyan-400";
+			return "bg-teal-500 dark:bg-teal-400";
 		} else if (opacity <= 90) {
-			return "bg-cyan-600 dark:bg-cyan-300";
+			return "bg-teal-600 dark:bg-teal-300";
 		} else {
-			return "bg-cyan-700 dark:bg-cyan-200";
+			return "bg-teal-700 dark:bg-teal-200";
 		}
 	}
 
@@ -129,7 +129,7 @@
 	>
 		<a
 			href={frontendUrls.DOCS_ACTIVITY}
-			class="text-sm text-cyan-600 no-underline hover:underline dark:text-cyan-400"
+			class="text-sm text-teal-600 no-underline hover:underline dark:text-teal-400"
 		>
 			Learn how we measure activity
 		</a>
@@ -141,7 +141,7 @@
 					class={cn(
 						"activity-cell",
 						"rounded-full",
-						"bg-gradient-to-r from-stone-100 via-cyan-200 via-25% to-cyan-700 dark:from-stone-800 dark:via-cyan-700 dark:to-cyan-200"
+						"bg-gradient-to-r from-stone-100 via-teal-200 via-25% to-teal-700 dark:from-stone-800 dark:via-teal-700 dark:to-teal-200"
 					)}
 				/>
 			</div>
@@ -150,7 +150,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.activity-cell {
 		@apply h-4 min-h-4 w-4 min-w-4 hover:scale-110 hover:shadow-md motion-safe:transition-transform;
 	}
