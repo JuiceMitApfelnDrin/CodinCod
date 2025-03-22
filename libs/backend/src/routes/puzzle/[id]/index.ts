@@ -1,17 +1,21 @@
 import { FastifyInstance } from "fastify";
 import {
 	AuthenticatedInfo,
-	puzzleEntitySchema,
 	PuzzleVisibilityEnum,
 	isAuthor,
 	isAuthenticatedInfo,
-	DeletePuzzle,
 	ErrorResponse,
-	httpResponseCodes
+	httpResponseCodes,
+	editPuzzleRequestSchema,
+	PistonExecutionRequest,
+	CodeExecutionParams
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import { ParamsId } from "@/types/types.js";
+import { handleError } from "@/errors/handle-error.js";
+import { PuzzleService } from "@/services/puzzle-service.js";
+import { ExecutionService } from "@/services/execution-service.js";
 
 export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
@@ -28,9 +32,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 
 			return reply.send(puzzle);
 		} catch (error) {
-			return reply
-				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ error: "Failed to fetch puzzle" });
+			handleError(error, reply);
 		}
 	});
 
@@ -40,15 +42,6 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 			onRequest: authenticated
 		},
 		async (request, reply) => {
-			const { id } = request.params;
-			const parseResult = puzzleEntitySchema.omit({ author: true }).safeParse(request.body);
-
-			if (!parseResult.success) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
-			}
-
 			const user = request.user;
 
 			if (!isAuthenticatedInfo(user)) {
@@ -60,39 +53,31 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				return reply.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED).send(errorResponse);
 			}
 
+			const { id } = request.params;
+			const parseResult = editPuzzleRequestSchema.safeParse(request.body);
+
+			if (!parseResult.success) {
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+					.send({ error: parseResult.error.errors });
+			}
+
 			const userId = user.userId;
 
 			try {
-				const puzzle = await Puzzle.findById(id);
+				const puzzle = await PuzzleService.updatePuzzle(id, userId, parseResult.data);
 
-				if (!puzzle) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: "Puzzle not found" });
-				}
-
-				// TODO: eventually make it so contributors / moderators can adjust puzzles
-				if (!isAuthor(puzzle.author.toString(), userId)) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
-						.send({ error: "Not authorized to edit this puzzle" });
-				}
-				Object.assign(puzzle, parseResult.data);
-
-				await puzzle.save();
+				// if (puzzle.visibility === PuzzleVisibilityEnum.DRAFT) {
+				// }
 
 				return reply.send(puzzle);
 			} catch (error) {
-				const errorResponse: ErrorResponse = { error: "Failed to update puzzle", message: "" };
-
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send(errorResponse);
+				handleError(error, reply);
 			}
 		}
 	);
 
-	fastify.delete<{ Params: DeletePuzzle }>(
+	fastify.delete<ParamsId>(
 		"/",
 		{
 			onRequest: authenticated
@@ -119,7 +104,9 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				const isNotAuthorOfPuzzle = !isAuthorOfPuzzle;
 
 				if (isNotAuthorOfPuzzle) {
-					return reply.status(403).send({ error: "Not authorized to delete this puzzle" });
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
+						.send({ error: "Not authorized to delete this puzzle" });
 				}
 
 				const isDraft = puzzle.visibility === PuzzleVisibilityEnum.DRAFT;
@@ -127,15 +114,15 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				if (isNotDraft) {
 					// TODO: figure out: this is a questionable choice at the moment, but might not want to delete an interesting puzzle completely which users already have solved, so maybe archive instead of a full delete??
 					return reply
-						.status(403)
+						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "This puzzle was public, contact support to get it deleted." });
 				}
 
 				await puzzle.deleteOne();
 
-				return reply.status(204).send();
+				return reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send();
 			} catch (error) {
-				return reply.status(500).send({ error: "Failed to delete puzzle" });
+				handleError(error, reply);
 			}
 		}
 	);

@@ -65,3 +65,6 @@ export type EditPuzzle = z.infer<typeof editPuzzleSchema>;
 export function isEditPuzzle(data: unknown): data is EditPuzzle {
 	return editPuzzleSchema.safeParse(data).success;
 }
+
+export const editPuzzleRequestSchema = puzzleEntitySchema.omit({ author: true });
+export type EditPuzzleRequest = z.infer<typeof editPuzzleRequestSchema>;
