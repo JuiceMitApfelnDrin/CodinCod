@@ -80,8 +80,8 @@ export class ExecutionService {
 		testOutput: string
 	) {
 		const { run, compile } = executionRes;
-		
-        const puzzleResultInformation = calculateResults([testOutput], [executionRes]);
+
+		const puzzleResultInformation = calculateResults([testOutput], [executionRes]);
 
 		return { run, compile, puzzleResultInformation };
 	}
