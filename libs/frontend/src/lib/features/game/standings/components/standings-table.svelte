@@ -40,7 +40,10 @@
 
 	function formatDuration(submissionDate: AcceptedDate) {
 		const gameStartTime = dayjs(game.startTime);
-		const gameplayDurationMs = Math.min(dayjs(submissionDate).diff(gameStartTime), DEFAULT_GAME_LENGTH_IN_MILLISECONDS);
+		const gameplayDurationMs = Math.min(
+			dayjs(submissionDate).diff(gameStartTime),
+			DEFAULT_GAME_LENGTH_IN_MILLISECONDS
+		);
 		return dayjs.duration(gameplayDurationMs).format("HH:mm:ss");
 	}
 </script>
