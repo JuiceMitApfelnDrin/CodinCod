@@ -15,7 +15,7 @@ export function setCookie(result: Response, cookies: Cookies) {
 
 		// Set the cookie using SvelteKit's cookies API
 		cookies.set(name, value, {
-			domain: isProduction ? ".codincod.com" : "localhost",
+			domain: env.FRONTEND_HOST ?? "localhost",
 			httpOnly: true,
 			path: frontendUrls.ROOT,
 			sameSite: isProduction ? "none" : "lax",
