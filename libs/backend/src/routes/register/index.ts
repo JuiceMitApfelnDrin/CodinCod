@@ -54,7 +54,7 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					httpOnly: true,
 					secure: process.env.NODE_ENV === "production",
 					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-					domain: process.env.NODE_ENV === "production" ? ".codincod.com" : "localhost",
+					domain: process.env.FRONTEND_HOST ?? "localhost",
 					maxAge: 3600
 				})
 				.send({ message: "User registered successfully" });

@@ -6,7 +6,7 @@ export const load = async ({ cookies }: PageServerLoadEvent) => {
 	const isProduction = env.NODE_ENV === "production";
 
 	cookies.delete(cookieKeys.TOKEN, {
-		domain: isProduction ? ".codincod.com" : "localhost",
+		domain: env.FRONTEND_HOST ?? "localhost",
 		path: frontendUrls.ROOT,
 		sameSite: isProduction ? "none" : "lax",
 		secure: isProduction
