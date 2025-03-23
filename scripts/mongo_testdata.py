@@ -45,7 +45,8 @@ FIZZBUZZ = {
     "visibility": "draft",
     "solution": {
         "code": 'n, m = [int(x) for x in input().split()]\nfor i in range(n, m+1):\n    fizz = i % 3 == 0\n    buzz = i % 5 == 0\n    print("Fizz" * fizz + "Buzz" * buzz + str(i) * (not fizz and not buzz))\n',
-        "language": "python"
+        "language": "python",
+        "languageVersion": "3.12.0"
     },
     "tags": [],
 }
@@ -54,7 +55,6 @@ db.puzzles.insert_one(FIZZBUZZ)
 EASY = {
     "title": "Easy",
     "statement": 'Print 42.',
-    "constraints": "",
     "author": testuser_id,
     "validators": [
         {
@@ -74,7 +74,8 @@ EASY = {
     "visibility": "approved",
     "solution": {
         "code": 'print(42)',
-        "language": "python"
+        "language": "python",
+        "languageVersion": "3.12.0"
     },
     "tags": [],
 }
