@@ -2,7 +2,6 @@
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
-		DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
 		isSubmissionDto,
 		isUserDto,
 		type AcceptedDate,
@@ -40,11 +39,11 @@
 
 	function formatDuration(submissionDate: AcceptedDate) {
 		const gameStartTime = dayjs(game.startTime);
-		const gameplayDurationMs = Math.min(
+		const gameplayDurationInMs = Math.min(
 			dayjs(submissionDate).diff(gameStartTime),
-			DEFAULT_GAME_LENGTH_IN_MILLISECONDS
+			1000 * game.options.maxGameDurationInSeconds
 		);
-		return dayjs.duration(gameplayDurationMs).format("HH:mm:ss");
+		return dayjs.duration(gameplayDurationInMs).format("HH:mm:ss");
 	}
 </script>
 
