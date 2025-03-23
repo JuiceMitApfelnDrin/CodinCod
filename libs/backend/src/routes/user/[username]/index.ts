@@ -1,6 +1,6 @@
 import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isUsername } from "types";
+import { ErrorResponse, httpResponseCodes, isUsername } from "types";
 import { ParamsUsername } from "./types.js";
 import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
 import { USER } from "@/utils/constants/model.js";
@@ -14,9 +14,12 @@ export default async function userByUsernameRoutes(fastify: FastifyInstance) {
 			const { IS_INVALID } = genericReturnMessages[BAD_REQUEST];
 			const { USERNAME } = userProperties;
 
-			return reply.status(BAD_REQUEST).send({
-				message: `${USERNAME} ${IS_INVALID}`
-			});
+			const errorResponse: ErrorResponse = {
+				message: `${USERNAME} ${IS_INVALID}`,
+				error: "Validation error"
+			};
+
+			return reply.status(BAD_REQUEST).send(errorResponse);
 		}
 
 		try {
