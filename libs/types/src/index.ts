@@ -49,7 +49,7 @@ export * from "./core/common/types/link.js";
 export * from "./core/common/types/value-of.js";
 
 // game
-export * from "./core/game/config/game.js";
+export * from "./core/game/config/game-config.js";
 export * from "./core/game/enum/waiting-room-event-enum.js";
 export * from "./core/game/enum/game-event-enums.js";
 export * from "./core/game/enum/game-mode-enum.js";

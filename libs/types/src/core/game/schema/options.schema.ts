@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { gameVisibilitySchema } from "./visibility.schema.js";
-import { DEFAULT_GAME_LENGTH_IN_SECONDS } from "../config/game.js";
+import { DEFAULT_GAME_LENGTH_IN_SECONDS } from "../config/game-config.js";
 import { gameModeSchema } from "./mode.schema.js";
 import { puzzleLanguage, puzzleLanguageVersion } from "../../puzzle/schema/puzzle-language.js";
 import { GameVisibilityEnum } from "../enum/game-visibility-enum.js";
