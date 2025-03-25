@@ -93,9 +93,15 @@
 
 		<H2 class="mt-8">Comments</H2>
 
-		<AddCommentForm commentType={commentTypeEnum.PUZZLE} replyOnId={puzzleId} {onCommentAdded} />
+		{#if $isAuthenticated}
+			<AddCommentForm commentType={commentTypeEnum.PUZZLE} replyOnId={puzzleId} {onCommentAdded} />
+		{/if}
 
-		<Comments comments={puzzleComments} />
+		{#if puzzleComments.length > 0}
+			<Comments comments={puzzleComments} />
+		{:else}
+			<p class="text-stone-400 dark:text-stone-600">No one commented yet.</p>
+		{/if}
 	</LogicalUnit>
 </Container>
 
