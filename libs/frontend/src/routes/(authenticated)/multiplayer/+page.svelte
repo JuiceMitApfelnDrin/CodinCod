@@ -202,7 +202,7 @@
 		</LogicalUnit>
 
 		{#if room}
-			<P>waiting for the room to start</P>
+			<p>waiting for the room to start</p>
 
 			<ul>
 				{#each room.users as user}
@@ -230,10 +230,10 @@
 				{/each}
 			</ul>
 		{:else}
-			<P>
+			<p>
 				No rooms are being hosted by other players. You can host one yourself by clicking on the
 				"host room" button.
-			</P>
+			</p>
 		{/if}
 	</Container>
 {/if}

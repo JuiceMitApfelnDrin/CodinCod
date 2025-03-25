@@ -3,15 +3,15 @@ import { Solution } from "types";
 
 const solutionSchema = new Schema<Solution>({
 	code: {
-		required: true,
+		required: false,
 		type: String
 	},
 	language: {
-		required: true,
+		required: false,
 		type: String
 	},
 	languageVersion: {
-		required: true,
+		required: false,
 		type: String
 	}
 });

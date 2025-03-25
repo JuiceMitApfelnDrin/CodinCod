@@ -1,29 +1,29 @@
 <script lang="ts">
 	import { Badge, type Variant } from "@/components/ui/badge";
-	import { PuzzleVisibilityEnum, type PuzzleVisibility } from "types";
+	import { puzzleVisibilityEnum, type PuzzleVisibility } from "types";
 
-	export let visibility: PuzzleVisibility = PuzzleVisibilityEnum.DRAFT;
+	export let visibility: PuzzleVisibility = puzzleVisibilityEnum.DRAFT;
 
 	let variant: Variant = "default";
 
 	$: {
 		switch (visibility) {
-			case PuzzleVisibilityEnum.APPROVED:
+			case puzzleVisibilityEnum.APPROVED:
 				variant = "success";
 				break;
-			case PuzzleVisibilityEnum.REVIEW:
+			case puzzleVisibilityEnum.REVIEW:
 				variant = "default";
 				break;
-			case PuzzleVisibilityEnum.DRAFT:
+			case puzzleVisibilityEnum.DRAFT:
 				variant = "destructive";
 				break;
-			case PuzzleVisibilityEnum.REVISE:
+			case puzzleVisibilityEnum.REVISE:
 				variant = "default";
 				break;
-			case PuzzleVisibilityEnum.INACTIVE:
+			case puzzleVisibilityEnum.INACTIVE:
 				variant = "default";
 				break;
-			case PuzzleVisibilityEnum.ARCHIVED:
+			case puzzleVisibilityEnum.ARCHIVED:
 				variant = "default";
 				break;
 		}

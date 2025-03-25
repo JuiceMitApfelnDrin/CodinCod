@@ -10,7 +10,7 @@
 		frontendUrls,
 		POST,
 		puzzleEntitySchema,
-		PuzzleVisibilityEnum,
+		puzzleVisibilityEnum,
 		type EditPuzzle,
 		type PuzzleVisibility
 	} from "types";
@@ -84,7 +84,7 @@
 
 	let { enhance, form: formData, message } = form;
 
-	let visibilityStates: PuzzleVisibility[] = Object.values(PuzzleVisibilityEnum);
+	let visibilityStates: PuzzleVisibility[] = Object.values(puzzleVisibilityEnum);
 </script>
 
 <form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">

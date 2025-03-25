@@ -22,30 +22,3 @@ export default async function authenticated(request: FastifyRequest, reply: Fast
 		return reply.status(500).send({ message: "An unexpected error occurred." });
 	}
 }
-
-// TODO: if cookie works, remove below
-// export default async function authenticate(
-// 	fastify: FastifyInstance,
-// 	request: FastifyRequest,
-// 	reply: FastifyReply
-// ) {
-// 	try {
-// 		if (!request.headers.authorization) {
-// 			throw new Error("No authorization header found");
-// 		}
-
-// 		const token = request.headers.authorization.split(' ')[1];
-// 		const decodedToken = fastify.jwt.decode(token) as JwtPayload;
-
-// 		if (decodedToken) {
-// 			request.user = {
-// 				userId: decodedToken.userId,
-// 				username: decodedToken.username
-// 			};
-// 		} else {
-// 			throw new Error('Invalid token');
-// 		}
-// 	} catch (err) {
-// 		reply.status(401).send({ error: "Invalid token" });
-// 	}
-// }

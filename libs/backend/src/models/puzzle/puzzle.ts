@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
-import { PUZZLE, USER, METRICS } from "../../utils/constants/model.js";
-import { DifficultyEnum, PuzzleEntity, PuzzleVisibilityEnum } from "types";
+import { PUZZLE, USER, METRICS, COMMENT } from "../../utils/constants/model.js";
+import { DifficultyEnum, PuzzleEntity, puzzleVisibilityEnum } from "types";
 import solutionSchema from "./solution.js";
 import validatorSchema from "./validator.js";
 
@@ -42,8 +42,8 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		type: String
 	},
 	visibility: {
-		enum: Object.values(PuzzleVisibilityEnum),
-		default: PuzzleVisibilityEnum.DRAFT,
+		enum: Object.values(puzzleVisibilityEnum),
+		default: puzzleVisibilityEnum.DRAFT,
 		required: true,
 		type: String
 	},
@@ -61,12 +61,18 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 	},
 	puzzleMetrics: {
 		ref: METRICS,
-		type: mongoose.Schema.Types.ObjectId,
+		type: Schema.Types.ObjectId,
 		select: false
 	},
 	tags: [
 		{
 			type: String
+		}
+	],
+	comments: [
+		{
+			ref: COMMENT,
+			type: Schema.Types.ObjectId
 		}
 	]
 });

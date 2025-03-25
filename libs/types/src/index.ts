@@ -21,6 +21,15 @@ export * from "./core/authentication/schema/token.schema.js";
 export * from "./core/chat/config/chat-message-config.js";
 export * from "./core/chat/schema/chat-message.schema.js";
 
+// comment
+export * from "./core/comment/config/comment-config.js";
+export * from "./core/comment/enum/comment-type-enum.js";
+export * from "./core/comment/schema/comment.schema.js";
+export * from "./core/comment/schema/comment-type.schema.js";
+export * from "./core/comment/schema/comment-dto.schema.js";
+export * from "./core/comment/schema/create-comment.schema.js";
+export * from "./core/comment/schema/comment-vote.schema.js";
+
 // common
 export * from "./core/common/config/backend-urls.js";
 export * from "./core/common/config/cookie.js";
@@ -28,6 +37,7 @@ export * from "./core/common/config/default-values-query-params.js";
 export * from "./core/common/config/frontend-urls.js";
 export * from "./core/common/config/web-socket-urls.js";
 export * from "./core/common/enum/http-response-codes.js";
+export * from "./core/common/enum/vote-type-enum.js";
 export * from "./core/common/schema/accepted-date.js";
 export * from "./core/common/schema/object-id.js";
 export * from "./core/common/schema/fetch-error.schema.js";
@@ -113,6 +123,7 @@ export * from "./core/submission/schema/submission-entity.schema.js";
 export * from "./core/user/schema/user-activity.schema.js";
 export * from "./core/user/schema/user-dto.schema.js";
 export * from "./core/user/schema/user-entity.schema.js";
+export * from "./core/user/schema/user-vote-entity.schema.js";
 export * from "./core/user/schema/user-profile.schema.js";
 
 // utils - constants
