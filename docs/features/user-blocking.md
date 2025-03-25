@@ -1,1 +1,0 @@
-Integrate a feature that allows users to block or mute other participants, enhancing the overall user experience and minimizing negative interactions.
