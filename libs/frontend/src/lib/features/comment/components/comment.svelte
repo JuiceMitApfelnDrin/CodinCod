@@ -15,6 +15,7 @@
 	import { CircleArrowDown, CircleArrowUp, MessageCircle, MessageCircleOff } from "lucide-svelte";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
+	import { isAuthenticated } from "@/stores";
 
 	export let comment: CommentDto;
 
@@ -113,7 +114,7 @@
 		</Button>
 	</LogicalUnit>
 
-	{#if isReplying}
+	{#if isReplying && $isAuthenticated}
 		<AddCommentForm
 			replyOnId={comment._id}
 			commentType={commentTypeEnum.COMMENT}
