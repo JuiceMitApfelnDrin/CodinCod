@@ -15,7 +15,7 @@
 			{puzzle.title}
 		</H1>
 
-		<dl class="flex gap-1 text-xs text-stone-400 lg:flex-row dark:text-stone-600">
+		<dl class="flex gap-1 text-xs text-stone-400 dark:text-stone-600 lg:flex-row">
 			{#if isUserDto(puzzle.author)}
 				<dt class="font-semibold">Created by</dt>
 				<dd>
