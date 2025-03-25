@@ -51,7 +51,7 @@
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{#each items as { title, _id, difficulty, visibility }}
+						{#each items as { _id, difficulty, title, visibility }}
 							<Table.Row>
 								<Table.Cell>
 									<a class="link" href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: _id })}

@@ -8,7 +8,7 @@ import {
 	GameModeEnum,
 	GameVisibilityEnum,
 	isAuthenticatedInfo,
-	PuzzleVisibilityEnum,
+	puzzleVisibilityEnum,
 	waitingRoomEventEnum
 } from "types";
 import { WaitingRoom } from "./waiting-room.js";
@@ -61,7 +61,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 			}
 			case waitingRoomEventEnum.START_GAME: {
 				const randomPuzzles = await Puzzle.aggregate([
-					{ $match: { visibility: PuzzleVisibilityEnum.APPROVED } },
+					{ $match: { visibility: puzzleVisibilityEnum.APPROVED } },
 					{ $sample: { size: 1 } }
 				]).exec();
 

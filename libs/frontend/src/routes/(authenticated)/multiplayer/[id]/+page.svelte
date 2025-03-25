@@ -42,9 +42,7 @@
 		isGameResponse,
 		gameEventEnum,
 		sendMessageOfType,
-		type GameRequest,
-		gameRequestSchema,
-		isGameRequest
+		type GameRequest
 	} from "types";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {

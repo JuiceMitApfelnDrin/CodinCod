@@ -2,12 +2,13 @@ import { FastifyInstance } from "fastify";
 import {
 	AuthenticatedInfo,
 	puzzleEntitySchema,
-	PuzzleVisibilityEnum,
+	puzzleVisibilityEnum,
 	isAuthor,
 	isAuthenticatedInfo,
 	DeletePuzzle,
 	ErrorResponse,
-	httpResponseCodes
+	httpResponseCodes,
+	PuzzleVisibility
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
@@ -18,7 +19,15 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 		const { id } = request.params;
 
 		try {
-			const puzzle = await Puzzle.findById(id).populate("author");
+			const puzzle = await Puzzle.findById(id)
+				.populate("author")
+				.populate("comments")
+				.populate({
+					path: "comments",
+					populate: {
+						path: "author"
+					}
+				});
 
 			if (!puzzle) {
 				return reply
@@ -122,7 +131,12 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					return reply.status(403).send({ error: "Not authorized to delete this puzzle" });
 				}
 
-				const isDraft = puzzle.visibility === PuzzleVisibilityEnum.DRAFT;
+				const allowedToRemoveState: PuzzleVisibility[] = [
+					puzzleVisibilityEnum.DRAFT,
+					puzzleVisibilityEnum.READY
+				];
+
+				const isDraft = allowedToRemoveState.includes(puzzle.visibility);
 				const isNotDraft = !isDraft;
 				if (isNotDraft) {
 					// TODO: figure out: this is a questionable choice at the moment, but might not want to delete an interesting puzzle completely which users already have solved, so maybe archive instead of a full delete??
