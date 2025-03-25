@@ -47,6 +47,7 @@ export const frontendUrls = {
 	BLOG: "/blog",
 
 	// docs
+	DOCS: "/docs",
 	DOCS_ACTIVITY: "/docs/activity"
 } as const;
 
