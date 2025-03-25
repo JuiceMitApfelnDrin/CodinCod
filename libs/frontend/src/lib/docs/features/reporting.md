@@ -1,5 +1,5 @@
+## Report Categories
 
-## Report Categories   
 Offer a list of predefined categories that users can choose from when submitting a report. Categories may include offensive language, spam, cheating, harassment, or inappropriate content.
 
 **Report Details**: Include a free-text field where users can provide additional context, details, or evidence related to the reported issue.

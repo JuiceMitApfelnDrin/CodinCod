@@ -1,4 +1,4 @@
-**Unified Community Experience:** The platform will become a central hub for both gaming and streaming activities, allowing users to seamlessly switch between participating in multiplayer games and enjoying live streams. 
+**Unified Community Experience:** The platform will become a central hub for both gaming and streaming activities, allowing users to seamlessly switch between participating in multiplayer games and enjoying live streams.
 
 **Content Discovery:** Streamer profiles and live streams will be easily discoverable by platform users, enhancing exposure for creators and promoting community growth.
 
