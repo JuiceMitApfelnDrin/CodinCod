@@ -2,7 +2,6 @@
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
-		DEFAULT_GAME_LENGTH_IN_SECONDS,
 		isSubmissionDto,
 		isUserDto,
 		type AcceptedDate,
@@ -40,17 +39,11 @@
 
 	function formatDuration(submissionDate: AcceptedDate) {
 		const gameStartTime = dayjs(game.startTime);
-		const maxAllowedDurationSeconds =
-			game.options?.maxGameDurationInSeconds ?? DEFAULT_GAME_LENGTH_IN_SECONDS;
-		const maximumGameEndTime = gameStartTime.add(maxAllowedDurationSeconds, "s");
-
-		// determine the display end time (either submission date or max allowed end time)
-		// context: users are allowed to go over the max end time by X seconds for connection issues
-		const clampedSubmissionDate = dayjs.min(dayjs(submissionDate), maximumGameEndTime);
-
-		const gameplayDurationMs = clampedSubmissionDate.diff(gameStartTime);
-
-		return dayjs.duration(gameplayDurationMs).format("HH:mm:ss");
+		const gameplayDurationInMs = Math.min(
+			dayjs(submissionDate).diff(gameStartTime),
+			1000 * game.options.maxGameDurationInSeconds
+		);
+		return dayjs.duration(gameplayDurationInMs).format("HH:mm:ss");
 	}
 </script>
 
