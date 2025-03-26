@@ -86,8 +86,8 @@
 	}
 </script>
 
-<li class={"flex w-fit flex-col gap-4 rounded-lg border px-6 py-4"}>
-	<LogicalUnit class="flex flex-row justify-between">
+<li class="flex w-fit flex-col gap-4 rounded-lg border px-6 py-4">
+	<LogicalUnit class="flex flex-row justify-between gap-2">
 		<CommentMetaInfo {comment} />
 
 		{#if $authenticatedUserInfo?.userId && isAuthor(getUserIdFromUser(comment.author), $authenticatedUserInfo.userId)}
