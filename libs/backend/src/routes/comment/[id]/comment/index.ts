@@ -50,7 +50,9 @@ export default async function commentByIdCommentRoutes(fastify: FastifyInstance)
 
 				await Comment.findByIdAndUpdate(id, { $push: { comments: newComment._id } }, { new: true });
 
-				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(newComment);
+				const comment = await Comment.findById(newComment.id).populate("author");
+
+				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(comment);
 			} catch (error) {
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
