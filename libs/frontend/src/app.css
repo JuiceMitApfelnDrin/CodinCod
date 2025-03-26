@@ -120,6 +120,7 @@ a:focus {
 code,
 pre,
 .monospaced,
-.font-mono {
+.font-mono,
+.codemirror-wrapper {
 	font-family: "Inconsolata", monospace;
 }
