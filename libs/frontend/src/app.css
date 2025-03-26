@@ -121,6 +121,7 @@ code,
 pre,
 .monospaced,
 .font-mono,
-.codemirror-wrapper {
+.codemirror-wrapper,
+.codemirror-wrapper * {
 	font-family: "Inconsolata", monospace;
 }
