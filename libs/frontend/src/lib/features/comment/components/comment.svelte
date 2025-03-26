@@ -1,23 +1,35 @@
 <script lang="ts">
 	import {
 		commentTypeEnum,
+		getUserIdFromUser,
 		httpRequestMethod,
+		isAuthor,
 		isCommentDto,
 		voteTypeEnum,
 		type CommentDto,
-		type CommentVoteRequest
+		type CommentVoteRequest,
+		type ObjectId
 	} from "types";
 	import CommentMetaInfo from "./comment-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Comments from "./comments.svelte";
 	import AddCommentForm from "./add-comment-form.svelte";
-	import { CircleArrowDown, CircleArrowUp, MessageCircle, MessageCircleOff } from "lucide-svelte";
+	import {
+		CircleArrowDown,
+		CircleArrowUp,
+		EllipsisVertical,
+		MessageCircle,
+		MessageCircleOff,
+		Trash
+	} from "lucide-svelte";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
-	import { isAuthenticated } from "@/stores";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import * as DropdownMenu from "@/components/ui/dropdown-menu";
 
 	export let comment: CommentDto;
+	export let onDeleted: (commentId: ObjectId) => void;
 
 	let isReplying: boolean = false;
 
@@ -64,10 +76,36 @@
 			};
 		}
 	}
+
+	async function deleteComment() {
+		await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.COMMENT_BY_ID, { id: comment._id }), {
+			method: httpRequestMethod.DELETE
+		});
+
+		onDeleted(comment._id);
+	}
 </script>
 
-<li class="flex w-fit flex-col gap-4 rounded-lg border px-6 py-4">
-	<CommentMetaInfo {comment} />
+<li class={"flex w-fit flex-col gap-4 rounded-lg border px-6 py-4"}>
+	<LogicalUnit class="flex flex-row justify-between">
+		<CommentMetaInfo {comment} />
+
+		{#if $authenticatedUserInfo?.userId && isAuthor(getUserIdFromUser(comment.author), $authenticatedUserInfo.userId)}
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					<EllipsisVertical class="mr-2 size-4" aria-label="Actions" />
+				</DropdownMenu.Trigger>
+
+				<DropdownMenu.Content>
+					<DropdownMenu.Group>
+						<DropdownMenu.Item on:click={deleteComment}>
+							<Trash class="mr-2 size-4" aria-hidden="true" /> Delete
+						</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		{/if}
+	</LogicalUnit>
 
 	<p class="max-w-[75ch]">
 		{comment.text}

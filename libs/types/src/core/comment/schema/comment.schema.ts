@@ -3,6 +3,7 @@ import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 import { COMMENT_CONFIG } from "../config/comment-config.js";
+import { commentTypeSchema } from "./comment-type.schema.js";
 
 export const baseComment = z.object({
 	author: objectIdSchema.or(userDtoSchema),
@@ -10,7 +11,8 @@ export const baseComment = z.object({
 	upvote: z.number(),
 	downvote: z.number(),
 	createdAt: acceptedDateSchema.optional(),
-	updatedAt: acceptedDateSchema.optional()
+	updatedAt: acceptedDateSchema.optional(),
+	commentType: commentTypeSchema
 });
 
 type BaseCommentEntity = z.infer<typeof baseComment> & {
