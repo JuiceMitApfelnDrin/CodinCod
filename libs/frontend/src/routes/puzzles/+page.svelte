@@ -25,7 +25,13 @@
 </script>
 
 <svelte:head>
-	<title>Puzzles | CodinCod</title>
+	<title>Learn programming concepts through solving puzzles | CodinCod</title>
+	<meta
+		name="description"
+		content="Solve community-crafted coding puzzles, challenge players worldwide, or build your own open-source challenges. Leaderboards await!"
+	/>
+	<meta name="keywords" content="coding exercises, problem-solving skills" />
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container>

@@ -16,6 +16,7 @@
 		<meta property="article:tag" content={$page.params.slug} />
 		<meta property="article:tag" content="Programming language" />
 	{/if}
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container>

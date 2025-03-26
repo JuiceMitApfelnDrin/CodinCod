@@ -7,6 +7,15 @@
 
 <svelte:head>
 	<title>Home | CodinCod</title>
+	<meta
+		name="description"
+		content="Master programming through interactive puzzles and battles. Learn Python, JavaScript, and more programming languages. 100% forever free, open-source, and beginner-friendly."
+	/>
+	<meta
+		name="keywords"
+		content="learn programming, coding for beginners, interactive coding practice"
+	/>
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container>

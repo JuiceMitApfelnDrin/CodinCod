@@ -13,6 +13,11 @@
 
 <svelte:head>
 	<title>Register | CodinCod</title>
+	<meta
+		name="description"
+		content="Create your free account to start competing in real-time coding puzzles, track your rank, and contribute to open-source challenges."
+	/>
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container class="items-center justify-center">

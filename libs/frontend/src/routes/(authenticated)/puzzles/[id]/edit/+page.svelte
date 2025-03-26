@@ -2,7 +2,13 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
-	import { getUserIdFromUser, isAuthenticatedInfo, isAuthor, type EditPuzzle } from "types";
+	import {
+		getUserIdFromUser,
+		isAuthenticatedInfo,
+		isAuthor,
+		isUserDto,
+		type EditPuzzle
+	} from "types";
 	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
@@ -26,6 +32,15 @@
 
 <svelte:head>
 	<title>Edit {puzzle.title} | CodinCod</title>
+	<meta
+		name="description"
+		content="Build and share your coding puzzles with the world. Get feedback, iterate, and earn recognition in our developer community."
+	/>
+	{#if isUserDto(puzzle.author)}
+		<meta name="author" content={`${puzzle.author.username}`} />
+	{:else}
+		<meta name="author" content="CodinCod contributors" />
+	{/if}
 </svelte:head>
 
 {#if isPuzzleAuthor}

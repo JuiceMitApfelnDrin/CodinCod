@@ -32,6 +32,11 @@
 
 <svelte:head>
 	<title>Profile of {$page.params.username} | CodinCod</title>
+	<meta
+		name="description"
+		content={`Track ${$page.params.username}'s puzzle wins, open-source contributions, and ranking. Challenge them to a duel or collaborate!`}
+	/>
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container class="gap-8">
