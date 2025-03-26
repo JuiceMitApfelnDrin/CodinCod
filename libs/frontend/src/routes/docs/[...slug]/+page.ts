@@ -1,5 +1,5 @@
 import { error, type LoadEvent } from "@sveltejs/kit";
-import type { SvelteComponent } from "svelte";
+import type { ComponentType } from "svelte";
 
 export async function load({ params }: LoadEvent) {
 	const modules = import.meta.glob(`/src/lib/docs/**/*.md`);
@@ -15,7 +15,7 @@ export async function load({ params }: LoadEvent) {
 
 		if (slugFromPath === slug) {
 			const docsPage = (await resolver?.()) as {
-				default: SvelteComponent;
+				default: ComponentType;
 				metadata?: Record<string, string>;
 			};
 

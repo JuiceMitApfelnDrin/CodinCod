@@ -1,14 +1,14 @@
 <script lang="ts">
-	export let data: { content: any };
-	let Content = data.content;
+	export let data;
+	let { content } = data;
 </script>
 
 <svelte:head>
 	<title>Docs | CodinCod</title>
 </svelte:head>
 
-{#if Content}
-	<svelte:component this={Content} />
+{#if content}
+	<svelte:component this={content} />
 {:else}
 	<p>No documentation found.</p>
 {/if}
