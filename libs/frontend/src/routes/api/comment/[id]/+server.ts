@@ -17,3 +17,15 @@ export async function GET({ params, request }: RequestEvent) {
 		}
 	);
 }
+
+export async function DELETE({ params, request }: RequestEvent) {
+	return await fetchWithAuthenticationCookie(
+		buildBackendUrl(backendUrls.COMMENT_BY_ID, {
+			id: params.id
+		}),
+		{
+			headers: getCookieHeader(request),
+			method: httpRequestMethod.DELETE
+		}
+	);
+}

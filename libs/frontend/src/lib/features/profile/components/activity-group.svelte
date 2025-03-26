@@ -19,7 +19,6 @@
 			const activities = activitiesByType.get(activity.type) || [];
 			activitiesByType.set(activity.type, [...activities, activity]);
 		});
-		console.log({ activitiesByType });
 	}
 
 	const typeToHumanText = {
@@ -30,15 +29,14 @@
 </script>
 
 <details open class="w-full max-w-md rounded-lg border border-stone-300 shadow-sm">
-	<summary class="cursor-pointer list-none px-4 py-3">
-		<div class="flex items-center justify-between">
-			<span class="text-sm font-medium">
-				<span class="font-semibold text-teal-700 dark:text-teal-300">{activities.length}</span>
-				{activities.length === 1 ? "activity" : "activities"} on
-				<time class="">{formattedDateYearMonthDay(date)}</time>
-			</span>
-			<ChevronDown />
-		</div>
+	<summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3">
+		<span class="text-sm font-medium">
+			<span class="font-semibold text-teal-700 dark:text-teal-300">{activities.length}</span>
+			{activities.length === 1 ? "activity" : "activities"} on
+			<time class="">{formattedDateYearMonthDay(date)}</time>
+		</span>
+
+		<ChevronDown aria-hidden="true" />
 	</summary>
 
 	<div class="border-t p-4">
@@ -57,9 +55,3 @@
 		</ul>
 	</div>
 </details>
-
-<style lang="postcss">
-	details[open] summary svg {
-		transform: rotate(180deg);
-	}
-</style>

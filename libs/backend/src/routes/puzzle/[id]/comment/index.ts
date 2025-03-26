@@ -3,7 +3,13 @@ import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
-import { CommentEntity, createCommentSchema, httpResponseCodes, isAuthenticatedInfo } from "types";
+import {
+	CommentEntity,
+	commentTypeEnum,
+	createCommentSchema,
+	httpResponseCodes,
+	isAuthenticatedInfo
+} from "types";
 
 export default async function puzzleByIdCommentRoutes(fastify: FastifyInstance) {
 	fastify.post<ParamsId>(
@@ -35,7 +41,8 @@ export default async function puzzleByIdCommentRoutes(fastify: FastifyInstance) 
 				author: userId,
 				upvote: 0,
 				downvote: 0,
-				comments: []
+				comments: [],
+				commentType: commentTypeEnum.PUZZLE
 			};
 
 			try {
