@@ -41,7 +41,7 @@
 	<title>Learn a programming language by solving {puzzle.title} | CodinCod</title>
 	<meta
 		name="description"
-		content={`Learn programming fundamentals with this puzzle. Compete against others, test your solution, to improve your coding skills.`}
+		content={`Learn programming fundamentals with this puzzle named: ${puzzle.title}. Compete against others, test your solution, to improve your coding skills.`}
 	/>
 	<meta name="keywords" content="coding exercises, problem-solving skills" />
 	{#if isUserDto(puzzle.author)}
