@@ -13,6 +13,11 @@
 
 <svelte:head>
 	<title>Login | CodinCod</title>
+	<meta
+		name="description"
+		content="Access your profile, join live battles, and continue mastering coding puzzles in our open-source community."
+	/>
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container class="items-center justify-center">

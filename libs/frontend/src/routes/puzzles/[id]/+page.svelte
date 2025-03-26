@@ -7,6 +7,7 @@
 		frontendUrls,
 		getUserIdFromUser,
 		isAuthor,
+		isUserDto,
 		puzzleVisibilityEnum,
 		type CommentDto,
 		type PuzzleDto
@@ -37,7 +38,17 @@
 </script>
 
 <svelte:head>
-	<title>{puzzle.title} | Puzzles | CodinCod</title>
+	<title>Learn a programming language by solving {puzzle.title} | CodinCod</title>
+	<meta
+		name="description"
+		content={`Learn programming fundamentals with this puzzle. Compete against others, test your solution, to improve your coding skills.`}
+	/>
+	<meta name="keywords" content="coding exercises, problem-solving skills" />
+	{#if isUserDto(puzzle.author)}
+		<meta name="author" content={`${puzzle.author.username}`} />
+	{:else}
+		<meta name="author" content="CodinCod contributors" />
+	{/if}
 </svelte:head>
 
 <Container class="flex flex-col gap-4 md:gap-8 lg:gap-12">

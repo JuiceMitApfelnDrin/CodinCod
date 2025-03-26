@@ -9,6 +9,11 @@
 
 <svelte:head>
 	<title>Create a new puzzle | CodinCod</title>
+	<meta
+		name="description"
+		content="Build and share your coding puzzles with the world. Get feedback, iterate, and earn recognition in our developer community."
+	/>
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container>

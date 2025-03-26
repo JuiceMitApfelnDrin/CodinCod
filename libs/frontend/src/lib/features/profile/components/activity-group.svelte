@@ -17,7 +17,7 @@
 
 	const typeToHumanText = {
 		[activityTypeEnum.ADD_SUBMISSION]: "solved a puzzle",
-		[activityTypeEnum.CREATE_ACCOUNT]: `joined us on $CodinCod`,
+		[activityTypeEnum.CREATE_ACCOUNT]: `joined us on CodinCod`,
 		[activityTypeEnum.CREATE_PUZZLE]: "created a puzzle"
 	};
 </script>

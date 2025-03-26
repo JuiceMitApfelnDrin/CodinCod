@@ -12,10 +12,21 @@
 
 <svelte:head>
 	<title>Learn overview | CodinCod</title>
+	<meta
+		name="description"
+		content={`Structured coding courses with live practice. Solve puzzles, get instant feedback, and level up your skills with community mentorship. Start with a programming language or dive into algorithms.`}
+	/>
+	<meta
+		name="keywords"
+		content="learn coding online, programming courses, coding tutorials, web development basics"
+	/>
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 <Container>
-	<H1>Hi there!</H1>
+	<H1
+		>Let's <em><span class="text-teal-700 dark:text-teal-200">learn</span></em> something today!</H1
+	>
 
 	<LogicalUnit>
 		<P>

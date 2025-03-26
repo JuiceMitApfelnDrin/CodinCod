@@ -231,6 +231,15 @@
 
 <svelte:head>
 	<title>Multiplayer game | CodinCod</title>
+	<meta
+		name="description"
+		content={`Sharpen your skills in live coding duels! Get instant feedback from opponents and learn faster through collaborative competition.`}
+	/>
+	{#if puzzle && isUserDto(puzzle.author)}
+		<meta name="author" content={`${puzzle.author.username}`} />
+	{:else}
+		<meta name="author" content="CodinCod contributors" />
+	{/if}
 </svelte:head>
 
 {#if !$authenticatedUserInfo}

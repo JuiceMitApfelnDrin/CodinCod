@@ -8,7 +8,7 @@
 
 ## Introduction
 
-Learning to code often feels like assembling IKEA furniture without the manual — frustrating and confusing. We’re here to change that.
+Learning to code often feels like assembling IKEA furniture without the manual — frustrating and confusing. We're here to change that.
 
 CodinCod is your stress-free coding playground where:
 
@@ -20,7 +20,7 @@ Think Duolingo or LEGO for coding. Less "*textbook lecture*", more "*aha!*" mome
 
 ## Project overview
 
-The [docs](./docs/README.md) exist to:
+The [docs](https://codincod/docs) exist to:
 
 1. get up to speed quickly;
 2. create a general shared understanding;

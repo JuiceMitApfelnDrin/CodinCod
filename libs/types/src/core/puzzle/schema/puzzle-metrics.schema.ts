@@ -9,9 +9,9 @@ import { z } from "zod";
  *
  * - **Purpose:**
  *   - **Track Engagement:** Measures how many users have interacted with the puzzle and how many have successfully solved it.
- *   - **Calculate Success Rate:** Enables the calculation of the success rate, which is the percentage of successful attempts relative to total attempts. This rate helps in determining the puzzle’s difficulty level.
- *   - **Dynamic Difficulty Adjustment:** Provides data necessary for dynamically adjusting the puzzle’s difficulty based on user performance metrics.
- *   - **Performance Analysis:** Allows for analyzing the puzzle’s performance and user engagement, helping in making data-driven decisions for maintaining and improving the puzzle.
+ *   - **Calculate Success Rate:** Enables the calculation of the success rate, which is the percentage of successful attempts relative to total attempts. This rate helps in determining the puzzle's difficulty level.
+ *   - **Dynamic Difficulty Adjustment:** Provides data necessary for dynamically adjusting the puzzle's difficulty based on user performance metrics.
+ *   - **Performance Analysis:** Allows for analyzing the puzzle's performance and user engagement, helping in making data-driven decisions for maintaining and improving the puzzle.
  *
  * @example
  * // Example of metrics object

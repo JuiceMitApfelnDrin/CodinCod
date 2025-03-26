@@ -141,6 +141,11 @@
 
 <svelte:head>
 	<title>Multiplayer waiting room | CodinCod</title>
+	<meta
+		name="description"
+		content={`Sharpen your skills in live coding duels! Get instant feedback from opponents and learn faster through collaborative competition.`}
+	/>
+	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
 {#if errorMessage}
