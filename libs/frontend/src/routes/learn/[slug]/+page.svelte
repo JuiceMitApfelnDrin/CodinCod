@@ -8,7 +8,7 @@
 
 <svelte:head>
 	{#if data.meta}
-		<title>{data.meta.title}</title>
+		<title>{data.meta.title} | CodinCod</title>
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content={data.meta.title} />
 		<meta property="article:section" content="Programming" />

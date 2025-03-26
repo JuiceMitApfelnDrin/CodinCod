@@ -36,6 +36,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{puzzle.title} | Puzzles | CodinCod</title>
+</svelte:head>
+
 <Container class="flex flex-col gap-4 md:gap-8 lg:gap-12">
 	<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
 		<PuzzleMetaInfo {puzzle} />

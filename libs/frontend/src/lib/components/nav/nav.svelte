@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { isAuthenticated } from "../../stores";
-	import { frontendUrls, websiteName, type FrontendLink } from "types";
+	import { frontendUrls, type FrontendLink } from "types";
 	import ToggleTheme from "./toggle-theme.svelte";
 	import UserDropdown from "./user-dropdown.svelte";
 
@@ -26,8 +26,7 @@
 	>
 		<div class="container mx-auto flex flex-row flex-wrap items-end gap-8">
 			<a href={frontendUrls.ROOT}>
-				<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">{websiteName}</span
-				>
+				<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">CodinCod</span>
 			</a>
 
 			<ul class="flex flex-1 flex-row gap-4">

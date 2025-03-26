@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from "$app/stores";
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
@@ -28,6 +29,10 @@
 	const originalActivities: Activity[] = [...submissions, ...puzzles, user];
 	const activitiesGroupedByCreatedAtDate = groupByCreatedAtDate(originalActivities);
 </script>
+
+<svelte:head>
+	<title>Profile of {$page.params.username} | CodinCod</title>
+</svelte:head>
 
 <Container class="gap-8">
 	{#if user && isUserDto(user)}

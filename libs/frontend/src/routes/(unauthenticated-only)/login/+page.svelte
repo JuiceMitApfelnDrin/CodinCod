@@ -11,6 +11,10 @@
 	export let form: ActionData;
 </script>
 
+<svelte:head>
+	<title>Login | CodinCod</title>
+</svelte:head>
+
 <Container class="items-center justify-center">
 	<Card.Root class="my-4 w-full md:my-8 md:max-w-lg lg:my-12">
 		<Card.Header>

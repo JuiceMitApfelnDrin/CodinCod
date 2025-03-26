@@ -6,6 +6,10 @@
 	let { puzzle } = data;
 </script>
 
+<svelte:head>
+	<title>Play {puzzle.title} | CodinCod</title>
+</svelte:head>
+
 {#if puzzle}
 	<Container>
 		<PlayPuzzle endDate={undefined} {puzzle} />

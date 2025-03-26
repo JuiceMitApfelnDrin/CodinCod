@@ -229,6 +229,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Multiplayer game | CodinCod</title>
+</svelte:head>
+
 {#if !$authenticatedUserInfo}
 	<Container>
 		<DisplayError

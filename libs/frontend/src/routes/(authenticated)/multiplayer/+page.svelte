@@ -139,6 +139,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Multiplayer waiting room | CodinCod</title>
+</svelte:head>
+
 {#if errorMessage}
 	<Container>
 		<DisplayError

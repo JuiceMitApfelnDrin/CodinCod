@@ -10,6 +10,10 @@
 	const { slugs } = data;
 </script>
 
+<svelte:head>
+	<title>Learn overview | CodinCod</title>
+</svelte:head>
+
 <Container>
 	<H1>Hi there!</H1>
 

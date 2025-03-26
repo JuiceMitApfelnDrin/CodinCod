@@ -5,6 +5,10 @@
 	import { githubRepo, twitchChannel } from "types";
 </script>
 
+<svelte:head>
+	<title>Home | CodinCod</title>
+</svelte:head>
+
 <Container>
 	<h1 class="sr-only">Home page</h1>
 

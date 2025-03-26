@@ -35,6 +35,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Preferences settings | CodinCod</title>
+</svelte:head>
+
 <h1 class="sr-only">Preferences</h1>
 
 <LogicalUnit class="flex w-full flex-col gap-8">

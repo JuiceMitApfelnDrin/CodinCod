@@ -11,7 +11,7 @@
 	export let data;
 
 	const { deletePuzzle: deletePuzzleFormData, form: formData } = data;
-	const puzzle: EditPuzzle = formData.data;
+	const puzzle = formData.data;
 
 	let isPuzzleAuthor = false;
 
@@ -23,6 +23,10 @@
 		}
 	}
 </script>
+
+<svelte:head>
+	<title>Edit {puzzle.title} | CodinCod</title>
+</svelte:head>
 
 {#if isPuzzleAuthor}
 	<Container>
