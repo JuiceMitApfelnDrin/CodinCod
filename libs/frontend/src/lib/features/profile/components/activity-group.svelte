@@ -1,13 +1,7 @@
 <script lang="ts">
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import { ChevronDown } from "lucide-svelte";
-	import {
-		activityTypeEnum,
-		websiteName,
-		type AcceptedDate,
-		type Activity,
-		type ActivityType
-	} from "types";
+	import { activityTypeEnum, type AcceptedDate, type Activity, type ActivityType } from "types";
 
 	export let date: AcceptedDate;
 	export let activities: Activity[] = [];
@@ -23,7 +17,7 @@
 
 	const typeToHumanText = {
 		[activityTypeEnum.ADD_SUBMISSION]: "solved a puzzle",
-		[activityTypeEnum.CREATE_ACCOUNT]: `joined us on ${websiteName}`,
+		[activityTypeEnum.CREATE_ACCOUNT]: `joined us on $CodinCod`,
 		[activityTypeEnum.CREATE_PUZZLE]: "created a puzzle"
 	};
 </script>

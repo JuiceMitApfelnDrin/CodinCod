@@ -7,6 +7,10 @@
 	const { form: formData } = data;
 </script>
 
+<svelte:head>
+	<title>Create a new puzzle | CodinCod</title>
+</svelte:head>
+
 <Container>
 	<H1>Create a puzzle</H1>
 

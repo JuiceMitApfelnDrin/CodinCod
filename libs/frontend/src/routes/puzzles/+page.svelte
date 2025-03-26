@@ -24,6 +24,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Puzzles | CodinCod</title>
+</svelte:head>
+
 <Container>
 	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 		<H1>Puzzles</H1>
