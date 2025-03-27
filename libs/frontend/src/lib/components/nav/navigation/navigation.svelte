@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { isAuthenticated } from "../../../stores";
 	import { frontendUrls } from "types";
 	import ToggleTheme from "../toggle-theme.svelte";
 	import UserDropdown from "../user-dropdown.svelte";
 	import NavigationItem from "./navigation-item.svelte";
+	import { isAuthenticated } from "@/stores";
 </script>
 
 <header
