@@ -14,7 +14,7 @@
 {#if puzzleResults}
 	<ul
 		class={cn(
-			"hidden gap-4 rounded-full border-2 border-gray-300 px-8 py-4 dark:border-gray-300 lg:flex lg:flex-wrap",
+			"hidden gap-4 rounded-full border-2 border-stone-300 px-8 py-4 lg:flex lg:flex-wrap dark:border-stone-300",
 			className
 		)}
 	>
