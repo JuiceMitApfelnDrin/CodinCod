@@ -56,9 +56,8 @@
 	</LogicalUnit>
 </Container>
 
-<style>
+<style lang="postcss">
 	a {
-		color: rgb(28, 155, 160);
-		text-decoration: underline;
+		@apply text-teal-800 hover:text-teal-600 underline dark:text-teal-200 hover:dark:text-teal-400;
 	}
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Nav from "@/components/nav/nav.svelte";
+	import Nav from "@/components/nav/navigation/navigation.svelte";
 	import { authenticatedUserInfo } from "@/stores/index.js";
 	import { isAuthenticatedInfo } from "types";
 	import { Toaster } from "$lib/components/ui/sonner";
