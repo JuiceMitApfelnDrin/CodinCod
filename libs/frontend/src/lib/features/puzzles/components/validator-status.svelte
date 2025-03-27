@@ -25,7 +25,7 @@
 {:else}
 	<span class="sr-only">didn't run test yet</span>
 	<Circle
-		class={cn("text-gray-700 dark:border-gray-300 dark:text-gray-500", className)}
+		class={cn("text-stone-700 dark:border-stone-300 dark:text-stone-500", className)}
 		aria-hidden="true"
 	/>
 {/if}

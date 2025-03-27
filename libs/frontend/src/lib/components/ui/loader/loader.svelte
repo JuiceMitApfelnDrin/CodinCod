@@ -8,7 +8,7 @@
 <svg
 	role="status"
 	class={cn(
-		"mx-auto my-auto inline aspect-square h-[15%] max-w-[15%] animate-spin fill-green-500 dark:text-gray-600"
+		"mx-auto my-auto inline aspect-square h-[15%] max-w-[15%] animate-spin fill-green-500 dark:text-stone-600"
 	)}
 	viewBox="0 0 100 101"
 	fill="none"
