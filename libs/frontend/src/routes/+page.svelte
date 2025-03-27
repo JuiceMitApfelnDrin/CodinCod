@@ -58,6 +58,6 @@
 
 <style lang="postcss">
 	a {
-		@apply text-teal-800 hover:text-teal-600 underline dark:text-teal-200 hover:dark:text-teal-400;
+		@apply text-teal-800 underline hover:text-teal-600 dark:text-teal-200 hover:dark:text-teal-400;
 	}
 </style>
