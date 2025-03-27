@@ -7,7 +7,7 @@
 </script>
 
 <header
-	class="bg-teal-300 bg-gradient-to-b from-teal-100 text-teal-950 dark:bg-teal-800 dark:from-teal-950 dark:text-teal-100"
+	class="bg-teal-200 bg-gradient-to-b from-teal-100 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 >
 	<nav class="container flex flex-row items-center gap-8 py-6">
 		<a href={frontendUrls.ROOT}>
