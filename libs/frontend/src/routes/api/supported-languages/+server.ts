@@ -1,7 +1,8 @@
-import { backendUrls, httpRequestMethod, type PuzzleLanguage } from "types";
+import { backendUrls, httpRequestMethod } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import type { RequestEvent } from "./$types";
 import { getCookieHeader } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+import { json } from "@sveltejs/kit";
 
 export async function GET({ fetch, request }: RequestEvent) {
 	const response = await fetch(buildBackendUrl(backendUrls.PUZZLE_LANGUAGES), {
@@ -9,5 +10,7 @@ export async function GET({ fetch, request }: RequestEvent) {
 		method: httpRequestMethod.GET
 	});
 
-	return response;
+	const { languages } = await response.json();
+
+	return json({ languages });
 }

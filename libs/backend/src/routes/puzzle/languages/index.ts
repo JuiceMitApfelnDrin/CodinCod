@@ -16,7 +16,7 @@ export default async function puzzleLanguagesRoutes(fastify: FastifyInstance) {
 				return runtime.language;
 			});
 
-			return reply.status(200).send({
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({
 				languages: languages.sort()
 			});
 		} catch (error) {

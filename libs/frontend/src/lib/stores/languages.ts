@@ -1,5 +1,6 @@
 import { browser } from "$app/environment";
 import { apiUrls, buildApiUrl } from "@/config/api";
+import { language } from "@codemirror/language";
 import { writable } from "svelte/store";
 import { httpRequestMethod } from "types";
 
@@ -19,7 +20,6 @@ const createLanguagesStore = () => {
 
 				set(languages);
 			} catch (error) {
-				console.log({ error });
 				console.error("Failed to load languages:", error);
 			}
 		},
