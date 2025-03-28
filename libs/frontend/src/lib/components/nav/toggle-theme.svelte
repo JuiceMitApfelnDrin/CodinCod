@@ -16,7 +16,7 @@
 	pressed={$isDarkTheme}
 	on:click={toggleDarkTheme}
 	class={cn(
-		"bg-background bg-inherit dark:bg-inherit dark:hover:bg-background dark:hover:text-foreground",
+		"bg-background bg-transparent dark:bg-inherit dark:hover:bg-background dark:hover:text-foreground",
 		className
 	)}
 >
