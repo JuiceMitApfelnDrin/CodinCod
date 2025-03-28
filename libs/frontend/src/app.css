@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wdth,wght@50..200,200..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wdth,wght@50..200,200..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Borel&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -115,6 +115,10 @@ a:focus {
 
 * {
 	font-family: "Nunito Sans", sans-serif;
+}
+
+.borel {
+	font-family: "Borel", cursive;
 }
 
 code,

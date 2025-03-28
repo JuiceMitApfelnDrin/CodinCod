@@ -29,21 +29,21 @@
 
 	<LogicalUnit>
 		<P>
-			this will eventually show a bunch of resources, that are free and open-source, that people can
+			This will eventually show a bunch of resources, that are free and open-source, that people can
 			use to learn new different languages at their own pace and time, and look through resources
 			related to code golfing, ...
 		</P>
 		<P>
-			there should be a general language learning path with the basics e.g.: "if-else" ..., as well
-			as language specific paths
+			There should be a general language learning path with the basics e.g.: "if-else" ..., as well
+			as language specific paths.
 		</P>
 		<P>
-			ideally, there are several levels of understanding, one that just says enough to get going
+			Ideally, there are several levels of understanding, one that just says enough to get going
 			with X (explained in a very rudimentary way, so anyone can understand), then another that goes
 			a more in depth on how X works ...
 			<br />
 			So basically 3 levels, that expect a user to have a different understanding of the language, and
-			each tailored to how much the person would like to know and understand
+			each tailored to how much the person would like to know and understand.
 		</P>
 
 		{#if slugs}
@@ -59,3 +59,9 @@
 		{/if}
 	</LogicalUnit>
 </Container>
+
+<style lang="postcss">
+	a {
+		@apply text-teal-800 underline hover:text-teal-600 dark:text-teal-200 hover:dark:text-teal-400;
+	}
+</style>

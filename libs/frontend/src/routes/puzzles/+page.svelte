@@ -47,10 +47,6 @@
 		{#if totalItems <= 0}
 			<P>Couldn't find any puzzles!</P>
 		{:else}
-			<P>
-				Puzzles found {totalItems}:
-			</P>
-
 			<div class="rounded-lg border">
 				<Table.Root>
 					<Table.Header>
@@ -81,8 +77,11 @@
 					</Table.Body>
 				</Table.Root>
 			</div>
+			<p class="w-full text-center text-stone-400 dark:text-stone-600">
+				Puzzles found {totalItems}
+			</p>
 
-			<Pagination {totalPages} currentPage={page}></Pagination>
+			<Pagination {totalPages} currentPage={page} />
 		{/if}
 	</LogicalUnit>
 </Container>
