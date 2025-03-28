@@ -11,13 +11,14 @@
 
 <header class="lg:mx-8">
 	<nav
-		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:mt-6 lg:flex lg:flex-row lg:rounded-full"
+		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 lg:mt-6 lg:flex lg:flex-row lg:rounded-full dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
-		<a href={frontendUrls.ROOT}>
-			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">CodinCod</span>
+		<a href={frontendUrls.ROOT} class="self-center whitespace-nowrap text-4xl font-bold">
+			CodinCod
 		</a>
 
-		<ul class="mt-3 flex flex-1 flex-row gap-4">
+		<ul class="mt-3 flex w-full flex-1 flex-row items-center justify-center gap-4">
+			<NavigationItem href={frontendUrls.ROOT} text="Home" />
 			<NavigationItem href={frontendUrls.MULTIPLAYER} text="Play" />
 			<NavigationItem href={frontendUrls.PUZZLES} text="Puzzles" />
 			<NavigationItem href={frontendUrls.LEARN} text="Learn" />
@@ -35,7 +36,7 @@
 	</nav>
 
 	<div
-		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:hidden"
+		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 lg:hidden dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a href={frontendUrls.ROOT}>
 			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">CodinCod</span>
@@ -48,6 +49,7 @@
 
 			<DropdownMenu.Content>
 				<DropdownMenu.Group>
+					<DropdownMenu.Item href={frontendUrls.ROOT}>Home</DropdownMenu.Item>
 					<DropdownMenu.Item href={frontendUrls.MULTIPLAYER}>Play</DropdownMenu.Item>
 					<DropdownMenu.Item href={frontendUrls.PUZZLES}>Puzzles</DropdownMenu.Item>
 					<DropdownMenu.Item href={frontendUrls.LEARN}>Learn</DropdownMenu.Item>
