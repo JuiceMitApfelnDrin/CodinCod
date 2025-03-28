@@ -11,7 +11,7 @@
 
 <header class="lg:mx-8">
 	<nav
-		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 lg:mt-6 lg:flex lg:flex-row lg:rounded-full dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
+		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:mt-6 lg:flex lg:flex-row lg:rounded-full"
 	>
 		<a href={frontendUrls.ROOT}>
 			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">CodinCod</span>
@@ -35,7 +35,7 @@
 	</nav>
 
 	<div
-		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 lg:hidden dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
+		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:hidden"
 	>
 		<a href={frontendUrls.ROOT}>
 			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">CodinCod</span>
