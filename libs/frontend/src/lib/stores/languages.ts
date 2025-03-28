@@ -1,6 +1,7 @@
 import { browser } from "$app/environment";
-import { fetchSupportedLanguages } from "@/utils/fetch-supported-languages";
+import { apiUrls, buildApiUrl } from "@/config/api";
 import { writable } from "svelte/store";
+import { httpRequestMethod } from "types";
 
 const createLanguagesStore = () => {
 	const { set, subscribe } = writable<string[] | null>(null);
@@ -10,10 +11,15 @@ const createLanguagesStore = () => {
 			if (!browser) return;
 
 			try {
-				const languages = await fetchSupportedLanguages();
+				const response = await fetch(buildApiUrl(apiUrls.SUPPORTED_LANGUAGES), {
+					method: httpRequestMethod.GET
+				});
+
+				const { languages } = await response.json();
 
 				set(languages);
 			} catch (error) {
+				console.log({ error });
 				console.error("Failed to load languages:", error);
 			}
 		},

@@ -27,6 +27,8 @@
 			language = languages[0];
 		}
 	}
+
+	$: console.log({ languages });
 </script>
 
 <Select.Root

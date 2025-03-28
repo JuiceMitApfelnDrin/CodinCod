@@ -34,7 +34,7 @@
 				<DropdownMenu.Item href={profileLink}>Profile</DropdownMenu.Item>
 				<DropdownMenu.Item href={frontendUrls.SETTINGS_PROFILE}>Settings</DropdownMenu.Item>
 
-				<DropdownMenu.Separator></DropdownMenu.Separator>
+				<DropdownMenu.Separator />
 
 				<DropdownMenu.Item href={frontendUrls.LOGOUT}>Log out</DropdownMenu.Item>
 			</DropdownMenu.Group>

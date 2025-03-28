@@ -4,6 +4,7 @@
 	import P from "@/components/typography/p.svelte";
 	import { buildFrontendUrl, frontendUrls } from "types";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
+	import HighlightText from "@/components/ui/highlight-text/highlight-text.svelte";
 
 	export let data;
 
@@ -24,9 +25,7 @@
 </svelte:head>
 
 <Container>
-	<H1
-		>Let's <em><span class="text-teal-700 dark:text-teal-200">learn</span></em> something today!</H1
-	>
+	<H1>Let's <HighlightText text="learn" /> something today!</H1>
 
 	<LogicalUnit>
 		<P>
