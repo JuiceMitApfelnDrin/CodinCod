@@ -42,12 +42,7 @@
 	let isSubmittingCode = false;
 	let testResults: Record<number, CodeExecutionResponse> = {};
 
-	async function runSingularTestItem(
-		itemInList: number,
-		testInput: string,
-		testOutput: string,
-		isMultipleTests: boolean = false
-	) {
+	async function executeCode(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
 			body: JSON.stringify({
 				code,
@@ -64,13 +59,15 @@
 			...testResults,
 			[itemInList]: testResult
 		};
+	}
 
-		if (isMultipleTests) {
-			return;
-		}
+	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
+		await executeCode(itemInList, testInput, testOutput);
+
+		const testResult = testResults[itemInList];
 
 		if (isCodeExecutionSuccessResponse(testResult)) {
-			const successPercentage = testResult.puzzleResultInformation.successRate * 100;
+			const successPercentage = testResult.puzzleResultInformation.successRate;
 			showToastWhenTestRan(successPercentage);
 		} else {
 			showToastWhenTestRan(0);
@@ -83,18 +80,23 @@
 	}
 
 	function showToastWhenTestRan(successPercentage: number, isMultipleTests: boolean = false) {
+		const formattedSuccessPercentage = new Intl.NumberFormat("en", {
+			style: "percent",
+			roundingMode: "halfCeil"
+		}).format(successPercentage);
+
 		if (isMultipleTests) {
-			if (successPercentage === 100) {
+			if (successPercentage === 1) {
 				toast.success("All tests passed!");
-			} else if (successPercentage >= 35) {
-				toast.warning(`${successPercentage}% of the tests passed`);
+			} else if (successPercentage >= 0.35) {
+				toast.warning(`${formattedSuccessPercentage} of the tests passed`);
 			} else if (successPercentage >= 0) {
-				toast.error(`${successPercentage}% of the tests passed`);
+				toast.error(`${formattedSuccessPercentage} of the tests passed`);
 			} else {
 				toast.error("Invalid success percentage");
 			}
 		} else {
-			if (successPercentage === 100) {
+			if (successPercentage === 1) {
 				toast.success("Test passed!");
 			} else {
 				toast.error("Test failed!");
@@ -109,7 +111,7 @@
 
 			const convertToPromises = puzzle.validators.map(
 				(validator: ValidatorEntity, index: number) => {
-					runSingularTestItem(index, validator.input, validator.output, isMultipleTests);
+					executeCode(index, validator.input, validator.output);
 				}
 			);
 
@@ -126,7 +128,7 @@
 				return sum;
 			}, 0);
 
-			const successPercentage = calculatePercentage(0, totalTests, combinedSuccessRate) * 100;
+			const successPercentage = calculatePercentage(0, totalTests, combinedSuccessRate);
 			showToastWhenTestRan(successPercentage, isMultipleTests);
 		}
 	}
