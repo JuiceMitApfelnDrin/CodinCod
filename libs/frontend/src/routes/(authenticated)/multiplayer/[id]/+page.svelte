@@ -313,11 +313,10 @@
 						{#each game.players as player}
 							<li>
 								{#if isUserDto(player)}
+									{@const playerSubmission = findPlayerSubmission(player._id)}
 									<UserHoverCard username={player.username} />{` - using ${
-										findPlayerSubmission(player._id)?.language ??
-										playerLanguages[player.username] ??
-										"???"
-									} - ${findPlayerSubmission(player._id)?.result ?? "still busy solving the puzzle"}!`}
+										playerSubmission?.language ?? playerLanguages[player.username] ?? "???"
+									} - ${playerSubmission?.result.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
 									{player}
 								{/if}

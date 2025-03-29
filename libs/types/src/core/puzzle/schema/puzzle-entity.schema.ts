@@ -36,7 +36,7 @@ export const puzzleEntitySchema = z.object({
 	puzzleMetrics: objectIdSchema.optional(),
 	// TODO: later not now !
 	tags: z.array(z.string()).optional(),
-	comments: z.array(commentDtoSchema).default([])
+	comments: z.array(commentDtoSchema.or(objectIdSchema)).default([])
 });
 
 export type PuzzleEntity = z.infer<typeof puzzleEntitySchema>;

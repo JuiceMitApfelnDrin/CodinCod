@@ -2,4 +2,4 @@
 	export let text: string;
 </script>
 
-<em><span class="borel text-teal-700 dark:text-teal-200">{text}</span></em>
+<em><span class="text-teal-700 dark:text-teal-200">{text}</span></em>
