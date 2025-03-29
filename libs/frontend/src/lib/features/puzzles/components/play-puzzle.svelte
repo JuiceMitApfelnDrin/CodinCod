@@ -42,12 +42,7 @@
 	let isSubmittingCode = false;
 	let testResults: Record<number, CodeExecutionResponse> = {};
 
-	async function runSingularTestItem(
-		itemInList: number,
-		testInput: string,
-		testOutput: string,
-		isMultipleTests: boolean = false
-	) {
+	async function executeCode(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
 			body: JSON.stringify({
 				code,
@@ -64,10 +59,12 @@
 			...testResults,
 			[itemInList]: testResult
 		};
+	}
 
-		if (isMultipleTests) {
-			return;
-		}
+	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
+		await executeCode(itemInList, testInput, testOutput);
+
+		const testResult = testResults[itemInList];
 
 		if (isCodeExecutionSuccessResponse(testResult)) {
 			const successPercentage = testResult.puzzleResultInformation.successRate;
@@ -114,7 +111,7 @@
 
 			const convertToPromises = puzzle.validators.map(
 				(validator: ValidatorEntity, index: number) => {
-					runSingularTestItem(index, validator.input, validator.output, isMultipleTests);
+					executeCode(index, validator.input, validator.output);
 				}
 			);
 
