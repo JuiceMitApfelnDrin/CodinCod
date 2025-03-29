@@ -71,22 +71,26 @@
 						<Table.Cell><UserHoverCard username={user.username} /></Table.Cell>
 						<Table.Cell>{language}</Table.Cell>
 						<Table.Cell>
-							{#if result.successRate === 1}
-								<FishIcon
-									aria-hidden="true"
-									class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
-								/>
-							{:else}
-								<FishOffIcon
-									aria-hidden="true"
-									class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
-								/>
-							{/if}{Math.round(result.successRate * 100)}%
+							<span class="flex items-center">
+								{#if result.successRate === 1}
+									<FishIcon
+										aria-hidden="true"
+										class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
+									/>
+								{:else}
+									<FishOffIcon
+										aria-hidden="true"
+										class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
+									/>
+								{/if}{Math.round(result.successRate * 100)}%
+							</span>
 						</Table.Cell>
 						<Table.Cell>
-							<!-- todo: make this more readable for screen readers somehow -->
-							<Hourglass aria-hidden="true" class="icon default mr-1" />
-							{formatDuration(createdAt)}
+							<span class="flex items-center">
+								<!-- todo: make this more readable for screen readers somehow -->
+								<Hourglass aria-hidden="true" class="icon default mr-1" />
+								{formatDuration(createdAt)}
+							</span>
 						</Table.Cell>
 						<Table.Cell>
 							<Button
