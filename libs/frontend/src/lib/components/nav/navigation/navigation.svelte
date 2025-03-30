@@ -7,36 +7,55 @@
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import { authenticatedUserInfo } from "@/stores";
 	import { Menu, Moon, Sun } from "lucide-svelte";
+	import { testIds } from "@/config/test-ids";
 </script>
 
 <header class="lg:mx-8">
 	<nav
-		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:mt-6 lg:flex lg:flex-row lg:rounded-2xl"
+		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 lg:mt-6 lg:flex lg:flex-row lg:rounded-2xl dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a href={frontendUrls.ROOT} class="self-center whitespace-nowrap text-4xl font-bold">
 			CodinCod
 		</a>
 
 		<ul class="mt-3 flex w-full flex-1 flex-row items-center justify-center gap-4">
-			<NavigationItem href={frontendUrls.ROOT} text="Home" />
-			<NavigationItem href={frontendUrls.MULTIPLAYER} text="Play" />
-			<NavigationItem href={frontendUrls.PUZZLES} text="Puzzles" />
-			<NavigationItem href={frontendUrls.LEARN} text="Learn" />
-
-			{#if !$isAuthenticated}
-				<NavigationItem class="ml-auto" text="Login" href={frontendUrls.LOGIN}></NavigationItem>
-			{/if}
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_HOME}
+				href={frontendUrls.ROOT}
+				text="Home"
+			/>
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_PLAY}
+				href={frontendUrls.MULTIPLAYER}
+				text="Play"
+			/>
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_PUZZLES}
+				href={frontendUrls.PUZZLES}
+				text="Puzzles"
+			/>
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_LEARN}
+				href={frontendUrls.LEARN}
+				text="Learn"
+			/>
 		</ul>
 
 		{#if $isAuthenticated}
-			<UserDropdown></UserDropdown>
+			<UserDropdown />
+		{:else}
+			<a
+				data-testid={testIds.NAVIGATION_ANCHOR_LOGIN}
+				class="hover:text-foreground dark:hover:text-foreground px-2 pb-2 pt-5 text-sm font-semibold uppercase text-teal-900 underline underline-offset-8 hover:underline hover:underline-offset-2 dark:text-teal-100"
+				href={frontendUrls.LOGIN}>Login</a
+			>
 		{/if}
 
-		<ToggleTheme class="mt-2" />
+		<ToggleTheme data-testid={testIds.NAVIGATION_ANCHOR_LEARN} class="mt-2" />
 	</nav>
 
 	<div
-		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:hidden"
+		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 lg:hidden dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a href={frontendUrls.ROOT}>
 			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">CodinCod</span>

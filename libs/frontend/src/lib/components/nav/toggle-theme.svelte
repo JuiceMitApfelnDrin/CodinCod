@@ -4,8 +4,9 @@
 	import Sun from "lucide-svelte/icons/sun";
 	import Toggle from "../ui/toggle/toggle.svelte";
 	import { cn } from "@/utils/cn";
+	import { Toggle as TogglePrimitive } from "bits-ui";
 
-	type $$Props = { class?: string };
+	type $$Props = TogglePrimitive.Props & { class?: string };
 	let className: $$Props["class"] = undefined;
 
 	export { className as class };
@@ -16,7 +17,7 @@
 	pressed={$isDarkTheme}
 	on:click={toggleDarkTheme}
 	class={cn(
-		"bg-background bg-transparent dark:bg-inherit dark:hover:bg-background dark:hover:text-foreground",
+		"bg-background dark:hover:bg-background dark:hover:text-foreground bg-transparent dark:bg-inherit",
 		className
 	)}
 >
