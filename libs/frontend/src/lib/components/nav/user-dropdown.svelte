@@ -4,6 +4,7 @@
 	import { buildFrontendUrl, frontendUrls, type Link } from "types";
 	import { authenticatedUserInfo } from "../../stores";
 	import Button from "../ui/button/button.svelte";
+	import { testIds } from "@/config/test-ids";
 </script>
 
 {#if $authenticatedUserInfo?.isAuthenticated}
@@ -11,6 +12,7 @@
 		<DropdownMenu.Trigger asChild let:builder>
 			<Avatar.Root asChild>
 				<Button
+					data-testid={testIds.NAVIGATION_MENU_BUTTON_OPEN}
 					size="icon"
 					class="rounded-full border-2 border-black dark:border-white"
 					variant="outline"
@@ -31,12 +33,24 @@
 				{@const profileLink = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
 					username: $authenticatedUserInfo.username
 				})}
-				<DropdownMenu.Item href={profileLink}>Profile</DropdownMenu.Item>
-				<DropdownMenu.Item href={frontendUrls.SETTINGS_PROFILE}>Settings</DropdownMenu.Item>
+				<DropdownMenu.Item data-testid={testIds.NAVIGATION_MENU_ANCHOR_PROFILE} href={profileLink}>
+					Profile
+				</DropdownMenu.Item>
+				<DropdownMenu.Item
+					data-testid={testIds.NAVIGATION_MENU_ANCHOR_SETTINGS}
+					href={frontendUrls.SETTINGS_PROFILE}
+				>
+					Settings
+				</DropdownMenu.Item>
 
 				<DropdownMenu.Separator />
 
-				<DropdownMenu.Item href={frontendUrls.LOGOUT}>Log out</DropdownMenu.Item>
+				<DropdownMenu.Item
+					data-testid={testIds.NAVIGATION_MENU_ANCHOR_LOGOUT}
+					href={frontendUrls.LOGOUT}
+				>
+					Log out
+				</DropdownMenu.Item>
 			</DropdownMenu.Group>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>

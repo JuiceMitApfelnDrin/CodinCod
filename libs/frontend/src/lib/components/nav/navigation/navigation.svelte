@@ -7,6 +7,7 @@
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import { authenticatedUserInfo } from "@/stores";
 	import { Menu, Moon, Sun } from "lucide-svelte";
+	import { testIds } from "@/config/test-ids";
 </script>
 
 <header class="lg:mx-8">
@@ -18,21 +19,39 @@
 		</a>
 
 		<ul class="mt-3 flex w-full flex-1 flex-row items-center justify-center gap-4">
-			<NavigationItem href={frontendUrls.ROOT} text="Home" />
-			<NavigationItem href={frontendUrls.MULTIPLAYER} text="Play" />
-			<NavigationItem href={frontendUrls.PUZZLES} text="Puzzles" />
-			<NavigationItem href={frontendUrls.LEARN} text="Learn" />
-
-			{#if !$isAuthenticated}
-				<NavigationItem class="ml-auto" text="Login" href={frontendUrls.LOGIN}></NavigationItem>
-			{/if}
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_HOME}
+				href={frontendUrls.ROOT}
+				text="Home"
+			/>
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_PLAY}
+				href={frontendUrls.MULTIPLAYER}
+				text="Play"
+			/>
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_PUZZLES}
+				href={frontendUrls.PUZZLES}
+				text="Puzzles"
+			/>
+			<NavigationItem
+				data-testid={testIds.NAVIGATION_ANCHOR_LEARN}
+				href={frontendUrls.LEARN}
+				text="Learn"
+			/>
 		</ul>
 
 		{#if $isAuthenticated}
-			<UserDropdown></UserDropdown>
+			<UserDropdown />
+		{:else}
+			<a
+				data-testid={testIds.NAVIGATION_ANCHOR_LOGIN}
+				class="px-2 pb-2 pt-5 text-sm font-semibold uppercase text-teal-900 underline underline-offset-8 hover:text-foreground hover:underline hover:underline-offset-2 dark:text-teal-100 dark:hover:text-foreground"
+				href={frontendUrls.LOGIN}>Login</a
+			>
 		{/if}
 
-		<ToggleTheme class="mt-2" />
+		<ToggleTheme data-testid={testIds.NAVIGATION_ANCHOR_LEARN} class="mt-2" />
 	</nav>
 
 	<div
