@@ -27,7 +27,7 @@
 			<NavigationItem
 				data-testid={testIds.NAVIGATION_ANCHOR_PLAY}
 				href={frontendUrls.MULTIPLAYER}
-				text="Play"
+				text="Multiplayer"
 			/>
 			<NavigationItem
 				data-testid={testIds.NAVIGATION_ANCHOR_PUZZLES}
@@ -69,7 +69,7 @@
 			<DropdownMenu.Content>
 				<DropdownMenu.Group>
 					<DropdownMenu.Item href={frontendUrls.ROOT}>Home</DropdownMenu.Item>
-					<DropdownMenu.Item href={frontendUrls.MULTIPLAYER}>Play</DropdownMenu.Item>
+					<DropdownMenu.Item href={frontendUrls.MULTIPLAYER}>Multiplayer</DropdownMenu.Item>
 					<DropdownMenu.Item href={frontendUrls.PUZZLES}>Puzzles</DropdownMenu.Item>
 					<DropdownMenu.Item href={frontendUrls.LEARN}>Learn</DropdownMenu.Item>
 
