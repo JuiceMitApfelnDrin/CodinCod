@@ -41,8 +41,10 @@ List things with dashes or numbers.
 
 Use checkboxes to track tasks.
 
+```markdown
 - [x] Done task
 - [ ] Not done task
+```
 
 ## Links
 
