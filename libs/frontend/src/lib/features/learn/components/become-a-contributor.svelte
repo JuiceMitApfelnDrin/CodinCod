@@ -8,11 +8,11 @@
 <section>
 	<H2>Join the movement</H2>
 
-	<p>
+	<P>
 		If you see something that can be improved,
 		<Button variant="secondary" href={`${githubRepo}/issues`}>open an issue</Button> or <Button
 			href={githubRepo}
 			variant="secondary">contribute on github</Button
 		>.
-	</p>
+	</P>
 </section>
