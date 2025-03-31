@@ -9,9 +9,9 @@ import { z } from "zod";
  *
  * - **Purpose:**
  *   - **Track Engagement:** Measures how many users have interacted with the puzzle and how many have successfully solved it.
- *   - **Calculate Success Rate:** Enables the calculation of the success rate, which is the percentage of successful attempts relative to total attempts. This rate helps in determining the puzzle’s difficulty level.
- *   - **Dynamic Difficulty Adjustment:** Provides data necessary for dynamically adjusting the puzzle’s difficulty based on user performance metrics.
- *   - **Performance Analysis:** Allows for analyzing the puzzle’s performance and user engagement, helping in making data-driven decisions for maintaining and improving the puzzle.
+ *   - **Calculate Success Rate:** Enables the calculation of the success rate, which is the percentage of successful attempts relative to total attempts. This rate helps in determining the puzzle's difficulty level.
+ *   - **Dynamic Difficulty Adjustment:** Provides data necessary for dynamically adjusting the puzzle's difficulty based on user performance metrics.
+ *   - **Performance Analysis:** Allows for analyzing the puzzle's performance and user engagement, helping in making data-driven decisions for maintaining and improving the puzzle.
  *
  * @example
  * // Example of metrics object
@@ -23,7 +23,7 @@ import { z } from "zod";
 export const puzzleMetricsSchema = z.object({
 	totalAttempts: z.number().default(0),
 	successfulAttempts: z.number().default(0),
-	likes: z.number().default(0),
-	dislikes: z.number().default(0)
+	upvote: z.number().default(0),
+	downvote: z.number().default(0)
 });
 export type PuzzleMetrics = z.infer<typeof puzzleMetricsSchema>;

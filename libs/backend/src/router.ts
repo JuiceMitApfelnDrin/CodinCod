@@ -16,6 +16,11 @@ import submissionGameRoutes from "./routes/submission/game/index.js";
 import puzzleLanguagesRoutes from "./routes/puzzle/languages/index.js";
 import submissionByIdRoutes from "./routes/submission/[id]/index.js";
 import preferencesRoutes from "./routes/account/preferences/index.js";
+import puzzleByIdSolutionRoutes from "./routes/puzzle/[id]/solution/index.js";
+import puzzleByIdCommentRoutes from "./routes/puzzle/[id]/comment/index.js";
+import commentByIdRoutes from "./routes/comment/[id]/index.js";
+import commentByIdVoteRoutes from "./routes/comment/[id]/vote/index.js";
+import commentByIdCommentRoutes from "./routes/comment/[id]/comment/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
@@ -35,5 +40,10 @@ export default async function router(fastify: FastifyInstance) {
 	fastify.register(submissionGameRoutes, { prefix: backendUrls.SUBMISSION_GAME });
 	fastify.register(puzzleLanguagesRoutes, { prefix: backendUrls.PUZZLE_LANGUAGES });
 	fastify.register(puzzleByIdRoutes, { prefix: backendUrls.PUZZLE_DETAIL });
+	fastify.register(puzzleByIdCommentRoutes, { prefix: backendUrls.PUZZLE_DETAIL_COMMENT });
+	fastify.register(puzzleByIdSolutionRoutes, { prefix: backendUrls.PUZZLE_DETAIL_SOLUTION });
+	fastify.register(commentByIdRoutes, { prefix: backendUrls.COMMENT_BY_ID });
+	fastify.register(commentByIdCommentRoutes, { prefix: backendUrls.COMMENT_BY_ID_COMMENT });
+	fastify.register(commentByIdVoteRoutes, { prefix: backendUrls.COMMENT_BY_ID_VOTE });
 	fastify.register(preferencesRoutes, { prefix: backendUrls.ACCOUNT_PREFERENCES });
 }

@@ -9,7 +9,7 @@
 	import Message from "./chat-message.svelte";
 
 	export let chatMessages: ChatMessage[] = [];
-	export let sendMessage: (message: string) => {};
+	export let sendMessage: (message: string) => void;
 
 	function executeSend() {
 		sendMessage(composedMessage);

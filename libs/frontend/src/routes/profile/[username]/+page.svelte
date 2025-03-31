@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { page } from "$app/stores";
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
-	import ActivityGroup from "@/features/profile/components/activity-feed/activity-group.svelte";
-	import CalendarHeatmap from "@/features/profile/components/calendar-heatmap.svelte";
+	import ActivityGroup from "@/features/profile/components/activity-group.svelte";
+	import ActivityHeatmap from "@/features/profile/components/activity-heatmap.svelte";
 	import dayjs from "dayjs";
 	import { isUserDto, type Activity, type GroupedActivitiesByDate } from "types";
 
@@ -29,9 +30,18 @@
 	const activitiesGroupedByCreatedAtDate = groupByCreatedAtDate(originalActivities);
 </script>
 
+<svelte:head>
+	<title>Profile of {$page.params.username} | CodinCod</title>
+	<meta
+		name="description"
+		content={`Track ${$page.params.username}'s puzzle wins, open-source contributions, and ranking. Challenge them to a duel or collaborate!`}
+	/>
+	<meta name="author" content="CodinCod contributors" />
+</svelte:head>
+
 <Container class="gap-8">
 	{#if user && isUserDto(user)}
-		<Card.Root class="w-full">
+		<Card.Root class="w-full border border-stone-300">
 			<Card.Header>
 				<H1 class="flex w-full justify-center">{user.username}</H1>
 			</Card.Header>
@@ -56,7 +66,7 @@
 		</Card.Root>
 	{/if}
 
-	<CalendarHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
+	<ActivityHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
 
 	{#each Object.entries(activitiesGroupedByCreatedAtDate).sort((a, b) => {
 		const aDate = a[0];

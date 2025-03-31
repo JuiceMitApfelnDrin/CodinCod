@@ -7,8 +7,9 @@
 		type PuzzleLanguage,
 		type CodeSubmissionParams,
 		type ValidatorEntity,
-		type PistonExecutionResponse,
-		isPistonExecutionResponseSuccess
+		type CodeExecutionResponse,
+		isCodeExecutionSuccessResponse,
+		PuzzleResultEnum
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -26,18 +27,22 @@
 	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import { languages } from "@/stores/languages";
+	import { toast } from "svelte-sonner";
+	import { calculatePercentage } from "@/utils/calculate-percentage";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
+	export let onPlayerChangeLanguage: (language: string) => void = () => {};
 	export let endDate: Date | undefined;
 
 	let code: string = "";
 	let language: PuzzleLanguage = "";
 	let isExecutingTests = false;
 	let isSubmittingCode = false;
-	const testResults: Record<number, PistonExecutionResponse> = {};
+	let testResults: Record<number, CodeExecutionResponse> = {};
 
-	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
+	async function executeCode(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
 			body: JSON.stringify({
 				code,
@@ -47,16 +52,26 @@
 			}),
 			method: httpRequestMethod.POST
 		});
-		const testResult: PistonExecutionResponse = await response.json();
 
-		const validator = puzzle.validators?.[itemInList];
+		const testResult: CodeExecutionResponse = await response.json();
 
-		if (validator) {
-			testResults[itemInList] = testResult;
+		testResults = {
+			...testResults,
+			[itemInList]: testResult
+		};
+	}
+
+	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
+		await executeCode(itemInList, testInput, testOutput);
+
+		const testResult = testResults[itemInList];
+
+		if (isCodeExecutionSuccessResponse(testResult)) {
+			const successPercentage = testResult.puzzleResultInformation.successRate;
+			showToastWhenTestRan(successPercentage);
+		} else {
+			showToastWhenTestRan(0);
 		}
-
-		// necessary since svelte has a weird way to do reactivity, you have to set the object that changed again, this ensures that
-		puzzle = puzzle;
 	}
 
 	async function patience() {
@@ -64,19 +79,57 @@
 		return new Promise((resolve) => setTimeout(resolve, 500));
 	}
 
+	function showToastWhenTestRan(successPercentage: number, isMultipleTests: boolean = false) {
+		const formattedSuccessPercentage = new Intl.NumberFormat("en", {
+			style: "percent",
+			roundingMode: "halfCeil"
+		}).format(successPercentage);
+
+		if (isMultipleTests) {
+			if (successPercentage === 1) {
+				toast.success("All tests passed!");
+			} else if (successPercentage >= 0.35) {
+				toast.warning(`${formattedSuccessPercentage} of the tests passed`);
+			} else if (successPercentage >= 0) {
+				toast.error(`${formattedSuccessPercentage} of the tests passed`);
+			} else {
+				toast.error("Invalid success percentage");
+			}
+		} else {
+			if (successPercentage === 1) {
+				toast.success("Test passed!");
+			} else {
+				toast.error("Test failed!");
+			}
+		}
+	}
+
 	async function runAllTests() {
 		if (puzzle.validators) {
+			const isMultipleTests = true;
 			isExecutingTests = true;
 
 			const convertToPromises = puzzle.validators.map(
 				(validator: ValidatorEntity, index: number) => {
-					runSingularTestItem(index, validator.input, validator.output);
+					executeCode(index, validator.input, validator.output);
 				}
 			);
 
 			await Promise.all([...convertToPromises, patience()]).then(() => {
 				isExecutingTests = false;
 			});
+
+			const totalTests = Object.keys(testResults).length;
+			const combinedSuccessRate = Object.values(testResults).reduce((sum, res) => {
+				if (isCodeExecutionSuccessResponse(res)) {
+					return sum + res.puzzleResultInformation.successRate;
+				}
+
+				return sum;
+			}, 0);
+
+			const successPercentage = calculatePercentage(0, totalTests, combinedSuccessRate);
+			showToastWhenTestRan(successPercentage, isMultipleTests);
 		}
 	}
 
@@ -123,8 +176,8 @@
 		openTests = true;
 	}
 
-	function setLanguage(newLanguage: PuzzleLanguage) {
-		language = newLanguage;
+	$: {
+		onPlayerChangeLanguage(language);
 	}
 </script>
 
@@ -148,7 +201,7 @@
 
 <LogicalUnit class="space-y-4">
 	<LogicalUnit class="flex flex-col justify-between gap-2 md:flex-row">
-		<LanguageSelect {language} {setLanguage} />
+		<LanguageSelect bind:language languages={$languages ?? []} />
 
 		<CountdownTimer {endDate} />
 	</LogicalUnit>
@@ -183,7 +236,21 @@
 
 {#if puzzle.validators}
 	<LogicalUnit>
-		<TestProgressBar {openTestsAccordion} validators={puzzle.validators} class="my-7" />
+		<TestProgressBar
+			{openTestsAccordion}
+			puzzleResults={puzzle.validators.map((_, index) => {
+				const testResult = testResults[index];
+				if (testResult === undefined) {
+					return undefined;
+				}
+				if (!isCodeExecutionSuccessResponse(testResult)) {
+					return PuzzleResultEnum.ERROR;
+				}
+
+				return testResult.puzzleResultInformation.result;
+			})}
+			class="my-7"
+		/>
 
 		<Accordion bind:open={openTests} id="tests">
 			<h2 slot="title">Tests</h2>
@@ -193,8 +260,8 @@
 					<li class="relative">
 						<div
 							class={cn(
-								isPistonExecutionResponseSuccess(testResults[index]) &&
-									calculatePuzzleResultColor(testResults[index]?.run.result),
+								isCodeExecutionSuccessResponse(testResults[index]) &&
+									calculatePuzzleResultColor(testResults[index].puzzleResultInformation.result),
 								"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
 							)}
 							id={`validator-${index}`}
@@ -209,16 +276,16 @@
 								</LogicalUnit>
 							</div>
 
-							{#if isPistonExecutionResponseSuccess(testResults[index])}
+							{#if isCodeExecutionSuccessResponse(testResults[index])}
 								<div class="flex flex-col gap-4 lg:gap-6">
 									<h3 class="text-xl font-semibold">Actual output</h3>
 
 									<LogicalUnit class="w-full space-y-2">
-										<OutputBox title="Stdout:">{testResults[index]?.run.stdout}</OutputBox>
+										<OutputBox title="Stdout:">{testResults[index].run.stdout}</OutputBox>
 									</LogicalUnit>
-									{#if testResults[index]?.run.stderr}
+									{#if testResults[index].run.stderr}
 										<LogicalUnit class="w-full space-y-2">
-											<OutputBox title="Stderr:">{testResults[index]?.run.stderr}</OutputBox>
+											<OutputBox title="Stderr:">{testResults[index].run.stderr}</OutputBox>
 										</LogicalUnit>
 									{/if}
 								</div>
@@ -244,10 +311,10 @@
 							</Button>
 						</div>
 
-						{#if isPistonExecutionResponseSuccess(testResults[index])}
+						{#if isCodeExecutionSuccessResponse(testResults[index])}
 							<ValidatorStatus
 								class="absolute right-0 top-0 mr-4 mt-4 p-0"
-								testResult={testResults[index]}
+								puzzleResult={testResults[index].puzzleResultInformation.result}
 							/>
 						{/if}
 					</li>

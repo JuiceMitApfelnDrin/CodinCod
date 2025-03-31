@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wdth,wght@50..200,200..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -101,10 +103,25 @@ a:focus {
 */
 
 .icon {
-	@apply inline-flex items-center justify-center rounded-full
-           bg-stone-700 p-1 text-lg  text-white dark:bg-stone-200 dark:text-stone-700;
+	@apply inline-flex items-center justify-center rounded-full p-1 text-lg;
+}
+.icon.default {
+	@apply bg-stone-700  text-white dark:bg-stone-200 dark:text-stone-700;
 }
 
 .link {
-	@apply hover:text-cyan-700 hover:underline hover:dark:text-cyan-300;
+	@apply hover:text-teal-700 hover:underline hover:dark:text-teal-300;
+}
+
+* {
+	font-family: "Nunito Sans", sans-serif;
+}
+
+code,
+pre,
+.monospaced,
+.font-mono,
+.codemirror-wrapper,
+.codemirror-wrapper * {
+	font-family: "Inconsolata", monospace;
 }

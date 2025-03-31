@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
-	import Error from "@/components/error/error.svelte";
+	import DisplayError from "@/components/error/display-error.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
@@ -9,17 +10,20 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
-	import { onMount } from "svelte";
-	import { frontendUrls, GameEventEnum, isAuthor, webSocketUrls } from "types";
+	import {
+		frontendUrls,
+		isAuthor,
+		isWaitingRoomResponse,
+		sendMessageOfType,
+		waitingRoomEventEnum,
+		webSocketUrls,
+		type RoomOverviewResponse,
+		type RoomStateResponse,
+		type WaitingRoomRequest
+	} from "types";
 
-	let game:
-		| {
-				users: { username: string; userId: string; joinedAt: Date }[];
-				creator: { username: string; userId: string; joinedAt: Date };
-		  }
-		| undefined;
-	let games: { id: string; amountOfPlayersJoined: number }[];
-	let gameId: string | undefined;
+	let room: RoomStateResponse | undefined;
+	let rooms: RoomOverviewResponse[] = [];
 	let errorMessage: string | undefined;
 
 	const queryParamKeys = {
@@ -27,8 +31,8 @@
 	};
 
 	function updateRoomIdInUrl() {
-		if (gameId) {
-			query.set(queryParamKeys.ROOM_ID, gameId);
+		if (room?.roomId) {
+			query.set(queryParamKeys.ROOM_ID, room.roomId);
 
 			goto(`?${query.toString()}`);
 		} else {
@@ -39,94 +43,114 @@
 	}
 
 	function checkForRoomId() {
-		if (query.has(queryParamKeys.ROOM_ID)) {
-			socket.send(
-				JSON.stringify({
-					event: GameEventEnum.JOIN_GAME,
-					gameId: query.get(queryParamKeys.ROOM_ID),
-					userId: $authenticatedUserInfo?.userId,
-					username: $authenticatedUserInfo?.username
-				})
-			);
+		const roomId = query.get(queryParamKeys.ROOM_ID);
+
+		if (!roomId) {
+			return;
 		}
+
+		sendWaitingRoomMessage(socket, {
+			event: waitingRoomEventEnum.JOIN_ROOM,
+			roomId
+		});
+
+		updateRoomIdInUrl();
 	}
 
 	function connectWithWebsocket() {
+		if (socket) {
+			socket.close();
+		}
+
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.WAITING_ROOM);
 		socket = new WebSocket(webSocketUrl);
 
-		socket.addEventListener("open", (message) => {
+		socket.onopen = (message) => {
 			console.info("WebSocket connection opened");
 
 			checkForRoomId();
-		});
+		};
 
-		socket.addEventListener("close", (message) => {
-			console.info("WebSocket connection opened");
+		socket.onerror = (e) => {
+			console.error("Closing websocket", e);
+		};
+
+		socket.onclose = (message) => {
+			console.info("WebSocket connection closed:", message.code, message.reason);
 
 			setTimeout(function () {
 				connectWithWebsocket();
 			}, 1000);
-		});
+		};
 
-		socket.addEventListener("message", async (message) => {
+		socket.onmessage = (message) => {
 			const receivedInformation = JSON.parse(message.data);
+
+			if (!isWaitingRoomResponse(receivedInformation)) {
+				throw new Error("unknown / unhandled waiting room response");
+			}
 
 			const { event } = receivedInformation;
 
 			switch (event) {
-				case GameEventEnum.HOST_GAME:
+				case waitingRoomEventEnum.OVERVIEW_OF_ROOMS:
 					{
-						gameId = receivedInformation.message;
-
-						updateRoomIdInUrl();
+						rooms = receivedInformation.rooms;
 					}
 					break;
-				case GameEventEnum.OVERVIEW_OF_GAMES:
+				case waitingRoomEventEnum.OVERVIEW_ROOM:
 					{
-						games = receivedInformation.data;
+						room = receivedInformation.room;
 					}
 					break;
-				case GameEventEnum.OVERVIEW_GAME:
+				case waitingRoomEventEnum.START_GAME:
 					{
-						game = receivedInformation.data;
+						goto(receivedInformation.gameUrl);
 					}
 					break;
-				case GameEventEnum.GO_TO_GAME:
-					{
-						await goto(receivedInformation.message);
-					}
-					break;
-				case GameEventEnum.NOT_ENOUGH_GAMES:
+				case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
 					{
 						errorMessage = receivedInformation.message;
 					}
 					break;
-				case GameEventEnum.NONEXISTENT_GAME:
+				case waitingRoomEventEnum.ERROR:
 					{
+						console.error(receivedInformation.message);
 					}
 					break;
 				default:
-					console.warn("unknown / unhandled event: ", { event });
-
+					receivedInformation satisfies never;
 					break;
 			}
-		});
+		};
 	}
 
 	let socket: WebSocket;
-	onMount(() => {
+	if (browser) {
 		connectWithWebsocket();
-	});
+	}
 
-	$: if (gameId) updateRoomIdInUrl();
+	$: if (room?.roomId) updateRoomIdInUrl();
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
+
+	export function sendWaitingRoomMessage(socket: WebSocket, data: WaitingRoomRequest) {
+		sendMessageOfType<WaitingRoomRequest>(socket, data);
+	}
 </script>
+
+<svelte:head>
+	<title>Multiplayer waiting room | CodinCod</title>
+	<meta
+		name="description"
+		content={`Sharpen your skills in live coding duels! Get instant feedback from opponents and learn faster through collaborative competition.`}
+	/>
+	<meta name="author" content="CodinCod contributors" />
+</svelte:head>
 
 {#if errorMessage}
 	<Container>
-		<Error
+		<DisplayError
 			link={{ href: frontendUrls.PUZZLE_CREATE, text: "Go to create a puzzle" }}
 			message={errorMessage}
 		/>
@@ -137,102 +161,88 @@
 			<H1>Multiplayer</H1>
 
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
-				{#if gameId}
+				{#if room && room.roomId}
 					<Button
 						on:click={() => {
-							socket.send(
-								JSON.stringify({
-									event: GameEventEnum.LEAVE_GAME,
-									gameId: gameId,
-									username: $authenticatedUserInfo?.username
-								})
-							);
+							if (!room?.roomId) {
+								return;
+							}
 
-							gameId = undefined;
-							game = undefined;
+							sendWaitingRoomMessage(socket, {
+								event: waitingRoomEventEnum.LEAVE_ROOM,
+								roomId: room.roomId
+							});
 
-							updateRoomIdInUrl();
+							room = undefined;
 						}}
 					>
-						leave game
+						Leave room
 					</Button>
 
-					{#if $authenticatedUserInfo?.userId && isAuthor(game?.creator.userId, $authenticatedUserInfo?.userId)}
+					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
 							on:click={() => {
-								socket.send(
-									JSON.stringify({
-										event: GameEventEnum.START_GAME,
-										gameId: gameId
-									})
-								);
+								if (!room?.roomId) {
+									return;
+								}
+
+								sendWaitingRoomMessage(socket, {
+									event: waitingRoomEventEnum.START_GAME,
+									roomId: room.roomId
+								});
 							}}
 						>
-							start game
+							Start room
 						</Button>
 					{/if}
 				{:else}
 					<Button
 						on:click={() => {
-							socket.send(
-								JSON.stringify({
-									event: GameEventEnum.HOST_GAME,
-									userId: $authenticatedUserInfo?.userId,
-									username: $authenticatedUserInfo?.username
-								})
-							);
+							sendWaitingRoomMessage(socket, {
+								event: waitingRoomEventEnum.HOST_ROOM
+							});
 						}}
 					>
-						host game
+						Host room
 					</Button>
-					<!-- TODO: give ability to host a custom game -->
+					<!-- TODO: give ability to host a custom room -->
 				{/if}
 			</div>
 		</LogicalUnit>
 
-		{#if gameId}
-			<P>waiting for the game to start</P>
+		{#if room}
+			<p>waiting for the room to start</p>
 
-			{#if game}
-				<ul>
-					{#each game.users as user}
-						<li class="list-inside list-disc">
-							{user.username}{#if isAuthor(game.creator.userId, user.userId)}
-								{` - Creator/host!`}{/if}
-						</li>
-					{/each}
-				</ul>
-			{/if}
-		{:else if games && games.length > 0}
 			<ul>
-				{#each games as joinableGame}
+				{#each room.users as user}
+					<li class="list-inside list-disc">
+						{user.username}{#if isAuthor(room.owner.userId, user.userId)}
+							{` - Host!`}{/if}
+					</li>
+				{/each}
+			</ul>
+		{:else if rooms && rooms.length > 0}
+			<ul>
+				{#each rooms as joinableRoom}
 					<li>
 						<Button
 							on:click={() => {
-								socket.send(
-									JSON.stringify({
-										event: GameEventEnum.JOIN_GAME,
-										gameId: joinableGame.id,
-										userId: $authenticatedUserInfo?.userId,
-										username: $authenticatedUserInfo?.username
-									})
-								);
-
-								gameId = joinableGame.id;
-
-								updateRoomIdInUrl();
+								sendWaitingRoomMessage(socket, {
+									event: waitingRoomEventEnum.JOIN_ROOM,
+									roomId: joinableRoom.roomId
+								});
 							}}
 						>
-							Join a game with {joinableGame.amountOfPlayersJoined} other players!
+							Join a room with {joinableRoom.amountOfPlayersJoined} other players!
 						</Button>
 					</li>
 				{/each}
 			</ul>
 		{:else}
-			<P>
-				No games are being hosted by other players. You can host on yourself by clicking on the
-				"host game" button.
-			</P>
+			<p>
+				No rooms are being hosted by other players. You can host one yourself by clicking on the
+				"host room" button.
+			</p>
 		{/if}
 	</Container>
 {/if}

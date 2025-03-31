@@ -9,6 +9,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
+	import { testIds } from "@/config/test-ids";
 
 	export let data;
 
@@ -24,23 +25,32 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Learn programming concepts through solving puzzles | CodinCod</title>
+	<meta
+		name="description"
+		content="Solve community-crafted coding puzzles, challenge players worldwide, or build your own open-source challenges. Leaderboards await!"
+	/>
+	<meta name="keywords" content="coding exercises, problem-solving skills" />
+	<meta name="author" content="CodinCod contributors" />
+</svelte:head>
+
 <Container>
 	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 		<H1>Puzzles</H1>
 
-		<Button href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button>
+		<Button
+			data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
+			href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button
+		>
 	</LogicalUnit>
 
 	<!-- TODO: search should come here: -->
 	<!-- <Input placeholder="Search through puzzles" /> -->
 	<LogicalUnit class="flex flex-col gap-8">
 		{#if totalItems <= 0}
-			<P>Couldn't find any puzzles!</P>
+			<p data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}>Couldn't find any puzzles!</p>
 		{:else}
-			<P>
-				Puzzles found {totalItems}:
-			</P>
-
 			<div class="rounded-lg border">
 				<Table.Root>
 					<Table.Header>
@@ -51,12 +61,16 @@
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{#each items as { title, _id, difficulty, visibility }}
+						{#each items as { _id, difficulty, title, visibility }}
 							<Table.Row>
 								<Table.Cell>
-									<a class="link" href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: _id })}
-										>{title}</a
+									<a
+										class="link"
+										data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}
+										href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: _id })}
 									>
+										{title}
+									</a>
 								</Table.Cell>
 
 								<Table.Cell>
@@ -71,8 +85,11 @@
 					</Table.Body>
 				</Table.Root>
 			</div>
+			<p class="w-full text-center text-stone-400 dark:text-stone-600">
+				Puzzles found {totalItems}
+			</p>
 
-			<Pagination {totalPages} currentPage={page}></Pagination>
+			<Pagination {totalPages} currentPage={page} />
 		{/if}
 	</LogicalUnit>
 </Container>

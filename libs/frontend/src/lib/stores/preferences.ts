@@ -3,7 +3,13 @@ import { apiUrls, buildApiUrl } from "@/config/api";
 import { localStorageKeys } from "@/config/local-storage";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { writable } from "svelte/store";
-import { httpRequestMethod, httpResponseCodes, isThemeOption, type PreferencesDto } from "types";
+import {
+	editorPreferencesSchema,
+	httpRequestMethod,
+	httpResponseCodes,
+	isThemeOption,
+	type PreferencesDto
+} from "types";
 
 const createPreferencesStore = () => {
 	const { set, subscribe, update } = writable<PreferencesDto | null>(null);
@@ -28,7 +34,9 @@ const createPreferencesStore = () => {
 				const data = await response.json();
 
 				if (!response.ok && response.status === httpResponseCodes.CLIENT_ERROR.NOT_FOUND) {
-					const defaultPreferences: PreferencesDto = {};
+					const defaultPreferences: PreferencesDto = {
+						editor: editorPreferencesSchema.parse({})
+					};
 
 					const theme = localStorage.getItem(localStorageKeys.THEME);
 
@@ -66,7 +74,14 @@ const createPreferencesStore = () => {
 					method: httpRequestMethod.PUT
 				}).then((res) => res.json());
 
-				update((current) => ({ ...current, ...updates }));
+				update((current) => ({
+					...current,
+					...updates,
+					editor: {
+						...(current?.editor ?? editorPreferencesSchema.parse({})),
+						...updates.editor
+					}
+				}));
 			} catch (error) {
 				console.error("Failed to update preferences:", error);
 			}

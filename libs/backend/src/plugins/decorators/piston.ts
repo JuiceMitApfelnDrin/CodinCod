@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import {
+	arePistonRuntimes,
+	ErrorResponse,
 	httpRequestMethod,
+	isPistonExecutionResponse,
 	PistonExecutionRequest,
-	PistonExecutionResponse,
-	PistonRuntime,
 	pistonUrls,
 	POST
 } from "types";
@@ -24,9 +25,19 @@ async function piston(fastify: FastifyInstance) {
 			},
 			body: JSON.stringify(pistonExecutionRequestObject)
 		});
-		const executionRes: PistonExecutionResponse = await res.json();
 
-		return executionRes;
+		const executionResponse = await res.json();
+
+		if (!isPistonExecutionResponse(executionResponse)) {
+			const error: ErrorResponse = {
+				error: "Unknown error with piston",
+				message: "response is not a piston execution response"
+			};
+
+			return error;
+		}
+
+		return executionResponse;
 	});
 
 	fastify.decorate("runtimes", async () => {
@@ -47,7 +58,16 @@ async function piston(fastify: FastifyInstance) {
 			throw new Error(`Failed to execute code: ${response.status} - ${response.statusText}`);
 		}
 
-		const pistonRuntimesResponse: PistonRuntime[] = await response.json();
+		const pistonRuntimesResponse = await response.json();
+
+		if (!arePistonRuntimes(pistonRuntimesResponse)) {
+			const error: ErrorResponse = {
+				error: "Unknown error with piston",
+				message: "response are not a piston runtimes"
+			};
+
+			return error;
+		}
 
 		return pistonRuntimesResponse;
 	});

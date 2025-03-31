@@ -7,6 +7,7 @@ export * from "./core/activity/schema/activity.schema.js";
 export * from "./core/activity/types/grouped-activities-by-date.js";
 
 // authentication
+export * from "./core/authentication/config/identifier-config.js";
 export * from "./core/authentication/config/password-config.js";
 export * from "./core/authentication/config/username-config.js";
 export * from "./core/authentication/schema/authenticated-info.schema.js";
@@ -20,6 +21,15 @@ export * from "./core/authentication/schema/token.schema.js";
 export * from "./core/chat/config/chat-message-config.js";
 export * from "./core/chat/schema/chat-message.schema.js";
 
+// comment
+export * from "./core/comment/config/comment-config.js";
+export * from "./core/comment/enum/comment-type-enum.js";
+export * from "./core/comment/schema/comment.schema.js";
+export * from "./core/comment/schema/comment-type.schema.js";
+export * from "./core/comment/schema/comment-dto.schema.js";
+export * from "./core/comment/schema/create-comment.schema.js";
+export * from "./core/comment/schema/comment-vote.schema.js";
+
 // common
 export * from "./core/common/config/backend-urls.js";
 export * from "./core/common/config/cookie.js";
@@ -27,24 +37,30 @@ export * from "./core/common/config/default-values-query-params.js";
 export * from "./core/common/config/frontend-urls.js";
 export * from "./core/common/config/web-socket-urls.js";
 export * from "./core/common/enum/http-response-codes.js";
+export * from "./core/common/enum/vote-type-enum.js";
 export * from "./core/common/schema/accepted-date.js";
 export * from "./core/common/schema/object-id.js";
 export * from "./core/common/schema/fetch-error.schema.js";
 export * from "./core/common/schema/message.schema.js";
 export * from "./core/common/schema/paginated-query-response.schema.js";
 export * from "./core/common/schema/paginated-query.schema.js";
+export * from "./core/common/schema/error-response.schema.js";
 export * from "./core/common/types/link.js";
 export * from "./core/common/types/value-of.js";
 
 // game
-export * from "./core/game/config/game.js";
-export * from "./core/game/enum/game-event-enum.js";
+export * from "./core/game/config/game-config.js";
+export * from "./core/game/enum/waiting-room-event-enum.js";
+export * from "./core/game/enum/game-event-enums.js";
 export * from "./core/game/enum/game-mode-enum.js";
 export * from "./core/game/enum/game-visibility-enum.js";
 export * from "./core/game/schema/game-dto.schema.js";
 export * from "./core/game/schema/game-entity.schema.js";
-export * from "./core/game/schema/game-event.schema.js";
 export * from "./core/game/schema/game-user-info.schema.js";
+export * from "./core/game/schema/waiting-room-request.schema.js";
+export * from "./core/game/schema/waiting-room-response.schema.js";
+export * from "./core/game/schema/game-request.schema.js";
+export * from "./core/game/schema/game-response.schema.js";
 export * from "./core/game/schema/mode.schema.js";
 export * from "./core/game/schema/options.schema.js";
 export * from "./core/game/schema/visibility.schema.js";
@@ -65,6 +81,8 @@ export * from "./core/piston/schema/file-encoding.js";
 export * from "./core/piston/schema/puzzle-result.js";
 export * from "./core/piston/schema/request.js";
 export * from "./core/piston/schema/runtime.js";
+export * from "./core/piston/schema/puzzle-result-information.schema.js";
+export * from "./core/piston/schema/code-execution-response.js";
 
 // preferences
 export * from "./core/preferences/config/editor-config.js";
@@ -105,6 +123,8 @@ export * from "./core/submission/schema/submission-entity.schema.js";
 export * from "./core/user/schema/user-activity.schema.js";
 export * from "./core/user/schema/user-dto.schema.js";
 export * from "./core/user/schema/user-entity.schema.js";
+export * from "./core/user/schema/user-vote-entity.schema.js";
+export * from "./core/user/schema/user-profile.schema.js";
 
 // utils - constants
 export * from "./utils/constants/http-methods.js";
@@ -117,3 +137,4 @@ export * from "./utils/functions/is-author.js";
 export * from "./utils/functions/is-email.js";
 export * from "./utils/functions/is-string.js";
 export * from "./utils/functions/is-username.js";
+export * from "./utils/functions/send-message-of-type.js";

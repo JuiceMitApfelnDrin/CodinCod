@@ -34,13 +34,7 @@ export function buildBackendUrl(path: BackendUrl, params: Params = {}) {
 }
 
 export function buildWebSocketBackendUrl(path: WebSocketUrl, params: Params = {}) {
-	const webSocketUrl = import.meta.env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER;
-
-	if (!webSocketUrl) {
-		throw new Error("Bruh, you forgot to add VITE_BACKEND_WEBSOCKET_MULTIPLAYER to your .env");
-	}
-
-	let url = `${webSocketUrl}${path}`;
+	let url = `${path}`;
 
 	if (params) {
 		// Replace placeholders in the path with actual values

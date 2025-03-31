@@ -21,11 +21,13 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 			try {
 				const preferences = await Preferences.findOne({ owner: userId });
 
-				return preferences
-					? reply.send(preferences)
-					: reply
-							.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-							.send({ error: "Preferences not found" });
+				if (!preferences) {
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
+						.send({ error: "Preferences not found" });
+				}
+
+				return reply.send(preferences);
 			} catch (error) {
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
@@ -88,11 +90,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 			try {
 				const deleted = await Preferences.findOneAndDelete({ owner: userId });
-				return deleted
-					? reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send()
-					: reply
-							.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-							.send({ error: "Preferences not found" });
+
+				if (!deleted) {
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
+						.send({ error: "Preferences not found" });
+				}
+
+				return reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send(deleted);
 			} catch (error) {
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)

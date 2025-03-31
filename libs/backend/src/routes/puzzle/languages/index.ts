@@ -1,16 +1,28 @@
 import { FastifyInstance } from "fastify";
-import { PuzzleLanguage } from "types";
+import { arePistonRuntimes, ErrorResponse, httpResponseCodes, PuzzleLanguage } from "types";
 
 export default async function puzzleLanguagesRoutes(fastify: FastifyInstance) {
 	fastify.get("/", async (_, reply) => {
-		const runtimes = await fastify.runtimes();
+		try {
+			const runtimes = await fastify.runtimes();
 
-		const languages: PuzzleLanguage[] = runtimes.map((runtime) => {
-			return runtime.language;
-		});
+			if (!arePistonRuntimes(runtimes)) {
+				const error: ErrorResponse = runtimes;
 
-		return reply.status(200).send({
-			languages
-		});
+				return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
+			}
+
+			const languages: PuzzleLanguage[] = runtimes.map((runtime) => {
+				return runtime.language;
+			});
+
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({
+				languages: languages.sort()
+			});
+		} catch (error) {
+			return reply
+				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+				.send({ error: "Failed to fetch languages" });
+		}
 	});
 }

@@ -1,7 +1,7 @@
+import { GameRequest, isGameRequest, isWaitingRoomRequest, WaitingRoomRequest } from "types";
 import { RawData } from "ws";
-import { WebSocket } from "@fastify/websocket";
 
-function convertRawDataToString(message: RawData): string | null {
+function convertRawDataToString(message: RawData): string {
 	if (Buffer.isBuffer(message)) {
 		return message.toString("utf-8");
 	} else if (Array.isArray(message)) {
@@ -13,14 +13,26 @@ function convertRawDataToString(message: RawData): string | null {
 	}
 }
 
-export function parseRawDataMessage(message: RawData, socket: WebSocket) {
+export function parseRawDataWaitingRoomRequest(message: RawData): WaitingRoomRequest {
 	const messageString = convertRawDataToString(message);
 
-	if (messageString) {
-		try {
-			return JSON.parse(messageString);
-		} catch (error) {
-			socket.send("Failed to parse message:" + error);
-		}
+	const receivedMessageData = JSON.parse(messageString);
+
+	if (!isWaitingRoomRequest(receivedMessageData)) {
+		throw new Error("parsing message failed");
 	}
+
+	return receivedMessageData;
+}
+
+export function parseRawDataGameRequest(message: RawData): GameRequest {
+	const messageString = convertRawDataToString(message);
+
+	const receivedMessageData = JSON.parse(messageString);
+
+	if (!isGameRequest(receivedMessageData)) {
+		throw new Error("parsing message failed");
+	}
+
+	return receivedMessageData;
 }

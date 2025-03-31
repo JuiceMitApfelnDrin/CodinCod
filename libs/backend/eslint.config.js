@@ -26,8 +26,8 @@ export default [
 			"eslint-plugin-sort-destructure-keys": sortDestructureKeys
 		},
 		rules: {
-			"no-undef": "off",
-			"no-unused-vars": "off",
+			"no-undef": "warn",
+			"no-unused-vars": "warn",
 			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
 			yoda: "error"
 		}

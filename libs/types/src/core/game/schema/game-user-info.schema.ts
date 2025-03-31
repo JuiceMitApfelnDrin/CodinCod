@@ -5,7 +5,6 @@ import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 export const gameUserInfoSchema = z.object({
 	userId: authenticatedInfoSchema.shape.userId,
 	username: authenticatedInfoSchema.shape.username,
-	joinedAt: acceptedDateSchema,
-	socket: z.any()
+	joinedAt: acceptedDateSchema
 });
 export type GameUserInfo = z.infer<typeof gameUserInfoSchema>;

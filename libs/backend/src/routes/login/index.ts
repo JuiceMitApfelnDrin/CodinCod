@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
 import bcrypt from "bcrypt";
-import { cookieKeys, isEmail, loginSchema } from "types";
 import User from "../../models/user/user.js";
 import { generateToken } from "../../utils/functions/generate-token.js";
+import { cookieKeys, isEmail, loginSchema } from "types";
 
 export default async function loginRoutes(fastify: FastifyInstance) {
 	fastify.post("/", async (request, reply) => {
@@ -41,6 +41,8 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 					path: "/",
 					httpOnly: true,
 					secure: process.env.NODE_ENV === "production",
+					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+					domain: process.env.FRONTEND_HOST ?? "localhost",
 					maxAge: 3600
 				})
 				.send({ message: "Login successful" });

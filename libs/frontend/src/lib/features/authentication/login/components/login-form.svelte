@@ -4,10 +4,11 @@
 	import { Input } from "@/components/ui/input";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import { loginSchema, PASSWORD_CONFIG, POST, USERNAME_CONFIG, type Login } from "types";
+	import { loginSchema, PASSWORD_CONFIG, POST, IDENTIFIER_CONFIG, type Login } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
+	import { testIds } from "@/config/test-ids";
 
 	export let data: SuperValidated<Login>;
 	export let message: string | undefined;
@@ -34,10 +35,10 @@
 			<Form.Label class="text-lg">Username or email</Form.Label>
 			<Input
 				{...attrs}
+				data-testid={testIds.LOGIN_FORM_INPUT_IDENTIFIER}
 				bind:value={$formData.identifier}
-				minlength={USERNAME_CONFIG.minUsernameLength}
-				maxlength={USERNAME_CONFIG.maxUsernameLength}
-				pattern={USERNAME_CONFIG.allowedCharacters.source}
+				minlength={IDENTIFIER_CONFIG.minIdentifierLength}
+				maxlength={IDENTIFIER_CONFIG.maxIdentifierLength}
 			/>
 		</Form.Control>
 		<Form.FieldErrors />
@@ -49,6 +50,7 @@
 			<Input
 				type="password"
 				{...attrs}
+				data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
 				bind:value={$formData.password}
 				minlength={PASSWORD_CONFIG.minPasswordLength}
 			/>
@@ -64,5 +66,5 @@
 		/>
 	{/if}
 
-	<Form.Button>Login</Form.Button>
+	<Form.Button data-testid={testIds.LOGIN_FORM_BUTTON_LOGIN}>Login</Form.Button>
 </form>

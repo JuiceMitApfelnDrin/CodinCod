@@ -8,7 +8,7 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const gameEntitySchema = z.object({
 	players: z.array(objectIdSchema.or(userDtoSchema)),
-	creator: objectIdSchema.or(userDtoSchema),
+	owner: objectIdSchema.or(userDtoSchema),
 	puzzle: objectIdSchema.or(puzzleDtoSchema),
 	startTime: acceptedDateSchema,
 	endTime: acceptedDateSchema,

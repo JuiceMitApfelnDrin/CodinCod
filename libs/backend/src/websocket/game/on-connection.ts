@@ -1,33 +1,25 @@
 import Game from "@/models/game/game.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
+import {
+	AuthenticatedInfo,
+	gameEventEnum,
+	GameResponse,
+	getUserIdFromUser,
+	isGameDto,
+	isPuzzleDto,
+	ObjectId
+} from "types";
+import { UserWebSockets } from "./user-web-sockets.js";
 import { WebSocket } from "@fastify/websocket";
-import { GameEventEnum } from "types";
-import { updatePlayer } from "../common/update-player.js";
-import { isValidObjectId } from "mongoose";
-import { addPlayerToPlayers } from "../common/add-player-to-players.js";
 
-export async function onConnection({
-	socket,
-	id,
-	players
-}: {
-	socket: WebSocket;
-	id: string;
-	players: WebSocket[];
-}) {
-	if (!isValidObjectId(id)) {
-		updatePlayer({
-			socket,
-			event: GameEventEnum.NONEXISTENT_GAME,
-			message: "invalid id"
-		});
-		return;
-	}
-
-	addPlayerToPlayers({ players, playerSocketToAdd: socket });
-
-	const game = await Game.findById(id)
-		.populate("creator")
+export async function onConnection(
+	userWebSockets: UserWebSockets,
+	user: AuthenticatedInfo,
+	gameId: ObjectId,
+	socket: WebSocket
+) {
+	const game = await Game.findById(gameId)
+		.populate("owner")
 		.populate("players")
 		/* deeply populated, for every playerSubmission populate the userId field with a user */
 		.populate({
@@ -38,32 +30,57 @@ export async function onConnection({
 		})
 		.exec();
 
-	if (!game) {
-		updatePlayer({
-			socket,
-			event: GameEventEnum.NONEXISTENT_GAME,
+	if (!isGameDto(game)) {
+		const response: GameResponse = {
+			event: gameEventEnum.NONEXISTENT_GAME,
 			message: "game couldn't be found"
-		});
-		return;
+		};
+
+		return socket.send(JSON.stringify(response));
 	}
+
+	const currentPlayerIndex = game.players.findIndex((player) => {
+		return getUserIdFromUser(player) === user.userId;
+	});
+
+	if (currentPlayerIndex === -1) {
+		const gameOverviewResponse: GameResponse = {
+			event: gameEventEnum.OVERVIEW_GAME,
+			game
+		};
+
+		socket.send(JSON.stringify(gameOverviewResponse));
+
+		const errorResponse: GameResponse = {
+			event: gameEventEnum.ERROR,
+			message: `user with id (${user.userId}) didn't join game`
+		};
+
+		return socket.send(JSON.stringify(errorResponse));
+	}
+
+	userWebSockets.add(user.username, socket);
 
 	const currentTime = new Date();
 	if (game.endTime < currentTime) {
-		updatePlayer({
-			socket,
-			event: GameEventEnum.FINISHED_GAME,
-			data: { game }
+		return userWebSockets.updateUser(user.username, {
+			event: gameEventEnum.FINISHED_GAME,
+			game
 		});
-		return;
 	}
 
 	const puzzle = await Puzzle.findById(game.puzzle).populate("author");
 
-	if (puzzle) {
-		updatePlayer({
-			socket,
-			event: GameEventEnum.OVERVIEW_GAME,
-			data: { game, puzzle }
+	if (!isPuzzleDto(puzzle)) {
+		return userWebSockets.updateUser(user.username, {
+			event: gameEventEnum.ERROR,
+			message: "puzzle couldn't be found"
 		});
 	}
+
+	userWebSockets.updateUser(user.username, {
+		event: gameEventEnum.OVERVIEW_GAME,
+		game,
+		puzzle
+	});
 }

@@ -1,9 +1,11 @@
-<script lang="ts">
-	import { goto } from "$app/navigation";
-	import { onMount } from "svelte";
-	import { frontendUrls } from "types";
-
-	onMount(() => {
-		goto(frontendUrls.SETTINGS_PROFILE);
-	});
+<script>
 </script>
+
+<svelte:head>
+	<title>Settings | CodinCod</title>
+	<meta
+		name="description"
+		content={`Tweak your coding battleground—adjust themes, notifications, and community preferences to match your style.`}
+	/>
+	<meta name="author" content="CodinCod contributors" />
+</svelte:head>

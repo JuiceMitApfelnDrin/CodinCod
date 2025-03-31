@@ -8,3 +8,9 @@ export const pistonRuntimeSchema = z.object({
 	runtime: z.string().optional()
 });
 export type PistonRuntime = z.infer<typeof pistonRuntimeSchema>;
+
+export const pistonRuntimesSchema = z.array(pistonRuntimeSchema);
+export type PistonRuntimes = z.infer<typeof pistonRuntimesSchema>;
+export function arePistonRuntimes(data: unknown): data is PistonRuntimes {
+	return pistonRuntimesSchema.safeParse(data).success;
+}

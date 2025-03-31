@@ -1,6 +1,10 @@
 export const apiUrls = {
 	ACCOUNT_PREFERENCES: "/api/account/preferences",
+	COMMENT_BY_ID: "/api/comment/:id",
+	COMMENT_BY_ID_COMMENT: "/api/comment/:id/comment",
+	COMMENT_BY_ID_VOTE: "/api/comment/:id/vote",
 	EXECUTE_CODE: "/api/execute-code",
+	PUZZLE_BY_ID_COMMENT: "/api/puzzles/:id/comment",
 	SUBMISSION_BY_ID: "/api/submission/:id",
 	SUBMIT_CODE: "/api/submit-code",
 	SUBMIT_GAME: "/api/submit-game",
