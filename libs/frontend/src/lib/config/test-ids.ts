@@ -4,6 +4,9 @@ export const testIds = {
 	LOGIN_FORM_INPUT_IDENTIFIER: "login-form-input-identifier",
 	LOGIN_FORM_INPUT_PASSWORD: "login-form-input-password",
 
+	// login page
+	LOGIN_PAGE_H1: "login-page-h1",
+
 	// main-navigation
 	NAVIGATION_ANCHOR_HOME: "navigation-anchor-home",
 	NAVIGATION_ANCHOR_LEARN: "navigation-anchor-learn",
@@ -24,5 +27,9 @@ export const testIds = {
 
 	// puzzles page
 	PUZZLES_PAGE_ANCHOR_PUZZLE: "puzzles-page-anchor-puzzle",
-	PUZZLES_PAGE_BUTTON_CREATE_PUZZLE: "puzzles-page-button-create-puzzle"
+	PUZZLES_PAGE_BUTTON_CREATE_PUZZLE: "puzzles-page-button-create-puzzle",
+
+	// puzzle detail page
+	PUZZLE_DETAIL_PAGE_EDIT_ANCHOR: "puzzle-detail-page-edit-anchor",
+	PUZZLE_DETAIL_PAGE_PLAY_ANCHOR: "puzzle-detail-page-play-anchor"
 } as const;

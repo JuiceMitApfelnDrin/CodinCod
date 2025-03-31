@@ -6,6 +6,7 @@
 	import LoginForm from "@/features/authentication/login/components/login-form.svelte";
 	import { frontendUrls } from "types";
 	import type { ActionData, PageData } from "./$types";
+	import { testIds } from "@/config/test-ids";
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -25,7 +26,7 @@
 		<Tabs.List class="grid w-full grid-cols-2 gap-2">
 			<Tabs.Trigger value="login">Login</Tabs.Trigger>
 			<a
-				class="inline-flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+				class="ring-offset-background focus-visible:ring-ring data-[state=active]:bg-background data-[state=active]:text-foreground inline-flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm"
 				href={frontendUrls.REGISTER}
 			>
 				Register
@@ -34,7 +35,7 @@
 			<Tabs.Content value="login" class="col-span-2">
 				<Card.Root class="w-full">
 					<Card.Header>
-						<H1>Login</H1>
+						<H1 data-testid={testIds.LOGIN_PAGE_H1}>Login</H1>
 						<Card.Description>Welcome, let's login and get playin'!</Card.Description>
 					</Card.Header>
 
