@@ -75,12 +75,10 @@ For one line:
 For block:
 
 ```markdown
-\`\`\`
-
+```python
 def hello():
-print("Hello")
-
-\`\`\`
+  print("Hello")
+```
 ```
 
 ## Blockquotes
