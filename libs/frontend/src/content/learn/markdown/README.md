@@ -10,16 +10,18 @@ Use `#` to show title. More `#` means smaller title.
 
 ```markdown
 # Big Title
+
 ## Medium Title
+
 ### Small Title
 ```
 
 ## Emphasis
 
-Make words *italic* or **bold**.
+Make words _italic_ or **bold**.
 
 ```markdown
-*Italic* and **Bold**
+_Italic_ and **Bold**
 ```
 
 ## Lists
@@ -74,7 +76,7 @@ For block:
 \`\`\`
 
 def hello():
-    print("Hello")
+print("Hello")
 
 \`\`\`
 ```
