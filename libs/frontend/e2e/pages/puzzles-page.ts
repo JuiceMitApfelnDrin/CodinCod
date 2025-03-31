@@ -34,7 +34,7 @@ export class PuzzlesPage {
 				.first()
 				.getByTestId(testIds.PUZZLES_PAGE_ANCHOR_PUZZLE)
 		);
-		await pageChanged(this.page)
+		await pageChanged(this.page);
 	}
 
 	private getPuzzleRows() {
