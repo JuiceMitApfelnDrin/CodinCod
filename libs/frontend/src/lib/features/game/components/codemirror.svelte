@@ -34,6 +34,7 @@
 		lineNumbers,
 		rectangularSelection
 	} from "@codemirror/view";
+	import { testClasses } from "@/config/test-classes";
 
 	export let readonly = false;
 	export let value = "";
@@ -235,6 +236,7 @@
 	<p>loading the editor...</p>
 {:then editorConfig}
 	<CodeMirror
+		class={testClasses.CODEMIRROR_INSTANCE}
 		bind:value
 		theme={oneDark}
 		{readonly}

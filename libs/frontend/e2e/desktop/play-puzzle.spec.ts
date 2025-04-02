@@ -5,6 +5,7 @@ import { HomePage } from "../pages/home-page";
 import { PuzzlesPage } from "../pages/puzzles-page";
 import { puzzleVisibilityEnum } from "types";
 import { PuzzlesDetailPage } from "../pages/puzzle-detail-page";
+import { PuzzlePlayPage } from "../pages/puzzle-play-page";
 
 test("logged in user can play a puzzle", async ({ page }) => {
 	const loginPage = new LoginPage(page);
@@ -19,6 +20,9 @@ test("logged in user can play a puzzle", async ({ page }) => {
 
 	const puzzleDetailPage = new PuzzlesDetailPage(page);
 	await puzzleDetailPage.gotoPlayPuzzle();
+
+	const puzzlePlayPage = new PuzzlePlayPage(page);
+	await puzzlePlayPage.isPuzzlePlayPage();
 });
 
 test("unable to play when logged out", async ({ page }) => {

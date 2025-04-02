@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Container from "@/components/ui/container/container.svelte";
+	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
+	import { testIds } from "@/config/test-ids";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import { isUserDto } from "types";
 
@@ -20,8 +22,10 @@
 	{/if}
 </svelte:head>
 
-{#if puzzle}
-	<Container>
-		<PlayPuzzle endDate={undefined} {puzzle} />
-	</Container>
-{/if}
+<LogicalUnit data-testid={testIds.PUZZLE_PLAY_PAGE_CONTAINER}>
+	{#if puzzle}
+		<Container>
+			<PlayPuzzle endDate={undefined} {puzzle} />
+		</Container>
+	{/if}
+</LogicalUnit>

@@ -31,5 +31,17 @@ export const testIds = {
 
 	// puzzle detail page
 	PUZZLE_DETAIL_PAGE_EDIT_ANCHOR: "puzzle-detail-page-edit-anchor",
-	PUZZLE_DETAIL_PAGE_PLAY_ANCHOR: "puzzle-detail-page-play-anchor"
+	PUZZLE_DETAIL_PAGE_PLAY_ANCHOR: "puzzle-detail-page-play-anchor",
+
+	// puzzle metadata information component
+	PUZZLE_METADATA_COMPONENT_H1: "puzzle-metadata-component-h1",
+
+	// play puzzle
+	PUZZLE_PLAY_BUTTON_OPEN_LANGUAGE_SELECT: "play-puzzle-button-open-language-select",
+	PUZZLE_PLAY_BUTTON_RUN_ALL_TESTS: "play-puzzle-button-run-all-tests",
+	PUZZLE_PLAY_BUTTON_RUN_SINGLE_TEST: "play-puzzle-button-run-single-test",
+	PUZZLE_PLAY_BUTTON_SUBMIT_CODE: "play-puzzle-button-submit-code",
+	PUZZLE_PLAY_INPUT_CODE_EDITOR: "play-puzzle-input-code-editor",
+	PUZZLE_PLAY_PAGE_CONTAINER: "puzzle-play-page-container",
+	PUZZLE_PLAY_SELECT_CHOOSE_LANGUAGE: "play-puzzle-select-choose-language"
 } as const;
