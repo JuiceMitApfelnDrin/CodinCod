@@ -6,6 +6,7 @@
 	import LoginForm from "@/features/authentication/login/components/login-form.svelte";
 	import { frontendUrls } from "types";
 	import type { ActionData, PageData } from "./$types";
+	import { testIds } from "@/config/test-ids";
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -34,7 +35,7 @@
 			<Tabs.Content value="login" class="col-span-2">
 				<Card.Root class="w-full">
 					<Card.Header>
-						<H1>Login</H1>
+						<H1 data-testid={testIds.LOGIN_PAGE_H1}>Login</H1>
 						<Card.Description>Welcome, let's login and get playin'!</Card.Description>
 					</Card.Header>
 
