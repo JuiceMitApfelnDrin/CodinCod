@@ -8,11 +8,13 @@ import {
 	DeletePuzzle,
 	ErrorResponse,
 	httpResponseCodes,
-	PuzzleVisibility
+	PuzzleVisibility,
+	isPuzzleDto
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import { ParamsId } from "@/types/types.js";
+import { checkAllValidators } from "@/utils/functions/check-all-validators.js";
 
 export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
@@ -89,6 +91,33 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				Object.assign(puzzle, parseResult.data);
 
 				await puzzle.save();
+
+				const checkWhenEdited: PuzzleVisibility[] = [
+					puzzleVisibilityEnum.DRAFT,
+					puzzleVisibilityEnum.READY,
+					puzzleVisibilityEnum.REVIEW
+				];
+
+				if (
+					checkWhenEdited.includes(puzzle.visibility) &&
+					puzzle.validators &&
+					puzzle.validators.length > 0 &&
+					isPuzzleDto(puzzle)
+				) {
+					try {
+						const allPassed = await checkAllValidators(puzzle, fastify);
+
+						if (allPassed) {
+							puzzle.visibility = puzzleVisibilityEnum.READY;
+						} else {
+							puzzle.visibility = puzzleVisibilityEnum.DRAFT;
+						}
+
+						await puzzle.save();
+					} catch (error) {
+						request.log.error(error, "Failed to check validators");
+					}
+				}
 
 				return reply.send(puzzle);
 			} catch (error) {
