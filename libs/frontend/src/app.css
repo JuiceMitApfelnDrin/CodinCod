@@ -1,8 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wdth,wght@50..200,200..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	font-family: "Inconsolata";
+	src: url("/fonts/Inconsolata-VariableFont_wdth,wght.ttf") format("truetype");
+	font-weight: 200 900;
+	font-stretch: 50% 200%;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Nunito Sans";
+	src: url("/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf") format("truetype");
+	font-weight: 200 1000;
+	font-stretch: 75% 125%;
+	font-display: swap;
+}
 
 @layer base {
 	:root {

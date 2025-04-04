@@ -74,14 +74,14 @@ For one line:
 
 For block:
 
-```markdown
-\`\`\`
-
+````markdown
+```python
 def hello():
-print("Hello")
-
-\`\`\`
+  print("Hello")
 ```
+````
+
+````
 
 ## Blockquotes
 
@@ -89,7 +89,7 @@ Mark quote from someone.
 
 ```markdown
 > This is a wise word.
-```
+````
 
 ## Tables
 
