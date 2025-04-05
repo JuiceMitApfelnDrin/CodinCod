@@ -23,6 +23,7 @@ export const testIds = {
 	PAGINATION_BUTTON_PREVIOUS: "pagination-button-previous",
 
 	// puzzles page
+	PUZZLES_PAGE_ANCHOR_MY_PUZZLES: "puzzles-page-anchor-my-puzzles",
 	PUZZLES_PAGE_ANCHOR_PUZZLE: "puzzles-page-anchor-puzzle",
 	PUZZLES_PAGE_BUTTON_CREATE_PUZZLE: "puzzles-page-button-create-puzzle"
 } as const;
