@@ -18,4 +18,4 @@ export const genericReturnMessages = {
 
 export const userProperties = {
 	USERNAME: "username"
-};
+} as const;
