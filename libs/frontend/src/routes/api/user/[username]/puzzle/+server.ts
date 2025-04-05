@@ -6,13 +6,13 @@ import {
 import { backendUrls, httpRequestMethod } from "types";
 import type { RequestEvent } from "./$types";
 
-export async function GET({ params, request }: RequestEvent) {
+export async function GET({ params, request, url }: RequestEvent) {
 	const username = params.username;
 	const userPuzzlesByUsernameUrl = buildBackendUrl(backendUrls.USER_BY_USERNAME_PUZZLE, {
 		username
 	});
 
-	return fetchWithAuthenticationCookie(userPuzzlesByUsernameUrl, {
+	return fetchWithAuthenticationCookie(userPuzzlesByUsernameUrl + url.search, {
 		headers: getCookieHeader(request),
 		method: httpRequestMethod.GET
 	});
