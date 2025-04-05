@@ -6,6 +6,7 @@ export const backendUrls = {
 	LOGIN: `${baseRoute}/login`,
 	USER: `${baseRoute}/user`,
 	USER_BY_USERNAME: `${baseRoute}/user/:username`,
+	USER_BY_USERNAME_PUZZLE: `${baseRoute}/user/:username/puzzle`,
 	USER_BY_USERNAME_ACTIVITY: `${baseRoute}/user/:username/activity`,
 	USER_BY_USERNAME_IS_AVAILABLE: `${baseRoute}/user/:username/isAvailable`,
 	ACCOUNT: `${baseRoute}/account`,

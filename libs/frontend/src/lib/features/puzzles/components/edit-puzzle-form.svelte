@@ -9,6 +9,7 @@
 		buildFrontendUrl,
 		frontendUrls,
 		POST,
+		PUZZLE_CONFIG,
 		puzzleEntitySchema,
 		puzzleVisibilityEnum,
 		type EditPuzzle,
@@ -131,6 +132,15 @@
 	<Form.Field {form} name="validators" class="flex flex-col gap-2">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Validators</Form.Label>
+
+			<Form.Description>
+				To ensure high-quality puzzles and effective test cases, we require a <strong
+					>minimum</strong
+				>
+				of <strong>{PUZZLE_CONFIG.requiredNumberOfValidators} test cases</strong> before the puzzle can
+				move on to the next stage of the review process.
+			</Form.Description>
+
 			{#if $formData.validators}
 				{#each $formData.validators as _, index}
 					<div class="my-4 flex gap-2">

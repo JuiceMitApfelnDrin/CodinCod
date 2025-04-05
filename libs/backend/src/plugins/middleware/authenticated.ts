@@ -1,11 +1,13 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { AuthenticatedInfo } from "types";
+import { AuthenticatedInfo, httpResponseCodes } from "types";
 
 export default async function authenticated(request: FastifyRequest, reply: FastifyReply) {
 	const token = request.cookies.token;
 
 	if (!token) {
-		return reply.status(401).send({ message: "Unauthorized" });
+		return reply
+			.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
+			.send({ message: "Unauthorized" });
 	}
 
 	try {
@@ -17,8 +19,13 @@ export default async function authenticated(request: FastifyRequest, reply: Fast
 		request.user = decoded;
 	} catch (err) {
 		if (err instanceof Error) {
-			return reply.status(401).send({ message: "Invalid token" });
+			return reply
+				.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
+				.send({ message: "Invalid token" });
 		}
-		return reply.status(500).send({ message: "An unexpected error occurred." });
+
+		return reply
+			.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+			.send({ message: "An unexpected error occurred." });
 	}
 }
