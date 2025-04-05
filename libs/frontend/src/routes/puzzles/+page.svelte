@@ -2,7 +2,6 @@
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import P from "@/components/typography/p.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
 	import { buildFrontendUrl, frontendUrls, type PuzzleDto } from "types";
 	import Button from "@/components/ui/button/button.svelte";
