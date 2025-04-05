@@ -2,71 +2,79 @@
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
+	import { page } from "$app/stores";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import { buildFrontendUrl, frontendUrls, type PuzzleDto } from "types";
+	import {
+		buildFrontendUrl,
+		frontendUrls,
+		paginatedQueryResponseSchema,
+		type PuzzleDto
+	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
 	import { testIds } from "@/config/test-ids";
-	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import { authenticatedUserInfo } from "@/stores/index.js";
 
 	export let data;
 
 	let items: PuzzleDto[] = [];
-	let page: number;
+	let currentPage: number;
 	let totalItems: number;
 	let totalPages: number;
-	$: {
-		items = data.items;
-		page = data.page;
-		totalItems = data.totalItems;
-		totalPages = data.totalPages;
-	}
 
-	let myPuzzlesUrl: string | undefined = undefined;
-	if ($authenticatedUserInfo?.isAuthenticated) {
-		myPuzzlesUrl = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME_PUZZLES, {
-			username: $authenticatedUserInfo.username
-		});
+	$: {
+		const paginatedQueryResponseInfo = paginatedQueryResponseSchema.safeParse(data);
+
+		if (paginatedQueryResponseInfo.success) {
+			items = paginatedQueryResponseInfo.data.items;
+			currentPage = paginatedQueryResponseInfo.data.page;
+			totalItems = paginatedQueryResponseInfo.data.totalItems;
+			totalPages = paginatedQueryResponseInfo.data.totalPages;
+		}
 	}
 </script>
 
 <svelte:head>
-	<title>Learn programming concepts through solving puzzles | CodinCod</title>
+	<title>Puzzles created by {$page.params.username} | CodinCod</title>
+	<!-- TODO: create a better description here -->
 	<meta
 		name="description"
-		content="Solve community-crafted coding puzzles, challenge players worldwide, or build your own open-source challenges. Leaderboards await!"
+		content={`View all the puzzles that are publicly available and made by ${$page.params.username}`}
 	/>
-	<meta name="keywords" content="coding exercises, problem-solving skills" />
-	<meta name="author" content="CodinCod contributors" />
+	<!-- TODO: add better keywords here -->
+	<meta name="keywords" content="coding puzzles" />
+	<meta name="author" content={$page.params.username} />
 </svelte:head>
 
 <Container>
 	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-		<H1>Puzzles</H1>
+		<H1>{$page.params.username} puzzles</H1>
 
-		<LogicalUnit class="flex flex-row gap-2">
-			{#if $isAuthenticated}
-				<Button
-					variant="outline"
-					data-testid={testIds.PUZZLES_PAGE_ANCHOR_MY_PUZZLES}
-					href={myPuzzlesUrl}>My puzzles</Button
-				>
-			{/if}
-
+		{#if $page.params.username === $authenticatedUserInfo?.username}
 			<Button
+				variant="outline"
 				data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
 				href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button
 			>
-		</LogicalUnit>
+		{/if}
 	</LogicalUnit>
 
 	<!-- TODO: search should come here: -->
 	<!-- <Input placeholder="Search through puzzles" /> -->
 	<LogicalUnit class="flex flex-col gap-8">
 		{#if totalItems <= 0}
-			<p data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}>Couldn't find any puzzles!</p>
+			<p data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}>
+				Couldn't find any puzzles.
+				{#if $page.params.username === $authenticatedUserInfo?.username}
+					But you can <Button
+						variant="outline"
+						data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
+						href={frontendUrls.PUZZLE_CREATE}>create a new puzzle</Button
+					> !
+				{/if}
+			</p>
 		{:else}
 			<div class="rounded-lg border">
 				<Table.Root>
@@ -102,11 +110,12 @@
 					</Table.Body>
 				</Table.Root>
 			</div>
+
 			<p class="w-full text-center text-stone-400 dark:text-stone-600">
 				Puzzles found {totalItems}
 			</p>
 
-			<Pagination {totalPages} currentPage={page} />
+			<Pagination {totalPages} {currentPage} />
 		{/if}
 	</LogicalUnit>
 </Container>

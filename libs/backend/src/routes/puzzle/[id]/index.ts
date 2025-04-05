@@ -9,7 +9,8 @@ import {
 	ErrorResponse,
 	httpResponseCodes,
 	PuzzleVisibility,
-	isPuzzleDto
+	isPuzzleDto,
+	PUZZLE_CONFIG
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
@@ -101,7 +102,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				if (
 					checkWhenEdited.includes(puzzle.visibility) &&
 					puzzle.validators &&
-					puzzle.validators.length > 0 &&
+					puzzle.validators.length >= PUZZLE_CONFIG.requiredNumberOfValidators &&
 					isPuzzleDto(puzzle)
 				) {
 					try {

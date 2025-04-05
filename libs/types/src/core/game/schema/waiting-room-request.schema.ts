@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { waitingRoomEventEnum, waitingRoomEventSchema } from "../enum/waiting-room-event-enum.js";
+import { waitingRoomEventEnum } from "../enum/waiting-room-event-enum.js";
 import { getValues } from "../../../utils/functions/get-values.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 

@@ -2,7 +2,7 @@ import Puzzle from "@/models/puzzle/puzzle.js";
 import Submission from "@/models/submission/submission.js";
 import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isUsername } from "types";
+import { httpResponseCodes, isUsername, puzzleVisibilityEnum } from "types";
 import { ParamsUsername } from "../types.js";
 import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
 
@@ -24,23 +24,28 @@ export default async function userByUsernameActivityRoutes(fastify: FastifyInsta
 			const user = await User.findOne({ username });
 
 			if (!user) {
-				return reply.status(404).send({ message: "User not found" });
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
+					.send({ message: "User not found" });
 			}
 
 			const userId = user._id;
 
 			const [puzzlesByUser, submissionsByUser] = await Promise.all([
-				Puzzle.find({ author: userId }),
+				// TODO: add other puzzle visibility states as well?
+				Puzzle.find({ author: userId, visibility: puzzleVisibilityEnum.APPROVED }),
 				Submission.find({ user: userId })
 			]);
 
-			return reply.status(200).send({
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({
 				user,
 				message: "User activity found",
 				activity: { puzzles: puzzlesByUser, submissions: submissionsByUser }
 			});
 		} catch (error) {
-			return reply.status(500).send({ message: "Internal Server Error" });
+			return reply
+				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+				.send({ message: "Internal Server Error" });
 		}
 	});
 }

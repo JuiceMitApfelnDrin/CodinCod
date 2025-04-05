@@ -21,6 +21,7 @@ import puzzleByIdCommentRoutes from "./routes/puzzle/[id]/comment/index.js";
 import commentByIdRoutes from "./routes/comment/[id]/index.js";
 import commentByIdVoteRoutes from "./routes/comment/[id]/vote/index.js";
 import commentByIdCommentRoutes from "./routes/comment/[id]/comment/index.js";
+import userByUsernamePuzzleRoutes from "./routes/user/[username]/puzzle/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
@@ -29,6 +30,7 @@ export default async function router(fastify: FastifyInstance) {
 	fastify.register(userRoutes, { prefix: backendUrls.USER });
 	fastify.register(userByUsernameRoutes, { prefix: backendUrls.USER_BY_USERNAME });
 	fastify.register(userByUsernameActivityRoutes, { prefix: backendUrls.USER_BY_USERNAME_ACTIVITY });
+	fastify.register(userByUsernamePuzzleRoutes, { prefix: backendUrls.USER_BY_USERNAME_PUZZLE });
 	fastify.register(userByUsernameIsAvailableRoutes, {
 		prefix: backendUrls.USER_BY_USERNAME_IS_AVAILABLE
 	});

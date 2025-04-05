@@ -1,6 +1,5 @@
 import { browser } from "$app/environment";
 import { apiUrls, buildApiUrl } from "@/config/api";
-import { language } from "@codemirror/language";
 import { writable } from "svelte/store";
 import { httpRequestMethod } from "types";
 
