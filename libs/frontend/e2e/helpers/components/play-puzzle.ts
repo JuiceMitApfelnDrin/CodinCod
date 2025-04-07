@@ -1,50 +1,38 @@
 import { Locator, Page } from "@playwright/test";
 import { testIds } from "../../../src/lib/config/test-ids";
-import { pageChanged } from "../page-changed";
-import { frontendUrls } from "types";
 import { improvedClick } from "../improved-click";
+import { LanguageSelectComponent } from "./language-select";
 
 export class PlayPuzzleComponent {
 	page: Page;
 
-	languageSelect: Locator;
-	languageSelectButton: Locator;
+	languageSelect: LanguageSelectComponent;
+
+	runAllTestsButton: Locator;
+	submitCodeButton: Locator;
+	runSingleTestButton: Locator;
 
 	constructor(page: Page) {
 		this.page = page;
 
-		this.languageSelect = page.getByTestId(testIds.PUZZLE_PLAY_CHOOSE_LANGUAGE);
-		this.languageSelectButton = page.getByTestId(testIds.PUZZLE_PLAY_OPEN_LANGUAGE_SELECT);
-		page.getByTestId(testIds.PUZZLE_PLAY_RUN_ALL_TESTS)
-	}
+		this.languageSelect = new LanguageSelectComponent(page);
 
-	async openLanguageSelect() {
-		// Click language select button
-		await improvedClick(this.languageSelectButton);
-	}
-
-	async chooseLanguage(language: string) {
-		// Choose language from dropdown
-		await this.languageSelect.selectOption(language);
+		this.runAllTestsButton = page.getByTestId(testIds.PUZZLE_PLAY_BUTTON_RUN_ALL_TESTS);
+		this.submitCodeButton = page.getByTestId(testIds.PUZZLE_PLAY_BUTTON_SUBMIT_CODE);
+		this.runSingleTestButton = page.getByTestId(testIds.PUZZLE_PLAY_BUTTON_RUN_SINGLE_TEST);
 	}
 
 	async runAllTests() {
-		// Click run all tests button
-		await this.;
+		await improvedClick(this.runAllTestsButton);
 	}
 
 	async submitCode() {
-		// Click submit code button
-		await this.page.getByTestId(testIds.PUZZLE_PLAY_SUBMIT_CODE).click();
+		await improvedClick(this.submitCodeButton);
 	}
 
 	async runSingleTest(index: number) {
-		// Click specific test button. Id appended with index.
-		await this.page.getByTestId(`${testIds.PUZZLE_PLAY_RUN_SINGLE_TEST}_${index}`).click();
-	}
+		const nthTestToRun = this.runSingleTestButton.nth(index);
 
-	async fillCode(code: string) {
-		// Fill code editor
-		await this.page.getByTestId(testIds.PUZZLE_PLAY_CODE_EDITOR).fill(code);
+		await improvedClick(nthTestToRun);
 	}
 }

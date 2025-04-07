@@ -1,4 +1,8 @@
 export const testIds = {
+	// language select
+	LANGUAGE_SELECT_BUTTON_OPEN_LANGUAGE_SELECT: "language-select-button-open-language-select",
+	LANGUAGE_SELECT_OPTION_LANGUAGE: "language-select-option-language",
+
 	// login form
 	LOGIN_FORM_BUTTON_LOGIN: "login-form-button-login",
 	LOGIN_FORM_INPUT_IDENTIFIER: "login-form-input-identifier",
@@ -38,11 +42,9 @@ export const testIds = {
 	PUZZLE_METADATA_COMPONENT_H1: "puzzle-metadata-component-h1",
 
 	// play puzzle
-	PUZZLE_PLAY_BUTTON_OPEN_LANGUAGE_SELECT: "play-puzzle-button-open-language-select",
 	PUZZLE_PLAY_BUTTON_RUN_ALL_TESTS: "play-puzzle-button-run-all-tests",
 	PUZZLE_PLAY_BUTTON_RUN_SINGLE_TEST: "play-puzzle-button-run-single-test",
 	PUZZLE_PLAY_BUTTON_SUBMIT_CODE: "play-puzzle-button-submit-code",
 	PUZZLE_PLAY_INPUT_CODE_EDITOR: "play-puzzle-input-code-editor",
-	PUZZLE_PLAY_PAGE_CONTAINER: "puzzle-play-page-container",
-	PUZZLE_PLAY_SELECT_CHOOSE_LANGUAGE: "play-puzzle-select-choose-language"
+	PUZZLE_PLAY_PAGE_CONTAINER: "puzzle-play-page-container"
 } as const;
