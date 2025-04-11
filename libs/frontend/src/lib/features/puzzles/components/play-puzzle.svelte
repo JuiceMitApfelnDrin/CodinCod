@@ -30,6 +30,7 @@
 	import { languages } from "@/stores/languages";
 	import { toast } from "svelte-sonner";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
+	import { testIds } from "@/config/test-ids";
 
 	export let puzzle: PuzzleDto;
 	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
@@ -216,6 +217,7 @@
 				on:click={runAllTests}
 				disabled={isExecutingTests || isSubmittingCode}
 				class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
+				data-testid={testIds.PUZZLE_PLAY_BUTTON_RUN_ALL_TESTS}
 			>
 				Run all tests
 			</Button>
@@ -228,6 +230,7 @@
 			on:click={async () => {
 				endPuzzleGame();
 			}}
+			data-testid={testIds.PUZZLE_PLAY_BUTTON_SUBMIT_CODE}
 		>
 			Submit code
 		</Button>

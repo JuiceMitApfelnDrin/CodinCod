@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Select from "$lib/components/ui/select";
 	import { ScrollArea } from "@/components/ui/scroll-area";
+	import { testIds } from "@/config/test-ids";
 	import { preferences } from "@/stores/preferences";
 	import { DEFAULT_LANGUAGE } from "types";
 
@@ -37,7 +38,11 @@
 		}
 	}}
 >
-	<Select.Trigger class="w-[180px]" {...formAttributes}>
+	<Select.Trigger
+		class="w-[180px]"
+		{...formAttributes}
+		data-testid={testIds.LANGUAGE_SELECT_BUTTON_OPEN_LANGUAGE_SELECT}
+	>
 		<Select.Value placeholder="Select a language" />
 	</Select.Trigger>
 
@@ -48,7 +53,11 @@
 
 			<Select.Group>
 				{#each languages as language}
-					<Select.Item value={language} label={language} />
+					<Select.Item
+						value={language}
+						label={language}
+						data-testid={testIds.LANGUAGE_SELECT_OPTION_LANGUAGE}
+					/>
 				{/each}
 			</Select.Group>
 		</ScrollArea>
