@@ -1,6 +1,12 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { backendUrls, buildFrontendUrl, createPuzzleSchema, frontendUrls, httpRequestMethod } from "types";
+import {
+	backendUrls,
+	buildFrontendUrl,
+	createPuzzleSchema,
+	frontendUrls,
+	httpRequestMethod
+} from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";

@@ -29,7 +29,7 @@ const preferencesSchema = new Schema<PreferencesDocument>(
 			required: true,
 			select: false,
 			type: mongoose.Schema.Types.ObjectId,
-			unique: true,
+			unique: true
 		},
 		preferredLanguage: {
 			required: false,
@@ -38,8 +38,7 @@ const preferencesSchema = new Schema<PreferencesDocument>(
 		theme: {
 			required: false,
 			type: String
-		},
-		
+		}
 	},
 	{ timestamps: true }
 );

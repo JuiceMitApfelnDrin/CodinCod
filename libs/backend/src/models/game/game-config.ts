@@ -20,7 +20,7 @@ const gameOptionsSchema = new Schema<GameOptions>({
 	visibility: {
 		required: true,
 		type: String
-	},
+	}
 });
 
 export default gameOptionsSchema;

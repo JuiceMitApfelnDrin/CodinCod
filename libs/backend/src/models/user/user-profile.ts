@@ -5,17 +5,17 @@ export const profileSchema = new Schema<UserProfile>({
 	bio: {
 		required: false,
 		trim: true,
-		type: String,
+		type: String
 	},
 	location: {
 		required: false,
 		trim: true,
-		type: String,
+		type: String
 	},
 	picture: {
 		required: false,
 		trim: true,
-		type: String,
+		type: String
 	},
 	socials: {
 		required: false,

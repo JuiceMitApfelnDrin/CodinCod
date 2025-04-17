@@ -35,7 +35,7 @@ const gameSchema = new Schema<GameDocument>({
 			type: Schema.Types.ObjectId
 		}
 	],
-	
+
 	puzzle: {
 		ref: PUZZLE,
 		required: true,
@@ -45,7 +45,7 @@ const gameSchema = new Schema<GameDocument>({
 		default: Date.now,
 		required: true,
 		type: Date
-	},
+	}
 });
 
 const Game = mongoose.model<GameDocument>(GAME, gameSchema);

@@ -3,7 +3,13 @@ import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/f
 import { redirect, type RequestEvent } from "@sveltejs/kit";
 import { fail, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { backendUrls, httpRequestMethod, deletePuzzleSchema, frontendUrls, httpResponseCodes } from "types";
+import {
+	backendUrls,
+	httpRequestMethod,
+	deletePuzzleSchema,
+	frontendUrls,
+	httpResponseCodes
+} from "types";
 
 export async function handleDeletePuzzleForm({ request }: RequestEvent) {
 	const deletePuzzleForm = await superValidate(request, zod(deletePuzzleSchema));

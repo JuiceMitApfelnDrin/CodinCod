@@ -2,7 +2,13 @@ import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
-import { backendUrls, frontendUrls, httpResponseCodes, httpRequestMethod, registerSchema } from "types";
+import {
+	backendUrls,
+	frontendUrls,
+	httpResponseCodes,
+	httpRequestMethod,
+	registerSchema
+} from "types";
 import { setCookie } from "@/features/authentication/utils/set-cookie";
 import type { RequestEvent } from "./$types.js";
 

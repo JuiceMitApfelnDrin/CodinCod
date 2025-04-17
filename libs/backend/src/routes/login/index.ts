@@ -43,7 +43,7 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 			const authenticatedUserInfo = {
 				isAuthenticated: true,
 				userId: `${user._id}`,
-				username: user.username,
+				username: user.username
 			};
 			const token = generateToken(fastify, authenticatedUserInfo);
 

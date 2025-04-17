@@ -25,9 +25,7 @@ export default async function puzzleLanguagesRoutes(fastify: FastifyInstance) {
 				message: "" + error
 			};
 
-			return reply
-				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send(errorResponse);
+			return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(errorResponse);
 		}
 	});
 }
