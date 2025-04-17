@@ -16,65 +16,65 @@ export interface PuzzleDocument
  * offering different play modes and play styles
  */
 const puzzleSchema = new Schema<PuzzleDocument>({
-	title: {
-		required: true,
-		trim: true,
-		type: String
-	},
-	statement: {
-		trim: true,
-		type: String
-	},
-	constraints: {
-		trim: true,
-		type: String
-	},
 	author: {
 		ref: USER,
-		required: true, // Ensure every puzzle has an author
+		required: true,
 		type: mongoose.Schema.Types.ObjectId
 	},
-	validators: [validatorSchema],
-	difficulty: {
-		enum: Object.values(DifficultyEnum),
-		default: DifficultyEnum.INTERMEDIATE,
-		required: true,
-		type: String
-	},
-	visibility: {
-		enum: Object.values(puzzleVisibilityEnum),
-		default: puzzleVisibilityEnum.DRAFT,
-		required: true,
+	comments: [
+		{
+			ref: COMMENT,
+			type: Schema.Types.ObjectId
+		}
+	],
+	constraints: {
+		trim: true,
 		type: String
 	},
 	createdAt: {
 		default: Date.now,
 		type: Date
 	},
-	updatedAt: {
-		default: Date.now,
-		type: Date
-	},
-	solution: {
-		type: solutionSchema,
-		select: false
+	difficulty: {
+		default: DifficultyEnum.INTERMEDIATE,
+		enum: Object.values(DifficultyEnum),
+		required: true,
+		type: String
 	},
 	puzzleMetrics: {
 		ref: METRICS,
-		type: Schema.Types.ObjectId,
-		select: false
+		select: false,
+		type: Schema.Types.ObjectId
+	},
+	solution: {
+		select: false,
+		type: solutionSchema
+	},
+	statement: {
+		trim: true,
+		type: String
 	},
 	tags: [
 		{
 			type: String
 		}
 	],
-	comments: [
-		{
-			ref: COMMENT,
-			type: Schema.Types.ObjectId
-		}
-	]
+	title: {
+		required: true,
+		trim: true,
+		type: String
+	},
+	updatedAt: {
+		default: Date.now,
+		type: Date
+	},
+	validators: [validatorSchema],
+	visibility: {
+		default: puzzleVisibilityEnum.DRAFT,
+		enum: Object.values(puzzleVisibilityEnum),
+		required: true,
+		type: String
+	}
 });
 
 const Puzzle = mongoose.model<PuzzleDocument>(PUZZLE, puzzleSchema);

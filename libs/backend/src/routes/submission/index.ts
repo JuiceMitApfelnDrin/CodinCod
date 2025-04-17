@@ -71,10 +71,10 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 			const promises = puzzle.validators.map(async (validator) => {
 				const pistonRequest: PistonExecutionRequest = {
-					language: runtimeInfo.language,
-					version: runtimeInfo.version,
 					files: [{ content: code }],
-					stdin: validator.input
+					language: runtimeInfo.language,
+					stdin: validator.input,
+					version: runtimeInfo.version
 				};
 				const executionResponse = await fastify.piston(pistonRequest);
 				return { executionResponse, output: validator.output };
@@ -90,12 +90,12 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			try {
 				const submissionData: SubmissionEntity = {
 					code: code,
-					puzzle: puzzleId,
-					user: userId,
 					createdAt: new Date(),
+					language: runtimeInfo.language,
 					languageVersion: runtimeInfo.version,
+					puzzle: puzzleId,
 					result: calculateResults(expectedOutputs, pistonExecutionResults),
-					language: runtimeInfo.language
+					user: userId
 				};
 
 				const submission = new Submission(submissionData);
@@ -106,7 +106,7 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 				fastify.log.error("Error saving submission:", error);
 
 				if (isValidationError(error)) {
-					return reply.status(400).send({ error: "Validation failed", details: error.errors });
+					return reply.status(400).send({ details: error.errors, error: "Validation failed" });
 				}
 
 				return reply.status(500).send({ error: "Failed to create submission" });

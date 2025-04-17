@@ -7,22 +7,22 @@ interface UserVoteDocument extends Document, Omit<UserVoteEntity, "author"> {
 }
 
 const userVoteSchema = new Schema<UserVoteDocument>({
+	author: {
+		ref: USER,
+		required: true,
+		type: Schema.Types.ObjectId
+	},
 	createdAt: {
 		default: Date.now,
 		type: Date
 	},
 	type: {
-		type: String,
-		required: true
+		required: true,
+		type: String
 	},
 	votedOn: {
-		type: String,
-		required: true
-	},
-	author: {
-		ref: USER,
-		type: Schema.Types.ObjectId,
-		required: true
+		required: true,
+		type: String
 	}
 });
 

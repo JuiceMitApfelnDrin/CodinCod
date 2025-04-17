@@ -14,7 +14,6 @@
 
 	const now = dayjs();
 	const startDate = now.subtract(minNumberOfDays, "day");
-	const endDate = now;
 
 	$: days = Array.from({ length: minNumberOfDays }, (_, i) => {
 		const date = startDate.add(i, "day").format("YYYY-MM-DD");
@@ -31,7 +30,7 @@
 		// Calculate month groups
 		const groups = [];
 		let currentYearMonth: string | null = null;
-		let currentGroup: { month: string; colspan: number; yearMonth: string } | null = null;
+		let currentGroup: { colspan: number; month: string; yearMonth: string } | null = null;
 
 		for (let weekIndex = 0; weekIndex < totalWeeks; weekIndex++) {
 			const weekStartDate = startDate.add(weekIndex * totalDays, "day");
@@ -40,8 +39,8 @@
 			if (yearMonth !== currentYearMonth) {
 				if (currentGroup) groups.push(currentGroup);
 				currentGroup = {
-					month: weekStartDate.format("MMM"),
 					colspan: 1,
+					month: weekStartDate.format("MMM"),
 					yearMonth: yearMonth
 				};
 				currentYearMonth = yearMonth;

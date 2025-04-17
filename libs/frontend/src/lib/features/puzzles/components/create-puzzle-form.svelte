@@ -3,7 +3,7 @@
 	import { type SuperValidated, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
-	import { createPuzzleSchema, POST, type CreatePuzzle } from "types";
+	import { createPuzzleSchema, httpRequestMethod, type CreatePuzzle } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
@@ -17,7 +17,7 @@
 	const { enhance, form: formData, message } = form;
 </script>
 
-<form method={POST} use:enhance class="flex flex-col gap-4">
+<form method={httpRequestMethod.POST} use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Title</Form.Label>

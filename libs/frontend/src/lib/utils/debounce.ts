@@ -1,9 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type DebouncedFunction<T extends (...args: any[]) => any> = (
-	...args: Parameters<T>
-) => Promise<ReturnType<T>>;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars */
+type DebouncedFunction<T extends () => any> = (...args: Parameters<T>) => Promise<ReturnType<T>>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce<T extends (...args: any[]) => any>(
 	func: T,
 	delay: number

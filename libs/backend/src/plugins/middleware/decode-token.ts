@@ -10,5 +10,7 @@ export default async function decodeToken(request: FastifyRequest) {
 		const decoded = await request.jwtVerify<AuthenticatedInfo>();
 
 		request.user = decoded;
-	} catch (err) {}
+	} catch {
+		console.info("couldn't decode user token");
+	}
 }

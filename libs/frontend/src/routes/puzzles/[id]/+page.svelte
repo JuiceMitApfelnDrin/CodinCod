@@ -22,6 +22,7 @@
 	import H2 from "@/components/typography/h2.svelte";
 	import Comments from "@/features/comment/components/comments.svelte";
 	import AddCommentForm from "@/features/comment/components/add-comment-form.svelte";
+	import { testIds } from "@/config/test-ids";
 
 	export let data;
 
@@ -57,10 +58,18 @@
 
 		<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 			{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(getUserIdFromUser(puzzle.author), $authenticatedUserInfo.userId)}
-				<Button variant="outline" href={editUrl}>Edit puzzle</Button>
+				<Button
+					data-testid={testIds.PUZZLE_DETAIL_PAGE_EDIT_ANCHOR}
+					variant="outline"
+					href={editUrl}
+				>
+					Edit puzzle
+				</Button>
 			{/if}
 
-			<Button href={playUrl}>Play puzzle</Button>
+			<Button data-testid={testIds.PUZZLE_DETAIL_PAGE_PLAY_ANCHOR} href={playUrl}>
+				Play puzzle
+			</Button>
 		</div>
 	</LogicalUnit>
 

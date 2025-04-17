@@ -20,6 +20,7 @@
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
+	import { assertNever } from "@/utils/assert-never";
 	import dayjs from "dayjs";
 	import {
 		buildFrontendUrl,
@@ -67,11 +68,11 @@
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.GAME, { id: $page.params.id });
 		socket = new WebSocket(webSocketUrl);
 
-		socket.addEventListener("open", (message) => {
+		socket.addEventListener("open", () => {
 			console.info("WebSocket connection opened");
 		});
 
-		socket.addEventListener("close", (message) => {
+		socket.addEventListener("close", () => {
 			console.info("WebSocket connection closed");
 
 			setTimeout(function () {
@@ -79,7 +80,7 @@
 			}, 1000);
 		});
 
-		socket.addEventListener("error", (message) => {
+		socket.addEventListener("error", () => {
 			console.info("WebSocket connection error");
 			socket.close();
 		});
@@ -128,7 +129,7 @@
 					}
 					break;
 				default:
-					receivedInformation satisfies never;
+					assertNever(receivedInformation satisfies never);
 					break;
 			}
 		});
@@ -212,8 +213,8 @@
 		};
 
 		sendGameMessage(socket, {
-			event: gameEventEnum.SEND_MESSAGE,
-			chatMessage: newChatMessage
+			chatMessage: newChatMessage,
+			event: gameEventEnum.SEND_MESSAGE
 		});
 	}
 

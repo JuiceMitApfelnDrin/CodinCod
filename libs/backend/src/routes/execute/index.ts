@@ -14,20 +14,20 @@ import authenticated from "@/plugins/middleware/authenticated.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
 
 export const executionResponseErrors = {
-	UNSUPPORTED_LANGUAGE: {
-		error: "Unsupported language",
-		message: "At the moment we don't support this language."
-	},
-	SERVICE_UNAVAILABLE: {
-		error: "Service unavailable",
-		message: "Unable to reach piston code execution service"
-	},
 	INTERNAL_SERVER_ERROR: {
 		error: "Internal Server Error",
 		message: "Something went wrong during piston code execution"
 	},
 	PISTON_ERROR: {
 		error: "Piston error"
+	},
+	SERVICE_UNAVAILABLE: {
+		error: "Service unavailable",
+		message: "Unable to reach piston code execution service"
+	},
+	UNSUPPORTED_LANGUAGE: {
+		error: "Unsupported language",
+		message: "At the moment we don't support this language."
 	}
 } as const;
 
@@ -56,10 +56,10 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 			}
 
 			const requestObject: PistonExecutionRequest = {
-				language: runtimeInfo.language,
-				version: runtimeInfo.version,
 				files: [{ content: code }],
-				stdin: testInput
+				language: runtimeInfo.language,
+				stdin: testInput,
+				version: runtimeInfo.version
 			};
 
 			let executionRes: PistonExecutionResponse;
@@ -96,9 +96,9 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 			let compile = executionRes.compile;
 
 			const codeExecutionResponse = {
-				run,
 				compile,
-				puzzleResultInformation: calculateResults([testOutput], [executionRes])
+				puzzleResultInformation: calculateResults([testOutput], [executionRes]),
+				run
 			};
 
 			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(codeExecutionResponse);

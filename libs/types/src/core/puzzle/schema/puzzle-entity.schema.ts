@@ -9,7 +9,6 @@ import { puzzleVisibilityEnum } from "../enum/puzzle-visibility-enum.js";
 import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
-import { commentEntitySchema } from "../../comment/schema/comment.schema.js";
 import { commentDtoSchema } from "../../comment/schema/comment-dto.schema.js";
 
 export const puzzleEntitySchema = z.object({

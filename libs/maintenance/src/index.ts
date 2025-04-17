@@ -2,12 +2,14 @@ import maintenanceHtml from './maintenance.html';
 import { websiteUrl } from 'types';
 
 export default {
-	async fetch(request, env, ctx) {
+	async fetch(request) {
 		try {
 			const mainResponse = await fetch(websiteUrl);
 
 			if (mainResponse.ok) return fetch(request);
-		} catch (e) {}
+		} catch {
+			console.error('fetch went wrong');
+		}
 
 		return new Response(maintenanceHtml, {
 			status: 503,

@@ -3,6 +3,7 @@
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import { isUserDto, type EditPuzzle, type PuzzleDto } from "types";
 	import UserHoverCard from "./user-hover-card.svelte";
+	import { testIds } from "@/config/test-ids";
 
 	export let puzzle: PuzzleDto | EditPuzzle | null;
 
@@ -11,7 +12,7 @@
 
 {#if puzzle}
 	<div class="flex flex-col gap-2">
-		<H1 class="pb-0">
+		<H1 class="pb-0" data-testid={testIds.PUZZLE_METADATA_COMPONENT_H1}>
 			{puzzle.title}
 		</H1>
 

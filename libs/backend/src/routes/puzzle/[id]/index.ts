@@ -40,9 +40,9 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 
 			return reply.send(puzzle);
 		} catch (error) {
-			return reply
-				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ error: "Failed to fetch puzzle" });
+			const errorResponse: ErrorResponse = { error: "Failed to fetch puzzle", message: "" + error };
+
+			return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(errorResponse);
 		}
 	});
 
@@ -122,7 +122,10 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 
 				return reply.send(puzzle);
 			} catch (error) {
-				const errorResponse: ErrorResponse = { error: "Failed to update puzzle", message: "" };
+				const errorResponse: ErrorResponse = {
+					error: "Failed to update puzzle",
+					message: "" + error
+				};
 
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
@@ -179,7 +182,11 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 
 				return reply.status(204).send();
 			} catch (error) {
-				return reply.status(500).send({ error: "Failed to delete puzzle" });
+				const errorResponse: ErrorResponse = {
+					error: "Failed to delete puzzle",
+					message: "" + error
+				};
+				return reply.status(500).send(errorResponse);
 			}
 		}
 	);

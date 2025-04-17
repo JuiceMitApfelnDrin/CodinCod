@@ -101,11 +101,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				const now = new Date();
 
 				const createGameEntity: GameEntity = {
-					players: players,
-					owner: waitingRoom.findRoomOwner(room).userId,
-					puzzle: randomPuzzleId,
 					createdAt: now,
-					startTime: now,
 					endTime: new Date(now.getTime() + DEFAULT_GAME_LENGTH_IN_MILLISECONDS),
 					options: {
 						allowedLanguages: [],
@@ -113,7 +109,11 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 						mode: GameModeEnum.RATED,
 						visibility: GameVisibilityEnum.PUBLIC
 					},
-					playerSubmissions: []
+					owner: waitingRoom.findRoomOwner(room).userId,
+					playerSubmissions: [],
+					players: players,
+					puzzle: randomPuzzleId,
+					startTime: now
 				};
 
 				const databaseGame = new Game(createGameEntity);
@@ -144,7 +144,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 		waitingRoom.updateAllUsers(data);
 	});
 
-	socket.on("close", (code, reason) => {
+	socket.on("close", () => {
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}

@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isAuthenticatedInfo, preferencesDtoSchema } from "types";
+import { ErrorResponse, httpResponseCodes, isAuthenticatedInfo, preferencesDtoSchema } from "types";
 import Preferences from "../../../models/preferences/preferences.js";
 import authenticated from "../../../plugins/middleware/authenticated.js";
 
@@ -29,9 +29,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: "Failed to fetch preferences",
+					message: "" + error
+				};
+
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to fetch preferences" });
+					.send(errorResponse);
 			}
 		}
 	);
@@ -67,9 +72,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: "Failed to update preferences",
+					message: "" + error
+				};
+
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to update preferences" });
+					.send(errorResponse);
 			}
 		}
 	);
@@ -99,9 +109,13 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send(deleted);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: "Failed to delete preferences",
+					message: "" + error
+				};
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to delete preferences" });
+					.send(errorResponse);
 			}
 		}
 	);
@@ -137,9 +151,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: "Failed to update preferences",
+					message: "" + error
+				};
+
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to update preferences" });
+					.send(errorResponse);
 			}
 		}
 	);

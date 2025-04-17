@@ -64,7 +64,7 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each submissions as { user, language, createdAt, result, _id }, index}
+			{#each submissions as { _id, createdAt, language, result, user }, index}
 				{#if isUserDto(user)}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>

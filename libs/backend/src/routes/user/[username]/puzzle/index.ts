@@ -3,6 +3,7 @@ import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
 import {
 	DEFAULT_PAGE,
+	ErrorResponse,
 	httpResponseCodes,
 	isAuthenticatedInfo,
 	isUsername,
@@ -75,18 +76,23 @@ export default async function userByUsernamePuzzleRoutes(fastify: FastifyInstanc
 				const totalPages = Math.ceil(total / pageSize);
 
 				const paginatedResponse: PaginatedQueryResponse = {
+					items: puzzles,
 					page,
 					pageSize,
-					totalPages,
 					totalItems: total,
-					items: puzzles
+					totalPages
 				};
 
 				return reply.send(paginatedResponse);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: `Failed to fetch puzzles of user (${username})`,
+					message: "" + error
+				};
+
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: `Failed to fetch puzzles of user (${username})` });
+					.send(errorResponse);
 			}
 		}
 	);

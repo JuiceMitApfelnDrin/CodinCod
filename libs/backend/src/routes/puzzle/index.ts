@@ -6,7 +6,8 @@ import {
 	isAuthenticatedInfo,
 	createPuzzleSchema,
 	httpResponseCodes,
-	CreatePuzzleBackend
+	CreatePuzzleBackend,
+	ErrorResponse
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
@@ -40,9 +41,16 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 				const puzzle = new Puzzle(puzzleData);
 				await puzzle.save();
 
-				return reply.status(201).send(puzzle);
+				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(puzzle);
 			} catch (error) {
-				return reply.status(500).send({ error: "Failed to create puzzle" });
+				const errorResponse: ErrorResponse = {
+					error: "Failed to create puzzle",
+					message: "" + error
+				};
+
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send(errorResponse);
 			}
 		}
 	);
@@ -73,18 +81,21 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 			const totalPages = Math.ceil(total / pageSize);
 
 			const paginatedResponse: PaginatedQueryResponse = {
+				items: puzzles,
 				page,
 				pageSize,
-				totalPages,
 				totalItems: total,
-				items: puzzles
+				totalPages
 			};
 
-			return reply.send(paginatedResponse);
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(paginatedResponse);
 		} catch (error) {
-			return reply
-				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ error: "Failed to fetch puzzles" });
+			const errorResponse: ErrorResponse = {
+				error: "Failed to fetch puzzles",
+				message: "" + error
+			};
+
+			return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(errorResponse);
 		}
 	});
 }

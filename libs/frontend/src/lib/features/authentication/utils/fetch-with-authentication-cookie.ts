@@ -7,6 +7,7 @@ export function getCookieHeader(request: Request): Record<string, string> {
 
 export async function fetchWithAuthenticationCookie(
 	url: string | URL | globalThis.Request,
+	// eslint-disable-next-line no-undef
 	options: RequestInit = {}
 ) {
 	options.credentials = "include"; // Ensure cookies are included

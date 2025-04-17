@@ -47,7 +47,7 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 				}
 
 				// Check if user already voted on this comment
-				let existingVote = await UserVote.findOne({ votedOn: commentId, author: userId });
+				let existingVote = await UserVote.findOne({ author: userId, votedOn: commentId });
 
 				// Handle vote toggle/update
 				if (existingVote && existingVote.type === type) {
@@ -57,10 +57,10 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 					await existingVote.save();
 				} else {
 					await UserVote.create({
-						type,
-						votedOn: commentId,
 						author: userId,
-						createdAt: new Date()
+						createdAt: new Date(),
+						type,
+						votedOn: commentId
 					});
 				}
 
@@ -71,14 +71,14 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 					{
 						$group: {
 							_id: null,
-							upvote: {
-								$sum: {
-									$cond: [{ $eq: ["$type", voteTypeEnum.UPVOTE] }, 1, 0]
-								}
-							},
 							downvote: {
 								$sum: {
 									$cond: [{ $eq: ["$type", voteTypeEnum.DOWNVOTE] }, 1, 0]
+								}
+							},
+							upvote: {
+								$sum: {
+									$cond: [{ $eq: ["$type", voteTypeEnum.UPVOTE] }, 1, 0]
 								}
 							}
 						}

@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { activityTypeEnum, activityTypes } from "../enum/activity-type-enum.js";
-import { getValues } from "../../../utils/functions/get-values.js";
+import { activityTypes } from "../enum/activity-type-enum.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 
