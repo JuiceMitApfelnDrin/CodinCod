@@ -3,7 +3,6 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import RegisterForm from "@/features/authentication/register/components/register-form.svelte";
-	import P from "@/components/typography/p.svelte";
 	import { frontendUrls } from "types";
 	import * as Card from "@/components/ui/card";
 	import type { ActionData, PageData } from "./$types";
@@ -25,7 +24,7 @@
 	<Tabs.Root value="register" class="w-96">
 		<Tabs.List class="grid w-full grid-cols-2 gap-2">
 			<a
-				class="inline-flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+				class="ring-offset-background focus-visible:ring-ring data-[state=active]:bg-background data-[state=active]:text-foreground inline-flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm"
 				href={frontendUrls.LOGIN}
 			>
 				Login

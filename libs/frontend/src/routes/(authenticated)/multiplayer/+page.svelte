@@ -4,12 +4,12 @@
 	import { page } from "$app/stores";
 	import DisplayError from "@/components/error/display-error.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
+	import { assertNever } from "@/utils/assert-never";
 	import {
 		frontendUrls,
 		isAuthor,
@@ -65,7 +65,7 @@
 		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.WAITING_ROOM);
 		socket = new WebSocket(webSocketUrl);
 
-		socket.onopen = (message) => {
+		socket.onopen = () => {
 			console.info("WebSocket connection opened");
 
 			checkForRoomId();
@@ -119,7 +119,7 @@
 					}
 					break;
 				default:
-					receivedInformation satisfies never;
+					assertNever(receivedInformation satisfies never);
 					break;
 			}
 		};

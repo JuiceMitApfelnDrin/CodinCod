@@ -1,6 +1,6 @@
 import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isUsername } from "types";
+import { ErrorResponse, httpResponseCodes, isUsername } from "types";
 import { ParamsUsername } from "./types.js";
 import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
 import { USER } from "@/utils/constants/model.js";
@@ -35,17 +35,20 @@ export default async function userByUsernameRoutes(fastify: FastifyInstance) {
 			const { WAS_FOUND } = genericReturnMessages[OK];
 
 			return reply.status(OK).send({
-				user,
-				message: `${USER} ${WAS_FOUND}`
+				message: `${USER} ${WAS_FOUND}`,
+				user
 			});
 		} catch (error) {
 			const { INTERNAL_SERVER_ERROR } = httpResponseCodes.SERVER_ERROR;
 			const { WENT_WRONG } = genericReturnMessages[INTERNAL_SERVER_ERROR];
 			const { USERNAME } = userProperties;
 
-			return reply.status(INTERNAL_SERVER_ERROR).send({
-				message: `attempting to find a ${USER} by ${USERNAME} ${WENT_WRONG}`
-			});
+			const errorResponse: ErrorResponse = {
+				error: `attempting to find a ${USER} by ${USERNAME} ${WENT_WRONG}`,
+				message: "" + error
+			};
+
+			return reply.status(INTERNAL_SERVER_ERROR).send(errorResponse);
 		}
 	});
 }

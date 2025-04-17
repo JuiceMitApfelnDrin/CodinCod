@@ -2,8 +2,8 @@ import { httpResponseCodes } from "types";
 
 export const genericReturnMessages = {
 	[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: {
-		IS_INVALID: "is invalid",
-		CONTAINS_INVALID_DATA: "contains invalid data"
+		CONTAINS_INVALID_DATA: "contains invalid data",
+		IS_INVALID: "is invalid"
 	},
 	[httpResponseCodes.SUCCESSFUL.OK]: {
 		WAS_FOUND: "was found"

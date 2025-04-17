@@ -41,35 +41,36 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 			// TODO: give information back to the user about the user in question, see registerresponseschema
 
 			const authenticatedUserInfo = {
+				isAuthenticated: true,
 				userId: `${user._id}`,
-				username: user.username,
-				isAuthenticated: true
+				username: user.username
 			};
 			const token = generateToken(fastify, authenticatedUserInfo);
 
 			return reply
 				.status(200)
 				.setCookie(cookieKeys.TOKEN, token, {
-					path: "/",
-					httpOnly: true,
-					secure: process.env.NODE_ENV === "production",
-					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 					domain: process.env.FRONTEND_HOST ?? "localhost",
-					maxAge: 3600
+					httpOnly: true,
+					maxAge: 3600,
+					path: "/",
+					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+					secure: process.env.NODE_ENV === "production"
 				})
 				.send({ message: "User registered successfully" });
 		} catch (error) {
 			if (error instanceof Error.ValidationError) {
 				const messages = Object.values(error.errors).map((err) => err.message);
+
 				return reply.status(400).send({
-					message: "Could not create user due to some invalid fields!",
-					error: messages
+					error: messages,
+					message: "Could not create user due to some invalid fields!"
 				});
 			} else if (error instanceof MongoError && error.code === 11000) {
 				return reply.status(400).send({ message: `Duplicate key, unique value already exists` });
 			}
 
-			return reply.status(500).send({ message: "Internal server error", error });
+			return reply.status(500).send({ error, message: "Internal server error" });
 		}
 	});
 }

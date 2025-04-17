@@ -6,6 +6,7 @@ import {
 	CommentEntity,
 	commentTypeEnum,
 	createCommentSchema,
+	ErrorResponse,
 	httpResponseCodes,
 	isAuthenticatedInfo
 } from "types";
@@ -38,10 +39,10 @@ export default async function commentByIdCommentRoutes(fastify: FastifyInstance)
 			const newCommentData: CommentEntity = {
 				...parseResult.data,
 				author: userId,
-				upvote: 0,
-				downvote: 0,
+				commentType: commentTypeEnum.COMMENT,
 				comments: [],
-				commentType: commentTypeEnum.COMMENT
+				downvote: 0,
+				upvote: 0
 			};
 
 			try {
@@ -54,9 +55,14 @@ export default async function commentByIdCommentRoutes(fastify: FastifyInstance)
 
 				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(comment);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: "Failed to create comment",
+					message: "" + error
+				};
+
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to create comment" });
+					.send(errorResponse);
 			}
 		}
 	);

@@ -92,7 +92,10 @@ export class WaitingRoom {
 
 	getRooms() {
 		return Object.entries(this.roomsByRoomId).map(([roomId, room]) => {
-			return { roomId, amountOfPlayersJoined: Object.keys(room).length };
+			return {
+				amountOfPlayersJoined: Object.keys(room).length,
+				roomId
+			};
 		});
 	}
 
@@ -108,9 +111,9 @@ export class WaitingRoom {
 		this.updateUsersInRoom(roomId, {
 			event: waitingRoomEventEnum.OVERVIEW_ROOM,
 			room: {
-				users: usersInRoom,
 				owner: this.findRoomOwner(room),
-				roomId
+				roomId,
+				users: usersInRoom
 			}
 		});
 	}

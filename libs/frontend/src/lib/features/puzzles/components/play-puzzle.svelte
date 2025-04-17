@@ -82,8 +82,8 @@
 
 	function showToastWhenTestRan(successPercentage: number, isMultipleTests: boolean = false) {
 		const formattedSuccessPercentage = new Intl.NumberFormat("en", {
-			style: "percent",
-			roundingMode: "halfCeil"
+			roundingMode: "halfCeil",
+			style: "percent"
 		}).format(successPercentage);
 
 		if (isMultipleTests) {

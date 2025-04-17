@@ -20,9 +20,9 @@ const server = Fastify({
 
 // register fastify ecosystem plugins
 server.register(fastifyCookie, {
-	secret: process.env.COOKIE_SECRET,
 	hook: "onRequest",
-	parseOptions: {}
+	parseOptions: {},
+	secret: process.env.COOKIE_SECRET
 } as FastifyCookieOptions);
 server.register(fastifyRateLimit, {
 	max: 100,

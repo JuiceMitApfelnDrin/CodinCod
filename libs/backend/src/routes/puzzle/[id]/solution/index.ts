@@ -42,9 +42,13 @@ export default async function puzzleByIdSolutionRoutes(fastify: FastifyInstance)
 
 				return reply.send(puzzle);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: "Failed to fetch puzzle",
+					message: "" + error
+				};
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to fetch puzzle" });
+					.send(errorResponse);
 			}
 		}
 	);

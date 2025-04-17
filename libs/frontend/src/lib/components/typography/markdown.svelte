@@ -17,6 +17,7 @@
 		<P>Loading...</P>
 	{:then parsedMarkdown}
 		<div class="prose prose-stone dark:prose-invert">
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			{@html parsedMarkdown}
 		</div>
 	{/await}

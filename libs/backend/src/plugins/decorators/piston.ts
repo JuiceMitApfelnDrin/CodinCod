@@ -6,8 +6,7 @@ import {
 	httpRequestMethod,
 	isPistonExecutionResponse,
 	PistonExecutionRequest,
-	pistonUrls,
-	POST
+	pistonUrls
 } from "types";
 
 async function piston(fastify: FastifyInstance) {
@@ -19,11 +18,11 @@ async function piston(fastify: FastifyInstance) {
 		}
 
 		const res = await fetch(`${PISTON_API}${pistonUrls.EXECUTE}`, {
-			method: POST,
+			body: JSON.stringify(pistonExecutionRequestObject),
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(pistonExecutionRequestObject)
+			method: httpRequestMethod.POST
 		});
 
 		const executionResponse = await res.json();
@@ -48,10 +47,10 @@ async function piston(fastify: FastifyInstance) {
 		}
 
 		const response = await fetch(`${PISTON_API}${pistonUrls.RUNTIMES}`, {
-			method: httpRequestMethod.GET,
 			headers: {
 				"Content-Type": "application/json"
-			}
+			},
+			method: httpRequestMethod.GET
 		});
 
 		if (!response.ok) {

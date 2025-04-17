@@ -12,33 +12,33 @@ const userSchema = new Schema<UserDocument>({
 		type: Date
 	},
 	email: {
+		index: true,
 		lowercase: true,
 		required: true,
+		select: false,
 		trim: true,
 		type: String,
-		unique: true,
-		select: false,
-		index: true
+		unique: true
 	},
 	password: {
 		required: true,
-		type: String,
-		select: false
+		select: false,
+		type: String
+	},
+	profile: {
+		required: false,
+		type: profileSchema
 	},
 	updatedAt: {
 		default: Date.now,
 		type: Date
 	},
 	username: {
+		index: true,
 		required: true,
 		trim: true,
 		type: String,
-		unique: true,
-		index: true
-	},
-	profile: {
-		type: profileSchema,
-		required: false
+		unique: true
 	}
 });
 

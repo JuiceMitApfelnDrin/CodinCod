@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { buildFrontendUrl, frontendUrls, type Link } from "types";
+	import { buildFrontendUrl, frontendUrls } from "types";
 	import { authenticatedUserInfo } from "../../stores";
 	import Button from "../ui/button/button.svelte";
 	import { testIds } from "@/config/test-ids";

@@ -2,92 +2,92 @@ import { Schema } from "mongoose";
 import { EditorPreferences } from "types";
 
 export const preferencesEditor = new Schema<EditorPreferences>({
-	keymap: {
-		type: String,
-		required: false
-	},
 	allowMultipleSelections: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	autocompletion: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	bracketMatching: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	closeBrackets: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	completionKeymap: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	crosshairCursor: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	defaultKeymap: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	drawSelection: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	dropCursor: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	foldGutter: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	foldKeymap: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	highlightActiveLine: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	highlightActiveLineGutter: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	highlightSelectionMatches: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	highlightSpecialChars: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	history: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	indentOnInput: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
+	},
+	keymap: {
+		required: false,
+		type: String
 	},
 	lineNumbers: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	lintKeymap: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	rectangularSelection: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	},
 	searchKeymap: {
-		type: Boolean,
-		required: false
+		required: false,
+		type: Boolean
 	}
 });

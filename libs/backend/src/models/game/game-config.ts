@@ -8,19 +8,19 @@ import languageSchema from "../programming-language/language.js";
  * this could mitigate users that just look at the public test cases and thus help catch code that technically is wrong, but passes the visible gameOptionss (to all users).
  */
 const gameOptionsSchema = new Schema<GameOptions>({
+	allowedLanguages: [languageSchema],
 	maxGameDurationInSeconds: {
 		required: true,
 		type: Number
+	},
+	mode: {
+		required: true,
+		type: String
 	},
 	visibility: {
 		required: true,
 		type: String
 	},
-	allowedLanguages: [languageSchema],
-	mode: {
-		required: true,
-		type: String
-	}
 });
 
 export default gameOptionsSchema;

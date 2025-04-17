@@ -9,14 +9,6 @@ interface PreferencesDocument extends Document, Omit<PreferencesEntity, "owner" 
 
 const preferencesSchema = new Schema<PreferencesDocument>(
 	{
-		owner: {
-			ref: USER,
-			required: true,
-			type: mongoose.Schema.Types.ObjectId,
-			index: true,
-			unique: true,
-			select: false
-		},
 		blockedUsers: {
 			required: false,
 			type: [
@@ -27,18 +19,27 @@ const preferencesSchema = new Schema<PreferencesDocument>(
 				}
 			]
 		},
+		editor: {
+			required: false,
+			type: preferencesEditor
+		},
+		owner: {
+			index: true,
+			ref: USER,
+			required: true,
+			select: false,
+			type: mongoose.Schema.Types.ObjectId,
+			unique: true,
+		},
 		preferredLanguage: {
-			type: String,
-			required: false
+			required: false,
+			type: String
 		},
 		theme: {
-			type: String,
-			required: false
+			required: false,
+			type: String
 		},
-		editor: {
-			type: preferencesEditor,
-			required: false
-		}
+		
 	},
 	{ timestamps: true }
 );

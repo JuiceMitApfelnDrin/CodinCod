@@ -6,7 +6,7 @@ import {
 	deletePuzzleSchema,
 	editPuzzleSchema,
 	httpResponseCodes,
-	PUT,
+	httpRequestMethod,
 	type EditPuzzle
 } from "types";
 import { message } from "sveltekit-superforms";
@@ -59,7 +59,7 @@ export const actions = {
 				"Content-Type": "application/json",
 				Cookie: cookie
 			},
-			method: PUT
+			method: httpRequestMethod.PUT
 		});
 
 		if (!response.ok) {

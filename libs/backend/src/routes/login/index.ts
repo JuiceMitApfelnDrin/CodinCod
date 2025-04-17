@@ -2,14 +2,19 @@ import { FastifyInstance } from "fastify";
 import bcrypt from "bcrypt";
 import User from "../../models/user/user.js";
 import { generateToken } from "../../utils/functions/generate-token.js";
-import { cookieKeys, isEmail, loginSchema } from "types";
+import { cookieKeys, ErrorResponse, httpResponseCodes, isEmail, loginSchema } from "types";
 
 export default async function loginRoutes(fastify: FastifyInstance) {
 	fastify.post("/", async (request, reply) => {
 		const parseResult = loginSchema.safeParse(request.body);
 
 		if (!parseResult.success) {
-			return reply.status(400).send({ message: "Invalid request data" });
+			const errorResponse: ErrorResponse = {
+				error: "Invalid request data",
+				message: "" + parseResult.error.errors
+			};
+
+			return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send(errorResponse);
 		}
 
 		const { identifier, password } = parseResult.data;
@@ -20,34 +25,46 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				: await User.findOne({ username: identifier }).select("+password").exec();
 
 			if (!user) {
-				return reply.status(400).send({ message: "Invalid email/username or password" });
+				const errorResponse: ErrorResponse = {
+					error: "Invalid email/username or password",
+					message: "Can't be authenticated"
+				};
+
+				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send(errorResponse);
 			}
 			const isMatch = await bcrypt.compare(password, user.password);
 
 			if (!isMatch) {
-				return reply.status(400).send({ message: "Invalid email/username or password" });
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+					.send({ message: "Invalid email/username or password" });
 			}
 
 			const authenticatedUserInfo = {
+				isAuthenticated: true,
 				userId: `${user._id}`,
 				username: user.username,
-				isAuthenticated: true
 			};
 			const token = generateToken(fastify, authenticatedUserInfo);
 
 			return reply
-				.status(200)
+				.status(httpResponseCodes.SUCCESSFUL.OK)
 				.setCookie(cookieKeys.TOKEN, token, {
-					path: "/",
-					httpOnly: true,
-					secure: process.env.NODE_ENV === "production",
-					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 					domain: process.env.FRONTEND_HOST ?? "localhost",
-					maxAge: 3600
+					httpOnly: true,
+					maxAge: 3600,
+					path: "/",
+					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+					secure: process.env.NODE_ENV === "production"
 				})
 				.send({ message: "Login successful" });
 		} catch (error) {
-			return reply.status(500).send({ message: error });
+			const errorResponse: ErrorResponse = {
+				error: "Failed to login",
+				message: "" + error
+			};
+
+			return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(errorResponse);
 		}
 	});
 }

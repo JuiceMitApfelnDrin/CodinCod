@@ -3,7 +3,7 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import { buildFrontendUrl, frontendUrls, isUserDto, type UserDto } from "types";
-	import { Calendar, Smile } from "lucide-svelte";
+	import { Calendar } from "lucide-svelte";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { Button as ButtonPrimitive } from "bits-ui";
@@ -73,7 +73,7 @@
 
 						<div class="flex items-center pt-2">
 							<Calendar class="mr-2 h-4 w-4 opacity-70" />
-							<span class="text-xs text-muted-foreground"
+							<span class="text-muted-foreground text-xs"
 								>Joined {dayjs(user.createdAt).format("MMMM YYYY")}</span
 							>
 						</div>

@@ -38,14 +38,14 @@ export default async function userByUsernameActivityRoutes(fastify: FastifyInsta
 			]);
 
 			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({
-				user,
+				activity: { puzzles: puzzlesByUser, submissions: submissionsByUser },
 				message: "User activity found",
-				activity: { puzzles: puzzlesByUser, submissions: submissionsByUser }
+				user
 			});
 		} catch (error) {
 			return reply
 				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ message: "Internal Server Error" });
+				.send({ message: "Internal Server Error" + error });
 		}
 	});
 }

@@ -35,10 +35,10 @@ export async function checkAllValidators(
 
 	for (const validator of puzzle.validators) {
 		const requestObject: PistonExecutionRequest = {
-			language: runtimeInfo.language,
-			version: runtimeInfo.version,
 			files: [{ content: puzzle.solution.code }],
-			stdin: validator.input
+			language: runtimeInfo.language,
+			stdin: validator.input,
+			version: runtimeInfo.version
 		};
 
 		try {

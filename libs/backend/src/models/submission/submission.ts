@@ -11,12 +11,20 @@ export interface SubmissionDocument extends Document, Omit<SubmissionEntity, "pu
 const submissionSchema = new Schema<SubmissionDocument>({
 	code: {
 		required: true,
-		type: String,
-		select: false
+		select: false,
+		type: String
 	},
 	createdAt: {
 		default: Date.now,
 		type: Date
+	},
+	language: {
+		required: true,
+		type: String
+	},
+	languageVersion: {
+		required: true,
+		type: String
 	},
 	puzzle: {
 		ref: PUZZLE,
@@ -31,14 +39,6 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		ref: USER,
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
-	},
-	language: {
-		required: true,
-		type: String
-	},
-	languageVersion: {
-		required: true,
-		type: String
 	}
 });
 

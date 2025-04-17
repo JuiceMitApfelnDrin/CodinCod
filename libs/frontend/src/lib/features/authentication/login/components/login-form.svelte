@@ -4,7 +4,7 @@
 	import { Input } from "@/components/ui/input";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import { loginSchema, PASSWORD_CONFIG, POST, IDENTIFIER_CONFIG, type Login } from "types";
+	import { loginSchema, PASSWORD_CONFIG, httpRequestMethod, IDENTIFIER_CONFIG, type Login } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
@@ -25,7 +25,7 @@
 </script>
 
 <form
-	method={POST}
+	method={httpRequestMethod.POST}
 	use:enhance
 	class="my-5 flex flex-col items-center gap-5"
 	on:input={handleFormInput}

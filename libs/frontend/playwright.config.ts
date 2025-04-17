@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { defineConfig, devices } from "@playwright/test";
 
 /**
@@ -28,9 +29,10 @@ export default defineConfig({
 		/* Base URL to use in actions like `await page.goto('/')`. */
 		baseURL: "http://localhost:5173",
 
+		colorScheme: "dark",
+
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: "on-first-retry",
-		colorScheme: "dark"
+		trace: "on-first-retry"
 	},
 
 	/* Configure projects for major browsers */

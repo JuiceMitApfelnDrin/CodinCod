@@ -37,6 +37,7 @@
 		"globals": "^15.9.0",
 		"lucide-svelte": "^0.378.0",
 		"mdsvex": "^0.12.3",
+		"oxlint": "^0.16.6",
 		"paneforge": "^0.0.6",
 		"postcss": "^8.4.33",
 		"prettier": "^3.3.3",

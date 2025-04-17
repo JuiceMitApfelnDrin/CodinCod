@@ -45,7 +45,7 @@
 		const updatedComment = await response.json();
 
 		if (isCommentDto(updatedComment)) {
-			comment = { ...comment, upvote: updatedComment.upvote, downvote: updatedComment.downvote };
+			comment = { ...comment, downvote: updatedComment.downvote, upvote: updatedComment.upvote };
 		}
 	}
 
@@ -69,10 +69,10 @@
 			comment = {
 				...comment,
 				comments: [...updatedCommentInfoWithSubComments.comments],
-				upvote: updatedCommentInfoWithSubComments.upvote,
 				downvote: updatedCommentInfoWithSubComments.downvote,
+				text: updatedCommentInfoWithSubComments.text,
 				updatedAt: updatedCommentInfoWithSubComments.updatedAt,
-				text: updatedCommentInfoWithSubComments.text
+				upvote: updatedCommentInfoWithSubComments.upvote
 			};
 		}
 	}

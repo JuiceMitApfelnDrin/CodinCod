@@ -2,27 +2,27 @@ import { Schema } from "mongoose";
 import { UserProfile } from "types";
 
 export const profileSchema = new Schema<UserProfile>({
-	picture: {
-		type: String,
-		required: false,
-		trim: true
-	},
 	bio: {
-		type: String,
 		required: false,
-		trim: true
+		trim: true,
+		type: String,
 	},
 	location: {
-		type: String,
 		required: false,
-		trim: true
+		trim: true,
+		type: String,
+	},
+	picture: {
+		required: false,
+		trim: true,
+		type: String,
 	},
 	socials: {
 		required: false,
 		type: [
 			{
-				type: String,
-				trim: true
+				trim: true,
+				type: String
 			}
 		]
 	}

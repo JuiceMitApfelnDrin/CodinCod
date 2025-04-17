@@ -1,5 +1,5 @@
 import { WebSocket } from "@fastify/websocket";
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { FastifyRequest } from "fastify";
 import { onConnection } from "./on-connection.js";
 import {
 	ChatMessage,
@@ -23,11 +23,7 @@ function isPlayerInGame(game: GameDocument, userId: ObjectId) {
 	return game.players.some((player) => getUserIdFromUser(player) === userId);
 }
 
-export function gameSetup(
-	socket: WebSocket,
-	req: FastifyRequest<ParamsId>,
-	fastify: FastifyInstance
-) {
+export function gameSetup(socket: WebSocket, req: FastifyRequest<ParamsId>) {
 	const { id } = req.params;
 
 	if (!isAuthenticatedInfo(req.user)) {
@@ -36,9 +32,9 @@ export function gameSetup(
 	if (!isValidObjectId(id)) {
 		socket.send(
 			JSON.stringify({
-				socket,
 				event: gameEventEnum.NONEXISTENT_GAME,
-				message: "invalid id"
+				message: "invalid id",
+				socket
 			})
 		);
 
@@ -161,8 +157,8 @@ export function gameSetup(
 					};
 
 					userWebSockets.updateAllUsers({
-						event: gameEventEnum.SEND_MESSAGE,
-						chatMessage: updatedChatMessage
+						chatMessage: updatedChatMessage,
+						event: gameEventEnum.SEND_MESSAGE
 					});
 				}
 				break;
@@ -188,7 +184,7 @@ export function gameSetup(
 		}
 	});
 
-	socket.on("close", (code, reason) => {
+	socket.on("close", () => {
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}

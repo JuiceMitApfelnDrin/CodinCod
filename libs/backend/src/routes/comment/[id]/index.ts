@@ -3,16 +3,19 @@ import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
-import { commentTypeEnum, httpResponseCodes, objectIdSchema } from "types";
+import { commentTypeEnum, ErrorResponse, httpResponseCodes, objectIdSchema } from "types";
 
 export default async function commentByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
 		const parseResult = objectIdSchema.safeParse(request.params.id);
 
 		if (!parseResult.success) {
-			return reply
-				.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-				.send({ error: parseResult.error.errors });
+			const errorResponse: ErrorResponse = {
+				error: "Failed to validate id",
+				message: "" + parseResult.error.errors
+			};
+
+			return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send(errorResponse);
 		}
 
 		try {
@@ -27,16 +30,22 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 				});
 
 			if (!comment) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-					.send({ error: "Comment not found" });
+				const errorResponse: ErrorResponse = {
+					error: "Comment not found",
+					message: "Couldn't find comment"
+				};
+
+				return reply.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND).send(errorResponse);
 			}
 
 			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(comment);
 		} catch (error) {
-			return reply
-				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ error: "Failed to fetch comment" });
+			const errorResponse: ErrorResponse = {
+				error: "Failed to fetch comment",
+				message: "" + error
+			};
+
+			return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(errorResponse);
 		}
 	});
 
@@ -74,9 +83,14 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 
 				return reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send(comment);
 			} catch (error) {
+				const errorResponse: ErrorResponse = {
+					error: "Failed to fetch comment",
+					message: "" + error
+				};
+
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to fetch comment" });
+					.send(errorResponse);
 			}
 		}
 	);

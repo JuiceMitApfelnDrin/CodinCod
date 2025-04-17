@@ -1,6 +1,6 @@
 import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isUsername } from "types";
+import { ErrorResponse, httpResponseCodes, isUsername } from "types";
 import { ParamsUsername } from "../types.js";
 import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
 
@@ -22,12 +22,17 @@ export default async function userByUsernameIsAvailableRoutes(fastify: FastifyIn
 			const existingUser = await User.findOne({ username });
 
 			if (existingUser) {
-				return reply.status(200).send({ isAvailable: false });
+				return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({ isAvailable: false });
 			}
 
-			return reply.status(200).send({ isAvailable: true });
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({ isAvailable: true });
 		} catch (error) {
-			reply.status(500).send({ message: "Internal Server Error" });
+			const errorResponse: ErrorResponse = {
+				error: "Internal Server Error",
+				message: "" + error
+			};
+
+			reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(errorResponse);
 		}
 	});
 }

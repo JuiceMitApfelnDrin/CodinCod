@@ -81,7 +81,7 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 				if (isValidationError(error)) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-						.send({ error: "Validation failed", details: error.errors });
+						.send({ details: error.errors, error: "Validation failed" });
 				}
 
 				return reply

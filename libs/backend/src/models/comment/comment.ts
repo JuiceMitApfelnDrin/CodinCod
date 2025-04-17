@@ -10,41 +10,41 @@ export interface CommentDocument extends Document, Omit<CommentEntity, "author">
 export const commentSchema = new Schema<CommentDocument>({
 	author: {
 		ref: USER,
-		type: Schema.Types.ObjectId,
-		required: true
-	},
-	downvote: {
-		type: Number,
 		required: true,
-		default: 0
+		type: Schema.Types.ObjectId
 	},
-	upvote: {
-		type: Number,
+	commentType: {
+		default: commentTypeEnum.COMMENT,
 		required: true,
-		default: 0
+		type: String
 	},
-	text: {
-		type: String,
-		required: true
-	},
+	comments: [
+		{
+			ref: COMMENT,
+			type: Schema.Types.ObjectId
+		}
+	],
 	createdAt: {
 		default: Date.now,
 		type: Date
+	},
+	downvote: {
+		default: 0,
+		required: true,
+		type: Number
+	},
+	text: {
+		required: true,
+		type: String
 	},
 	updatedAt: {
 		default: Date.now,
 		type: Date
 	},
-	comments: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: COMMENT
-		}
-	],
-	commentType: {
-		type: String,
+	upvote: {
+		default: 0,
 		required: true,
-		default: commentTypeEnum.COMMENT
+		type: Number
 	}
 });
 

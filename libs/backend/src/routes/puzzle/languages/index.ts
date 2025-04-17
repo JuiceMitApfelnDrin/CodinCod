@@ -20,9 +20,14 @@ export default async function puzzleLanguagesRoutes(fastify: FastifyInstance) {
 				languages: languages.sort()
 			});
 		} catch (error) {
+			const errorResponse: ErrorResponse = {
+				error: "Failed to fetch languages",
+				message: "" + error
+			};
+
 			return reply
 				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ error: "Failed to fetch languages" });
+				.send(errorResponse);
 		}
 	});
 }

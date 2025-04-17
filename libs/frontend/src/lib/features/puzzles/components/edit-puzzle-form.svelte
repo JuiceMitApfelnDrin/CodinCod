@@ -8,7 +8,7 @@
 	import {
 		buildFrontendUrl,
 		frontendUrls,
-		POST,
+		httpRequestMethod,
 		PUZZLE_CONFIG,
 		puzzleEntitySchema,
 		puzzleVisibilityEnum,
@@ -48,9 +48,9 @@
 			}
 
 			$form.validators.push({
+				createdAt: new Date(),
 				input: "",
 				output: "",
-				createdAt: new Date(),
 				updatedAt: new Date()
 			});
 
@@ -88,7 +88,7 @@
 	let visibilityStates: PuzzleVisibility[] = Object.values(puzzleVisibilityEnum);
 </script>
 
-<form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
+<form method={httpRequestMethod.POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Title</Form.Label>

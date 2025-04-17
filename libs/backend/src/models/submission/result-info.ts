@@ -3,11 +3,11 @@ import { PuzzleResultInformation } from "types";
 
 export const resultInfoSchema = new Schema<PuzzleResultInformation>({
 	result: {
-		type: String,
-		required: true
+		required: true,
+		type: String
 	},
 	successRate: {
-		type: Number,
-		required: true
+		required: true,
+		type: Number
 	}
 });
