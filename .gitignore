@@ -18,3 +18,5 @@ libs/**/.env
 
 /data
 .venv
+setup-dev-env.sh
+todos.md
