@@ -11,8 +11,8 @@
 
 <Nav />
 
-<div class="dark:bg-primary-900 dark:text-primary-100 flex min-h-screen flex-col">
+<main class="dark:bg-primary-900 dark:text-primary-100 flex min-h-screen flex-col">
 	<slot />
-</div>
+</main>
 
 <Toaster richColors closeButton />
