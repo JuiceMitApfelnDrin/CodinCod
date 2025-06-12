@@ -28,7 +28,7 @@
 		"@types/bcrypt": "^5.0.2",
 		"bcrypt": "^5.1.1",
 		"dotenv": "^16.4.5",
-		"fastify": "^4.28.1",
+		"fastify": "^4.29.1",
 		"fastify-plugin": "^4.5.1",
 		"mongodb": "^6.8.0",
 		"mongoose": "^8.5.1",
