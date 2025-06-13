@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import LanguageSelect from "@/features/puzzles/components/language-select.svelte";

@@ -11,8 +11,8 @@
 		value: $$Props["value"];
 		label?: $$Props["label"];
 		disabled?: $$Props["disabled"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -23,7 +23,6 @@
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <SelectPrimitive.Item

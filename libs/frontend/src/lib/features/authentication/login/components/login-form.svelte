@@ -35,9 +35,9 @@
 	oninput={handleFormInput}
 >
 	<Form.Field {form} name="identifier" class="w-full">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Username or email</Form.Label>
+				<Form.Label class="text-lg">Username or email</Form.Label>
 				<Input
 					{...attrs}
 					data-testid={testIds.LOGIN_FORM_INPUT_IDENTIFIER}
@@ -45,15 +45,15 @@
 					minlength={IDENTIFIER_CONFIG.minIdentifierLength}
 					maxlength={IDENTIFIER_CONFIG.maxIdentifierLength}
 				/>
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="password" class="w-full">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Password</Form.Label>
+				<Form.Label class="text-lg">Password</Form.Label>
 				<Input
 					type="password"
 					{...attrs}
@@ -61,8 +61,8 @@
 					bind:value={$formData.password}
 					minlength={PASSWORD_CONFIG.minPasswordLength}
 				/>
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 

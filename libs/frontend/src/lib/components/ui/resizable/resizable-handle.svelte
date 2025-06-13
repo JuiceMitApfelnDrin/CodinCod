@@ -13,8 +13,11 @@
 		class?: $$Props["class"];
 	}
 
-	let { withHandle = false, el = $bindable(undefined), class: className = undefined }: Props = $props();
-	
+	let {
+		withHandle = false,
+		el = $bindable(undefined),
+		class: className = undefined
+	}: Props = $props();
 </script>
 
 <ResizablePrimitive.PaneResizer

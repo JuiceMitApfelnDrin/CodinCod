@@ -67,30 +67,30 @@
 	<LogicalUnit class="mb-8">
 		<Accordion open={true} id="statement">
 			{#snippet title()}
-						<h2 >Statement</h2>
-					{/snippet}
+				<h2>Statement</h2>
+			{/snippet}
 			{#snippet content()}
-						<div  class={cn(!puzzle.statement && "italic opacity-50")}>
+				<div class={cn(!puzzle.statement && "italic opacity-50")}>
 					<Markdown
 						markdown={puzzle.statement}
 						fallbackText={"Author still needs to add a statement"}
 					/>
 				</div>
-					{/snippet}
+			{/snippet}
 		</Accordion>
 
 		<Accordion open={true} id="constraints">
 			{#snippet title()}
-						<h2 >Constraints</h2>
-					{/snippet}
+				<h2>Constraints</h2>
+			{/snippet}
 			{#snippet content()}
-						<div  class={cn(!puzzle.constraints && "italic opacity-50")}>
+				<div class={cn(!puzzle.constraints && "italic opacity-50")}>
 					<Markdown
 						markdown={puzzle.constraints}
 						fallbackText={"Author still needs to add constraints"}
 					/>
 				</div>
-					{/snippet}
+			{/snippet}
 		</Accordion>
 	</LogicalUnit>
 

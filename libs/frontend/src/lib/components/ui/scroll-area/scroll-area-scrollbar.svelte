@@ -9,11 +9,10 @@
 	interface Props {
 		class?: $$Props["class"];
 		orientation?: $$Props["orientation"];
-		children?: import('svelte').Snippet;
+		children?: import("svelte").Snippet;
 	}
 
 	let { class: className = undefined, orientation = "vertical", children }: Props = $props();
-	
 </script>
 
 <ScrollAreaPrimitive.Scrollbar

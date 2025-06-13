@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import { Badge, type Variant } from "@/components/ui/badge";
 	import { puzzleVisibilityEnum, type PuzzleVisibility } from "types";

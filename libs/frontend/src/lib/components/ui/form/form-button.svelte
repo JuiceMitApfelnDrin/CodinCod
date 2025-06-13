@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Button from "$lib/components/ui/button/index.js";
 	interface Props {
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let { children, ...rest }: Props = $props();

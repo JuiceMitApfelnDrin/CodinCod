@@ -30,11 +30,11 @@
 
 			<form method="POST" action="?/deletePuzzle" use:enhance>
 				<Form.Field {form} name="id">
-					<Form.Control >
+					<Form.Control>
 						{#snippet children({ attrs })}
-												<Input type="hidden" {...attrs} bind:value={$formData.id} />
-																	{/snippet}
-										</Form.Control>
+							<Input type="hidden" {...attrs} bind:value={$formData.id} />
+						{/snippet}
+					</Form.Control>
 					<Form.Description>
 						This action cannot be undone. This will permanently delete your puzzle and remove this
 						puzzle from our servers.

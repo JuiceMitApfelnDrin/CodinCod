@@ -35,9 +35,9 @@
 	oninput={handleFormInput}
 >
 	<Form.Field {form} name="username" class="w-full">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Username</Form.Label>
+				<Form.Label class="text-lg">Username</Form.Label>
 				<Input
 					{...attrs}
 					bind:value={$formData.username}
@@ -46,8 +46,8 @@
 					maxlength={USERNAME_CONFIG.maxUsernameLength}
 					pattern={USERNAME_CONFIG.allowedCharacters.source}
 				/>
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.Description
 			>Username must be {USERNAME_CONFIG.minUsernameLength}-{USERNAME_CONFIG.maxUsernameLength} characters
 			long and can include letters, numbers, hyphens, and underscores.</Form.Description
@@ -56,28 +56,33 @@
 	</Form.Field>
 
 	<Form.Field {form} name="email" class="w-full">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Email</Form.Label>
-				<Input {...attrs} bind:value={$formData.email} placeholder="john@example.com" type="email" />
-								{/snippet}
-				</Form.Control>
+				<Form.Label class="text-lg">Email</Form.Label>
+				<Input
+					{...attrs}
+					bind:value={$formData.email}
+					placeholder="john@example.com"
+					type="email"
+				/>
+			{/snippet}
+		</Form.Control>
 		<Form.Description>Email must be a valid email address.</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="password" class="w-full">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Password</Form.Label>
+				<Form.Label class="text-lg">Password</Form.Label>
 				<Input
 					type="password"
 					{...attrs}
 					bind:value={$formData.password}
 					placeholder={`${PASSWORD_CONFIG.minPasswordLength}characters`}
 				/>
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.Description
 			>Password must be at least {PASSWORD_CONFIG.minPasswordLength} characters.
 			<span class="text-xs"

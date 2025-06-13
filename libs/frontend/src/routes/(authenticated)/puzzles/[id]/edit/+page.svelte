@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import Container from "@/components/ui/container/container.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";

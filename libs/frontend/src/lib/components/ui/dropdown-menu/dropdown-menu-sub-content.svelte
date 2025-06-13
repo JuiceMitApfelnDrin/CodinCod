@@ -10,21 +10,20 @@
 		class?: $$Props["class"];
 		transition?: $$Props["transition"];
 		transitionConfig?: $$Props["transitionConfig"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
 		class: className = undefined,
 		transition = flyAndScale,
 		transitionConfig = {
-		x: -10,
-		y: 0
-	},
+			x: -10,
+			y: 0
+		},
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <DropdownMenuPrimitive.SubContent

@@ -23,12 +23,12 @@
 
 <form method={POST} use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Title</Form.Label>
+				<Form.Label class="text-lg">Title</Form.Label>
 				<Input {...attrs} bind:value={$formData.title} />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.Description>This will be the title of the puzzle.</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>

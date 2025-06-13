@@ -4,8 +4,6 @@
 	import type { HTMLInputAttributes } from "svelte/elements";
 	import { PuzzleResultEnum, type PuzzleResult } from "types";
 
-	
-
 	interface Props {
 		class?: HTMLInputAttributes["class"];
 		puzzleResult: PuzzleResult | undefined;

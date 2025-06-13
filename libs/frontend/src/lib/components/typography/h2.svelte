@@ -9,7 +9,7 @@
 	}
 
 	let { class = undefined, children }: Props = $props();
-	
+
 </script>
 
 <h2

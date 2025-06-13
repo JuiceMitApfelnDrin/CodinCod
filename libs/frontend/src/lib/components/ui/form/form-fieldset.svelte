@@ -10,35 +10,20 @@
 
 	type $$Props = FormPrimitive.FieldsetProps<T, U>;
 
-
 	interface Props {
 		form: SuperForm<T>;
 		name: U;
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet<[any]>;
+		children?: import("svelte").Snippet<[any]>;
 	}
 
-	let {
-		form,
-		name,
-		class: className = undefined,
-		children
-	}: Props = $props();
-	
+	let { form, name, class: className = undefined, children }: Props = $props();
 
 	const children_render = $derived(children);
 </script>
 
-<FormPrimitive.Fieldset
-	{form}
-	{name}
-	
-	
-	
-	
-	class={cn("space-y-2", className)}
->
+<FormPrimitive.Fieldset {form} {name} class={cn("space-y-2", className)}>
 	{#snippet children({ constraints, errors, tainted, value })}
-		{@render children_render?.({ constraints, errors, tainted, value, })}
+		{@render children_render?.({ constraints, errors, tainted, value })}
 	{/snippet}
 </FormPrimitive.Fieldset>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createBubbler } from 'svelte/legacy';
+	import { createBubbler } from "svelte/legacy";
 
 	const bubble = createBubbler();
 	import type { HTMLAttributes } from "svelte/elements";
@@ -12,12 +12,11 @@
 
 	interface Props {
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, children, ...rest }: Props = $props();
-	
 </script>
 
 <tr
@@ -26,8 +25,8 @@
 		className
 	)}
 	{...rest}
-	onclick={bubble('click')}
-	onkeydown={bubble('keydown')}
+	onclick={bubble("click")}
+	onkeydown={bubble("keydown")}
 >
 	{@render children?.()}
 </tr>

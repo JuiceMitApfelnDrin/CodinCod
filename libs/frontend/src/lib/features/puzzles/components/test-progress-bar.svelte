@@ -4,8 +4,6 @@
 	import { type PuzzleResult } from "types";
 	import ValidatorStatus from "./validator-status.svelte";
 
-	
-
 	interface Props {
 		class?: HTMLInputAttributes["class"];
 		puzzleResults: (PuzzleResult | undefined)[];

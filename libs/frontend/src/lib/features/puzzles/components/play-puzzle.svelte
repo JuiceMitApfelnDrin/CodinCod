@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import {
@@ -197,24 +197,24 @@
 <LogicalUnit>
 	<Accordion open={true} id="statement">
 		{#snippet title()}
-				<h2 >Statement</h2>
-			{/snippet}
+			<h2>Statement</h2>
+		{/snippet}
 		{#snippet content()}
-				<div >
+			<div>
 				<Markdown markdown={puzzle.statement} fallbackText="No statement" />
 			</div>
-			{/snippet}
+		{/snippet}
 	</Accordion>
 
 	<Accordion open={true} id="constraints">
 		{#snippet title()}
-				<h2 >Constraints</h2>
-			{/snippet}
+			<h2>Constraints</h2>
+		{/snippet}
 		{#snippet content()}
-				<div >
+			<div>
 				<Markdown markdown={puzzle.constraints} fallbackText="No constraints" />
 			</div>
-			{/snippet}
+		{/snippet}
 	</Accordion>
 </LogicalUnit>
 
@@ -273,11 +273,11 @@
 
 		<Accordion bind:open={openTests} id="tests">
 			{#snippet title()}
-						<h2 >Tests</h2>
-					{/snippet}
+				<h2>Tests</h2>
+			{/snippet}
 
 			{#snippet content()}
-						<ul class="flex flex-col gap-10" >
+				<ul class="flex flex-col gap-10">
 					{#each puzzle.validators as validator, index}
 						<li class="relative">
 							<div
@@ -342,7 +342,7 @@
 						</li>
 					{/each}
 				</ul>
-					{/snippet}
+			{/snippet}
 		</Accordion>
 	</LogicalUnit>
 {/if}

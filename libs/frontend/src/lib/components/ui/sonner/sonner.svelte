@@ -3,7 +3,7 @@
 	import { Toaster as Sonner, type ToasterProps as SonnerProps } from "svelte-sonner";
 	import { themeOption } from "types";
 	interface Props {
-		[key: string]: any
+		[key: string]: any;
 	}
 
 	let { ...rest }: Props = $props();

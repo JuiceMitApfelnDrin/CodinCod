@@ -8,12 +8,11 @@
 
 	interface Props {
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet<[any]>;
-		[key: string]: any
+		children?: import("svelte").Snippet<[any]>;
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, children, ...rest }: Props = $props();
-	
 
 	const children_render = $derived(children);
 </script>
@@ -24,12 +23,11 @@
 		className
 	)}
 	{...rest}
-	
 	on:click
 	on:keydown
 >
 	{#snippet children({ builder })}
-		{@render children_render?.({ builder, })}
+		{@render children_render?.({ builder })}
 		<div>
 			<ChevronDown class="h-4 w-4 opacity-50" />
 		</div>

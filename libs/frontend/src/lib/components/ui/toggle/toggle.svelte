@@ -14,8 +14,8 @@
 		variant?: $$Props["variant"];
 		size?: $$Props["size"];
 		pressed?: $$Props["pressed"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -26,7 +26,6 @@
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <TogglePrimitive.Root

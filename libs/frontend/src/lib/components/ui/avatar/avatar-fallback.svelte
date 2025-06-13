@@ -6,11 +6,10 @@
 
 	interface Props {
 		class?: $$Props["class"];
-		[key: string]: any
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, ...rest }: Props = $props();
-	
 </script>
 
 <AvatarPrimitive.Fallback

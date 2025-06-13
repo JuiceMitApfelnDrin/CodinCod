@@ -11,8 +11,8 @@
 		variant?: $$Props["variant"];
 		size?: $$Props["size"];
 		builders?: $$Props["builders"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -23,7 +23,6 @@
 		children,
 		...rest
 	}: Props_1 = $props();
-	
 </script>
 
 <ButtonPrimitive.Root

@@ -10,8 +10,6 @@
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
 
-	
-
 	interface Props {
 		class?: ButtonPrimitive.Props["class"];
 		username: string;
@@ -55,7 +53,7 @@
 	<HoverCard.Content class="w-80">
 		{#await fetchUserInfo(username)}
 			loading...
-		{:then {user }}
+		{:then { user }}
 			{#if isUserDto(user)}
 				<div class="flex justify-between space-x-4">
 					<Avatar.Root asChild>

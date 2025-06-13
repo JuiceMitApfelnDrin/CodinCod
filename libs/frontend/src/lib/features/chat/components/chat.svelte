@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
+	import { preventDefault } from "svelte/legacy";
 
 	import H2 from "@/components/typography/h2.svelte";
 	import Button from "@/components/ui/button/button.svelte";

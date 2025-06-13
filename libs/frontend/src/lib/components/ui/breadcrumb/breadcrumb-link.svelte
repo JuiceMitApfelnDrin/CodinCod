@@ -12,8 +12,8 @@
 		el?: $$Props["el"];
 		asChild?: $$Props["asChild"];
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet<[any]>;
-		[key: string]: any
+		children?: import("svelte").Snippet<[any]>;
+		[key: string]: any;
 	}
 
 	let {
@@ -24,21 +24,18 @@
 		children,
 		...rest
 	}: Props = $props();
-	
 
 	let attrs: Record<string, unknown> = $derived({
 		class: cn("hover:text-foreground transition-colors", className),
 		href,
 		...rest
 	});
-
-	
 </script>
 
 {#if asChild}
-	{@render children?.({ attrs, })}
+	{@render children?.({ attrs })}
 {:else}
 	<a bind:this={el} {...attrs} {href}>
-		{@render children?.({ attrs, })}
+		{@render children?.({ attrs })}
 	</a>
 {/if}
