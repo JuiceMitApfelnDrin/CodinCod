@@ -9,12 +9,11 @@
 	interface Props {
 		class?: $$Props["class"];
 		inset?: $$Props["inset"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, inset = undefined, children, ...rest }: Props = $props();
-	
 </script>
 
 <DropdownMenuPrimitive.Label

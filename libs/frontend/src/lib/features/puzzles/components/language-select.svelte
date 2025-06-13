@@ -7,17 +7,17 @@
 	interface Props {
 		language?: string;
 		languages?: string[];
-		formAttributes?: 
-		| {
-				name: string;
-				id: string;
-				"data-fs-error": string | undefined;
-				"aria-describedby": string | undefined;
-				"aria-invalid": "true" | undefined;
-				"aria-required": "true" | undefined;
-				"data-fs-control": string;
-		  }
-		| undefined;
+		formAttributes?:
+			| {
+					name: string;
+					id: string;
+					"data-fs-error": string | undefined;
+					"aria-describedby": string | undefined;
+					"aria-invalid": "true" | undefined;
+					"aria-required": "true" | undefined;
+					"data-fs-control": string;
+			  }
+			| undefined;
 	}
 
 	let { language = $bindable(""), languages = [], formAttributes = undefined }: Props = $props();

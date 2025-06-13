@@ -5,11 +5,10 @@
 
 	interface Props {
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
+		children?: import("svelte").Snippet;
 	}
 
 	let { class: className = undefined, children }: Props = $props();
-	
 </script>
 
 <!-- important: should never have any classes defined by itself! -->

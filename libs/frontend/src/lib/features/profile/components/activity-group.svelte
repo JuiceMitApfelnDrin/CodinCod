@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import { ChevronDown } from "lucide-svelte";

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import Nav from "@/components/nav/navigation/navigation.svelte";
 	import { authenticatedUserInfo } from "@/stores/index.js";

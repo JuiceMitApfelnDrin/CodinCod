@@ -4,7 +4,6 @@
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { httpResponseCodes } from "types";
 
-
 	interface Props {
 		message: string;
 		title: string;

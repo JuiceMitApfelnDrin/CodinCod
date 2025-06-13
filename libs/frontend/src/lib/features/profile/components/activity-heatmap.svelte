@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import dayjs from "dayjs";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
@@ -22,10 +22,12 @@
 	const startDate = now.subtract(minNumberOfDays, "day");
 	const endDate = now;
 
-	let days = $derived(Array.from({ length: minNumberOfDays }, (_, i) => {
-		const date = startDate.add(i, "day").format("YYYY-MM-DD");
-		return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
-	}));
+	let days = $derived(
+		Array.from({ length: minNumberOfDays }, (_, i) => {
+			const date = startDate.add(i, "day").format("YYYY-MM-DD");
+			return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
+		})
+	);
 
 	let monthGroups: Array<{ month: string; colspan: number }> = $state([]);
 
@@ -59,10 +61,12 @@
 		monthGroups = currentGroup ? [...groups, currentGroup] : groups;
 	});
 
-	let dayNames = $derived(Array.from({ length: totalDays }, (_, i) => {
-		const d = dayjs().startOf("week").add(i, "day");
-		return { long: d.format("dddd"), short: d.format("ddd").toUpperCase() };
-	}));
+	let dayNames = $derived(
+		Array.from({ length: totalDays }, (_, i) => {
+			const d = dayjs().startOf("week").add(i, "day");
+			return { long: d.format("dddd"), short: d.format("ddd").toUpperCase() };
+		})
+	);
 
 	function calcDayStyle(count: number): string {
 		if (count <= 0) {

@@ -6,17 +6,13 @@
 
 	interface Props {
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, children, ...rest }: Props = $props();
-	
 </script>
 
-<SelectPrimitive.Label
-	class={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)}
-	{...rest}
->
+<SelectPrimitive.Label class={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)} {...rest}>
 	{@render children?.()}
 </SelectPrimitive.Label>

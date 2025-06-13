@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";

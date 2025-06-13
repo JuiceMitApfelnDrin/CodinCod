@@ -7,12 +7,11 @@
 	interface Props {
 		class?: $$Props["class"];
 		delayMs?: $$Props["delayMs"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, delayMs = undefined, children, ...rest }: Props = $props();
-	
 </script>
 
 <AvatarPrimitive.Root

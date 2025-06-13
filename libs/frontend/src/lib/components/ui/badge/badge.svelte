@@ -6,8 +6,8 @@
 		class?: string | undefined | null;
 		href?: string | undefined;
 		variant?: Variant;
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -17,7 +17,6 @@
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <svelte:element

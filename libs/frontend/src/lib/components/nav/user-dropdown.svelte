@@ -9,9 +9,9 @@
 
 {#if $authenticatedUserInfo?.isAuthenticated}
 	<DropdownMenu.Root>
-		<DropdownMenu.Trigger asChild >
+		<DropdownMenu.Trigger asChild>
 			{#snippet children({ builder })}
-						<Avatar.Root asChild>
+				<Avatar.Root asChild>
 					<Button
 						data-testid={testIds.NAVIGATION_MENU_BUTTON_OPEN}
 						size="icon"
@@ -27,8 +27,8 @@
 						<Avatar.Fallback />
 					</Button>
 				</Avatar.Root>
-								{/snippet}
-				</DropdownMenu.Trigger>
+			{/snippet}
+		</DropdownMenu.Trigger>
 
 		<DropdownMenu.Content>
 			<DropdownMenu.Group>

@@ -11,8 +11,8 @@
 		transitionConfig?: $$Props["transitionConfig"];
 		align?: $$Props["align"];
 		sideOffset?: $$Props["sideOffset"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -24,7 +24,6 @@
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <HoverCardPrimitive.Content

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy";
 
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
@@ -129,7 +129,7 @@
 							<Table.Cell colspan={6} aria-live="polite" class="m-0 p-0">
 								{#await fetchCode(_id)}
 									<span class="p-2">Loading code...</span>
-								{:then {code }}
+								{:then { code }}
 									<Codemirror {language} value={code} readonly={true} />
 								{:catch}
 									<span class="p-2 text-red-500"

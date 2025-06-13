@@ -7,12 +7,11 @@
 
 	interface Props {
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, children, ...rest }: Props = $props();
-	
 </script>
 
 <tfoot class={cn("bg-muted/50 font-medium text-primary-foreground", className)} {...rest}>

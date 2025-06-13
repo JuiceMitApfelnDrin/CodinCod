@@ -7,7 +7,7 @@
 	import BecomeAContributor from "@/features/learn/components/become-a-contributor.svelte";
 	import { frontendUrls } from "types";
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: import("svelte").Snippet;
 	}
 
 	let { children }: Props = $props();

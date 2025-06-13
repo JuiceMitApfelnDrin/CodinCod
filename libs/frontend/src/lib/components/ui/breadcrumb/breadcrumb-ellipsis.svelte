@@ -10,11 +10,10 @@
 	interface Props {
 		el?: $$Props["el"];
 		class?: $$Props["class"];
-		[key: string]: any
+		[key: string]: any;
 	}
 
 	let { el = $bindable(undefined), class: className = undefined, ...rest }: Props = $props();
-	
 </script>
 
 <span

@@ -1,7 +1,7 @@
 <script lang="ts">
 	interface Props {
 		title: string;
-		children?: import('svelte').Snippet;
+		children?: import("svelte").Snippet;
 	}
 
 	let { title, children }: Props = $props();

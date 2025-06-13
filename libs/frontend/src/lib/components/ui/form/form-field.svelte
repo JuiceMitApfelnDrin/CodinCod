@@ -11,29 +11,22 @@
 
 	type $$Props = FormPrimitive.FieldProps<T, U> & HTMLAttributes<HTMLElement>;
 
-
 	interface Props {
 		form: SuperForm<T>;
 		name: U;
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet<[any]>;
+		children?: import("svelte").Snippet<[any]>;
 	}
 
-	let {
-		form,
-		name,
-		class: className = undefined,
-		children
-	}: Props = $props();
-	
+	let { form, name, class: className = undefined, children }: Props = $props();
 
 	const children_render = $derived(children);
 </script>
 
-<FormPrimitive.Field {form} {name}    >
+<FormPrimitive.Field {form} {name}>
 	{#snippet children({ constraints, errors, tainted, value })}
 		<div class={cn("space-y-2", className)}>
-			{@render children_render?.({ constraints, errors, tainted, value, })}
+			{@render children_render?.({ constraints, errors, tainted, value })}
 		</div>
 	{/snippet}
 </FormPrimitive.Field>

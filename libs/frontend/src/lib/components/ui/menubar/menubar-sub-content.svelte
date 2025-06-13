@@ -10,8 +10,8 @@
 		class?: $$Props["class"];
 		transition?: $$Props["transition"];
 		transitionConfig?: $$Props["transitionConfig"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -21,7 +21,6 @@
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <MenubarPrimitive.SubContent

@@ -9,14 +9,13 @@
 		scrollbarYClasses?: string;
 	};
 
-	
 	interface Props {
 		class?: $$Props["class"];
 		orientation?: string;
 		scrollbarXClasses?: string;
 		scrollbarYClasses?: string;
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {

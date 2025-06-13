@@ -9,8 +9,8 @@
 		direction: $$Props["direction"];
 		paneGroup?: $$Props["paneGroup"];
 		el?: $$Props["el"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -21,7 +21,6 @@
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <ResizablePrimitive.PaneGroup

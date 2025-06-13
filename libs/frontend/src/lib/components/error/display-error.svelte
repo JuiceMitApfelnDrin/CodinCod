@@ -18,9 +18,9 @@
 		message = null,
 		header = null,
 		link = {
-		href: frontendUrls.ROOT,
-		text: "Go to Homepage"
-	}
+			href: frontendUrls.ROOT,
+			text: "Go to Homepage"
+		}
 	}: Props = $props();
 
 	type ErrorTypeDefaultInfo = { header: string; description: string };

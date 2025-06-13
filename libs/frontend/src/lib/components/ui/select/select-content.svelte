@@ -7,7 +7,6 @@
 	type $$Props = SelectPrimitive.ContentProps;
 	type $$Events = SelectPrimitive.ContentEvents;
 
-
 	interface Props {
 		sideOffset?: $$Props["sideOffset"];
 		inTransition?: $$Props["inTransition"];
@@ -15,8 +14,8 @@
 		outTransition?: $$Props["outTransition"];
 		outTransitionConfig?: $$Props["outTransitionConfig"];
 		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
+		children?: import("svelte").Snippet;
+		[key: string]: any;
 	}
 
 	let {
@@ -25,15 +24,14 @@
 		inTransitionConfig = undefined,
 		outTransition = scale,
 		outTransitionConfig = {
-		duration: 50,
-		opacity: 0,
-		start: 0.95
-	},
+			duration: 50,
+			opacity: 0,
+			start: 0.95
+		},
 		class: className = undefined,
 		children,
 		...rest
 	}: Props = $props();
-	
 </script>
 
 <SelectPrimitive.Content

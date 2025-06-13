@@ -5,12 +5,11 @@
 
 	type $$Props = ButtonPrimitive.Props & { class?: string; href: FrontendUrl; text: string };
 
-	
 	interface Props {
 		class?: $$Props["class"];
 		href: FrontendUrl;
 		text: string;
-		[key: string]: any
+		[key: string]: any;
 	}
 
 	let { class: className = undefined, href, text, ...rest }: Props = $props();

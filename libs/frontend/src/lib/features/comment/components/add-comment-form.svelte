@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
+	import { preventDefault } from "svelte/legacy";
 
 	import Button from "@/components/ui/button/button.svelte";
 	import Label from "@/components/ui/label/label.svelte";
