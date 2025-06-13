@@ -1,18 +1,22 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Nav from "@/components/nav/navigation/navigation.svelte";
 	import { authenticatedUserInfo } from "@/stores/index.js";
 	import { isAuthenticatedInfo } from "types";
 	import { Toaster } from "$lib/components/ui/sonner";
 
-	export let data;
+	let { data, children } = $props();
 
-	$: authenticatedUserInfo.set(isAuthenticatedInfo(data) ? data : null);
+	run(() => {
+		authenticatedUserInfo.set(isAuthenticatedInfo(data) ? data : null);
+	});
 </script>
 
 <Nav />
 
 <main class="dark:bg-primary-900 dark:text-primary-100 flex min-h-screen flex-col">
-	<slot />
+	{@render children?.()}
 </main>
 
 <Toaster richColors closeButton />

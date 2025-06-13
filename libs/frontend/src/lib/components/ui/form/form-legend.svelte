@@ -4,14 +4,24 @@
 
 	type $$Props = FormPrimitive.LegendProps;
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet<[any]>;
+		[key: string]: any
+	}
+
+	let { class: className = undefined, children, ...rest }: Props = $props();
+	
+
+	const children_render = $derived(children);
 </script>
 
 <FormPrimitive.Legend
-	{...$$restProps}
+	{...rest}
 	class={cn("text-sm font-medium leading-none data-[fs-error]:text-destructive", className)}
-	let:legendAttrs
+	
 >
-	<slot {legendAttrs} />
+	{#snippet children({ legendAttrs })}
+		{@render children_render?.({ legendAttrs, })}
+	{/snippet}
 </FormPrimitive.Legend>

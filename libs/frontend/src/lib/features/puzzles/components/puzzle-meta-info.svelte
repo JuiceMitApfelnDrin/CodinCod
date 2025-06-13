@@ -4,7 +4,11 @@
 	import { isUserDto, type EditPuzzle, type PuzzleDto } from "types";
 	import UserHoverCard from "./user-hover-card.svelte";
 
-	export let puzzle: PuzzleDto | EditPuzzle | null;
+	interface Props {
+		puzzle: PuzzleDto | EditPuzzle | null;
+	}
+
+	let { puzzle }: Props = $props();
 
 	const hasBeenUpdated = puzzle && puzzle.updatedAt !== puzzle.createdAt;
 </script>

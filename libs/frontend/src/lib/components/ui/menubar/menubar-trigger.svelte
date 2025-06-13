@@ -5,8 +5,14 @@
 	type $$Props = MenubarPrimitive.TriggerProps;
 	type $$Events = MenubarPrimitive.TriggerEvents;
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let { class: className = undefined, children, ...rest }: Props = $props();
+	
 </script>
 
 <MenubarPrimitive.Trigger
@@ -17,7 +23,7 @@
 	on:click
 	on:keydown
 	on:pointerenter
-	{...$$restProps}
+	{...rest}
 >
-	<slot />
+	{@render children?.()}
 </MenubarPrimitive.Trigger>

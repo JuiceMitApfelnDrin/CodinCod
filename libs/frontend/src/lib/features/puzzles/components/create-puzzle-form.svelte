@@ -8,7 +8,11 @@
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
 
-	export let data: SuperValidated<CreatePuzzle>;
+	interface Props {
+		data: SuperValidated<CreatePuzzle>;
+	}
+
+	let { data }: Props = $props();
 
 	const form = superForm(data, {
 		validators: zodClient(createPuzzleSchema)
@@ -19,10 +23,12 @@
 
 <form method={POST} use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Title</Form.Label>
-			<Input {...attrs} bind:value={$formData.title} />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Title</Form.Label>
+				<Input {...attrs} bind:value={$formData.title} />
+								{/snippet}
+				</Form.Control>
 		<Form.Description>This will be the title of the puzzle.</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>

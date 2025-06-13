@@ -1,12 +1,18 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { Badge, type Variant } from "@/components/ui/badge";
 	import { puzzleVisibilityEnum, type PuzzleVisibility } from "types";
 
-	export let visibility: PuzzleVisibility = puzzleVisibilityEnum.DRAFT;
+	interface Props {
+		visibility?: PuzzleVisibility;
+	}
 
-	let variant: Variant = "default";
+	let { visibility = puzzleVisibilityEnum.DRAFT }: Props = $props();
 
-	$: {
+	let variant: Variant = $state("default");
+
+	run(() => {
 		switch (visibility) {
 			case puzzleVisibilityEnum.APPROVED:
 				variant = "success";
@@ -27,7 +33,7 @@
 				variant = "default";
 				break;
 		}
-	}
+	});
 </script>
 
 <Badge {variant}>{visibility}</Badge>

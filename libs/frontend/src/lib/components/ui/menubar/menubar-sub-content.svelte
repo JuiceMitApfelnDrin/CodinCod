@@ -6,10 +6,22 @@
 	type $$Props = MenubarPrimitive.SubContentProps;
 	type $$Events = MenubarPrimitive.SubContentEvents;
 
-	let className: $$Props["class"] = undefined;
-	export let transition: $$Props["transition"] = flyAndScale;
-	export let transitionConfig: $$Props["transitionConfig"] = { x: -10, y: 0 };
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		transition?: $$Props["transition"];
+		transitionConfig?: $$Props["transitionConfig"];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let {
+		class: className = undefined,
+		transition = flyAndScale,
+		transitionConfig = { x: -10, y: 0 },
+		children,
+		...rest
+	}: Props = $props();
+	
 </script>
 
 <MenubarPrimitive.SubContent
@@ -19,10 +31,10 @@
 		"z-50 min-w-max rounded-md border bg-popover p-1 text-popover-foreground focus:outline-none",
 		className
 	)}
-	{...$$restProps}
+	{...rest}
 	on:focusout
 	on:pointermove
 	on:keydown
 >
-	<slot />
+	{@render children?.()}
 </MenubarPrimitive.SubContent>

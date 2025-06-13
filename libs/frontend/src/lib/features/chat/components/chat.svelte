@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import H2 from "@/components/typography/h2.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Input from "@/components/ui/input/input.svelte";
@@ -8,15 +10,19 @@
 	import { CHAT_MESSAGE_CONFIG, type ChatMessage } from "types";
 	import Message from "./chat-message.svelte";
 
-	export let chatMessages: ChatMessage[] = [];
-	export let sendMessage: (message: string) => void;
+	interface Props {
+		chatMessages?: ChatMessage[];
+		sendMessage: (message: string) => void;
+	}
+
+	let { chatMessages = [], sendMessage }: Props = $props();
 
 	function executeSend() {
 		sendMessage(composedMessage);
 		composedMessage = "";
 	}
 
-	let composedMessage: string = "";
+	let composedMessage: string = $state("");
 </script>
 
 <LogicalUnit class="flex h-full flex-col gap-4">
@@ -32,7 +38,7 @@
 		{/if}
 	</ScrollArea.Root>
 
-	<form class="flex flex-col justify-end gap-2 px-1" on:submit|preventDefault={executeSend}>
+	<form class="flex flex-col justify-end gap-2 px-1" onsubmit={preventDefault(executeSend)}>
 		<Label class="sr-only" for="msg-compose">Compose message</Label>
 		<Input
 			maxlength={CHAT_MESSAGE_CONFIG.maxChatMessageLength}

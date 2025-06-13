@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
@@ -21,15 +23,21 @@
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
-	export let game: GameDto;
-	let submissions: SubmissionDto[] = [];
-	$: submissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
+	interface Props {
+		game: GameDto;
+	}
+
+	let { game }: Props = $props();
+	let submissions: SubmissionDto[] = $state([]);
+	run(() => {
+		submissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
+	});
 
 	// used to check whether a solution is being viewed
-	let isOpen: Record<string, boolean> = {};
+	let isOpen: Record<string, boolean> = $state({});
 
 	// used for caching, check whether a solution was fetched
-	let hasBeenOpened: Record<string, boolean> = {};
+	let hasBeenOpened: Record<string, boolean> = $state({});
 
 	async function fetchCode(id: string) {
 		const url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
@@ -121,7 +129,7 @@
 							<Table.Cell colspan={6} aria-live="polite" class="m-0 p-0">
 								{#await fetchCode(_id)}
 									<span class="p-2">Loading code...</span>
-								{:then { code }}
+								{:then {code }}
 									<Codemirror {language} value={code} readonly={true} />
 								{:catch}
 									<span class="p-2 text-red-500"

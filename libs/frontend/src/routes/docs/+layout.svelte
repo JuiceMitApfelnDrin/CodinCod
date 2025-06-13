@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import SideNavigationGroup from "@/components/nav/side-navigation/side-navigation-group.svelte";
 	import SideNavigationItem from "@/components/nav/side-navigation/side-navigation-item.svelte";
 	import SideNavigation from "@/components/nav/side-navigation/side-navigation.svelte";
@@ -6,6 +6,11 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import BecomeAContributor from "@/features/learn/components/become-a-contributor.svelte";
 	import { frontendUrls } from "types";
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 </script>
 
 <Container class="flex md:flex-row">
@@ -17,7 +22,7 @@
 	</SideNavigation>
 
 	<LogicalUnit class="prose prose-stone dark:prose-invert">
-		<slot />
+		{@render children?.()}
 
 		<BecomeAContributor />
 	</LogicalUnit>

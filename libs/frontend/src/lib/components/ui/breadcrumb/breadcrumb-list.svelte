@@ -6,9 +6,15 @@
 		el?: HTMLOListElement;
 	};
 
-	export let el: $$Props["el"] = undefined;
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		el?: $$Props["el"];
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let { el = $bindable(undefined), class: className = undefined, children, ...rest }: Props = $props();
+	
 </script>
 
 <ol
@@ -17,7 +23,7 @@
 		"flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
 		className
 	)}
-	{...$$restProps}
+	{...rest}
 >
-	<slot />
+	{@render children?.()}
 </ol>

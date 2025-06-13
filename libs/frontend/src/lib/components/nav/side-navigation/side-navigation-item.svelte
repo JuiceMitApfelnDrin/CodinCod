@@ -4,9 +4,15 @@
 	import type { ComponentType } from "svelte";
 	import type { FrontendUrl } from "types";
 
-	export let href: FrontendUrl;
-	export let text: string;
-	export let icon: ComponentType | null = null;
+	interface Props {
+		href: FrontendUrl;
+		text: string;
+		icon?: ComponentType | null;
+	}
+
+	let { href, text, icon = null }: Props = $props();
+
+	const SvelteComponent = $derived(icon);
 </script>
 
 <a
@@ -17,7 +23,7 @@
 			"settings-link bg-stone-100 font-bold text-teal-600 hover:text-teal-800 dark:bg-stone-900 dark:text-teal-300 hover:dark:text-teal-100"
 	)}
 >
-	<svelte:component this={icon} class="mr-2 inline" size={16} aria-hidden="true" />
+	<SvelteComponent class="mr-2 inline" size={16} aria-hidden="true" />
 
 	<span>{text}</span>
 </a>

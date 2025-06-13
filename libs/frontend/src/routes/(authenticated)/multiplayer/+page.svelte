@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
@@ -22,9 +24,9 @@
 		type WaitingRoomRequest
 	} from "types";
 
-	let room: RoomStateResponse | undefined;
-	let rooms: RoomOverviewResponse[] = [];
-	let errorMessage: string | undefined;
+	let room: RoomStateResponse | undefined = $state();
+	let rooms: RoomOverviewResponse[] = $state([]);
+	let errorMessage: string | undefined = $state();
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"
@@ -125,12 +127,14 @@
 		};
 	}
 
-	let socket: WebSocket;
+	let socket: WebSocket = $state();
 	if (browser) {
 		connectWithWebsocket();
 	}
 
-	$: if (room?.roomId) updateRoomIdInUrl();
+	run(() => {
+		if (room?.roomId) updateRoomIdInUrl();
+	});
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
 

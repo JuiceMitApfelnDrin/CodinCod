@@ -1,12 +1,23 @@
 <script lang="ts">
-	export let id: string;
-	export let open: boolean = false;
+	interface Props {
+		id: string;
+		open?: boolean;
+		title?: import('svelte').Snippet;
+		content?: import('svelte').Snippet;
+	}
+
+	let {
+		id,
+		open = $bindable(false),
+		title,
+		content
+	}: Props = $props();
 </script>
 
 <details bind:open {id}>
-	<summary><slot name="title">no title provided</slot></summary>
+	<summary>{#if title}{@render title()}{:else}no title provided{/if}</summary>
 
-	<slot name="content">no content provided</slot>
+	{#if content}{@render content()}{:else}no content provided{/if}
 </details>
 
 <style lang="postcss">

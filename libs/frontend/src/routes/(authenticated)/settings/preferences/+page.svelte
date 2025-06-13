@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import LanguageSelect from "@/features/puzzles/components/language-select.svelte";
 	import H2 from "@/components/typography/h2.svelte";
@@ -10,8 +12,8 @@
 	import { languages } from "@/stores/languages";
 	import Checkbox from "@/components/ui/toggle/checkbox.svelte";
 
-	let language: PuzzleLanguage = $preferences?.preferredLanguage ?? DEFAULT_LANGUAGE;
-	let code: string = 'print("Hello, World!")';
+	let language: PuzzleLanguage = $state($preferences?.preferredLanguage ?? DEFAULT_LANGUAGE);
+	let code: string = $state('print("Hello, World!")');
 
 	function updatePreferredLanguage(newPreferredLanguage: string) {
 		if (newPreferredLanguage != $preferences?.preferredLanguage) {
@@ -21,7 +23,9 @@
 		}
 	}
 
-	$: updatePreferredLanguage(language);
+	run(() => {
+		updatePreferredLanguage(language);
+	});
 
 	function CheckboxEditorPreference<K extends keyof EditorPreferences>(key: K) {
 		if ($preferences?.editor) {

@@ -10,10 +10,14 @@
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
 
-	let className: ButtonPrimitive.Props["class"] = undefined;
-	export { className as class };
+	
 
-	export let username: string;
+	interface Props {
+		class?: ButtonPrimitive.Props["class"];
+		username: string;
+	}
+
+	let { class: className = undefined, username }: Props = $props();
 
 	const userInfoCache: Record<string, UserDto> = {};
 
@@ -51,7 +55,7 @@
 	<HoverCard.Content class="w-80">
 		{#await fetchUserInfo(username)}
 			loading...
-		{:then { user }}
+		{:then {user }}
 			{#if isUserDto(user)}
 				<div class="flex justify-between space-x-4">
 					<Avatar.Root asChild>

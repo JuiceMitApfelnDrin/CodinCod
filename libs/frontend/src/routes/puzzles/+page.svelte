@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
@@ -11,20 +13,20 @@
 	import { testIds } from "@/config/test-ids";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 
-	export let data;
+	let { data } = $props();
 
-	let items: PuzzleDto[] = [];
-	let page: number;
-	let totalItems: number;
-	let totalPages: number;
-	$: {
+	let items: PuzzleDto[] = $state([]);
+	let page: number = $state();
+	let totalItems: number = $state();
+	let totalPages: number = $state();
+	run(() => {
 		items = data.items;
 		page = data.page;
 		totalItems = data.totalItems;
 		totalPages = data.totalPages;
-	}
+	});
 
-	let myPuzzlesUrl: string | undefined = undefined;
+	let myPuzzlesUrl: string | undefined = $state(undefined);
 	if ($authenticatedUserInfo?.isAuthenticated) {
 		myPuzzlesUrl = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME_PUZZLES, {
 			username: $authenticatedUserInfo.username

@@ -4,11 +4,15 @@
 	import { type PuzzleResult } from "types";
 	import ValidatorStatus from "./validator-status.svelte";
 
-	let className: HTMLInputAttributes["class"] = undefined;
-	export { className as class };
+	
 
-	export let puzzleResults: (PuzzleResult | undefined)[];
-	export let openTestsAccordion;
+	interface Props {
+		class?: HTMLInputAttributes["class"];
+		puzzleResults: (PuzzleResult | undefined)[];
+		openTestsAccordion: any;
+	}
+
+	let { class: className = undefined, puzzleResults, openTestsAccordion }: Props = $props();
 </script>
 
 {#if puzzleResults}
@@ -20,7 +24,7 @@
 	>
 		{#each puzzleResults as puzzleResult, index}
 			<li>
-				<a on:click={() => openTestsAccordion()} href={`#validator-${index}`}>
+				<a onclick={() => openTestsAccordion()} href={`#validator-${index}`}>
 					<ValidatorStatus {puzzleResult} />
 				</a>
 			</li>

@@ -1,5 +1,9 @@
 <script lang="ts">
-	export let data: { content: any };
+	interface Props {
+		data: { content: any };
+	}
+
+	let { data }: Props = $props();
 	let Content = data.content;
 </script>
 
@@ -13,7 +17,7 @@
 </svelte:head>
 
 {#if Content}
-	<svelte:component this={Content} />
+	<Content />
 {:else}
 	<p>No documentation found.</p>
 {/if}

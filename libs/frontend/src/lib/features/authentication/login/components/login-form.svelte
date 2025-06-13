@@ -10,8 +10,12 @@
 	import { page } from "$app/stores";
 	import { testIds } from "@/config/test-ids";
 
-	export let data: SuperValidated<Login>;
-	export let message: string | undefined;
+	interface Props {
+		data: SuperValidated<Login>;
+		message: string | undefined;
+	}
+
+	let { data, message }: Props = $props();
 
 	const form = superForm(data, {
 		validators: zodClient(loginSchema)
@@ -28,33 +32,37 @@
 	method={POST}
 	use:enhance
 	class="my-5 flex flex-col items-center gap-5"
-	on:input={handleFormInput}
+	oninput={handleFormInput}
 >
 	<Form.Field {form} name="identifier" class="w-full">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Username or email</Form.Label>
-			<Input
-				{...attrs}
-				data-testid={testIds.LOGIN_FORM_INPUT_IDENTIFIER}
-				bind:value={$formData.identifier}
-				minlength={IDENTIFIER_CONFIG.minIdentifierLength}
-				maxlength={IDENTIFIER_CONFIG.maxIdentifierLength}
-			/>
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Username or email</Form.Label>
+				<Input
+					{...attrs}
+					data-testid={testIds.LOGIN_FORM_INPUT_IDENTIFIER}
+					bind:value={$formData.identifier}
+					minlength={IDENTIFIER_CONFIG.minIdentifierLength}
+					maxlength={IDENTIFIER_CONFIG.maxIdentifierLength}
+				/>
+								{/snippet}
+				</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="password" class="w-full">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Password</Form.Label>
-			<Input
-				type="password"
-				{...attrs}
-				data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
-				bind:value={$formData.password}
-				minlength={PASSWORD_CONFIG.minPasswordLength}
-			/>
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Password</Form.Label>
+				<Input
+					type="password"
+					{...attrs}
+					data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
+					bind:value={$formData.password}
+					minlength={PASSWORD_CONFIG.minPasswordLength}
+				/>
+								{/snippet}
+				</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 

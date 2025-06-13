@@ -4,9 +4,10 @@
 	import { preferences } from "@/stores/preferences";
 	import { DEFAULT_LANGUAGE } from "types";
 
-	export let language: string = "";
-	export let languages: string[] = [];
-	export let formAttributes:
+	interface Props {
+		language?: string;
+		languages?: string[];
+		formAttributes?: 
 		| {
 				name: string;
 				id: string;
@@ -16,7 +17,10 @@
 				"aria-required": "true" | undefined;
 				"data-fs-control": string;
 		  }
-		| undefined = undefined;
+		| undefined;
+	}
+
+	let { language = $bindable(""), languages = [], formAttributes = undefined }: Props = $props();
 
 	if (!language) {
 		if ($preferences?.preferredLanguage && languages.includes($preferences.preferredLanguage)) {

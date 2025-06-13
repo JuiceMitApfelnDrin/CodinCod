@@ -7,9 +7,15 @@
 		el?: HTMLLIElement;
 	};
 
-	export let el: $$Props["el"] = undefined;
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		el?: $$Props["el"];
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let { el = $bindable(undefined), class: className = undefined, children, ...rest }: Props = $props();
+	
 </script>
 
 <li
@@ -17,9 +23,9 @@
 	aria-hidden="true"
 	class={cn("[&>svg]:size-3.5", className)}
 	bind:this={el}
-	{...$$restProps}
+	{...rest}
 >
-	<slot>
+	{#if children}{@render children()}{:else}
 		<ChevronRight />
-	</slot>
+	{/if}
 </li>

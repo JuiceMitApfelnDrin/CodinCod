@@ -1,3 +1,11 @@
+<script lang="ts">
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
+</script>
+
 <h4 class="scroll-m-20 text-xl font-semibold tracking-tight">
-	<slot></slot>
+	{@render children?.()}
 </h4>

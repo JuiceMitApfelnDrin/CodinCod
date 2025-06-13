@@ -23,7 +23,7 @@
 		}, {});
 	}
 
-	export let data;
+	let { data } = $props();
 
 	const { puzzles, submissions, user } = data;
 	const originalActivities: Activity[] = [...submissions, ...puzzles, user];

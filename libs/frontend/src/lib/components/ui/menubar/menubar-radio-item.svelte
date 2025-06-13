@@ -6,9 +6,15 @@
 	type $$Props = MenubarPrimitive.RadioItemProps;
 	type $$Events = MenubarPrimitive.RadioItemEvents;
 
-	let className: $$Props["class"] = undefined;
-	export let value: $$Props["value"];
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		value: $$Props["value"];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let { class: className = undefined, value, children, ...rest }: Props = $props();
+	
 </script>
 
 <MenubarPrimitive.RadioItem
@@ -17,7 +23,7 @@
 		"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:opacity-50",
 		className
 	)}
-	{...$$restProps}
+	{...rest}
 	on:click
 	on:keydown
 	on:focusin
@@ -31,5 +37,5 @@
 			<Circle class="h-2 w-2 fill-current" />
 		</MenubarPrimitive.RadioIndicator>
 	</span>
-	<slot />
+	{@render children?.()}
 </MenubarPrimitive.RadioItem>

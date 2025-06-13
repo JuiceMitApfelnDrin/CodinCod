@@ -2,8 +2,15 @@
 	import { cn } from "@/utils/cn";
 	import type { ComponentType } from "svelte";
 
-	export let icon: ComponentType | null = null;
-	export let text: string;
+	interface Props {
+		icon?: ComponentType | null;
+		text: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let { icon = null, text, children }: Props = $props();
+
+	const SvelteComponent = $derived(icon);
 </script>
 
 <details class="group" open>
@@ -12,12 +19,12 @@
 			"relative block w-full rounded-md px-4 py-2 hover:bg-stone-200 hover:underline hover:dark:bg-stone-800"
 		)}
 	>
-		<svelte:component this={icon} class="mr-2 inline" size={16} aria-hidden="true" />
+		<SvelteComponent class="mr-2 inline" size={16} aria-hidden="true" />
 
 		<span>{text}</span>
 	</summary>
 	<ul class="ml-4 mt-2 flex flex-col gap-1">
-		<slot />
+		{@render children?.()}
 	</ul>
 </details>
 

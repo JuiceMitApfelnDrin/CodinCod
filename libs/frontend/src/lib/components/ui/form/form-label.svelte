@@ -6,8 +6,14 @@
 
 	type $$Props = LabelPrimitive.Props;
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet<[any]>;
+		[key: string]: any
+	}
+
+	let { class: className = undefined, children, ...rest }: Props = $props();
+	
 
 	const { labelAttrs } = getFormControl();
 </script>
@@ -15,7 +21,7 @@
 <Label
 	{...$labelAttrs}
 	class={cn("data-[fs-error]:text-destructive data-[fs-error]:dark:text-red-500", className)}
-	{...$$restProps}
+	{...rest}
 >
-	<slot {labelAttrs} />
+	{@render children?.({ labelAttrs, })}
 </Label>

@@ -4,13 +4,18 @@
 
 	type $$Props = AvatarPrimitive.FallbackProps;
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		[key: string]: any
+	}
+
+	let { class: className = undefined, ...rest }: Props = $props();
+	
 </script>
 
 <AvatarPrimitive.Fallback
 	class={cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className)}
-	{...$$restProps}
+	{...rest}
 >
 	<!-- smiley svg from svgrepo.com by AUTHOR brankic1979 as fallback -->
 	<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->

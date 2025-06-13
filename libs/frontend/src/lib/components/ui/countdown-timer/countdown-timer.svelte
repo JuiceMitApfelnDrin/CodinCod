@@ -1,16 +1,22 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import LogicalUnit from "../logical-unit/logical-unit.svelte";
 	import { cn } from "@/utils/cn";
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
 
-	export let endDate: Date | undefined;
+	interface Props {
+		endDate: Date | undefined;
+	}
+
+	let { endDate }: Props = $props();
 
 	const DEFAULT_TIME_REMAINING = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
-	let timeRemaining = DEFAULT_TIME_REMAINING;
+	let timeRemaining = $state(DEFAULT_TIME_REMAINING);
 
-	$: {
+	run(() => {
 		if (!endDate) {
 			timeRemaining = DEFAULT_TIME_REMAINING;
 		} else {
@@ -25,18 +31,18 @@
 
 			timeRemaining = { days, hours, minutes, seconds };
 		}
-	}
+	});
 
-	let showDays = false,
-		showHours = false,
-		showMinutes = false,
-		showSeconds = false;
-	$: {
+	let showDays = $state(false),
+		showHours = $state(false),
+		showMinutes = $state(false),
+		showSeconds = $state(false);
+	run(() => {
 		showDays = timeRemaining.days > 0;
 		showHours = showDays || timeRemaining.hours > 0;
 		showMinutes = showHours || timeRemaining.minutes > 0;
 		showSeconds = true;
-	}
+	});
 
 	function formatToTwoDigits(value: number | string) {
 		return value.toString().padStart(2, "0");
