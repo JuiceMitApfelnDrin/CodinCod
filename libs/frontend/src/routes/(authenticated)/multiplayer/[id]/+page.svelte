@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
@@ -51,13 +53,13 @@
 
 	const gameId = $page.params.id;
 
-	let isGameOver = false;
+	let isGameOver = $state(false);
 
-	let game: GameDto | undefined;
-	let puzzle: PuzzleDto | undefined;
-	let errorMessage: string | undefined;
-	let chatMessages: ChatMessage[] = [];
-	const playerLanguages: Record<string, string> = {};
+	let game: GameDto | undefined = $state();
+	let puzzle: PuzzleDto | undefined = $state();
+	let errorMessage: string | undefined = $state();
+	let chatMessages: ChatMessage[] = $state([]);
+	const playerLanguages: Record<string, string> = $state({});
 
 	function connectWithWebsocket() {
 		if (socket) {
@@ -134,23 +136,25 @@
 		});
 	}
 
-	let socket: WebSocket;
+	let socket: WebSocket = $state();
 	if (browser) {
 		connectWithWebsocket();
 	}
 
-	let isNotPlayerInGame = true;
-	$: {
+	let isNotPlayerInGame = $state(true);
+	run(() => {
 		isNotPlayerInGame = Boolean(
 			$authenticatedUserInfo?.userId &&
 				!isUserIdInUserList($authenticatedUserInfo.userId, game?.players ?? [])
 		);
-	}
+	});
 
-	let endDate: Date | undefined;
-	$: endDate = game && dayjs(game.endTime).toDate();
+	let endDate: Date | undefined = $state();
+	run(() => {
+		endDate = game && dayjs(game.endTime).toDate();
+	});
 
-	$: {
+	run(() => {
 		const now = $currentTime;
 
 		const gameIsInThePast =
@@ -166,7 +170,7 @@
 		});
 
 		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
-	}
+	});
 
 	function findPlayerSubmission(playerId: string) {
 		if (!game) {

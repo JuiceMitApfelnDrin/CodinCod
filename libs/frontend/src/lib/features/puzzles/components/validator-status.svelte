@@ -4,10 +4,14 @@
 	import type { HTMLInputAttributes } from "svelte/elements";
 	import { PuzzleResultEnum, type PuzzleResult } from "types";
 
-	let className: HTMLInputAttributes["class"] = undefined;
-	export { className as class };
+	
 
-	export let puzzleResult: PuzzleResult | undefined;
+	interface Props {
+		class?: HTMLInputAttributes["class"];
+		puzzleResult: PuzzleResult | undefined;
+	}
+
+	let { class: className = undefined, puzzleResult }: Props = $props();
 </script>
 
 {#if puzzleResult === PuzzleResultEnum.SUCCESS}

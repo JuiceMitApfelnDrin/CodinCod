@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
 	import * as Form from "$lib/components/ui/form";
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
@@ -24,7 +26,11 @@
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages";
 
-	export let data: SuperValidated<EditPuzzle>;
+	interface Props {
+		data: SuperValidated<EditPuzzle>;
+	}
+
+	let { data }: Props = $props();
 
 	const learnMarkdownUrl = buildFrontendUrl(frontendUrls.LEARN_MARKDOWN);
 
@@ -67,7 +73,7 @@
 		});
 	}
 
-	$: {
+	run(() => {
 		if (!$formData.solution) {
 			$formData.solution = {
 				code: "",
@@ -81,7 +87,7 @@
 		if (!$formData.solution?.code) {
 			$formData.solution.code = "";
 		}
-	}
+	});
 
 	let { enhance, form: formData, message } = form;
 
@@ -90,10 +96,12 @@
 
 <form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Title</Form.Label>
-			<Input {...attrs} bind:value={$formData.title} />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Title</Form.Label>
+				<Input {...attrs} bind:value={$formData.title} />
+								{/snippet}
+				</Form.Control>
 		<Form.Description>
 			This will be shown as the name of the puzzle. A good title is both unique and descriptive.
 		</Form.Description>
@@ -101,10 +109,12 @@
 	</Form.Field>
 
 	<Form.Field {form} name="statement">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Statement</Form.Label>
-			<Textarea {...attrs} bind:value={$formData.statement} />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Statement</Form.Label>
+				<Textarea {...attrs} bind:value={$formData.statement} />
+								{/snippet}
+				</Form.Control>
 		<Form.Description>
 			Describe the puzzle in enough detail to make it possible for players to understand and solve
 			it. The description should contain answers to questions such as: What are the inputs of the
@@ -116,10 +126,12 @@
 	</Form.Field>
 
 	<Form.Field {form} name="constraints">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Constraints</Form.Label>
-			<Textarea {...attrs} bind:value={$formData.constraints} />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Constraints</Form.Label>
+				<Textarea {...attrs} bind:value={$formData.constraints} />
+								{/snippet}
+				</Form.Control>
 		<Form.Description>
 			Constraints should describe the limits for the input values, for example "1 ≤ N ≤ 100" or "S
 			contains only letters a to z and numbers 0 to 9". Sometimes it is useful to give constraints
@@ -130,38 +142,40 @@
 	</Form.Field>
 
 	<Form.Field {form} name="validators" class="flex flex-col gap-2">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Validators</Form.Label>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Validators</Form.Label>
 
-			<Form.Description>
-				To ensure high-quality puzzles and effective test cases, we require a <strong
-					>minimum</strong
-				>
-				of <strong>{PUZZLE_CONFIG.requiredNumberOfValidators} test cases</strong> before the puzzle can
-				move on to the next stage of the review process.
-			</Form.Description>
+				<Form.Description>
+					To ensure high-quality puzzles and effective test cases, we require a <strong
+						>minimum</strong
+					>
+					of <strong>{PUZZLE_CONFIG.requiredNumberOfValidators} test cases</strong> before the puzzle can
+					move on to the next stage of the review process.
+				</Form.Description>
 
-			{#if $formData.validators}
-				{#each $formData.validators as _, index}
-					<div class="my-4 flex gap-2">
-						<Textarea
-							{...attrs}
-							bind:value={$formData.validators[index].input}
-							placeholder="Input"
-						/>
-						<Textarea
-							{...attrs}
-							bind:value={$formData.validators[index].output}
-							placeholder="Output"
-						/>
-						<Button type="button" on:click={() => removeValidator(index)}>Remove</Button>
-					</div>
-				{/each}
-			{/if}
-			<div class="flex items-center">
-				<Button type="button" on:click={addValidator}>Add Validator</Button>
-			</div>
-		</Form.Control>
+				{#if $formData.validators}
+					{#each $formData.validators as _, index}
+						<div class="my-4 flex gap-2">
+							<Textarea
+								{...attrs}
+								bind:value={$formData.validators[index].input}
+								placeholder="Input"
+							/>
+							<Textarea
+								{...attrs}
+								bind:value={$formData.validators[index].output}
+								placeholder="Output"
+							/>
+							<Button type="button" on:click={() => removeValidator(index)}>Remove</Button>
+						</div>
+					{/each}
+				{/if}
+				<div class="flex items-center">
+					<Button type="button" on:click={addValidator}>Add Validator</Button>
+				</div>
+								{/snippet}
+				</Form.Control>
 		<Form.Description>
 			Validators are the test cases for your puzzle. Please make sure that the validators cover all
 			the edge cases that are allowed by the constraints.
@@ -179,55 +193,61 @@
 		<P>Please provide a valid solution for your puzzle. It will be used to check the validators.</P>
 
 		<Form.Field {form} name="solution.language">
-			<Form.Control let:attrs>
-				<Form.Label class="text-lg">Language</Form.Label>
+			<Form.Control >
+				{#snippet children({ attrs })}
+								<Form.Label class="text-lg">Language</Form.Label>
 
-				<LanguageSelect
-					formAttributes={attrs}
-					bind:language={$formData.solution.language}
-					languages={$languages ?? []}
-				/>
-			</Form.Control>
+					<LanguageSelect
+						formAttributes={attrs}
+						bind:language={$formData.solution.language}
+						languages={$languages ?? []}
+					/>
+											{/snippet}
+						</Form.Control>
 			<Form.Description>Programming language used for the solution.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 
 		<Form.Field {form} name="solution.code">
-			<Form.Control let:attrs>
-				<Form.Label class="text-lg">Code</Form.Label>
+			<Form.Control >
+				{#snippet children({ attrs })}
+								<Form.Label class="text-lg">Code</Form.Label>
 
-				<Codemirror language={$formData.solution.language} bind:value={$formData.solution.code} />
-				<Input class="sr-only" aria-hidden="true" {...attrs} bind:value={$formData.solution.code} />
-			</Form.Control>
+					<Codemirror language={$formData.solution.language} bind:value={$formData.solution.code} />
+					<Input class="sr-only" aria-hidden="true" {...attrs} bind:value={$formData.solution.code} />
+											{/snippet}
+						</Form.Control>
 			<Form.Description>This is for the code that tests the puzzle.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 	</Form.Fieldset>
 
 	<Form.Field {form} name="visibility">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Visibility</Form.Label>
-			<Select.Root
-				selected={{ label: $formData.visibility, value: $formData.visibility }}
-				onSelectedChange={(v) => {
-					if (v) {
-						$formData.visibility = v.value;
-					}
-				}}
-			>
-				<Select.Trigger class="w-[180px]" {...attrs}>
-					<Select.Value placeholder="Select a visibility" />
-				</Select.Trigger>
-				<Select.Content>
-					<Select.Group>
-						{#each visibilityStates as visibilityState}
-							<Select.Item value={visibilityState} label={visibilityState} />
-						{/each}
-					</Select.Group>
-				</Select.Content>
-				<Select.Input bind:value={$formData.visibility} name={attrs.name} />
-			</Select.Root>
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Visibility</Form.Label>
+				<Select.Root
+					selected={{ label: $formData.visibility, value: $formData.visibility }}
+					onSelectedChange={(v) => {
+						if (v) {
+							$formData.visibility = v.value;
+						}
+					}}
+				>
+					<Select.Trigger class="w-[180px]" {...attrs}>
+						<Select.Value placeholder="Select a visibility" />
+					</Select.Trigger>
+					<Select.Content>
+						<Select.Group>
+							{#each visibilityStates as visibilityState}
+								<Select.Item value={visibilityState} label={visibilityState} />
+							{/each}
+						</Select.Group>
+					</Select.Content>
+					<Select.Input bind:value={$formData.visibility} name={attrs.name} />
+				</Select.Root>
+								{/snippet}
+				</Form.Control>
 		<Form.Description>
 			At the moment you get to decide the visibility of your puzzle. In the future there will be a
 			review process to get a puzzle approved.

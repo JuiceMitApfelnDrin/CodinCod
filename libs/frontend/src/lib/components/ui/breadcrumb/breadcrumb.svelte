@@ -5,11 +5,17 @@
 		el?: HTMLElement;
 	};
 
-	export let el: $$Props["el"] = undefined;
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		el?: $$Props["el"];
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let { el = $bindable(undefined), class: className = undefined, children, ...rest }: Props = $props();
+	
 </script>
 
-<nav class={className} bind:this={el} aria-label="breadcrumb" {...$$restProps}>
-	<slot />
+<nav class={className} bind:this={el} aria-label="breadcrumb" {...rest}>
+	{@render children?.()}
 </nav>

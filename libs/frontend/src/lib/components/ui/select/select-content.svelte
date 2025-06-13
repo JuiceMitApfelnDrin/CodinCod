@@ -7,18 +7,33 @@
 	type $$Props = SelectPrimitive.ContentProps;
 	type $$Events = SelectPrimitive.ContentEvents;
 
-	export let sideOffset: $$Props["sideOffset"] = 4;
-	export let inTransition: $$Props["inTransition"] = flyAndScale;
-	export let inTransitionConfig: $$Props["inTransitionConfig"] = undefined;
-	export let outTransition: $$Props["outTransition"] = scale;
-	export let outTransitionConfig: $$Props["outTransitionConfig"] = {
+
+	interface Props {
+		sideOffset?: $$Props["sideOffset"];
+		inTransition?: $$Props["inTransition"];
+		inTransitionConfig?: $$Props["inTransitionConfig"];
+		outTransition?: $$Props["outTransition"];
+		outTransitionConfig?: $$Props["outTransitionConfig"];
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let {
+		sideOffset = 4,
+		inTransition = flyAndScale,
+		inTransitionConfig = undefined,
+		outTransition = scale,
+		outTransitionConfig = {
 		duration: 50,
 		opacity: 0,
 		start: 0.95
-	};
-
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	},
+		class: className = undefined,
+		children,
+		...rest
+	}: Props = $props();
+	
 </script>
 
 <SelectPrimitive.Content
@@ -31,10 +46,10 @@
 		"relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md outline-none",
 		className
 	)}
-	{...$$restProps}
+	{...rest}
 	on:keydown
 >
 	<div class="w-full p-1">
-		<slot />
+		{@render children?.()}
 	</div>
 </SelectPrimitive.Content>

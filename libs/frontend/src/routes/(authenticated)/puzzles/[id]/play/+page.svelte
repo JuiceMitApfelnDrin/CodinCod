@@ -3,7 +3,7 @@
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import { isUserDto } from "types";
 
-	export let data;
+	let { data } = $props();
 	let { puzzle } = data;
 </script>
 

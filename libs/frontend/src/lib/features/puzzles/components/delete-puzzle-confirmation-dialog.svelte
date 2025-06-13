@@ -7,7 +7,11 @@
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { deletePuzzleSchema, type DeletePuzzle } from "types";
 
-	export let data: SuperValidated<DeletePuzzle>;
+	interface Props {
+		data: SuperValidated<DeletePuzzle>;
+	}
+
+	let { data }: Props = $props();
 
 	const form = superForm(data, {
 		validators: zodClient(deletePuzzleSchema)
@@ -26,9 +30,11 @@
 
 			<form method="POST" action="?/deletePuzzle" use:enhance>
 				<Form.Field {form} name="id">
-					<Form.Control let:attrs>
-						<Input type="hidden" {...attrs} bind:value={$formData.id} />
-					</Form.Control>
+					<Form.Control >
+						{#snippet children({ attrs })}
+												<Input type="hidden" {...attrs} bind:value={$formData.id} />
+																	{/snippet}
+										</Form.Control>
 					<Form.Description>
 						This action cannot be undone. This will permanently delete your puzzle and remove this
 						puzzle from our servers.

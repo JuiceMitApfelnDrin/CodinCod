@@ -6,13 +6,22 @@
 	import P from "../typography/p.svelte";
 	import Button from "../ui/button/button.svelte";
 
-	export let status: number = 500;
-	export let message: string | null = null;
-	export let header: string | null = null;
-	export let link: FrontendLink = {
+	interface Props {
+		status?: number;
+		message?: string | null;
+		header?: string | null;
+		link?: FrontendLink;
+	}
+
+	let {
+		status = 500,
+		message = null,
+		header = null,
+		link = {
 		href: frontendUrls.ROOT,
 		text: "Go to Homepage"
-	};
+	}
+	}: Props = $props();
 
 	type ErrorTypeDefaultInfo = { header: string; description: string };
 	const errorMap: Record<number, ErrorTypeDefaultInfo> = {

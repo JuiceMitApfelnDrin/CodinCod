@@ -4,10 +4,14 @@
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { httpResponseCodes } from "types";
 
-	export let message: string;
 
-	export let title: string;
-	export let status: number;
+	interface Props {
+		message: string;
+		title: string;
+		status: number;
+	}
+
+	let { message, title, status }: Props = $props();
 </script>
 
 <Alert.Root variant={isHttpErrorCode(status) ? "destructive" : "success"}>

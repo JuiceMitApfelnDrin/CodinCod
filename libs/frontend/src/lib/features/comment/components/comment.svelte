@@ -28,10 +28,14 @@
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
 
-	export let comment: CommentDto;
-	export let onDeleted: (commentId: ObjectId) => void;
+	interface Props {
+		comment: CommentDto;
+		onDeleted: (commentId: ObjectId) => void;
+	}
 
-	let isReplying: boolean = false;
+	let { comment = $bindable(), onDeleted }: Props = $props();
+
+	let isReplying: boolean = $state(false);
 
 	async function handleVote(commentVoteRequest: CommentVoteRequest) {
 		const response = await fetchWithAuthenticationCookie(

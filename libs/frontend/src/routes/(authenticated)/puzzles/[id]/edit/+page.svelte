@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Container from "@/components/ui/container/container.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
@@ -8,20 +10,20 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import DisplayError from "@/components/error/display-error.svelte";
 
-	export let data;
+	let { data } = $props();
 
 	const { deletePuzzle: deletePuzzleFormData, form: formData } = data;
 	const puzzle = formData.data;
 
-	let isPuzzleAuthor = false;
+	let isPuzzleAuthor = $state(false);
 
 	const puzzleAuthorId = getUserIdFromUser(puzzle.author);
 
-	$: {
+	run(() => {
 		if ($isAuthenticated && isAuthenticatedInfo($authenticatedUserInfo)) {
 			isPuzzleAuthor = isAuthor(puzzleAuthorId, $authenticatedUserInfo.userId);
 		}
-	}
+	});
 </script>
 
 <svelte:head>

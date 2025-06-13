@@ -6,11 +6,16 @@
 		el?: HTMLLIElement;
 	};
 
-	export let el: $$Props["el"] = undefined;
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		el?: $$Props["el"];
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet;
+	}
+
+	let { el = $bindable(undefined), class: className = undefined, children }: Props = $props();
+	
 </script>
 
 <li bind:this={el} class={cn("inline-flex items-center gap-1.5", className)}>
-	<slot />
+	{@render children?.()}
 </li>

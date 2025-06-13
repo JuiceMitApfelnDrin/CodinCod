@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import {
 		httpRequestMethod,
@@ -31,16 +33,25 @@
 	import { toast } from "svelte-sonner";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 
-	export let puzzle: PuzzleDto;
-	export let onPlayerSubmitCode: (submissionId: string) => void = () => {};
-	export let onPlayerChangeLanguage: (language: string) => void = () => {};
-	export let endDate: Date | undefined;
+	interface Props {
+		puzzle: PuzzleDto;
+		onPlayerSubmitCode?: (submissionId: string) => void;
+		onPlayerChangeLanguage?: (language: string) => void;
+		endDate: Date | undefined;
+	}
 
-	let code: string = "";
-	let language: PuzzleLanguage = "";
-	let isExecutingTests = false;
-	let isSubmittingCode = false;
-	let testResults: Record<number, CodeExecutionResponse> = {};
+	let {
+		puzzle,
+		onPlayerSubmitCode = () => {},
+		onPlayerChangeLanguage = () => {},
+		endDate
+	}: Props = $props();
+
+	let code: string = $state("");
+	let language: PuzzleLanguage = $state("");
+	let isExecutingTests = $state(false);
+	let isSubmittingCode = $state(false);
+	let testResults: Record<number, CodeExecutionResponse> = $state({});
 
 	async function executeCode(itemInList: number, testInput: string, testOutput: string) {
 		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
@@ -163,39 +174,47 @@
 		isSubmittingCode = false;
 	}
 
-	let endedGame = false;
-	$: {
+	let endedGame = $state(false);
+	run(() => {
 		if (!endedGame && endDate && dayjs(endDate).isBefore($currentTime)) {
 			endPuzzleGame();
 			endedGame = true;
 		}
-	}
+	});
 
-	let openTests = true;
+	let openTests = $state(true);
 	function openTestsAccordion() {
 		openTests = true;
 	}
 
-	$: {
+	run(() => {
 		onPlayerChangeLanguage(language);
-	}
+	});
 </script>
 
 <PuzzleMetaInfo {puzzle} />
 
 <LogicalUnit>
 	<Accordion open={true} id="statement">
-		<h2 slot="title">Statement</h2>
-		<div slot="content">
-			<Markdown markdown={puzzle.statement} fallbackText="No statement" />
-		</div>
+		{#snippet title()}
+				<h2 >Statement</h2>
+			{/snippet}
+		{#snippet content()}
+				<div >
+				<Markdown markdown={puzzle.statement} fallbackText="No statement" />
+			</div>
+			{/snippet}
 	</Accordion>
 
 	<Accordion open={true} id="constraints">
-		<h2 slot="title">Constraints</h2>
-		<div slot="content">
-			<Markdown markdown={puzzle.constraints} fallbackText="No constraints" />
-		</div>
+		{#snippet title()}
+				<h2 >Constraints</h2>
+			{/snippet}
+		{#snippet content()}
+				<div >
+				<Markdown markdown={puzzle.constraints} fallbackText="No constraints" />
+			</div>
+			{/snippet}
 	</Accordion>
 </LogicalUnit>
 
@@ -253,73 +272,77 @@
 		/>
 
 		<Accordion bind:open={openTests} id="tests">
-			<h2 slot="title">Tests</h2>
+			{#snippet title()}
+						<h2 >Tests</h2>
+					{/snippet}
 
-			<ul class="flex flex-col gap-10" slot="content">
-				{#each puzzle.validators as validator, index}
-					<li class="relative">
-						<div
-							class={cn(
-								isCodeExecutionSuccessResponse(testResults[index]) &&
-									calculatePuzzleResultColor(testResults[index].puzzleResultInformation.result),
-								"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
-							)}
-							id={`validator-${index}`}
-						>
-							<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
-								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-									<OutputBox title="Input">{validator.input.trimEnd()}</OutputBox>
-								</LogicalUnit>
+			{#snippet content()}
+						<ul class="flex flex-col gap-10" >
+					{#each puzzle.validators as validator, index}
+						<li class="relative">
+							<div
+								class={cn(
+									isCodeExecutionSuccessResponse(testResults[index]) &&
+										calculatePuzzleResultColor(testResults[index].puzzleResultInformation.result),
+									"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
+								)}
+								id={`validator-${index}`}
+							>
+								<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
+									<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
+										<OutputBox title="Input">{validator.input.trimEnd()}</OutputBox>
+									</LogicalUnit>
 
-								<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-									<OutputBox title="Expected output">{validator.output.trimEnd()}</OutputBox>
-								</LogicalUnit>
+									<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
+										<OutputBox title="Expected output">{validator.output.trimEnd()}</OutputBox>
+									</LogicalUnit>
+								</div>
+
+								{#if isCodeExecutionSuccessResponse(testResults[index])}
+									<div class="flex flex-col gap-4 lg:gap-6">
+										<h3 class="text-xl font-semibold">Actual output</h3>
+
+										<LogicalUnit class="w-full space-y-2">
+											<OutputBox title="Stdout:">{testResults[index].run.stdout}</OutputBox>
+										</LogicalUnit>
+										{#if testResults[index].run.stderr}
+											<LogicalUnit class="w-full space-y-2">
+												<OutputBox title="Stderr:">{testResults[index].run.stderr}</OutputBox>
+											</LogicalUnit>
+										{/if}
+									</div>
+								{/if}
+
+								<Button
+									variant="secondary"
+									aria-live="polite"
+									disabled={isExecutingTests || isSubmittingCode}
+									class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
+									on:click={() => {
+										isExecutingTests = true;
+
+										Promise.all([
+											runSingularTestItem(index, validator.input, validator.output),
+											patience()
+										]).then(() => {
+											isExecutingTests = false;
+										});
+									}}
+								>
+									Run code
+								</Button>
 							</div>
 
 							{#if isCodeExecutionSuccessResponse(testResults[index])}
-								<div class="flex flex-col gap-4 lg:gap-6">
-									<h3 class="text-xl font-semibold">Actual output</h3>
-
-									<LogicalUnit class="w-full space-y-2">
-										<OutputBox title="Stdout:">{testResults[index].run.stdout}</OutputBox>
-									</LogicalUnit>
-									{#if testResults[index].run.stderr}
-										<LogicalUnit class="w-full space-y-2">
-											<OutputBox title="Stderr:">{testResults[index].run.stderr}</OutputBox>
-										</LogicalUnit>
-									{/if}
-								</div>
+								<ValidatorStatus
+									class="absolute right-0 top-0 mr-4 mt-4 p-0"
+									puzzleResult={testResults[index].puzzleResultInformation.result}
+								/>
 							{/if}
-
-							<Button
-								variant="secondary"
-								aria-live="polite"
-								disabled={isExecutingTests || isSubmittingCode}
-								class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
-								on:click={() => {
-									isExecutingTests = true;
-
-									Promise.all([
-										runSingularTestItem(index, validator.input, validator.output),
-										patience()
-									]).then(() => {
-										isExecutingTests = false;
-									});
-								}}
-							>
-								Run code
-							</Button>
-						</div>
-
-						{#if isCodeExecutionSuccessResponse(testResults[index])}
-							<ValidatorStatus
-								class="absolute right-0 top-0 mr-4 mt-4 p-0"
-								puzzleResult={testResults[index].puzzleResultInformation.result}
-							/>
-						{/if}
-					</li>
-				{/each}
-			</ul>
+						</li>
+					{/each}
+				</ul>
+					{/snippet}
 		</Accordion>
 	</LogicalUnit>
 {/if}

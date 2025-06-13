@@ -7,9 +7,13 @@
 	import { Toggle as TogglePrimitive } from "bits-ui";
 
 	type $$Props = TogglePrimitive.Props & { class?: string };
-	let className: $$Props["class"] = undefined;
+	interface Props {
+		class?: $$Props["class"];
+	}
 
-	export { className as class };
+	let { class: className = undefined }: Props = $props();
+
+	
 </script>
 
 <Toggle

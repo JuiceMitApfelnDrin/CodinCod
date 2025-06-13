@@ -9,24 +9,26 @@
 
 {#if $authenticatedUserInfo?.isAuthenticated}
 	<DropdownMenu.Root>
-		<DropdownMenu.Trigger asChild let:builder>
-			<Avatar.Root asChild>
-				<Button
-					data-testid={testIds.NAVIGATION_MENU_BUTTON_OPEN}
-					size="icon"
-					class="rounded-full border-2 border-black dark:border-white"
-					variant="outline"
-					builders={[builder]}
-				>
-					<Avatar.Image
-						class="rounded-full"
-						src={undefined}
-						alt={$authenticatedUserInfo?.username}
-					/>
-					<Avatar.Fallback />
-				</Button>
-			</Avatar.Root>
-		</DropdownMenu.Trigger>
+		<DropdownMenu.Trigger asChild >
+			{#snippet children({ builder })}
+						<Avatar.Root asChild>
+					<Button
+						data-testid={testIds.NAVIGATION_MENU_BUTTON_OPEN}
+						size="icon"
+						class="rounded-full border-2 border-black dark:border-white"
+						variant="outline"
+						builders={[builder]}
+					>
+						<Avatar.Image
+							class="rounded-full"
+							src={undefined}
+							alt={$authenticatedUserInfo?.username}
+						/>
+						<Avatar.Fallback />
+					</Button>
+				</Avatar.Root>
+								{/snippet}
+				</DropdownMenu.Trigger>
 
 		<DropdownMenu.Content>
 			<DropdownMenu.Group>

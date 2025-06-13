@@ -3,7 +3,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import BecomeAContributor from "@/features/learn/components/become-a-contributor.svelte";
 
-	export let data;
+	let { data } = $props();
 	const { content, metadata } = data;
 </script>
 
@@ -20,8 +20,9 @@
 </svelte:head>
 
 <Container>
+	{@const SvelteComponent = content}
 	<div class="prose prose-stone dark:prose-invert">
-		<svelte:component this={content} />
+		<SvelteComponent />
 	</div>
 
 	<BecomeAContributor />

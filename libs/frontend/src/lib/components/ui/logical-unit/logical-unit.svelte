@@ -3,11 +3,16 @@
 
 	type $$Props = HTMLInputAttributes;
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		children?: import('svelte').Snippet;
+	}
+
+	let { class: className = undefined, children }: Props = $props();
+	
 </script>
 
 <!-- important: should never have any classes defined by itself! -->
 <div class={className}>
-	<slot />
+	{@render children?.()}
 </div>

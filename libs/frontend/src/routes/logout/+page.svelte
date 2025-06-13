@@ -4,7 +4,11 @@
 	import { onMount } from "svelte";
 	import { frontendUrls } from "types";
 
-	export let data: { loggedOut: boolean };
+	interface Props {
+		data: { loggedOut: boolean };
+	}
+
+	let { data }: Props = $props();
 
 	onMount(() => {
 		if (data.loggedOut) {

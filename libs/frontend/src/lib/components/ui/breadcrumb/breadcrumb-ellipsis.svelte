@@ -7,9 +7,14 @@
 		el?: HTMLSpanElement;
 	};
 
-	export let el: $$Props["el"] = undefined;
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		el?: $$Props["el"];
+		class?: $$Props["class"];
+		[key: string]: any
+	}
+
+	let { el = $bindable(undefined), class: className = undefined, ...rest }: Props = $props();
+	
 </script>
 
 <span
@@ -17,7 +22,7 @@
 	role="presentation"
 	aria-hidden="true"
 	class={cn("flex h-9 w-9 items-center justify-center", className)}
-	{...$$restProps}
+	{...rest}
 >
 	<Ellipsis class="h-4 w-4" />
 	<span class="sr-only">More</span>

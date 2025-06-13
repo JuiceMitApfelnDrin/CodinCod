@@ -6,7 +6,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import HighlightText from "@/components/ui/highlight-text/highlight-text.svelte";
 
-	export let data;
+	let { data } = $props();
 
 	const { slugs } = data;
 </script>

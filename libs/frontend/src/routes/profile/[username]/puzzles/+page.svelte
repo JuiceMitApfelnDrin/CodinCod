@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
@@ -17,14 +19,14 @@
 	import { testIds } from "@/config/test-ids";
 	import { authenticatedUserInfo } from "@/stores/index.js";
 
-	export let data;
+	let { data } = $props();
 
-	let items: PuzzleDto[] = [];
-	let currentPage: number;
-	let totalItems: number;
-	let totalPages: number;
+	let items: PuzzleDto[] = $state([]);
+	let currentPage: number = $state();
+	let totalItems: number = $state();
+	let totalPages: number = $state();
 
-	$: {
+	run(() => {
 		const paginatedQueryResponseInfo = paginatedQueryResponseSchema.safeParse(data);
 
 		if (paginatedQueryResponseInfo.success) {
@@ -33,7 +35,7 @@
 			totalItems = paginatedQueryResponseInfo.data.totalItems;
 			totalPages = paginatedQueryResponseInfo.data.totalPages;
 		}
-	}
+	});
 </script>
 
 <svelte:head>

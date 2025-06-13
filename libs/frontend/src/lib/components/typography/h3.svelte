@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
 
-	type $$Props = { class?: string };
+	
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let { class = undefined, children }: Props = $props();
+	
 </script>
 
 <h3 class={cn("scroll-m-20 text-2xl font-semibold tracking-tight", className)}>
-	<slot></slot>
+	{@render children?.()}
 </h3>
