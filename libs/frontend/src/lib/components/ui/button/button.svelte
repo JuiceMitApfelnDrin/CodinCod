@@ -39,6 +39,7 @@
 
 <script lang="ts">
 	import { cn } from "@/utils/cn";
+	import type { DataTestIdProp } from "@/config/test-ids";
 
 	let {
 		class: className,
@@ -49,7 +50,7 @@
 		type = "button",
 		children,
 		...restProps
-	}: ButtonProps = $props();
+	}: ButtonProps & DataTestIdProp = $props();
 </script>
 
 {#if href}

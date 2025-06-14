@@ -21,6 +21,7 @@
 		"lib": ["ESNext"],
 
 		"paths": {
+			"#/*": ["./src/lib/components"],
 			"@/*": ["./src/*"]
 		}
 	}

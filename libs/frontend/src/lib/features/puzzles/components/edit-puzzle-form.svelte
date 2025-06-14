@@ -27,6 +27,7 @@
 	import LanguageSelect from "./language-select.svelte";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		data: SuperValidated<EditPuzzle>;
@@ -173,12 +174,20 @@
 								bind:value={$formData.validators[index].output}
 								placeholder="Output"
 							/>
-							<Button type="button" onclick={() => removeValidator(index)}>Remove</Button>
+							<Button
+								data-testid={testIds.EDIT_PUZZLE_FORM_BUTTON_REMOVE_VALIDATOR}
+								type="button"
+								onclick={() => removeValidator(index)}>Remove</Button
+							>
 						</div>
 					{/each}
 				{/if}
 				<div class="flex items-center">
-					<Button type="button" onclick={addValidator}>Add Validator</Button>
+					<Button
+						data-testid={testIds.EDIT_PUZZLE_FORM_BUTTON_ADD_VALIDATOR}
+						type="button"
+						onclick={addValidator}>Add Validator</Button
+					>
 				</div>
 			{/snippet}
 		</Form.Control>
@@ -274,5 +283,7 @@
 		/>
 	{/if}
 
-	<Form.Button>Update Puzzle</Form.Button>
+	<Form.Button data-testid={testIds.EDIT_PUZZLE_FORM_BUTTON_UPDATE_PUZZLE}
+		>Update Puzzle</Form.Button
+	>
 </form>

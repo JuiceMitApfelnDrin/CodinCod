@@ -23,6 +23,7 @@
 		type RoomStateResponse,
 		type WaitingRoomRequest
 	} from "types";
+	import { testIds } from "@/config/test-ids";
 
 	let room: RoomStateResponse | undefined = $state();
 	let rooms: RoomOverviewResponse[] = $state([]);
@@ -171,6 +172,7 @@
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 				{#if room && room.roomId}
 					<Button
+						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_LEAVE_ROOM}
 						onclick={() => {
 							if (!socket) {
 								return;
@@ -193,6 +195,7 @@
 
 					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
+							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_START_ROOM}
 							onclick={() => {
 								if (!socket) {
 									return;
@@ -213,6 +216,7 @@
 					{/if}
 				{:else}
 					<Button
+						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_HOST_ROOM}
 						onclick={() => {
 							if (!socket) {
 								return;
@@ -246,6 +250,7 @@
 				{#each rooms as joinableRoom}
 					<li>
 						<Button
+							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_JOIN_ROOM}
 							onclick={() => {
 								if (!socket) {
 									return;

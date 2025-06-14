@@ -32,6 +32,7 @@
 	import { languages } from "@/stores/languages";
 	import { toast } from "svelte-sonner";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		puzzle: PuzzleDto;
@@ -232,6 +233,7 @@
 	<div class="flex flex-row justify-end gap-2">
 		{#if puzzle.validators}
 			<Button
+				data-testid={testIds.PLAY_PUZZLE_COMPONENT_BUTTON_RUN_ALL_TESTS}
 				variant="secondary"
 				aria-live="polite"
 				onclick={runAllTests}
@@ -243,6 +245,7 @@
 		{/if}
 
 		<Button
+			data-testid={testIds.PLAY_PUZZLE_COMPONENT_BUTTON_SUBMIT_CODE}
 			variant="secondary"
 			disabled={isSubmittingCode}
 			class={cn(isSubmittingCode && "animate-pulse")}
@@ -316,6 +319,7 @@
 								{/if}
 
 								<Button
+									data-testid={testIds.PLAY_PUZZLE_COMPONENT_BUTTON_RUN_CODE}
 									variant="secondary"
 									aria-live="polite"
 									disabled={isExecutingTests || isSubmittingCode}

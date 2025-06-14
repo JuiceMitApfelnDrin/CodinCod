@@ -20,6 +20,7 @@
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
+	import { testIds } from "@/config/test-ids";
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
@@ -102,6 +103,7 @@
 						</Table.Cell>
 						<Table.Cell>
 							<Button
+								data-testid={testIds.STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE}
 								variant="secondary"
 								aria-expanded={isOpen[_id] ? "true" : "false"}
 								aria-controls={"code-" + _id}

@@ -9,6 +9,7 @@
 	import * as ScrollArea from "@/components/ui/scroll-area";
 	import { CHAT_MESSAGE_CONFIG, type ChatMessage } from "types";
 	import Message from "./chat-message.svelte";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		chatMessages?: ChatMessage[];
@@ -49,6 +50,11 @@
 			type="text"
 		/>
 
-		<Button type="submit" variant="outline" class="self-end">Send message</Button>
+		<Button
+			data-testid={testIds.CHAT_COMPONENT_BUTTON_SEND_MESSAGE}
+			type="submit"
+			variant="outline"
+			class="self-end">Send message</Button
+		>
 	</form>
 </LogicalUnit>

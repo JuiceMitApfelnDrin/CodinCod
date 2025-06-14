@@ -5,6 +5,7 @@
 	import H1 from "../typography/h1.svelte";
 	import P from "../typography/p.svelte";
 	import Button from "../ui/button/button.svelte";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		status?: number;
@@ -52,7 +53,9 @@
 		</Card.Content>
 
 		<Card.Footer>
-			<Button href={link.href} class="mt-4">{link.text}</Button>
+			<Button
+			data-testid={testIds.DISPLAY_ERROR_COMPONENT_ANCHOR_CUSTOM}
+			href={link.href} class="mt-4">{link.text}</Button>
 		</Card.Footer>
 	</Card.Root>
 </Container>
