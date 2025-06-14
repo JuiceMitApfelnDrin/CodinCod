@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
-	import { Badge, type Variant } from "@/components/ui/badge";
+	import { Badge, type BadgeVariant } from "@/components/ui/badge";
 	import { DifficultyEnum, type Difficulty } from "types";
 
 	interface Props {
@@ -10,24 +8,14 @@
 
 	let { difficulty = DifficultyEnum.INTERMEDIATE }: Props = $props();
 
-	let variant: Variant = $state("default");
+	const variantMap: Record<Difficulty, BadgeVariant> = {
+		[DifficultyEnum.BEGINNER]: "success",
+		[DifficultyEnum.INTERMEDIATE]: "default",
+		[DifficultyEnum.ADVANCED]: "destructive",
+		[DifficultyEnum.EXPERT]: "destructive"
+	};
 
-	run(() => {
-		switch (difficulty) {
-			case DifficultyEnum.ADVANCED:
-				variant = "destructive";
-				break;
-			case DifficultyEnum.EXPERT:
-				variant = "destructive";
-				break;
-			case DifficultyEnum.INTERMEDIATE:
-				variant = "default";
-				break;
-			case DifficultyEnum.BEGINNER:
-				variant = "success";
-				break;
-		}
-	});
+	let variant = $derived(variantMap[difficulty] ?? "default");
 </script>
 
 <Badge {variant}>{difficulty}</Badge>

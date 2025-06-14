@@ -3,22 +3,25 @@
 	import type { FrontendUrl } from "types";
 	import type { Button as ButtonPrimitive } from "bits-ui";
 
-	type $$Props = ButtonPrimitive.Props & { class?: string; href: FrontendUrl; text: string };
+	type $$Props = ButtonPrimitive.RootProps & { class?: string; href: FrontendUrl; text: string };
 
-	interface Props {
+	let {
+		class: className = undefined,
+		href,
+		text,
+		...rest
+	}: {
 		class?: $$Props["class"];
 		href: FrontendUrl;
 		text: string;
 		[key: string]: any;
-	}
-
-	let { class: className = undefined, href, text, ...rest }: Props = $props();
+	} = $props();
 </script>
 
 <li class={cn(className)}>
 	<a
 		{...rest}
-		class="px-2 py-4 text-sm font-semibold uppercase text-teal-900 hover:text-foreground hover:underline dark:text-teal-100 dark:hover:text-foreground"
+		class="hover:text-foreground dark:hover:text-foreground px-2 py-4 text-sm font-semibold uppercase text-teal-900 hover:underline dark:text-teal-100"
 		{href}>{text}</a
 	>
 </li>

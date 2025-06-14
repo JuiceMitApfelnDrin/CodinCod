@@ -175,7 +175,7 @@
 	}
 
 	let endedGame = $state(false);
-	run(() => {
+	$effect(() => {
 		if (!endedGame && endDate && dayjs(endDate).isBefore($currentTime)) {
 			endPuzzleGame();
 			endedGame = true;
@@ -187,9 +187,11 @@
 		openTests = true;
 	}
 
-	run(() => {
+	$effect(() => {
 		onPlayerChangeLanguage(language);
 	});
+
+	let puzzleValidators = $derived(puzzle.validators ?? []);
 </script>
 
 <PuzzleMetaInfo {puzzle} />
@@ -232,7 +234,7 @@
 			<Button
 				variant="secondary"
 				aria-live="polite"
-				on:click={runAllTests}
+				onclick={runAllTests}
 				disabled={isExecutingTests || isSubmittingCode}
 				class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
 			>
@@ -244,7 +246,7 @@
 			variant="secondary"
 			disabled={isSubmittingCode}
 			class={cn(isSubmittingCode && "animate-pulse")}
-			on:click={async () => {
+			onclick={async () => {
 				endPuzzleGame();
 			}}
 		>
@@ -278,7 +280,7 @@
 
 			{#snippet content()}
 				<ul class="flex flex-col gap-10">
-					{#each puzzle.validators as validator, index}
+					{#each puzzleValidators as validator, index}
 						<li class="relative">
 							<div
 								class={cn(
@@ -318,7 +320,7 @@
 									aria-live="polite"
 									disabled={isExecutingTests || isSubmittingCode}
 									class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
-									on:click={() => {
+									onclick={() => {
 										isExecutingTests = true;
 
 										Promise.all([

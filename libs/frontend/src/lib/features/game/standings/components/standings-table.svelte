@@ -16,7 +16,7 @@
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
-	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "lucide-svelte";
+	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "@lucide/svelte";
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
@@ -27,7 +27,7 @@
 		game: GameDto;
 	}
 
-	let { game }: Props = $props();
+	let { game = $bindable() }: Props = $props();
 	let submissions: SubmissionDto[] = $state([]);
 	run(() => {
 		submissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
@@ -105,7 +105,7 @@
 								variant="secondary"
 								aria-expanded={isOpen[_id] ? "true" : "false"}
 								aria-controls={"code-" + _id}
-								on:click={() => {
+								onclick={() => {
 									hasBeenOpened[_id] = true;
 									isOpen[_id] = !isOpen[_id];
 								}}

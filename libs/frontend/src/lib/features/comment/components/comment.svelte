@@ -22,7 +22,7 @@
 		MessageCircle,
 		MessageCircleOff,
 		Trash
-	} from "lucide-svelte";
+	} from "@lucide/svelte";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
@@ -102,7 +102,7 @@
 
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
-						<DropdownMenu.Item on:click={deleteComment}>
+						<DropdownMenu.Item onclick={deleteComment}>
 							<Trash class="mr-2 size-4" aria-hidden="true" /> Delete
 						</DropdownMenu.Item>
 					</DropdownMenu.Group>
@@ -119,7 +119,7 @@
 		{#if isReplying}
 			<Button
 				variant="outline"
-				on:click={() => {
+				onclick={() => {
 					isReplying = false;
 				}}
 			>
@@ -128,7 +128,7 @@
 		{:else}
 			<Button
 				variant="outline"
-				on:click={() => {
+				onclick={() => {
 					isReplying = true;
 				}}
 			>
@@ -138,7 +138,7 @@
 
 		<Button
 			variant="outline"
-			on:click={() => {
+			onclick={() => {
 				handleVote({ type: voteTypeEnum.UPVOTE });
 			}}
 		>
@@ -147,7 +147,7 @@
 		</Button>
 		<Button
 			variant="outline"
-			on:click={() => {
+			onclick={() => {
 				handleVote({ type: voteTypeEnum.DOWNVOTE });
 			}}
 		>
@@ -172,7 +172,7 @@
 		})}
 			<Button
 				variant="outline"
-				on:click={() => {
+				onclick={() => {
 					fetchReplies();
 				}}
 			>

@@ -1,12 +1,17 @@
 <script lang="ts">
-	interface Props {
+	import type { Snippet } from "svelte";
+
+	let {
+		id,
+		open = $bindable(false),
+		title,
+		content
+	}: {
 		id: string;
 		open?: boolean;
-		title?: import("svelte").Snippet;
-		content?: import("svelte").Snippet;
-	}
-
-	let { id, open = $bindable(false), title, content }: Props = $props();
+		title?: Snippet;
+		content?: Snippet;
+	} = $props();
 </script>
 
 <details bind:open {id}>

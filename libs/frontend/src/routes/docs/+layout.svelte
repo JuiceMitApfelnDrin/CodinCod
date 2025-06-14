@@ -5,12 +5,14 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import BecomeAContributor from "@/features/learn/components/become-a-contributor.svelte";
+	import type { Snippet } from "svelte";
 	import { frontendUrls } from "types";
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
 <Container class="flex md:flex-row">

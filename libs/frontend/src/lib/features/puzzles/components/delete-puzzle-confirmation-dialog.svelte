@@ -31,8 +31,8 @@
 			<form method="POST" action="?/deletePuzzle" use:enhance>
 				<Form.Field {form} name="id">
 					<Form.Control>
-						{#snippet children({ attrs })}
-							<Input type="hidden" {...attrs} bind:value={$formData.id} />
+						{#snippet children({ props })}
+							<Input type="hidden" {...props} bind:value={$formData.id} />
 						{/snippet}
 					</Form.Control>
 					<Form.Description>

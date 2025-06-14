@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import { buildFrontendUrl, frontendUrls, type PuzzleDto } from "types";
+	import {
+		buildFrontendUrl,
+		frontendUrls,
+		type PaginatedQueryResponse,
+		type PuzzleDto
+	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
@@ -13,25 +16,20 @@
 	import { testIds } from "@/config/test-ids";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 
-	let { data } = $props();
+	let { data }: { data: PaginatedQueryResponse | undefined } = $props();
 
-	let items: PuzzleDto[] = $state([]);
-	let page: number = $state();
-	let totalItems: number = $state();
-	let totalPages: number = $state();
-	run(() => {
-		items = data.items;
-		page = data.page;
-		totalItems = data.totalItems;
-		totalPages = data.totalPages;
-	});
+	let items: PuzzleDto[] = $derived(data?.items ?? []);
+	let page: number = $derived(data?.page ?? 1);
+	let totalItems: number = $derived(data?.totalItems ?? 0);
+	let totalPages: number = $derived(data?.totalPages ?? 0);
 
-	let myPuzzlesUrl: string | undefined = $state(undefined);
-	if ($authenticatedUserInfo?.isAuthenticated) {
-		myPuzzlesUrl = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME_PUZZLES, {
-			username: $authenticatedUserInfo.username
-		});
-	}
+	let myPuzzlesUrl: string | undefined = $derived(
+		$authenticatedUserInfo?.isAuthenticated
+			? buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME_PUZZLES, {
+					username: $authenticatedUserInfo.username
+				})
+			: undefined
+	);
 </script>
 
 <svelte:head>

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import type { ComponentType } from "svelte";
+	import type { Component, Snippet } from "svelte";
 
 	interface Props {
-		icon?: ComponentType | null;
+		icon?: Component | null;
 		text: string;
-		children?: import("svelte").Snippet;
+		children?: Snippet;
 	}
 
 	let { icon = null, text, children }: Props = $props();

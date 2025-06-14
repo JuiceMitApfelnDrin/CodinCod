@@ -2,19 +2,23 @@
 	import type { HTMLAttributes } from "svelte/elements";
 	import { type Variant, alertVariants } from "./index.js";
 	import { cn } from "@/utils/cn.js";
+	import type { Snippet } from "svelte";
 
 	type $$Props = HTMLAttributes<HTMLDivElement> & {
 		variant?: Variant;
 	};
 
-	interface Props {
+	let {
+		class: className = undefined,
+		variant = "default",
+		children,
+		...rest
+	}: {
 		class?: $$Props["class"];
 		variant?: $$Props["variant"];
-		children?: import("svelte").Snippet;
+		children?: Snippet;
 		[key: string]: any;
-	}
-
-	let { class: className = undefined, variant = "default", children, ...rest }: Props = $props();
+	} = $props();
 </script>
 
 <div class={cn(alertVariants({ variant }), className)} {...rest} role="alert">

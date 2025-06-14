@@ -1,14 +1,14 @@
 <script lang="ts">
+	import type { Snippet } from "svelte";
 	import type { HTMLInputAttributes } from "svelte/elements";
 
-	type $$Props = HTMLInputAttributes;
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import("svelte").Snippet;
-	}
-
-	let { class: className = undefined, children }: Props = $props();
+	let {
+		class: className = undefined,
+		children
+	}: {
+		class?: HTMLInputAttributes["class"];
+		children?: Snippet;
+	} = $props();
 </script>
 
 <!-- important: should never have any classes defined by itself! -->

@@ -1,9 +1,11 @@
 <script lang="ts">
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
+	import type { Snippet } from "svelte";
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
 <blockquote class="mt-6 border-l-2 pl-6 italic">

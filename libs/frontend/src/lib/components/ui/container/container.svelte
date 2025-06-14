@@ -1,12 +1,13 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from "svelte/elements";
 	import { cn } from "@/utils/cn";
+	import type { Snippet } from "svelte";
 
 	type $$Props = HTMLInputAttributes;
 
 	interface Props {
 		class?: $$Props["class"];
-		children?: import("svelte").Snippet;
+		children?: Snippet;
 	}
 
 	let { class: className = undefined, children }: Props = $props();

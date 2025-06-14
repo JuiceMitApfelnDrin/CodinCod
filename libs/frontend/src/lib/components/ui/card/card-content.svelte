@@ -1,18 +1,16 @@
 <script lang="ts">
-	import { cn } from "@/utils/cn";
+	import type { WithElementRef } from "bits-ui";
 	import type { HTMLAttributes } from "svelte/elements";
+	import { cn } from "@/utils/cn";
 
-	type $$Props = HTMLAttributes<HTMLDivElement>;
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import("svelte").Snippet;
-		[key: string]: any;
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 </script>
 
-<div class={cn("p-6 pt-0", className)} {...rest}>
+<div bind:this={ref} class={cn("p-6", className)} {...restProps}>
 	{@render children?.()}
 </div>

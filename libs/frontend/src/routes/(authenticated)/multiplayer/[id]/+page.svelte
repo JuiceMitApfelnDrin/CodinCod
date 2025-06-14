@@ -82,6 +82,10 @@
 		});
 
 		socket.addEventListener("error", (message) => {
+			if (!socket) {
+				return;
+			}
+
 			console.info("WebSocket connection error");
 			socket.close();
 		});
@@ -136,23 +140,19 @@
 		});
 	}
 
-	let socket: WebSocket = $state();
+	let socket: WebSocket | undefined = $state();
 	if (browser) {
 		connectWithWebsocket();
 	}
 
-	let isNotPlayerInGame = $state(true);
-	run(() => {
-		isNotPlayerInGame = Boolean(
+	let isNotPlayerInGame = $derived(
+		Boolean(
 			$authenticatedUserInfo?.userId &&
 				!isUserIdInUserList($authenticatedUserInfo.userId, game?.players ?? [])
-		);
-	});
+		)
+	);
 
-	let endDate: Date | undefined = $state();
-	run(() => {
-		endDate = game && dayjs(game.endTime).toDate();
-	});
+	let endDate: Date | undefined = $derived(game && dayjs(game.endTime).toDate());
 
 	run(() => {
 		const now = $currentTime;
@@ -184,6 +184,10 @@
 	}
 
 	async function onPlayerSubmitCode(submissionId: string) {
+		if (!socket) {
+			return;
+		}
+
 		if (!isGameOver && $authenticatedUserInfo) {
 			const gameSubmissionParams: GameSubmissionParams = {
 				gameId,
@@ -205,6 +209,10 @@
 	}
 
 	async function sendMessage(composedMessage: string) {
+		if (!socket) {
+			return;
+		}
+
 		if (!$authenticatedUserInfo) {
 			return;
 		}
@@ -222,14 +230,28 @@
 	}
 
 	function onPlayerChangeLanguage(language: string) {
+		if (!socket) {
+			return;
+		}
+
 		sendGameMessage(socket, {
 			event: gameEventEnum.CHANGE_LANGUAGE,
 			language
 		});
 	}
 
-	export function sendGameMessage(socket: WebSocket, data: GameRequest) {
+	function sendGameMessage(socket: WebSocket, data: GameRequest) {
 		sendMessageOfType<GameRequest>(socket, data);
+	}
+
+	function joinGame() {
+		if (!socket) {
+			return;
+		}
+
+		sendGameMessage(socket, {
+			event: gameEventEnum.JOIN_GAME
+		});
 	}
 </script>
 
@@ -278,7 +300,7 @@
 				</Button>
 			{/if}
 
-			<Button variant="outline" on:click={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}>
+			<Button variant="outline" onclick={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}>
 				Go to multiplayer
 			</Button>
 		</LogicalUnit>
@@ -294,13 +316,7 @@
 	</Container>
 {:else if isNotPlayerInGame}
 	<Container>
-		<Button
-			on:click={() => {
-				sendGameMessage(socket, {
-					event: gameEventEnum.JOIN_GAME
-				});
-			}}>Would you like to join this ongoing game?</Button
-		>
+		<Button onclick={joinGame}>Would you like to join this ongoing game?</Button>
 	</Container>
 {:else if puzzle && game}
 	<Container>

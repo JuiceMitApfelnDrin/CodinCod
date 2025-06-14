@@ -2,35 +2,22 @@
 	import { Menubar as MenubarPrimitive } from "bits-ui";
 	import { cn } from "@/utils/cn";
 
-	type $$Props = MenubarPrimitive.ItemProps & {
+	let {
+		ref = $bindable(null),
+		class: className,
+		inset = undefined,
+		...restProps
+	}: MenubarPrimitive.ItemProps & {
 		inset?: boolean;
-	};
-	type $$Events = MenubarPrimitive.ItemEvents;
-
-	interface Props {
-		class?: $$Props["class"];
-		inset?: $$Props["inset"];
-		children?: import("svelte").Snippet;
-		[key: string]: any;
-	}
-
-	let { class: className = undefined, inset = undefined, children, ...rest }: Props = $props();
+	} = $props();
 </script>
 
 <MenubarPrimitive.Item
+	bind:ref
 	class={cn(
-		"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:opacity-50",
+		"data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
 		inset && "pl-8",
 		className
 	)}
-	{...rest}
-	on:click
-	on:keydown
-	on:focusin
-	on:focusout
-	on:pointerleave
-	on:pointermove
-	on:pointerdown
->
-	{@render children?.()}
-</MenubarPrimitive.Item>
+	{...restProps}
+/>

@@ -4,12 +4,13 @@
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import Pagination from "@/components/nav/pagination.svelte";
 	import {
 		buildFrontendUrl,
 		frontendUrls,
 		paginatedQueryResponseSchema,
+		type PaginatedQueryResponse,
 		type PuzzleDto
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
@@ -19,42 +20,31 @@
 	import { testIds } from "@/config/test-ids";
 	import { authenticatedUserInfo } from "@/stores/index.js";
 
-	let { data } = $props();
+	let { data }: { data: PaginatedQueryResponse | undefined } = $props();
 
-	let items: PuzzleDto[] = $state([]);
-	let currentPage: number = $state();
-	let totalItems: number = $state();
-	let totalPages: number = $state();
-
-	run(() => {
-		const paginatedQueryResponseInfo = paginatedQueryResponseSchema.safeParse(data);
-
-		if (paginatedQueryResponseInfo.success) {
-			items = paginatedQueryResponseInfo.data.items;
-			currentPage = paginatedQueryResponseInfo.data.page;
-			totalItems = paginatedQueryResponseInfo.data.totalItems;
-			totalPages = paginatedQueryResponseInfo.data.totalPages;
-		}
-	});
+	let items: PuzzleDto[] = $derived(data?.items ?? []);
+	let currentPage: number = $derived(data?.page ?? 1);
+	let totalItems: number = $derived(data?.totalItems ?? 0);
+	let totalPages: number = $derived(data?.totalPages ?? 0);
 </script>
 
 <svelte:head>
-	<title>Puzzles created by {$page.params.username} | CodinCod</title>
+	<title>Puzzles created by {page.params.username} | CodinCod</title>
 	<!-- TODO: create a better description here -->
 	<meta
 		name="description"
-		content={`View all the puzzles that are publicly available and made by ${$page.params.username}`}
+		content={`View all the puzzles that are publicly available and made by ${page.params.username}`}
 	/>
 	<!-- TODO: add better keywords here -->
 	<meta name="keywords" content="coding puzzles" />
-	<meta name="author" content={$page.params.username} />
+	<meta name="author" content={page.params.username} />
 </svelte:head>
 
 <Container>
 	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-		<H1>{$page.params.username} puzzles</H1>
+		<H1>{page.params.username} puzzles</H1>
 
-		{#if $page.params.username === $authenticatedUserInfo?.username}
+		{#if page.params.username === $authenticatedUserInfo?.username}
 			<Button
 				variant="outline"
 				data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
@@ -69,7 +59,7 @@
 		{#if totalItems <= 0}
 			<p data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}>
 				Couldn't find any puzzles.
-				{#if $page.params.username === $authenticatedUserInfo?.username}
+				{#if page.params.username === $authenticatedUserInfo?.username}
 					But you can <Button
 						variant="outline"
 						data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
