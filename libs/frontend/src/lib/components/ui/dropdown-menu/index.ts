@@ -46,5 +46,5 @@ export {
 	Sub,
 	SubContent,
 	SubTrigger,
-	Trigger,
+	Trigger
 };

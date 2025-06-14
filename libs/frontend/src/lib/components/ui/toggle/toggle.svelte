@@ -6,19 +6,18 @@
 		variants: {
 			variant: {
 				default: "bg-transparent",
-				outline:
-					"border-input hover:bg-accent hover:text-accent-foreground border bg-transparent",
+				outline: "border-input hover:bg-accent hover:text-accent-foreground border bg-transparent"
 			},
 			size: {
 				default: "h-10 min-w-10 px-3",
 				sm: "h-9 min-w-9 px-2.5",
-				lg: "h-11 min-w-11 px-5",
-			},
+				lg: "h-11 min-w-11 px-5"
+			}
 		},
 		defaultVariants: {
 			variant: "default",
-			size: "default",
-		},
+			size: "default"
+		}
 	});
 
 	export type ToggleVariant = VariantProps<typeof toggleVariants>["variant"];

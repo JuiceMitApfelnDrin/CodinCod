@@ -30,5 +30,5 @@ export {
 	Trigger as SelectTrigger,
 	Separator as SelectSeparator,
 	ScrollDownButton as SelectScrollDownButton,
-	ScrollUpButton as SelectScrollUpButton,
+	ScrollUpButton as SelectScrollUpButton
 };
