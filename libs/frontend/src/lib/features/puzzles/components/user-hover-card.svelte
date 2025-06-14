@@ -9,6 +9,7 @@
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		class?: ButtonPrimitive.RootProps["class"];
@@ -59,6 +60,7 @@
 					<Avatar.Root>
 						{#snippet child(props)}
 							<Button
+								data-testid={testIds.USER_HOVER_CARD_COMPONENT_ANCHOR_USER_PROFILE}
 								size="icon"
 								class="aspect-square rounded-full border-2 border-black dark:border-white"
 								variant="outline"

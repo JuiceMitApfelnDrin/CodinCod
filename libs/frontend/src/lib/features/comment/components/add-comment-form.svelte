@@ -16,6 +16,7 @@
 		type CreateComment,
 		type ObjectId
 	} from "types";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		commentType: CommentType;
@@ -78,8 +79,18 @@
 
 	{#if commentText != ""}
 		<LogicalUnit>
-			<Button type="submit" variant="outline" class="self-end">Add comment</Button>
-			<Button type="reset" variant="outline" class="self-end">Cancel</Button>
+			<Button
+				data-testid={testIds.ADD_COMMENT_FORM_BUTTON_SUBMIT_NEW_COMMENT}
+				type="submit"
+				variant="outline"
+				class="self-end">Add comment</Button
+			>
+			<Button
+				data-testid={testIds.ADD_COMMENT_FORM_BUTTON_CANCEL_CREATING_COMMENT}
+				type="reset"
+				variant="outline"
+				class="self-end">Cancel</Button
+			>
 		</LogicalUnit>
 	{/if}
 </form>

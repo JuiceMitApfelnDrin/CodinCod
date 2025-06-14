@@ -3,6 +3,7 @@
 	import * as Dialog from "@/components/ui/dialog";
 	import * as Form from "@/components/ui/form";
 	import Input from "@/components/ui/input/input.svelte";
+	import { testIds } from "@/config/test-ids";
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { deletePuzzleSchema, type DeletePuzzle } from "types";
@@ -42,7 +43,10 @@
 					<Form.FieldErrors />
 				</Form.Field>
 
-				<Form.Button variant="destructive">Delete puzzle</Form.Button>
+				<Form.Button
+					variant="destructive"
+					data-testid={testIds.DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE}>Delete puzzle</Form.Button
+				>
 			</form>
 		</Dialog.Header>
 		<Dialog.Footer></Dialog.Footer>

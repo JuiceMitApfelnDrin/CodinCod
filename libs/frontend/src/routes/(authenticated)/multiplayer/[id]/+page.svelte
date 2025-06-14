@@ -46,6 +46,7 @@
 		sendMessageOfType,
 		type GameRequest
 	} from "types";
+	import { testIds } from "@/config/test-ids";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
 		return players.some((player) => getUserIdFromUser(player) === userId);
@@ -292,7 +293,10 @@
 	<Container>
 		<LogicalUnit>
 			{#if getUserIdFromUser(game.owner) === $authenticatedUserInfo.userId}
-				<Button variant="outline">
+				<Button
+					variant="outline"
+					data-testid={testIds.MULTIPLAYER_BY_ID_PAGE_BUTTON_CREATE_THE_SAME_CONFIGURED_GAME}
+				>
 					<WorkInProgress />: Create a game with the same options
 					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?
 						should you first check whether there is a similar game in the lobby and throw everyone that way or take everyone to the next game 
@@ -300,7 +304,11 @@
 				</Button>
 			{/if}
 
-			<Button variant="outline" onclick={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}>
+			<Button
+				data-testid={testIds.MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER}
+				variant="outline"
+				onclick={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}
+			>
 				Go to multiplayer
 			</Button>
 		</LogicalUnit>
@@ -316,7 +324,12 @@
 	</Container>
 {:else if isNotPlayerInGame}
 	<Container>
-		<Button onclick={joinGame}>Would you like to join this ongoing game?</Button>
+		<Button
+			data-testid={testIds.MULTIPLAYER_BY_ID_PAGE_BUTTON_JOIN_ONGOING_GAME}
+			onclick={joinGame}
+		>
+			Would you like to join this ongoing game?
+		</Button>
 	</Container>
 {:else if puzzle && game}
 	<Container>

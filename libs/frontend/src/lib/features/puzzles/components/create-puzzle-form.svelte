@@ -7,6 +7,7 @@
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		data: SuperValidated<CreatePuzzle>;
@@ -43,5 +44,7 @@
 		/>
 	{/if}
 
-	<Form.Button>Create Puzzle</Form.Button>
+	<Form.Button data-testid={testIds.CREATE_PUZZLE_FORM_BUTTON_CREATE_PUZZLE}>
+		Create Puzzle
+	</Form.Button>
 </form>

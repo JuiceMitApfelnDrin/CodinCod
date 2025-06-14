@@ -27,6 +27,7 @@
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		comment: CommentDto;
@@ -118,6 +119,7 @@
 	<LogicalUnit class="flex flex-row gap-2">
 		{#if isReplying}
 			<Button
+				data-testid={testIds.COMMENT_COMPONENT_BUTTON_HIDE_COMMENT}
 				variant="outline"
 				onclick={() => {
 					isReplying = false;
@@ -127,6 +129,7 @@
 			</Button>
 		{:else}
 			<Button
+				data-testid={testIds.COMMENT_COMPONENT_BUTTON_REPLY_TO_COMMENT}
 				variant="outline"
 				onclick={() => {
 					isReplying = true;
@@ -137,6 +140,7 @@
 		{/if}
 
 		<Button
+			data-testid={testIds.COMMENT_COMPONENT_BUTTON_UPVOTE_COMMENT}
 			variant="outline"
 			onclick={() => {
 				handleVote({ type: voteTypeEnum.UPVOTE });
@@ -146,6 +150,7 @@
 			{comment.upvote} upvotes
 		</Button>
 		<Button
+			data-testid={testIds.COMMENT_COMPONENT_BUTTON_DOWNVOTE_COMMENT}
 			variant="outline"
 			onclick={() => {
 				handleVote({ type: voteTypeEnum.DOWNVOTE });
@@ -171,6 +176,7 @@
 			return !isCommentDto(comment);
 		})}
 			<Button
+				data-testid={testIds.COMMENT_COMPONENT_BUTTON_SHOW_REPLIES}
 				variant="outline"
 				onclick={() => {
 					fetchReplies();

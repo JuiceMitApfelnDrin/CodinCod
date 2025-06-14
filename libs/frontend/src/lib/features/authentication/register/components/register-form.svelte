@@ -9,6 +9,7 @@
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
+	import { testIds } from "@/config/test-ids";
 
 	interface Props {
 		data: SuperValidated<RegisterForm>;
@@ -105,5 +106,5 @@
 		/>
 	{/if}
 
-	<Form.Button>Register</Form.Button>
+	<Form.Button data-testid={testIds.REGISTER_FORM_BUTTON_REGISTER}>Register</Form.Button>
 </form>

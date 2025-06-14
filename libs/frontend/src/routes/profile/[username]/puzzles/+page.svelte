@@ -42,14 +42,16 @@
 
 <Container>
 	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-		<H1>{page.params.username} puzzles</H1>
+		<H1>{page.params.username}'s puzzles</H1>
 
 		{#if page.params.username === $authenticatedUserInfo?.username}
 			<Button
 				variant="outline"
 				data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
-				href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button
+				href={frontendUrls.PUZZLE_CREATE}
 			>
+				Create a new puzzle
+			</Button>
 		{/if}
 	</LogicalUnit>
 

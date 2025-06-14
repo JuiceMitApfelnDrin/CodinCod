@@ -1,10 +1,10 @@
 <script lang="ts">
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-	import * as Avatar from "$lib/components/ui/avatar";
-	import { buildFrontendUrl, frontendUrls, type Link } from "types";
-	import { authenticatedUserInfo } from "../../stores";
-	import Button from "../ui/button/button.svelte";
+	import * as DropdownMenu from "#/ui/dropdown-menu";
+	import * as Avatar from "#/ui/avatar";
+	import { buildFrontendUrl, frontendUrls } from "types";
 	import { testIds } from "@/config/test-ids";
+	import { authenticatedUserInfo } from "@/stores";
+	import { Button } from "#/ui/button";
 </script>
 
 {#if $authenticatedUserInfo?.isAuthenticated}

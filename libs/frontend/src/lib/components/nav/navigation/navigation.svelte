@@ -51,7 +51,7 @@
 			>
 		{/if}
 
-		<ToggleTheme data-testid={testIds.NAVIGATION_ANCHOR_LEARN} class="mt-2" />
+		<ToggleTheme data-testid={testIds.NAVIGATION_ANCHOR_LEARN} />
 	</nav>
 
 	<div
