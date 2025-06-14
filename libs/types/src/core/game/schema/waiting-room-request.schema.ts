@@ -35,6 +35,8 @@ export const waitingRoomRequestSchema = z.discriminatedUnion("event", [
 
 export type WaitingRoomRequest = z.infer<typeof waitingRoomRequestSchema>;
 
-export function isWaitingRoomRequest(data: any): data is WaitingRoomRequest {
+export function isWaitingRoomRequest(
+	data: unknown,
+): data is WaitingRoomRequest {
 	return waitingRoomRequestSchema.safeParse(data).success;
 }

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { puzzleEntitySchema } from "./puzzle-entity.schema.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 import { solutionSchema } from "./solution.schema.js";

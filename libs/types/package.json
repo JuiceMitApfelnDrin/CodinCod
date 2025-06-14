@@ -13,10 +13,8 @@
 		"build": "tsc",
 		"dev": "tsc -w",
 		"type-check": "tsc",
-		"lint": "npx eslint .",
-		"lint:fix": "npm run lint -- --fix",
-		"prettier": "npx prettier . --check",
-		"prettier:fix": "npm run prettier -- --write",
+		"lint": "pnpm biome lint ./src",
+		"lint:fix": "pnpm biome lint --write ./src",
 		"format": "pnpm biome format --write ./src"
 	},
 	"dependencies": {

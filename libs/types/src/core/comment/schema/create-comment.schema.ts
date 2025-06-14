@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { baseComment } from "./comment.schema.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 

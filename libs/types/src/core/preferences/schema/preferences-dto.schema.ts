@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { preferencesEntitySchema } from "./preferences-entity.schema.js";
 
 const basePreferencesDtoSchema = preferencesEntitySchema;

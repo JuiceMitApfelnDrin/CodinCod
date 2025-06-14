@@ -26,6 +26,6 @@ export const gameRequestSchema = z.discriminatedUnion("event", [
 
 export type GameRequest = z.infer<typeof gameRequestSchema>;
 
-export function isGameRequest(data: any): data is GameRequest {
+export function isGameRequest(data: unknown): data is GameRequest {
 	return gameRequestSchema.safeParse(data).success;
 }

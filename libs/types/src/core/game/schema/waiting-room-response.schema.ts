@@ -49,6 +49,8 @@ export const waitingRoomResponseSchema = z.discriminatedUnion("event", [
 
 export type WaitingRoomResponse = z.infer<typeof waitingRoomResponseSchema>;
 
-export function isWaitingRoomResponse(data: any): data is WaitingRoomResponse {
+export function isWaitingRoomResponse(
+	data: unknown,
+): data is WaitingRoomResponse {
 	return waitingRoomResponseSchema.safeParse(data).success;
 }

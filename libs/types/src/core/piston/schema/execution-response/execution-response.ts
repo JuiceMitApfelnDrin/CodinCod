@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { pistonExecutionResponseSuccessSchema } from "./execution-success.js";
 import { pistonExecutionResponseErrorSchema } from "./execution-error.js";
 

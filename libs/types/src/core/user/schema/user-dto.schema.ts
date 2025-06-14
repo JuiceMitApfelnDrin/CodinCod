@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { userEntitySchema } from "./user-entity.schema.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { userEntitySchema } from "../../user/schema/user-entity.schema.js";
 
 export const registerSchema = userEntitySchema.pick({

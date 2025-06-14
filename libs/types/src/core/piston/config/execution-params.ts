@@ -1,4 +1,4 @@
-import { PuzzleLanguage } from "../../puzzle/schema/puzzle-language.js";
+import type { PuzzleLanguage } from "../../puzzle/schema/puzzle-language.js";
 
 export type CodeExecutionParams = {
 	code: string;
