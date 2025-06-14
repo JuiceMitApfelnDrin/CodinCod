@@ -1,9 +1,11 @@
 <script lang="ts">
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
+	import type { Snippet } from "svelte";
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
 <ul class="my-2 ml-6 list-disc [&>li]:mt-2">

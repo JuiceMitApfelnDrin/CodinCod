@@ -2,7 +2,7 @@
 	import { run } from "svelte/legacy";
 
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { ChevronDown } from "lucide-svelte";
+	import { ChevronDown } from "@lucide/svelte";
 	import { activityTypeEnum, type AcceptedDate, type Activity, type ActivityType } from "types";
 
 	interface Props {

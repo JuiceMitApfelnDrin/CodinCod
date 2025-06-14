@@ -1,32 +1,23 @@
 <script lang="ts">
-	import { createBubbler } from "svelte/legacy";
-
-	const bubble = createBubbler();
 	import type { HTMLAttributes } from "svelte/elements";
-
+	import type { WithElementRef } from "bits-ui";
 	import { cn } from "@/utils/cn";
 
-	type $$Props = HTMLAttributes<HTMLTableRowElement> & {
-		"data-state"?: unknown;
-	};
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import("svelte").Snippet;
-		[key: string]: any;
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLTableRowElement>> = $props();
 </script>
 
 <tr
+	bind:this={ref}
 	class={cn(
-		"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+		"hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
 		className
 	)}
-	{...rest}
-	onclick={bubble("click")}
-	onkeydown={bubble("keydown")}
+	{...restProps}
 >
 	{@render children?.()}
 </tr>

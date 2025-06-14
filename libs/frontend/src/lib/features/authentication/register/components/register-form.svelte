@@ -36,10 +36,10 @@
 >
 	<Form.Field {form} name="username" class="w-full">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Username</Form.Label>
 				<Input
-					{...attrs}
+					{...props}
 					bind:value={$formData.username}
 					placeholder="john_doe123"
 					minlength={USERNAME_CONFIG.minUsernameLength}
@@ -57,10 +57,10 @@
 
 	<Form.Field {form} name="email" class="w-full">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Email</Form.Label>
 				<Input
-					{...attrs}
+					{...props}
 					bind:value={$formData.email}
 					placeholder="john@example.com"
 					type="email"
@@ -73,11 +73,11 @@
 
 	<Form.Field {form} name="password" class="w-full">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Password</Form.Label>
 				<Input
 					type="password"
-					{...attrs}
+					{...props}
 					bind:value={$formData.password}
 					placeholder={`${PASSWORD_CONFIG.minPasswordLength}characters`}
 				/>

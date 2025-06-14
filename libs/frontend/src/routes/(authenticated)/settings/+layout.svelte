@@ -4,13 +4,15 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 
-	import { Bell, MessageCircle, Paintbrush2, Settings, Settings2, User } from "lucide-svelte";
+	import { Bell, MessageCircle, Paintbrush2, Settings, Settings2, User } from "@lucide/svelte";
+	import type { Snippet } from "svelte";
 	import { frontendUrls } from "types";
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
 <Container class="flex md:flex-row">

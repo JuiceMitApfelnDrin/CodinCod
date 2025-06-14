@@ -1,9 +1,11 @@
 <script lang="ts">
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
+	import type { Snippet } from "svelte";
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
 <h4 class="scroll-m-20 text-xl font-semibold tracking-tight">

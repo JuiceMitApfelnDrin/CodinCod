@@ -1,3 +1,9 @@
+export const DATA_TESTID_STRING = "data-testid";
+
+export type DataTestIdProp = {
+	[DATA_TESTID_STRING]: string;
+};
+
 export const testIds = {
 	// login form
 	LOGIN_FORM_BUTTON_LOGIN: "login-form-button-login",

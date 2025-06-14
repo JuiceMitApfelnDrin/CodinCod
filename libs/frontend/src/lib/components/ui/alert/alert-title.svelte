@@ -2,6 +2,7 @@
 	import type { HTMLAttributes } from "svelte/elements";
 	import type { HeadingLevel } from "./index.js";
 	import { cn } from "@/utils/cn.js";
+	import type { Snippet } from "svelte";
 
 	type $$Props = HTMLAttributes<HTMLHeadingElement> & {
 		level?: HeadingLevel;
@@ -10,7 +11,7 @@
 	interface Props {
 		class?: $$Props["class"];
 		level?: $$Props["level"];
-		children?: import("svelte").Snippet;
+		children?: Snippet;
 		[key: string]: any;
 	}
 

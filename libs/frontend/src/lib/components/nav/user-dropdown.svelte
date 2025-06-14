@@ -9,23 +9,25 @@
 
 {#if $authenticatedUserInfo?.isAuthenticated}
 	<DropdownMenu.Root>
-		<DropdownMenu.Trigger asChild>
-			{#snippet children({ builder })}
-				<Avatar.Root asChild>
-					<Button
-						data-testid={testIds.NAVIGATION_MENU_BUTTON_OPEN}
-						size="icon"
-						class="rounded-full border-2 border-black dark:border-white"
-						variant="outline"
-						builders={[builder]}
-					>
-						<Avatar.Image
-							class="rounded-full"
-							src={undefined}
-							alt={$authenticatedUserInfo?.username}
-						/>
-						<Avatar.Fallback />
-					</Button>
+		<DropdownMenu.Trigger>
+			{#snippet child({ props: avatarProps })}
+				<Avatar.Root {...avatarProps}>
+					{#snippet child({ props })}
+						<Button
+							data-testid={testIds.NAVIGATION_MENU_BUTTON_OPEN}
+							size="icon"
+							class="rounded-full border-2 border-black dark:border-white"
+							variant="outline"
+							{...props}
+						>
+							<Avatar.Image
+								class="rounded-full"
+								src={undefined}
+								alt={$authenticatedUserInfo?.username}
+							/>
+							<Avatar.Fallback />
+						</Button>
+					{/snippet}
 				</Avatar.Root>
 			{/snippet}
 		</DropdownMenu.Trigger>
@@ -35,23 +37,33 @@
 				{@const profileLink = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
 					username: $authenticatedUserInfo.username
 				})}
-				<DropdownMenu.Item data-testid={testIds.NAVIGATION_MENU_ANCHOR_PROFILE} href={profileLink}>
-					Profile
+				<DropdownMenu.Item>
+					{#snippet child(props)}
+						<a data-testid={testIds.NAVIGATION_MENU_ANCHOR_PROFILE} href={profileLink} {...props}
+							>Profile</a
+						>
+					{/snippet}
 				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					data-testid={testIds.NAVIGATION_MENU_ANCHOR_SETTINGS}
-					href={frontendUrls.SETTINGS_PROFILE}
-				>
-					Settings
+				<DropdownMenu.Item>
+					{#snippet child(props)}
+						<a
+							data-testid={testIds.NAVIGATION_MENU_ANCHOR_SETTINGS}
+							href={frontendUrls.SETTINGS_PROFILE}
+							{...props}>Settings</a
+						>
+					{/snippet}
 				</DropdownMenu.Item>
 
 				<DropdownMenu.Separator />
 
-				<DropdownMenu.Item
-					data-testid={testIds.NAVIGATION_MENU_ANCHOR_LOGOUT}
-					href={frontendUrls.LOGOUT}
-				>
-					Log out
+				<DropdownMenu.Item>
+					{#snippet child(props)}
+						<a
+							data-testid={testIds.NAVIGATION_MENU_ANCHOR_LOGOUT}
+							href={frontendUrls.LOGOUT}
+							{...props}>Log out</a
+						>
+					{/snippet}
 				</DropdownMenu.Item>
 			</DropdownMenu.Group>
 		</DropdownMenu.Content>

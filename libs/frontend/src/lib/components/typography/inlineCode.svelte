@@ -1,11 +1,13 @@
 <script lang="ts">
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
+	import type { Snippet } from "svelte";
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
-<code class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono font-semibold">
+<code class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono font-semibold">
 	{@render children?.()}
 </code>

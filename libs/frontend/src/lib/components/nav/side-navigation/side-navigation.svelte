@@ -1,9 +1,11 @@
 <script lang="ts">
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
+	import type { Snippet } from "svelte";
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
 <nav class="w-full rounded-lg border p-4 md:max-w-64">

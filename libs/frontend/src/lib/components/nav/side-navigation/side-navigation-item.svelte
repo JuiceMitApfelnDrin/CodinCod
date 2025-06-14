@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import { cn } from "@/utils/cn";
-	import type { ComponentType } from "svelte";
+	import type { Component, ComponentType } from "svelte";
 	import type { FrontendUrl } from "types";
 
 	interface Props {
 		href: FrontendUrl;
 		text: string;
-		icon?: ComponentType | null;
+		icon?: Component | null;
 	}
 
 	let { href, text, icon = null }: Props = $props();

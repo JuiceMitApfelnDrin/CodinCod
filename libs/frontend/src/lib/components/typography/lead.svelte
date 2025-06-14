@@ -1,11 +1,13 @@
 <script lang="ts">
-	interface Props {
-		children?: import("svelte").Snippet;
-	}
+	import type { Snippet } from "svelte";
 
-	let { children }: Props = $props();
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
-<p class="text-xl text-muted-foreground">
+<p class="text-muted-foreground text-xl">
 	{@render children?.()}
 </p>

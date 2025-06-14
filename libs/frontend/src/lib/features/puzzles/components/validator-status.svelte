@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import { CheckCircle, CircleX, Circle } from "lucide-svelte";
+	import { CheckCircle, CircleX, Circle } from "@lucide/svelte";
 	import type { HTMLInputAttributes } from "svelte/elements";
 	import { PuzzleResultEnum, type PuzzleResult } from "types";
 

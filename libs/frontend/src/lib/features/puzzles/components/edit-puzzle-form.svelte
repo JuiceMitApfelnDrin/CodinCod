@@ -10,14 +10,16 @@
 	import {
 		buildFrontendUrl,
 		frontendUrls,
+		isPuzzleVisibilityState,
 		POST,
 		PUZZLE_CONFIG,
 		puzzleEntitySchema,
 		puzzleVisibilityEnum,
 		type EditPuzzle,
+		type GameVisibility,
 		type PuzzleVisibility
 	} from "types";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
@@ -73,7 +75,7 @@
 		});
 	}
 
-	run(() => {
+	$effect(() => {
 		if (!$formData.solution) {
 			$formData.solution = {
 				code: "",
@@ -81,9 +83,11 @@
 				languageVersion: ""
 			};
 		}
+
 		if (!$formData.solution?.language) {
 			$formData.solution.language = "";
 		}
+
 		if (!$formData.solution?.code) {
 			$formData.solution.code = "";
 		}
@@ -92,14 +96,16 @@
 	let { enhance, form: formData, message } = form;
 
 	let visibilityStates: PuzzleVisibility[] = Object.values(puzzleVisibilityEnum);
+
+	const triggerContent = $derived($formData.visibility ?? "Select a visibility");
 </script>
 
 <form method={POST} action="?/editPuzzle" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Title</Form.Label>
-				<Input {...attrs} bind:value={$formData.title} />
+				<Input {...props} bind:value={$formData.title} />
 			{/snippet}
 		</Form.Control>
 		<Form.Description>
@@ -110,9 +116,9 @@
 
 	<Form.Field {form} name="statement">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Statement</Form.Label>
-				<Textarea {...attrs} bind:value={$formData.statement} />
+				<Textarea {...props} bind:value={$formData.statement} />
 			{/snippet}
 		</Form.Control>
 		<Form.Description>
@@ -127,9 +133,9 @@
 
 	<Form.Field {form} name="constraints">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Constraints</Form.Label>
-				<Textarea {...attrs} bind:value={$formData.constraints} />
+				<Textarea {...props} bind:value={$formData.constraints} />
 			{/snippet}
 		</Form.Control>
 		<Form.Description>
@@ -143,7 +149,7 @@
 
 	<Form.Field {form} name="validators" class="flex flex-col gap-2">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Validators</Form.Label>
 
 				<Form.Description>
@@ -158,21 +164,21 @@
 					{#each $formData.validators as _, index}
 						<div class="my-4 flex gap-2">
 							<Textarea
-								{...attrs}
+								{...props}
 								bind:value={$formData.validators[index].input}
 								placeholder="Input"
 							/>
 							<Textarea
-								{...attrs}
+								{...props}
 								bind:value={$formData.validators[index].output}
 								placeholder="Output"
 							/>
-							<Button type="button" on:click={() => removeValidator(index)}>Remove</Button>
+							<Button type="button" onclick={() => removeValidator(index)}>Remove</Button>
 						</div>
 					{/each}
 				{/if}
 				<div class="flex items-center">
-					<Button type="button" on:click={addValidator}>Add Validator</Button>
+					<Button type="button" onclick={addValidator}>Add Validator</Button>
 				</div>
 			{/snippet}
 		</Form.Control>
@@ -194,11 +200,11 @@
 
 		<Form.Field {form} name="solution.language">
 			<Form.Control>
-				{#snippet children({ attrs })}
+				{#snippet children({ props })}
 					<Form.Label class="text-lg">Language</Form.Label>
 
 					<LanguageSelect
-						formAttributes={attrs}
+						formAttributes={props}
 						bind:language={$formData.solution.language}
 						languages={$languages ?? []}
 					/>
@@ -210,14 +216,14 @@
 
 		<Form.Field {form} name="solution.code">
 			<Form.Control>
-				{#snippet children({ attrs })}
+				{#snippet children({ props })}
 					<Form.Label class="text-lg">Code</Form.Label>
 
 					<Codemirror language={$formData.solution.language} bind:value={$formData.solution.code} />
 					<Input
 						class="sr-only"
 						aria-hidden="true"
-						{...attrs}
+						{...props}
 						bind:value={$formData.solution.code}
 					/>
 				{/snippet}
@@ -229,18 +235,17 @@
 
 	<Form.Field {form} name="visibility">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ props })}
 				<Form.Label class="text-lg">Visibility</Form.Label>
-				<Select.Root
-					selected={{ label: $formData.visibility, value: $formData.visibility }}
-					onSelectedChange={(v) => {
-						if (v) {
-							$formData.visibility = v.value;
-						}
-					}}
-				>
-					<Select.Trigger class="w-[180px]" {...attrs}>
-						<Select.Value placeholder="Select a visibility" />
+				<!-- TODO: check if this works without it, otherwise put it back:
+				  onValueChange={(v) => {
+					if (v && isPuzzleVisibilityState(v)) {
+						$formData.visibility = v;
+					}
+				}} -->
+				<Select.Root type="single" bind:value={$formData.visibility} name={props.name}>
+					<Select.Trigger class="w-[180px]" {...props}>
+						{triggerContent}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
@@ -249,7 +254,6 @@
 							{/each}
 						</Select.Group>
 					</Select.Content>
-					<Select.Input bind:value={$formData.visibility} name={attrs.name} />
 				</Select.Root>
 			{/snippet}
 		</Form.Control>
@@ -262,10 +266,10 @@
 
 	{#if $message}
 		<GenericAlert
-			title={isHttpErrorCode($page.status)
+			title={isHttpErrorCode(page.status)
 				? "Error whilst trying to updating the puzzle"
 				: "Updated the puzzle"}
-			status={$page.status}
+			status={page.status}
 			message={$message}
 		/>
 	{/if}

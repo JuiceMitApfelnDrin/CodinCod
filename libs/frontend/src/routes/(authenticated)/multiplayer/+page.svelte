@@ -45,6 +45,10 @@
 	}
 
 	function checkForRoomId() {
+		if (!socket) {
+			return;
+		}
+
 		const roomId = query.get(queryParamKeys.ROOM_ID);
 
 		if (!roomId) {
@@ -127,7 +131,7 @@
 		};
 	}
 
-	let socket: WebSocket = $state();
+	let socket: WebSocket | undefined = $state();
 	if (browser) {
 		connectWithWebsocket();
 	}
@@ -167,7 +171,11 @@
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 				{#if room && room.roomId}
 					<Button
-						on:click={() => {
+						onclick={() => {
+							if (!socket) {
+								return;
+							}
+
 							if (!room?.roomId) {
 								return;
 							}
@@ -185,7 +193,11 @@
 
 					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
-							on:click={() => {
+							onclick={() => {
+								if (!socket) {
+									return;
+								}
+
 								if (!room?.roomId) {
 									return;
 								}
@@ -201,7 +213,11 @@
 					{/if}
 				{:else}
 					<Button
-						on:click={() => {
+						onclick={() => {
+							if (!socket) {
+								return;
+							}
+
 							sendWaitingRoomMessage(socket, {
 								event: waitingRoomEventEnum.HOST_ROOM
 							});
@@ -230,7 +246,11 @@
 				{#each rooms as joinableRoom}
 					<li>
 						<Button
-							on:click={() => {
+							onclick={() => {
+								if (!socket) {
+									return;
+								}
+
 								sendWaitingRoomMessage(socket, {
 									event: waitingRoomEventEnum.JOIN_ROOM,
 									roomId: joinableRoom.roomId

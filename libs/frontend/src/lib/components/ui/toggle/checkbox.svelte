@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
 	import Toggle from "./toggle.svelte";
-	import { CheckIcon } from "lucide-svelte";
+	import { CheckIcon } from "@lucide/svelte";
 
 	interface Props {
 		checked: boolean;
