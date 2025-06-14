@@ -43,7 +43,10 @@
 					<Form.FieldErrors />
 				</Form.Field>
 
-				<Form.Button variant="destructive" data-testid={testIds.DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE}>Delete puzzle</Form.Button>
+				<Form.Button
+					variant="destructive"
+					data-testid={testIds.DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE}>Delete puzzle</Form.Button
+				>
 			</form>
 		</Dialog.Header>
 		<Dialog.Footer></Dialog.Footer>

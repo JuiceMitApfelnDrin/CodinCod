@@ -54,8 +54,10 @@
 
 		<Card.Footer>
 			<Button
-			data-testid={testIds.DISPLAY_ERROR_COMPONENT_ANCHOR_CUSTOM}
-			href={link.href} class="mt-4">{link.text}</Button>
+				data-testid={testIds.DISPLAY_ERROR_COMPONENT_ANCHOR_CUSTOM}
+				href={link.href}
+				class="mt-4">{link.text}</Button
+			>
 		</Card.Footer>
 	</Card.Root>
 </Container>
