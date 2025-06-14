@@ -1,3 +1,3 @@
 export const cookieKeys = {
-	TOKEN: "token"
+	TOKEN: "token",
 } as const;

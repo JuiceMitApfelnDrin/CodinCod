@@ -3,5 +3,5 @@
  */
 export const ProblemTypeEnum = {
 	PUZZLE: "puzzle",
-	USER: "user"
+	USER: "user",
 } as const;

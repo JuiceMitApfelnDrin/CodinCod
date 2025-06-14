@@ -6,6 +6,8 @@ import { puzzleResultInformationSchema } from "../../piston/schema/puzzle-result
 export const puzzleVisibilitySchema = z.enum(getValues(puzzleVisibilityEnum));
 export type PuzzleVisibility = z.infer<typeof puzzleVisibilitySchema>;
 
-export function isPuzzleVisibilityState(data: unknown): data is PuzzleVisibility {
+export function isPuzzleVisibilityState(
+	data: unknown,
+): data is PuzzleVisibility {
 	return puzzleResultInformationSchema.safeParse(data).success;
 }

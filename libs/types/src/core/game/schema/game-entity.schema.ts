@@ -14,6 +14,8 @@ export const gameEntitySchema = z.object({
 	endTime: acceptedDateSchema,
 	options: gameOptionsSchema,
 	createdAt: acceptedDateSchema,
-	playerSubmissions: z.array(objectIdSchema.or(submissionDtoSchema)).default([])
+	playerSubmissions: z
+		.array(objectIdSchema.or(submissionDtoSchema))
+		.default([]),
 });
 export type GameEntity = z.infer<typeof gameEntitySchema>;

@@ -10,7 +10,7 @@ export const objectIdSchema = z.preprocess(
 	},
 	z.string().refine((val) => {
 		return mongoose.Types.ObjectId.isValid(val);
-	})
+	}),
 );
 
 export type ObjectId = z.infer<typeof objectIdSchema>;

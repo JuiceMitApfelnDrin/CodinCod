@@ -11,7 +11,7 @@ export const preferencesEntitySchema = z.object({
 	blockedUsers: z.set(objectIdSchema).default(new Set()).optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
-	editor: editorPreferencesSchema.optional()
+	editor: editorPreferencesSchema.optional(),
 });
 
 export type PreferencesEntity = z.infer<typeof preferencesEntitySchema>;

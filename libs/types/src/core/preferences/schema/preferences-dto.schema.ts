@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { preferencesEntitySchema } from "./preferences-entity.schema.js";
 
 const basePreferencesDtoSchema = preferencesEntitySchema;
@@ -6,7 +6,7 @@ const basePreferencesDtoSchema = preferencesEntitySchema;
 export const preferencesDtoSchema = basePreferencesDtoSchema.omit({
 	owner: true,
 	updatedAt: true,
-	createdAt: true
+	createdAt: true,
 });
 
 export type PreferencesDto = z.infer<typeof preferencesDtoSchema>;

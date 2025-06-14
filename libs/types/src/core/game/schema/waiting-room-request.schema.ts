@@ -4,37 +4,39 @@ import { getValues } from "../../../utils/functions/get-values.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 
 const baseMessageSchema = z.object({
-	event: z.enum(getValues(waitingRoomEventEnum))
+	event: z.enum(getValues(waitingRoomEventEnum)),
 });
 
 const joinRoomSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.JOIN_ROOM),
-	roomId: objectIdSchema
+	roomId: objectIdSchema,
 });
 
 const leaveRoomSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.LEAVE_ROOM),
-	roomId: objectIdSchema
+	roomId: objectIdSchema,
 });
 
 const hostRoomSchema = baseMessageSchema.extend({
-	event: z.literal(waitingRoomEventEnum.HOST_ROOM)
+	event: z.literal(waitingRoomEventEnum.HOST_ROOM),
 });
 
 const startGameSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.START_GAME),
-	roomId: objectIdSchema
+	roomId: objectIdSchema,
 });
 
 export const waitingRoomRequestSchema = z.discriminatedUnion("event", [
 	joinRoomSchema,
 	leaveRoomSchema,
 	hostRoomSchema,
-	startGameSchema
+	startGameSchema,
 ]);
 
 export type WaitingRoomRequest = z.infer<typeof waitingRoomRequestSchema>;
 
-export function isWaitingRoomRequest(data: any): data is WaitingRoomRequest {
+export function isWaitingRoomRequest(
+	data: unknown,
+): data is WaitingRoomRequest {
 	return waitingRoomRequestSchema.safeParse(data).success;
 }

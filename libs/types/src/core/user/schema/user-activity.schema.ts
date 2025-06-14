@@ -6,13 +6,13 @@ import { activitySchema } from "../../activity/schema/activity.schema.js";
 export const userActivitySchema = z.object({
 	userId: userDtoSchema.shape._id,
 	username: userEntitySchema.shape.username,
-	activity: activitySchema
+	activity: activitySchema,
 });
 
 export type UserActivity = z.infer<typeof userActivitySchema>;
 
 export function isUserActivity(
-	supposedUserActivity: unknown
+	supposedUserActivity: unknown,
 ): supposedUserActivity is UserActivity {
 	return userActivitySchema.safeParse(supposedUserActivity).success;
 }

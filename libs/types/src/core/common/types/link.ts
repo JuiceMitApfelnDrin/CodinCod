@@ -1,5 +1,5 @@
-import { BackendUrl } from "../config/backend-urls.js";
-import { FrontendUrl } from "../config/frontend-urls.js";
+import type { BackendUrl } from "../config/backend-urls.js";
+import type { FrontendUrl } from "../config/frontend-urls.js";
 
 export type Link = {
 	href: string;

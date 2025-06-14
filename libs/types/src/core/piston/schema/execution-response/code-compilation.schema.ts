@@ -5,5 +5,5 @@ export const codeCompilationSchema = z.object({
 	output: z.string(),
 	stderr: z.string(),
 	stdout: z.string(),
-	code: z.number().or(z.null())
+	code: z.number().or(z.null()),
 });

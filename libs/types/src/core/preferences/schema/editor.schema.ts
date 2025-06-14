@@ -24,7 +24,7 @@ export const editorPreferencesSchema = z.object({
 	searchKeymap: z.boolean().default(true),
 	foldKeymap: z.boolean().default(true),
 	completionKeymap: z.boolean().default(true),
-	lintKeymap: z.boolean().default(true)
+	lintKeymap: z.boolean().default(true),
 });
 
 export type EditorPreferences = z.infer<typeof editorPreferencesSchema>;

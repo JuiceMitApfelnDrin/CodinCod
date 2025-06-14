@@ -31,7 +31,7 @@ export const backendUrls = {
 	SUBMISSION: `${baseRoute}/submission`,
 	SUBMISSION_BY_ID: `${baseRoute}/submission/:id`,
 	SUBMISSION_GAME: `${baseRoute}/submission/game`,
-	REPORT: `${baseRoute}/report`
+	REPORT: `${baseRoute}/report`,
 } as const;
 
 export type BackendUrl = (typeof backendUrls)[keyof typeof backendUrls];
