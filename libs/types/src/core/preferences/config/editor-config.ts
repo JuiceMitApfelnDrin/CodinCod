@@ -1,5 +1,5 @@
 export const keymap = {
 	VIM: "vim",
 	EMACS: "emacs",
-	VSCODE: "vscode"
+	VSCODE: "vscode",
 };

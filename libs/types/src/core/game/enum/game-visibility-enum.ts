@@ -1,4 +1,4 @@
 export const GameVisibilityEnum = {
 	PRIVATE: "private",
-	PUBLIC: "public"
+	PUBLIC: "public",
 } as const;

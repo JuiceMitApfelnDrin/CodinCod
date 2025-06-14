@@ -8,6 +8,6 @@ export type PistonFileEncoding = z.infer<typeof pistonFileEncoding>;
 export const pistonFileSchema = z.object({
 	name: z.string().optional(),
 	content: z.string(),
-	encoding: pistonFileEncoding.optional()
+	encoding: pistonFileEncoding.optional(),
 });
 export type PistonFile = z.infer<typeof pistonFileSchema>;

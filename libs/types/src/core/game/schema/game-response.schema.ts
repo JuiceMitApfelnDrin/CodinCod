@@ -6,29 +6,29 @@ import { gameEventEnum } from "../enum/game-event-enums.js";
 
 const gameErrorResponseSchema = z.object({
 	event: z.literal(gameEventEnum.ERROR),
-	message: z.string()
+	message: z.string(),
 });
 const gameOverviewResponseSchema = z.object({
 	event: z.literal(gameEventEnum.OVERVIEW_GAME),
 	game: gameDtoSchema,
-	puzzle: puzzleDtoSchema.optional()
+	puzzle: puzzleDtoSchema.optional(),
 });
 const nonexistentGameResponseSchema = z.object({
 	event: z.literal(gameEventEnum.NONEXISTENT_GAME),
-	message: z.string()
+	message: z.string(),
 });
 const sendMessageGameResponseSchema = z.object({
 	event: z.literal(gameEventEnum.SEND_MESSAGE),
-	chatMessage: chatMessageSchema
+	chatMessage: chatMessageSchema,
 });
 const changeLanguageGameResponseSchema = z.object({
 	event: z.literal(gameEventEnum.CHANGE_LANGUAGE),
 	language: z.string(),
-	username: z.string()
+	username: z.string(),
 });
 const finishedGameGameResponseSchema = z.object({
 	event: z.literal(gameEventEnum.FINISHED_GAME),
-	game: gameDtoSchema
+	game: gameDtoSchema,
 });
 
 const gameResponseSchema = z.discriminatedUnion("event", [
@@ -37,7 +37,7 @@ const gameResponseSchema = z.discriminatedUnion("event", [
 	nonexistentGameResponseSchema,
 	sendMessageGameResponseSchema,
 	changeLanguageGameResponseSchema,
-	finishedGameGameResponseSchema
+	finishedGameGameResponseSchema,
 ]);
 
 export type GameResponse = z.infer<typeof gameResponseSchema>;

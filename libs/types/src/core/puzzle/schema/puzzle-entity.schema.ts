@@ -13,7 +13,10 @@ import { commentEntitySchema } from "../../comment/schema/comment.schema.js";
 import { commentDtoSchema } from "../../comment/schema/comment-dto.schema.js";
 
 export const puzzleEntitySchema = z.object({
-	title: z.string().min(PUZZLE_CONFIG.minTitleLength).max(PUZZLE_CONFIG.maxTitleLength),
+	title: z
+		.string()
+		.min(PUZZLE_CONFIG.minTitleLength)
+		.max(PUZZLE_CONFIG.maxTitleLength),
 	statement: z
 		.string()
 		.min(PUZZLE_CONFIG.minStatementLength)
@@ -36,19 +39,19 @@ export const puzzleEntitySchema = z.object({
 	puzzleMetrics: objectIdSchema.optional(),
 	// TODO: later not now !
 	tags: z.array(z.string()).optional(),
-	comments: z.array(commentDtoSchema.or(objectIdSchema)).default([])
+	comments: z.array(commentDtoSchema.or(objectIdSchema)).default([]),
 });
 
 export type PuzzleEntity = z.infer<typeof puzzleEntitySchema>;
 
 export const createPuzzleSchema = puzzleEntitySchema.pick({
-	title: true
+	title: true,
 });
 export type CreatePuzzle = z.infer<typeof createPuzzleSchema>;
 
 export const createPuzzleBackendSchema = puzzleEntitySchema.pick({
 	title: true,
-	author: true
+	author: true,
 });
 export type CreatePuzzleBackend = z.infer<typeof createPuzzleBackendSchema>;
 
@@ -61,7 +64,7 @@ export const editPuzzleSchema = puzzleEntitySchema.pick({
 	visibility: true,
 	author: true,
 	createdAt: true,
-	updatedAt: true
+	updatedAt: true,
 });
 export type EditPuzzle = z.infer<typeof editPuzzleSchema>;
 

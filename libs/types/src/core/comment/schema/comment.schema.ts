@@ -9,12 +9,15 @@ const authorSchema = z.union([objectIdSchema, userDtoSchema]);
 
 export const baseComment = z.object({
 	author: authorSchema,
-	text: z.string().min(COMMENT_CONFIG.minTextLength).max(COMMENT_CONFIG.maxTextLength),
+	text: z
+		.string()
+		.min(COMMENT_CONFIG.minTextLength)
+		.max(COMMENT_CONFIG.maxTextLength),
 	upvote: z.number(),
 	downvote: z.number(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
-	commentType: commentTypeSchema
+	commentType: commentTypeSchema,
 });
 
 type BaseCommentEntity = z.infer<typeof baseComment> & {
@@ -22,7 +25,7 @@ type BaseCommentEntity = z.infer<typeof baseComment> & {
 };
 
 export const commentEntitySchema = baseComment.extend({
-	comments: z.array(z.lazy(() => commentEntitySchema))
+	comments: z.array(z.lazy(() => commentEntitySchema)),
 }) as unknown as z.ZodType<BaseCommentEntity>;
 
 export type CommentEntity = z.infer<typeof commentEntitySchema>;

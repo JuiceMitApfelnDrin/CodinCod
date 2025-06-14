@@ -5,7 +5,7 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 const baseProfileDtoSchema = profileEntitySchema;
 
 export const profileDtoSchema = baseProfileDtoSchema.extend({
-	_id: objectIdSchema
+	_id: objectIdSchema,
 });
 
 export type ProfileDto = z.infer<typeof profileDtoSchema>;

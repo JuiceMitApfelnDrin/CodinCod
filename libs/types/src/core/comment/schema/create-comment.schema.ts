@@ -4,11 +4,11 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const createCommentSchema = baseComment
 	.extend({
-		replyOn: objectIdSchema.optional()
+		replyOn: objectIdSchema.optional(),
 	})
 	.pick({
 		replyOn: true,
-		text: true
+		text: true,
 	});
 
 export type CreateComment = z.infer<typeof createCommentSchema>;

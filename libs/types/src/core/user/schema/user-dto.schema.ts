@@ -5,11 +5,11 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 const baseUserDtoSchema = userEntitySchema.pick({
 	username: true,
 	createdAt: true,
-	profile: true
+	profile: true,
 });
 
 export const userDtoSchema = baseUserDtoSchema.extend({
-	_id: objectIdSchema
+	_id: objectIdSchema,
 });
 
 export type UserDto = z.infer<typeof userDtoSchema>;

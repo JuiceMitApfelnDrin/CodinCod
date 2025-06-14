@@ -5,11 +5,11 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 export const codeSubmissionParamsSchema = submissionEntitySchema
 	.pick({
 		code: true,
-		language: true
+		language: true,
 	})
 	.extend({
 		userId: objectIdSchema,
-		puzzleId: objectIdSchema
+		puzzleId: objectIdSchema,
 	})
 	.required();
 

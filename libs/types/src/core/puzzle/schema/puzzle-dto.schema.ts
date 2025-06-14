@@ -7,7 +7,7 @@ const basePuzzleDtoSchema = puzzleEntitySchema;
 
 export const puzzleDtoSchema = basePuzzleDtoSchema.extend({
 	_id: objectIdSchema,
-	solution: solutionSchema.optional()
+	solution: solutionSchema.optional(),
 });
 
 export type PuzzleDto = z.infer<typeof puzzleDtoSchema>;

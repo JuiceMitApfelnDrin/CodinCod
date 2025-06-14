@@ -8,7 +8,7 @@ export const chatMessageSchema = z.object({
 		.string()
 		.min(CHAT_MESSAGE_CONFIG.minChatMessageLength)
 		.max(CHAT_MESSAGE_CONFIG.maxChatMessageLength),
-	createdAt: acceptedDateSchema
+	createdAt: acceptedDateSchema,
 });
 
 export type ChatMessage = z.infer<typeof chatMessageSchema>;

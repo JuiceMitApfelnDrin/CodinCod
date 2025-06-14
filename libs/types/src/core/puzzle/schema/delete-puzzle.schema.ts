@@ -2,7 +2,7 @@ import { z } from "zod";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const deletePuzzleSchema = z.object({
-	id: objectIdSchema
+	id: objectIdSchema,
 });
 
 export type DeletePuzzle = z.infer<typeof deletePuzzleSchema>;

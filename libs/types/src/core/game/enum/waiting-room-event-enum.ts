@@ -12,7 +12,7 @@ export const waitingRoomEventEnum = {
 	NOT_ENOUGH_PUZZLES: "rooms:not-enough",
 	ERROR: "error",
 
-	OVERVIEW_OF_ROOMS: "rooms:overview"
+	OVERVIEW_OF_ROOMS: "rooms:overview",
 } as const;
 
 export const waitingRoomEventSchema = z.enum(getValues(waitingRoomEventEnum));

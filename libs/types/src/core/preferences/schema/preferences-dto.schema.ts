@@ -6,7 +6,7 @@ const basePreferencesDtoSchema = preferencesEntitySchema;
 export const preferencesDtoSchema = basePreferencesDtoSchema.omit({
 	owner: true,
 	updatedAt: true,
-	createdAt: true
+	createdAt: true,
 });
 
 export type PreferencesDto = z.infer<typeof preferencesDtoSchema>;

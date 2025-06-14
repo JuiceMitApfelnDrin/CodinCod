@@ -8,6 +8,6 @@ export const userVoteEntitySchema = z.object({
 	author: objectIdSchema.or(userDtoSchema),
 	type: voteTypesSchema,
 	votedOn: objectIdSchema,
-	createdAt: acceptedDateSchema.optional()
+	createdAt: acceptedDateSchema.optional(),
 });
 export type UserVoteEntity = z.infer<typeof userVoteEntitySchema>;
