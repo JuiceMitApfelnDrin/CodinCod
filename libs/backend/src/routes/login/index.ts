@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import User from "../../models/user/user.js";
 import { generateToken } from "../../utils/functions/generate-token.js";
 import { cookieKeys, isEmail, loginSchema } from "types";

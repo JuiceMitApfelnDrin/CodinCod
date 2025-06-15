@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { UserEntity } from "types";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { USER } from "../../utils/constants/model.js";
 import { profileSchema } from "./user-profile.js";
 
