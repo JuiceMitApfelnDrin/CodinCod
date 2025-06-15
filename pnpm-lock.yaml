@@ -271,9 +271,6 @@ importers:
       mdsvex:
         specifier: ^0.12.3
         version: 0.12.6(svelte@5.33.14)
-      mode-watcher:
-        specifier: ^1.0.8
-        version: 1.0.8(svelte@5.33.14)
       paneforge:
         specifier: 1.0.0-next.5
         version: 1.0.0-next.5(svelte@5.33.14)
@@ -2477,11 +2474,6 @@ packages:
   mnemonist@0.39.8:
     resolution: {integrity: sha512-vyWo2K3fjrUw8YeeZ1zF0fy6Mu59RHokURlld8ymdUPjMlD9EC9ov1/YPqTgqRvUN9nTr3Gqfz29LYAmu0PHPQ==}
 
-  mode-watcher@1.0.8:
-    resolution: {integrity: sha512-1YIgYymrae0lhcG9zPS/YWOvcKsUbM4bLGIh+eXTUIput5+dEJifcmUgp8NSehSXGSwITH6jbSjNhGEIhE3k5Q==}
-    peerDependencies:
-      svelte: ^5.27.0
-
   mongodb-connection-string-url@3.0.2:
     resolution: {integrity: sha512-rMO7CGo/9BFwyZABcKAWL8UJwH/Kc2x0g72uhDWzG48URRax5TCIcJ7Rc3RZqffZzO/Gwff/jyKwCU9TN8gehA==}
 
@@ -2935,11 +2927,6 @@ packages:
 
   runed@0.23.4:
     resolution: {integrity: sha512-9q8oUiBYeXIDLWNK5DfCWlkL0EW3oGbk845VdKlPeia28l751VpfesaB/+7pI6rnbx1I6rqoZ2fZxptOJLxILA==}
-    peerDependencies:
-      svelte: ^5.7.0
-
-  runed@0.25.0:
-    resolution: {integrity: sha512-7+ma4AG9FT2sWQEA0Egf6mb7PBT2vHyuHail1ie8ropfSjvZGtEAx8YTmUjv/APCsdRRxEVvArNjALk9zFSOrg==}
     peerDependencies:
       svelte: ^5.7.0
 
@@ -5604,12 +5591,6 @@ snapshots:
     dependencies:
       obliterator: 2.0.5
 
-  mode-watcher@1.0.8(svelte@5.33.14):
-    dependencies:
-      runed: 0.25.0(svelte@5.33.14)
-      svelte: 5.33.14
-      svelte-toolbelt: 0.7.1(svelte@5.33.14)
-
   mongodb-connection-string-url@3.0.2:
     dependencies:
       '@types/whatwg-url': 11.0.5
@@ -5957,11 +5938,6 @@ snapshots:
       queue-microtask: 1.2.3
 
   runed@0.23.4(svelte@5.33.14):
-    dependencies:
-      esm-env: 1.2.2
-      svelte: 5.33.14
-
-  runed@0.25.0(svelte@5.33.14):
     dependencies:
       esm-env: 1.2.2
       svelte: 5.33.14
