@@ -7,7 +7,7 @@
 	import HighlightText from "@/components/ui/highlight-text/highlight-text.svelte";
 </script>
 
-a<svelte:head>
+<svelte:head>
 	<title>Learn to Code by Solving Puzzles & Battling Players | CodinCod</title>
 	<meta
 		name="description"
