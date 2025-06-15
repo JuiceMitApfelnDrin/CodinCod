@@ -1,11 +1,16 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from "svelte/elements";
 	import { cn } from "@/utils/cn";
+	import type { Snippet } from "svelte";
 
 	type $$Props = HTMLInputAttributes;
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props["class"];
+		children?: Snippet;
+	}
+
+	let { class: className = undefined, children }: Props = $props();
 </script>
 
 <div
@@ -14,5 +19,5 @@
 		className
 	)}
 >
-	<slot />
+	{@render children?.()}
 </div>

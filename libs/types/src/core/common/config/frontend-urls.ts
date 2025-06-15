@@ -28,6 +28,7 @@ export const frontendUrls = {
 	// user profile
 	USER_PROFILE: "/profile",
 	USER_PROFILE_BY_USERNAME: "/profile/:username",
+	USER_PROFILE_BY_USERNAME_PUZZLES: "/profile/:username/puzzles",
 
 	// play game
 	// PLAY: "/",
@@ -48,7 +49,7 @@ export const frontendUrls = {
 
 	// docs
 	DOCS: "/docs",
-	DOCS_ACTIVITY: "/docs/activity"
+	DOCS_ACTIVITY: "/docs/activity",
 } as const;
 
 export type FrontendUrl = (typeof frontendUrls)[keyof typeof frontendUrls];
@@ -56,9 +57,12 @@ export type FrontendUrl = (typeof frontendUrls)[keyof typeof frontendUrls];
 const frontendUrlsArray: FrontendUrl[] = Object.values(frontendUrls);
 
 const indexNotFound = -1;
-export function isFrontendUrl(supposedFrontendUrl: unknown): supposedFrontendUrl is FrontendUrl {
+export function isFrontendUrl(
+	supposedFrontendUrl: unknown,
+): supposedFrontendUrl is FrontendUrl {
 	return (
 		typeof supposedFrontendUrl === "string" &&
-		frontendUrlsArray.findIndex((item) => item === supposedFrontendUrl) !== indexNotFound
+		frontendUrlsArray.findIndex((item) => item === supposedFrontendUrl) !==
+			indexNotFound
 	);
 }

@@ -1,19 +1,25 @@
 <script lang="ts">
+	import { run } from "svelte/legacy";
+
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { ChevronDown } from "lucide-svelte";
+	import { ChevronDown } from "@lucide/svelte";
 	import { activityTypeEnum, type AcceptedDate, type Activity, type ActivityType } from "types";
 
-	export let date: AcceptedDate;
-	export let activities: Activity[] = [];
+	interface Props {
+		date: AcceptedDate;
+		activities?: Activity[];
+	}
+
+	let { date, activities = [] }: Props = $props();
 
 	let activitiesByType = new Map<ActivityType, Activity[]>();
 
-	$: {
+	run(() => {
 		activities.forEach((activity) => {
 			const activities = activitiesByType.get(activity.type) || [];
 			activitiesByType.set(activity.type, [...activities, activity]);
 		});
-	}
+	});
 
 	const typeToHumanText = {
 		[activityTypeEnum.ADD_SUBMISSION]: "solved a puzzle",

@@ -9,5 +9,8 @@ export const PUZZLE_CONFIG = {
 
 	// constraints
 	minConstraintsLength: 1,
-	maxConstraintsLength: 256
+	maxConstraintsLength: 256,
+
+	// required number of validators for a puzzle to be considered done
+	requiredNumberOfValidators: 10,
 } as const;

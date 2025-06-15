@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let data;
+	let { data } = $props();
 	let { content } = data;
 </script>
 
@@ -13,7 +13,8 @@
 </svelte:head>
 
 {#if content}
-	<svelte:component this={content} />
+	{@const SvelteComponent = content}
+	<SvelteComponent />
 {:else}
 	<p>No documentation found.</p>
 {/if}

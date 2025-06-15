@@ -3,11 +3,16 @@
 	import * as Dialog from "@/components/ui/dialog";
 	import * as Form from "@/components/ui/form";
 	import Input from "@/components/ui/input/input.svelte";
+	import { testIds } from "@/config/test-ids";
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { deletePuzzleSchema, type DeletePuzzle } from "types";
 
-	export let data: SuperValidated<DeletePuzzle>;
+	interface Props {
+		data: SuperValidated<DeletePuzzle>;
+	}
+
+	let { data }: Props = $props();
 
 	const form = superForm(data, {
 		validators: zodClient(deletePuzzleSchema)
@@ -26,8 +31,10 @@
 
 			<form method="POST" action="?/deletePuzzle" use:enhance>
 				<Form.Field {form} name="id">
-					<Form.Control let:attrs>
-						<Input type="hidden" {...attrs} bind:value={$formData.id} />
+					<Form.Control>
+						{#snippet children({ props })}
+							<Input type="hidden" {...props} bind:value={$formData.id} />
+						{/snippet}
 					</Form.Control>
 					<Form.Description>
 						This action cannot be undone. This will permanently delete your puzzle and remove this
@@ -36,7 +43,10 @@
 					<Form.FieldErrors />
 				</Form.Field>
 
-				<Form.Button variant="destructive">Delete puzzle</Form.Button>
+				<Form.Button
+					variant="destructive"
+					data-testid={testIds.DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE}>Delete puzzle</Form.Button
+				>
 			</form>
 		</Dialog.Header>
 		<Dialog.Footer></Dialog.Footer>

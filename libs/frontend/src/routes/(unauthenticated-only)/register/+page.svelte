@@ -8,8 +8,12 @@
 	import * as Card from "@/components/ui/card";
 	import type { ActionData, PageData } from "./$types";
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
+
+	let { data, form }: Props = $props();
 </script>
 
 <svelte:head>

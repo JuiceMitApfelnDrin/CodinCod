@@ -3,17 +3,20 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import { buildFrontendUrl, frontendUrls, isUserDto, type UserDto } from "types";
-	import { Calendar, Smile } from "lucide-svelte";
+	import { Calendar } from "@lucide/svelte";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
+	import { testIds } from "@/config/test-ids";
 
-	let className: ButtonPrimitive.Props["class"] = undefined;
-	export { className as class };
+	interface Props {
+		class?: ButtonPrimitive.RootProps["class"];
+		username: string;
+	}
 
-	export let username: string;
+	let { class: className = undefined, username }: Props = $props();
 
 	const userInfoCache: Record<string, UserDto> = {};
 
@@ -54,16 +57,24 @@
 		{:then { user }}
 			{#if isUserDto(user)}
 				<div class="flex justify-between space-x-4">
-					<Avatar.Root asChild>
-						<Button
-							size="icon"
-							class="aspect-square rounded-full border-2 border-black dark:border-white"
-							variant="outline"
-						>
-							<Avatar.Image class="rounded-full" src={user.profile?.picture} alt={user.username} />
+					<Avatar.Root>
+						{#snippet child(props)}
+							<Button
+								data-testid={testIds.USER_HOVER_CARD_COMPONENT_ANCHOR_USER_PROFILE}
+								size="icon"
+								class="aspect-square rounded-full border-2 border-black dark:border-white"
+								variant="outline"
+								{...props}
+							>
+								<Avatar.Image
+									class="rounded-full"
+									src={user.profile?.picture}
+									alt={user.username}
+								/>
 
-							<Avatar.Fallback />
-						</Button>
+								<Avatar.Fallback />
+							</Button>
+						{/snippet}
 					</Avatar.Root>
 					<div class="space-y-1">
 						<h4 class="text-sm font-semibold">{user.username}</h4>

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from "svelte/legacy";
+
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import LanguageSelect from "@/features/puzzles/components/language-select.svelte";
 	import H2 from "@/components/typography/h2.svelte";
@@ -10,8 +12,8 @@
 	import { languages } from "@/stores/languages";
 	import Checkbox from "@/components/ui/toggle/checkbox.svelte";
 
-	let language: PuzzleLanguage = $preferences?.preferredLanguage ?? DEFAULT_LANGUAGE;
-	let code: string = 'print("Hello, World!")';
+	let language: PuzzleLanguage = $state($preferences?.preferredLanguage ?? DEFAULT_LANGUAGE);
+	let code: string = $state('print("Hello, World!")');
 
 	function updatePreferredLanguage(newPreferredLanguage: string) {
 		if (newPreferredLanguage != $preferences?.preferredLanguage) {
@@ -21,7 +23,9 @@
 		}
 	}
 
-	$: updatePreferredLanguage(language);
+	run(() => {
+		updatePreferredLanguage(language);
+	});
 
 	function CheckboxEditorPreference<K extends keyof EditorPreferences>(key: K) {
 		if ($preferences?.editor) {
@@ -33,6 +37,8 @@
 			});
 		}
 	}
+
+	const triggerContent = $derived($preferences?.editor?.keymap ?? "Select an editor keymap");
 </script>
 
 <svelte:head>
@@ -69,27 +75,28 @@
 					navigation, selection, and editing shortcuts.
 				</p>
 
-				<Select.Root
-					selected={{ label: $preferences.editor.keymap, value: $preferences.editor.keymap }}
-					onSelectedChange={(v) => {
-						if (v && $preferences?.editor) {
+				<!-- TODO: check if it works without it, otherwise put it back
+				 
+				onValueChange={(v) => {
+						if (v && $preferences.editor) {
 							preferences.updatePreferences({
 								editor: {
 									...$preferences.editor,
-									keymap: v.value
+									keymap: v
 								}
 							});
 						}
 					}}
-				>
+				-->
+
+				<Select.Root type="single" bind:value={$preferences.editor.keymap}>
 					<Select.Trigger class="w-[180px]">
-						<Select.Value placeholder="Select editor keymap" />
+						{triggerContent}
 					</Select.Trigger>
 					<Select.Content>
 						<ScrollArea class="h-40">
-							<Select.Label class="text-lg">Keybindings</Select.Label>
-							<Select.Separator />
 							<Select.Group>
+								<Select.GroupHeading>Keybindings</Select.GroupHeading>
 								{#each keymaps as keymap}
 									<Select.Item value={keymap} label={keymap} />
 								{/each}

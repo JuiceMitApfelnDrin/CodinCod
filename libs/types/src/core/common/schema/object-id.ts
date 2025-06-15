@@ -1,16 +1,25 @@
-import mongoose from "mongoose";
+import { ObjectId as BsonObjectId } from "bson";
 import { z } from "zod";
 
 export const objectIdSchema = z.preprocess(
-	(val) => {
-		if (val instanceof mongoose.Types.ObjectId) {
+	(val: unknown) => {
+		if (val == null) {
+			return val;
+		}
+
+		if (typeof val === "string") {
+			return val;
+		}
+
+		if (val && typeof val === "object" && typeof val.toString === "function") {
 			return val.toString();
 		}
-		return val;
+
+		return String(val);
 	},
 	z.string().refine((val) => {
-		return mongoose.Types.ObjectId.isValid(val);
-	})
+		return BsonObjectId.isValid(val);
+	}),
 );
 
 export type ObjectId = z.infer<typeof objectIdSchema>;

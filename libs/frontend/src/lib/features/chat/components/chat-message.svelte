@@ -5,9 +5,13 @@
 	import dayjs from "dayjs";
 	import type { ChatMessage } from "types";
 
-	export let chatMessage: ChatMessage;
+	interface Props {
+		chatMessage: ChatMessage;
+	}
 
-	let highlight = false;
+	let { chatMessage }: Props = $props();
+
+	let highlight = $state(false);
 	if ($authenticatedUserInfo) {
 		highlight = chatMessage.message.includes("@" + $authenticatedUserInfo.username);
 	}

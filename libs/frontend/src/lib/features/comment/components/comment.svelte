@@ -22,16 +22,21 @@
 		MessageCircle,
 		MessageCircleOff,
 		Trash
-	} from "lucide-svelte";
+	} from "@lucide/svelte";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
+	import { testIds } from "@/config/test-ids";
 
-	export let comment: CommentDto;
-	export let onDeleted: (commentId: ObjectId) => void;
+	interface Props {
+		comment: CommentDto;
+		onDeleted: (commentId: ObjectId) => void;
+	}
 
-	let isReplying: boolean = false;
+	let { comment = $bindable(), onDeleted }: Props = $props();
+
+	let isReplying: boolean = $state(false);
 
 	async function handleVote(commentVoteRequest: CommentVoteRequest) {
 		const response = await fetchWithAuthenticationCookie(
@@ -98,7 +103,7 @@
 
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
-						<DropdownMenu.Item on:click={deleteComment}>
+						<DropdownMenu.Item onclick={deleteComment}>
 							<Trash class="mr-2 size-4" aria-hidden="true" /> Delete
 						</DropdownMenu.Item>
 					</DropdownMenu.Group>
@@ -114,8 +119,9 @@
 	<LogicalUnit class="flex flex-row gap-2">
 		{#if isReplying}
 			<Button
+				data-testid={testIds.COMMENT_COMPONENT_BUTTON_HIDE_COMMENT}
 				variant="outline"
-				on:click={() => {
+				onclick={() => {
 					isReplying = false;
 				}}
 			>
@@ -123,8 +129,9 @@
 			</Button>
 		{:else}
 			<Button
+				data-testid={testIds.COMMENT_COMPONENT_BUTTON_REPLY_TO_COMMENT}
 				variant="outline"
-				on:click={() => {
+				onclick={() => {
 					isReplying = true;
 				}}
 			>
@@ -133,8 +140,9 @@
 		{/if}
 
 		<Button
+			data-testid={testIds.COMMENT_COMPONENT_BUTTON_UPVOTE_COMMENT}
 			variant="outline"
-			on:click={() => {
+			onclick={() => {
 				handleVote({ type: voteTypeEnum.UPVOTE });
 			}}
 		>
@@ -142,8 +150,9 @@
 			{comment.upvote} upvotes
 		</Button>
 		<Button
+			data-testid={testIds.COMMENT_COMPONENT_BUTTON_DOWNVOTE_COMMENT}
 			variant="outline"
-			on:click={() => {
+			onclick={() => {
 				handleVote({ type: voteTypeEnum.DOWNVOTE });
 			}}
 		>
@@ -167,8 +176,9 @@
 			return !isCommentDto(comment);
 		})}
 			<Button
+				data-testid={testIds.COMMENT_COMPONENT_BUTTON_SHOW_REPLIES}
 				variant="outline"
-				on:click={() => {
+				onclick={() => {
 					fetchReplies();
 				}}
 			>

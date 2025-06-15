@@ -5,7 +5,7 @@ export const gameSubmissionParamsSchema = z
 	.object({
 		gameId: objectIdSchema,
 		submissionId: objectIdSchema,
-		userId: objectIdSchema
+		userId: objectIdSchema,
 	})
 	.required();
 

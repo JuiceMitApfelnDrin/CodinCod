@@ -37,7 +37,7 @@ export const reportSchema = z.object({
 		.max(REPORT_CONFIG.maxLengthExplanation)
 		.regex(
 			REPORT_CONFIG.allowedCharacters,
-			"Explanation can only contain letters, numbers, hyphens, underscores and at-signs"
-		)
+			"Explanation can only contain letters, numbers, hyphens, underscores and at-signs",
+		),
 });
 export type Report = z.infer<typeof reportSchema>;

@@ -11,6 +11,7 @@ export const apiUrls = {
 	SUPPORTED_LANGUAGES: "/api/supported-languages",
 	USERNAME_IS_AVAILABLE: "/api/username-is-available/:username",
 	USER_BY_USERNAME: "/api/user/:username",
+	USER_BY_USERNAME_PUZZLE: "/api/user/:username/puzzle",
 	VERIFY_TOKEN: "/api/verify-token"
 } as const;
 export type ApiUrl = (typeof apiUrls)[keyof typeof apiUrls];

@@ -1,12 +1,18 @@
 <script lang="ts">
+	import { run } from "svelte/legacy";
+
 	import dayjs from "dayjs";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { frontendUrls, type GroupedActivitiesByDate } from "types";
 	import { cn } from "@/utils/cn";
 
-	export let activitiesGroupedByDate: GroupedActivitiesByDate;
-	let minAmount = 0;
-	let maxAmount = 0;
+	interface Props {
+		activitiesGroupedByDate: GroupedActivitiesByDate;
+	}
+
+	let { activitiesGroupedByDate }: Props = $props();
+	let minAmount = $state(0);
+	let maxAmount = $state(0);
 
 	const totalDays = 7;
 	const totalWeeks = 54;
@@ -16,14 +22,16 @@
 	const startDate = now.subtract(minNumberOfDays, "day");
 	const endDate = now;
 
-	$: days = Array.from({ length: minNumberOfDays }, (_, i) => {
-		const date = startDate.add(i, "day").format("YYYY-MM-DD");
-		return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
-	});
+	let days = $derived(
+		Array.from({ length: minNumberOfDays }, (_, i) => {
+			const date = startDate.add(i, "day").format("YYYY-MM-DD");
+			return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
+		})
+	);
 
-	let monthGroups: Array<{ month: string; colspan: number }> = [];
+	let monthGroups: Array<{ month: string; colspan: number }> = $state([]);
 
-	$: {
+	run(() => {
 		const nonZeroDays = days.filter((count) => count > 0);
 		minAmount = nonZeroDays.length > 0 ? Math.min(...nonZeroDays) : 0;
 		maxAmount = Math.max(...days);
@@ -51,12 +59,14 @@
 		}
 
 		monthGroups = currentGroup ? [...groups, currentGroup] : groups;
-	}
-
-	$: dayNames = Array.from({ length: totalDays }, (_, i) => {
-		const d = dayjs().startOf("week").add(i, "day");
-		return { long: d.format("dddd"), short: d.format("ddd").toUpperCase() };
 	});
+
+	let dayNames = $derived(
+		Array.from({ length: totalDays }, (_, i) => {
+			const d = dayjs().startOf("week").add(i, "day");
+			return { long: d.format("dddd"), short: d.format("ddd").toUpperCase() };
+		})
+	);
 
 	function calcDayStyle(count: number): string {
 		if (count <= 0) {
@@ -96,7 +106,7 @@
 		<caption class="sr-only">Activity Calendar</caption>
 		<thead>
 			<tr>
-				<th colspan={1} class="w-0" />
+				<th colspan={1} class="w-0"></th>
 				{#each monthGroups as group}
 					<th colspan={group.colspan} class="p-0 text-center font-bold">
 						<span class="sr-only">{group.month}</span>
@@ -117,7 +127,7 @@
 						<td
 							class={cn(calcDayStyle(days[cellIndex]), "activity-cell", "square-cell")}
 							title={getCellTitle(weekIndex, rowIndex, days[cellIndex])}
-						/>
+						></td>
 					{/each}
 				</tr>
 			{/each}
@@ -143,7 +153,7 @@
 						"rounded-full",
 						"bg-gradient-to-r from-stone-100 via-teal-200 via-25% to-teal-700 dark:from-stone-800 dark:via-teal-700 dark:to-teal-200"
 					)}
-				/>
+				></div>
 			</div>
 			<span class="text-xs">More</span>
 		</div>

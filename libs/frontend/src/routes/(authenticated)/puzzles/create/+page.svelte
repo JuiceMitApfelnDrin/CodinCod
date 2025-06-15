@@ -3,7 +3,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import CreatePuzzleForm from "@/features/puzzles/components/create-puzzle-form.svelte";
 
-	export let data;
+	let { data } = $props();
 	const { form: formData } = data;
 </script>
 

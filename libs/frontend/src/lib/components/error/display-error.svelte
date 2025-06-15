@@ -5,14 +5,24 @@
 	import H1 from "../typography/h1.svelte";
 	import P from "../typography/p.svelte";
 	import Button from "../ui/button/button.svelte";
+	import { testIds } from "@/config/test-ids";
 
-	export let status: number = 500;
-	export let message: string | null = null;
-	export let header: string | null = null;
-	export let link: FrontendLink = {
-		href: frontendUrls.ROOT,
-		text: "Go to Homepage"
-	};
+	interface Props {
+		status?: number;
+		message?: string | null;
+		header?: string | null;
+		link?: FrontendLink;
+	}
+
+	let {
+		status = 500,
+		message = null,
+		header = null,
+		link = {
+			href: frontendUrls.ROOT,
+			text: "Go to Homepage"
+		}
+	}: Props = $props();
 
 	type ErrorTypeDefaultInfo = { header: string; description: string };
 	const errorMap: Record<number, ErrorTypeDefaultInfo> = {
@@ -43,7 +53,11 @@
 		</Card.Content>
 
 		<Card.Footer>
-			<Button href={link.href} class="mt-4">{link.text}</Button>
+			<Button
+				data-testid={testIds.DISPLAY_ERROR_COMPONENT_ANCHOR_CUSTOM}
+				href={link.href}
+				class="mt-4">{link.text}</Button
+			>
 		</Card.Footer>
 	</Card.Root>
 </Container>

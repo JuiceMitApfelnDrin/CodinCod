@@ -2,27 +2,34 @@
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import P from "@/components/typography/p.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import { buildFrontendUrl, frontendUrls, type PuzzleDto } from "types";
+	import {
+		buildFrontendUrl,
+		frontendUrls,
+		type PaginatedQueryResponse,
+		type PuzzleDto
+	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
 	import { testIds } from "@/config/test-ids";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 
-	export let data;
+	let { data }: { data: PaginatedQueryResponse | undefined } = $props();
 
-	let items: PuzzleDto[] = [];
-	let page: number;
-	let totalItems: number;
-	let totalPages: number;
-	$: {
-		items = data.items;
-		page = data.page;
-		totalItems = data.totalItems;
-		totalPages = data.totalPages;
-	}
+	let items: PuzzleDto[] = $derived(data?.items ?? []);
+	let page: number = $derived(data?.page ?? 1);
+	let totalItems: number = $derived(data?.totalItems ?? 0);
+	let totalPages: number = $derived(data?.totalPages ?? 0);
+
+	let myPuzzlesUrl: string | undefined = $derived(
+		$authenticatedUserInfo?.isAuthenticated
+			? buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME_PUZZLES, {
+					username: $authenticatedUserInfo.username
+				})
+			: undefined
+	);
 </script>
 
 <svelte:head>
@@ -39,10 +46,20 @@
 	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 		<H1>Puzzles</H1>
 
-		<Button
-			data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
-			href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button
-		>
+		<LogicalUnit class="flex flex-row gap-2">
+			{#if $isAuthenticated}
+				<Button
+					variant="outline"
+					data-testid={testIds.PUZZLES_PAGE_ANCHOR_MY_PUZZLES}
+					href={myPuzzlesUrl}>My puzzles</Button
+				>
+			{/if}
+
+			<Button
+				data-testid={testIds.PUZZLES_PAGE_BUTTON_CREATE_PUZZLE}
+				href={frontendUrls.PUZZLE_CREATE}>Create a new puzzle</Button
+			>
+		</LogicalUnit>
 	</LogicalUnit>
 
 	<!-- TODO: search should come here: -->

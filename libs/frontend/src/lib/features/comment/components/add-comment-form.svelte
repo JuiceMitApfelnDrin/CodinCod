@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from "svelte/legacy";
+
 	import Button from "@/components/ui/button/button.svelte";
 	import Label from "@/components/ui/label/label.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
@@ -14,12 +16,17 @@
 		type CreateComment,
 		type ObjectId
 	} from "types";
+	import { testIds } from "@/config/test-ids";
 
-	export let commentType: CommentType;
-	export let replyOnId: ObjectId;
-	export let onCommentAdded: (addedComment: CommentDto) => void;
+	interface Props {
+		commentType: CommentType;
+		replyOnId: ObjectId;
+		onCommentAdded: (addedComment: CommentDto) => void;
+	}
 
-	let commentText: string = "";
+	let { commentType, replyOnId, onCommentAdded }: Props = $props();
+
+	let commentText: string = $state("");
 
 	async function handleCommentType() {
 		const createComment: CreateComment = {
@@ -60,7 +67,7 @@
 	}
 </script>
 
-<form on:submit|preventDefault={handleCommentType} class="flex flex-col gap-4">
+<form onsubmit={preventDefault(handleCommentType)} class="flex flex-col gap-4">
 	<Label class="sr-only" for="add-comment">Add comment</Label>
 	<Textarea
 		maxlength={COMMENT_CONFIG.maxTextLength}
@@ -72,8 +79,18 @@
 
 	{#if commentText != ""}
 		<LogicalUnit>
-			<Button type="submit" variant="outline" class="self-end">Add comment</Button>
-			<Button type="reset" variant="outline" class="self-end">Cancel</Button>
+			<Button
+				data-testid={testIds.ADD_COMMENT_FORM_BUTTON_SUBMIT_NEW_COMMENT}
+				type="submit"
+				variant="outline"
+				class="self-end">Add comment</Button
+			>
+			<Button
+				data-testid={testIds.ADD_COMMENT_FORM_BUTTON_CANCEL_CREATING_COMMENT}
+				type="reset"
+				variant="outline"
+				class="self-end">Cancel</Button
+			>
 		</LogicalUnit>
 	{/if}
 </form>

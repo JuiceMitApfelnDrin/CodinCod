@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from "svelte/legacy";
+
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
@@ -14,22 +16,29 @@
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
-	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "lucide-svelte";
+	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "@lucide/svelte";
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
+	import { testIds } from "@/config/test-ids";
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
-	export let game: GameDto;
-	let submissions: SubmissionDto[] = [];
-	$: submissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
+	interface Props {
+		game: GameDto;
+	}
+
+	let { game = $bindable() }: Props = $props();
+	let submissions: SubmissionDto[] = $state([]);
+	run(() => {
+		submissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
+	});
 
 	// used to check whether a solution is being viewed
-	let isOpen: Record<string, boolean> = {};
+	let isOpen: Record<string, boolean> = $state({});
 
 	// used for caching, check whether a solution was fetched
-	let hasBeenOpened: Record<string, boolean> = {};
+	let hasBeenOpened: Record<string, boolean> = $state({});
 
 	async function fetchCode(id: string) {
 		const url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
@@ -94,10 +103,11 @@
 						</Table.Cell>
 						<Table.Cell>
 							<Button
+								data-testid={testIds.STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE}
 								variant="secondary"
 								aria-expanded={isOpen[_id] ? "true" : "false"}
 								aria-controls={"code-" + _id}
-								on:click={() => {
+								onclick={() => {
 									hasBeenOpened[_id] = true;
 									isOpen[_id] = !isOpen[_id];
 								}}

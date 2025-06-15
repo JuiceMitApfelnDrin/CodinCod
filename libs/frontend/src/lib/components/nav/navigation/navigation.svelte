@@ -6,7 +6,7 @@
 	import { isAuthenticated, isDarkTheme, toggleDarkTheme } from "@/stores";
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import { authenticatedUserInfo } from "@/stores";
-	import { Menu, Moon, Sun } from "lucide-svelte";
+	import { Menu, Moon, Sun } from "@lucide/svelte";
 	import { testIds } from "@/config/test-ids";
 </script>
 
@@ -51,7 +51,7 @@
 			>
 		{/if}
 
-		<ToggleTheme data-testid={testIds.NAVIGATION_ANCHOR_LEARN} class="mt-2" />
+		<ToggleTheme data-testid={testIds.NAVIGATION_ANCHOR_LEARN} />
 	</nav>
 
 	<div
@@ -68,24 +68,48 @@
 
 			<DropdownMenu.Content>
 				<DropdownMenu.Group>
-					<DropdownMenu.Item href={frontendUrls.ROOT}>Home</DropdownMenu.Item>
-					<DropdownMenu.Item href={frontendUrls.MULTIPLAYER}>Multiplayer</DropdownMenu.Item>
-					<DropdownMenu.Item href={frontendUrls.PUZZLES}>Puzzles</DropdownMenu.Item>
-					<DropdownMenu.Item href={frontendUrls.LEARN}>Learn</DropdownMenu.Item>
+					<DropdownMenu.Item>
+						{#snippet child(props)}
+							<a href={frontendUrls.ROOT} {...props}>Home</a>
+						{/snippet}
+					</DropdownMenu.Item>
+					<DropdownMenu.Item>
+						{#snippet child(props)}
+							<a href={frontendUrls.MULTIPLAYER} {...props}>Multiplayer</a>
+						{/snippet}
+					</DropdownMenu.Item>
+					<DropdownMenu.Item>
+						{#snippet child(props)}
+							<a href={frontendUrls.PUZZLES} {...props}>Puzzles</a>
+						{/snippet}
+					</DropdownMenu.Item>
+					<DropdownMenu.Item>
+						{#snippet child(props)}
+							<a href={frontendUrls.LEARN} {...props}>Learn</a>
+						{/snippet}
+					</DropdownMenu.Item>
 
 					{#if $authenticatedUserInfo?.isAuthenticated}
 						{@const profileLink = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
 							username: $authenticatedUserInfo.username
 						})}
-						<DropdownMenu.Item href={profileLink}>Profile</DropdownMenu.Item>
+						<DropdownMenu.Item>
+							{#snippet child(props)}
+								<a href={profileLink} {...props}>Profile</a>
+							{/snippet}
+						</DropdownMenu.Item>
 					{/if}
 
 					<DropdownMenu.Separator />
 
 					{#if $authenticatedUserInfo?.isAuthenticated}
-						<DropdownMenu.Item href={frontendUrls.SETTINGS_PROFILE}>Settings</DropdownMenu.Item>
+						<DropdownMenu.Item>
+							{#snippet child(props)}
+								<a href={frontendUrls.SETTINGS_PROFILE} {...props}>Settings</a>
+							{/snippet}
+						</DropdownMenu.Item>
 					{/if}
-					<DropdownMenu.Item on:click={toggleDarkTheme}>
+					<DropdownMenu.Item onclick={toggleDarkTheme}>
 						{#if $isDarkTheme}
 							<Moon aria-label="dark mode" />
 						{:else}
@@ -96,9 +120,17 @@
 					<DropdownMenu.Separator />
 
 					{#if $authenticatedUserInfo?.isAuthenticated}
-						<DropdownMenu.Item href={frontendUrls.LOGOUT}>Log out</DropdownMenu.Item>
+						<DropdownMenu.Item>
+							{#snippet child(props)}
+								<a href={frontendUrls.LOGOUT} {...props}>Log out</a>
+							{/snippet}
+						</DropdownMenu.Item>
 					{:else}
-						<DropdownMenu.Item href={frontendUrls.LOGIN}>Login</DropdownMenu.Item>
+						<DropdownMenu.Item>
+							{#snippet child(props)}
+								<a href={frontendUrls.LOGIN} {...props}>Login</a>
+							{/snippet}
+						</DropdownMenu.Item>
 					{/if}
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>

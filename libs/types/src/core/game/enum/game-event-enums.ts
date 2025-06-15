@@ -15,7 +15,7 @@ export const gameEventEnum = {
 
 	SEND_MESSAGE: "message:send",
 
-	SUBMITTED_PLAYER: "player:submitted"
+	SUBMITTED_PLAYER: "player:submitted",
 } as const;
 
 export const gameEventSchema = z.enum(getValues(gameEventEnum));

@@ -1,21 +1,25 @@
 <script lang="ts">
 	import { isDarkTheme, toggleDarkTheme } from "@/stores";
-	import Moon from "lucide-svelte/icons/moon";
-	import Sun from "lucide-svelte/icons/sun";
+	import Moon from "@lucide/svelte/icons/moon";
+	import Sun from "@lucide/svelte/icons/sun";
 	import Toggle from "../ui/toggle/toggle.svelte";
 	import { cn } from "@/utils/cn";
 	import { Toggle as TogglePrimitive } from "bits-ui";
+	import type { DataTestIdProp } from "@/config/test-ids";
 
-	type $$Props = TogglePrimitive.Props & { class?: string };
-	let className: $$Props["class"] = undefined;
+	type $$Props = TogglePrimitive.RootProps & { class?: string };
 
-	export { className as class };
+	let {
+		class: className = undefined
+	}: {
+		class?: $$Props["class"];
+	} & DataTestIdProp = $props();
 </script>
 
 <Toggle
 	aria-label={`Change to ${$isDarkTheme ? "light mode" : "dark mode"}`}
 	pressed={$isDarkTheme}
-	on:click={toggleDarkTheme}
+	onclick={toggleDarkTheme}
 	class={cn(
 		"bg-background bg-transparent dark:bg-inherit dark:hover:bg-background dark:hover:text-foreground",
 		className

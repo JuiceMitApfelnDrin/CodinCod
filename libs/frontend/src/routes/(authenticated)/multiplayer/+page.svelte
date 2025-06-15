@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from "svelte/legacy";
+
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
@@ -21,10 +23,11 @@
 		type RoomStateResponse,
 		type WaitingRoomRequest
 	} from "types";
+	import { testIds } from "@/config/test-ids";
 
-	let room: RoomStateResponse | undefined;
-	let rooms: RoomOverviewResponse[] = [];
-	let errorMessage: string | undefined;
+	let room: RoomStateResponse | undefined = $state();
+	let rooms: RoomOverviewResponse[] = $state([]);
+	let errorMessage: string | undefined = $state();
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"
@@ -43,6 +46,10 @@
 	}
 
 	function checkForRoomId() {
+		if (!socket) {
+			return;
+		}
+
 		const roomId = query.get(queryParamKeys.ROOM_ID);
 
 		if (!roomId) {
@@ -125,12 +132,14 @@
 		};
 	}
 
-	let socket: WebSocket;
+	let socket: WebSocket | undefined = $state();
 	if (browser) {
 		connectWithWebsocket();
 	}
 
-	$: if (room?.roomId) updateRoomIdInUrl();
+	run(() => {
+		if (room?.roomId) updateRoomIdInUrl();
+	});
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
 
@@ -163,7 +172,12 @@
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 				{#if room && room.roomId}
 					<Button
-						on:click={() => {
+						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_LEAVE_ROOM}
+						onclick={() => {
+							if (!socket) {
+								return;
+							}
+
 							if (!room?.roomId) {
 								return;
 							}
@@ -181,7 +195,12 @@
 
 					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
-							on:click={() => {
+							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_START_ROOM}
+							onclick={() => {
+								if (!socket) {
+									return;
+								}
+
 								if (!room?.roomId) {
 									return;
 								}
@@ -197,7 +216,12 @@
 					{/if}
 				{:else}
 					<Button
-						on:click={() => {
+						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_HOST_ROOM}
+						onclick={() => {
+							if (!socket) {
+								return;
+							}
+
 							sendWaitingRoomMessage(socket, {
 								event: waitingRoomEventEnum.HOST_ROOM
 							});
@@ -226,7 +250,12 @@
 				{#each rooms as joinableRoom}
 					<li>
 						<Button
-							on:click={() => {
+							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_JOIN_ROOM}
+							onclick={() => {
+								if (!socket) {
+									return;
+								}
+
 								sendWaitingRoomMessage(socket, {
 									event: waitingRoomEventEnum.JOIN_ROOM,
 									roomId: joinableRoom.roomId

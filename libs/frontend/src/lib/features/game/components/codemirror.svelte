@@ -35,9 +35,13 @@
 		rectangularSelection
 	} from "@codemirror/view";
 
-	export let readonly = false;
-	export let value = "";
-	export let language: PuzzleLanguage = "";
+	interface Props {
+		readonly?: boolean;
+		value?: string;
+		language?: PuzzleLanguage;
+	}
+
+	let { readonly = false, value = $bindable(""), language = "" }: Props = $props();
 
 	function createBasicExtensions(editorPreferences: EditorPreferences): Extension[] {
 		const extensions: Extension[] = [];

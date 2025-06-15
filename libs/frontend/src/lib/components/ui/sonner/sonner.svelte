@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { isDarkTheme } from "@/stores";
 	import { Toaster as Sonner, type ToasterProps as SonnerProps } from "svelte-sonner";
 	import { themeOption } from "types";
+	import { isDarkTheme } from "@/stores";
 
-	type $$Props = SonnerProps;
+	let { ...restProps }: SonnerProps = $props();
 </script>
 
 <Sonner
-	theme={isDarkTheme ? themeOption.DARK : themeOption.LIGHT}
+	theme={$isDarkTheme ? themeOption.DARK : themeOption.LIGHT}
 	class="toaster group"
 	toastOptions={{
 		classes: {
@@ -18,5 +18,5 @@
 			cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground"
 		}
 	}}
-	{...$$restProps}
+	{...restProps}
 />

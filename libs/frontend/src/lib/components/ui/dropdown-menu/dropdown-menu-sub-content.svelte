@@ -1,31 +1,19 @@
 <script lang="ts">
-	import { cn } from "@/utils/cn";
-	import { flyAndScale } from "@/utils/fly-and-scale";
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
+	import { cn } from "@/utils/cn";
 
-	type $$Props = DropdownMenuPrimitive.SubContentProps;
-	type $$Events = DropdownMenuPrimitive.SubContentEvents;
-
-	let className: $$Props["class"] = undefined;
-	export let transition: $$Props["transition"] = flyAndScale;
-	export let transitionConfig: $$Props["transitionConfig"] = {
-		x: -10,
-		y: 0
-	};
-	export { className as class };
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: DropdownMenuPrimitive.SubContentProps = $props();
 </script>
 
 <DropdownMenuPrimitive.SubContent
-	{transition}
-	{transitionConfig}
+	bind:ref
 	class={cn(
 		"z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-lg focus:outline-none",
 		className
 	)}
-	{...$$restProps}
-	on:keydown
-	on:focusout
-	on:pointermove
->
-	<slot />
-</DropdownMenuPrimitive.SubContent>
+	{...restProps}
+/>

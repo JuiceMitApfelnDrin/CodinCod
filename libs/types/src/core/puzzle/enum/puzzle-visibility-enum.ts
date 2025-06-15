@@ -14,5 +14,5 @@ export const puzzleVisibilityEnum = {
 	REVISE: "revise",
 	APPROVED: "approved",
 	INACTIVE: "inactive",
-	ARCHIVED: "archived"
+	ARCHIVED: "archived",
 } as const;

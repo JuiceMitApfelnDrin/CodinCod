@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from "svelte/legacy";
+
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
@@ -44,6 +46,7 @@
 		sendMessageOfType,
 		type GameRequest
 	} from "types";
+	import { testIds } from "@/config/test-ids";
 
 	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
 		return players.some((player) => getUserIdFromUser(player) === userId);
@@ -51,13 +54,13 @@
 
 	const gameId = $page.params.id;
 
-	let isGameOver = false;
+	let isGameOver = $state(false);
 
-	let game: GameDto | undefined;
-	let puzzle: PuzzleDto | undefined;
-	let errorMessage: string | undefined;
-	let chatMessages: ChatMessage[] = [];
-	const playerLanguages: Record<string, string> = {};
+	let game: GameDto | undefined = $state();
+	let puzzle: PuzzleDto | undefined = $state();
+	let errorMessage: string | undefined = $state();
+	let chatMessages: ChatMessage[] = $state([]);
+	const playerLanguages: Record<string, string> = $state({});
 
 	function connectWithWebsocket() {
 		if (socket) {
@@ -80,6 +83,10 @@
 		});
 
 		socket.addEventListener("error", (message) => {
+			if (!socket) {
+				return;
+			}
+
 			console.info("WebSocket connection error");
 			socket.close();
 		});
@@ -134,23 +141,21 @@
 		});
 	}
 
-	let socket: WebSocket;
+	let socket: WebSocket | undefined = $state();
 	if (browser) {
 		connectWithWebsocket();
 	}
 
-	let isNotPlayerInGame = true;
-	$: {
-		isNotPlayerInGame = Boolean(
+	let isNotPlayerInGame = $derived(
+		Boolean(
 			$authenticatedUserInfo?.userId &&
 				!isUserIdInUserList($authenticatedUserInfo.userId, game?.players ?? [])
-		);
-	}
+		)
+	);
 
-	let endDate: Date | undefined;
-	$: endDate = game && dayjs(game.endTime).toDate();
+	let endDate: Date | undefined = $derived(game && dayjs(game.endTime).toDate());
 
-	$: {
+	run(() => {
 		const now = $currentTime;
 
 		const gameIsInThePast =
@@ -166,7 +171,7 @@
 		});
 
 		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
-	}
+	});
 
 	function findPlayerSubmission(playerId: string) {
 		if (!game) {
@@ -180,6 +185,10 @@
 	}
 
 	async function onPlayerSubmitCode(submissionId: string) {
+		if (!socket) {
+			return;
+		}
+
 		if (!isGameOver && $authenticatedUserInfo) {
 			const gameSubmissionParams: GameSubmissionParams = {
 				gameId,
@@ -201,6 +210,10 @@
 	}
 
 	async function sendMessage(composedMessage: string) {
+		if (!socket) {
+			return;
+		}
+
 		if (!$authenticatedUserInfo) {
 			return;
 		}
@@ -218,14 +231,28 @@
 	}
 
 	function onPlayerChangeLanguage(language: string) {
+		if (!socket) {
+			return;
+		}
+
 		sendGameMessage(socket, {
 			event: gameEventEnum.CHANGE_LANGUAGE,
 			language
 		});
 	}
 
-	export function sendGameMessage(socket: WebSocket, data: GameRequest) {
+	function sendGameMessage(socket: WebSocket, data: GameRequest) {
 		sendMessageOfType<GameRequest>(socket, data);
+	}
+
+	function joinGame() {
+		if (!socket) {
+			return;
+		}
+
+		sendGameMessage(socket, {
+			event: gameEventEnum.JOIN_GAME
+		});
 	}
 </script>
 
@@ -266,7 +293,10 @@
 	<Container>
 		<LogicalUnit>
 			{#if getUserIdFromUser(game.owner) === $authenticatedUserInfo.userId}
-				<Button variant="outline">
+				<Button
+					variant="outline"
+					data-testid={testIds.MULTIPLAYER_BY_ID_PAGE_BUTTON_CREATE_THE_SAME_CONFIGURED_GAME}
+				>
 					<WorkInProgress />: Create a game with the same options
 					<!-- TODO: add option to create a game options used in the previous game, only for custom games tho?
 						should you first check whether there is a similar game in the lobby and throw everyone that way or take everyone to the next game 
@@ -274,7 +304,11 @@
 				</Button>
 			{/if}
 
-			<Button variant="outline" on:click={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}>
+			<Button
+				data-testid={testIds.MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER}
+				variant="outline"
+				onclick={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}
+			>
 				Go to multiplayer
 			</Button>
 		</LogicalUnit>
@@ -291,12 +325,11 @@
 {:else if isNotPlayerInGame}
 	<Container>
 		<Button
-			on:click={() => {
-				sendGameMessage(socket, {
-					event: gameEventEnum.JOIN_GAME
-				});
-			}}>Would you like to join this ongoing game?</Button
+			data-testid={testIds.MULTIPLAYER_BY_ID_PAGE_BUTTON_JOIN_ONGOING_GAME}
+			onclick={joinGame}
 		>
+			Would you like to join this ongoing game?
+		</Button>
 	</Container>
 {:else if puzzle && game}
 	<Container>

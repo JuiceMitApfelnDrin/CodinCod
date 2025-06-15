@@ -1,3 +1,5 @@
-export function isAuthor(authorId: any, currentUserId: string): boolean {
-	return authorId && authorId === currentUserId;
+import { isString } from "./is-string.js";
+
+export function isAuthor(authorId: unknown, currentUserId: string): boolean {
+	return isString(authorId) && authorId === currentUserId;
 }

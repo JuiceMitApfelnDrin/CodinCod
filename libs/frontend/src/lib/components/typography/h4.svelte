@@ -1,3 +1,13 @@
+<script lang="ts">
+	import type { Snippet } from "svelte";
+
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
+</script>
+
 <h4 class="scroll-m-20 text-xl font-semibold tracking-tight">
-	<slot></slot>
+	{@render children?.()}
 </h4>

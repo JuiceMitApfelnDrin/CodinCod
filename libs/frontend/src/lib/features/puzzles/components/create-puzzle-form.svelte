@@ -7,8 +7,13 @@
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
+	import { testIds } from "@/config/test-ids";
 
-	export let data: SuperValidated<CreatePuzzle>;
+	interface Props {
+		data: SuperValidated<CreatePuzzle>;
+	}
+
+	let { data }: Props = $props();
 
 	const form = superForm(data, {
 		validators: zodClient(createPuzzleSchema)
@@ -19,9 +24,11 @@
 
 <form method={POST} use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="title">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Title</Form.Label>
-			<Input {...attrs} bind:value={$formData.title} />
+		<Form.Control>
+			{#snippet children({ props })}
+				<Form.Label class="text-lg">Title</Form.Label>
+				<Input {...props} bind:value={$formData.title} />
+			{/snippet}
 		</Form.Control>
 		<Form.Description>This will be the title of the puzzle.</Form.Description>
 		<Form.FieldErrors />
@@ -37,5 +44,7 @@
 		/>
 	{/if}
 
-	<Form.Button>Create Puzzle</Form.Button>
+	<Form.Button data-testid={testIds.CREATE_PUZZLE_FORM_BUTTON_CREATE_PUZZLE}>
+		Create Puzzle
+	</Form.Button>
 </form>

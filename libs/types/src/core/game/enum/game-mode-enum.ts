@@ -1,4 +1,4 @@
 export const GameModeEnum = {
 	RATED: "rated",
-	CASUAL: "casual"
+	CASUAL: "casual",
 } as const;

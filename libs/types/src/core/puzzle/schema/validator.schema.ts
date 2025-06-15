@@ -7,6 +7,8 @@ export const validatorEntitySchema = z.object({
 	output: z.string().transform((s) => s.trimEnd()),
 	createdAt: acceptedDateSchema,
 	updatedAt: acceptedDateSchema,
-	testResult: pistonExecutionResponseSuccessSchema.pick({ compile: true, run: true }).optional()
+	testResult: pistonExecutionResponseSuccessSchema
+		.pick({ compile: true, run: true })
+		.optional(),
 });
 export type ValidatorEntity = z.infer<typeof validatorEntitySchema>;

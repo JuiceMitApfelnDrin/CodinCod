@@ -9,25 +9,25 @@ export const userEntitySchema = z.object({
 		.string()
 		.min(
 			USERNAME_CONFIG.minUsernameLength,
-			`Username must be at least ${USERNAME_CONFIG.minUsernameLength} characters long`
+			`Username must be at least ${USERNAME_CONFIG.minUsernameLength} characters long`,
 		)
 		.max(
 			USERNAME_CONFIG.maxUsernameLength,
-			`Username must be at most ${USERNAME_CONFIG.maxUsernameLength} characters long`
+			`Username must be at most ${USERNAME_CONFIG.maxUsernameLength} characters long`,
 		)
 		.regex(
 			USERNAME_CONFIG.allowedCharacters,
-			"Username can only contain letters, numbers, hyphens, and underscores"
+			"Username can only contain letters, numbers, hyphens, and underscores",
 		),
 	password: z
 		.string()
 		.min(
 			PASSWORD_CONFIG.minPasswordLength,
-			`Password must be at least ${PASSWORD_CONFIG.minPasswordLength} characters long`
+			`Password must be at least ${PASSWORD_CONFIG.minPasswordLength} characters long`,
 		),
 	email: z.string().email("Invalid email address"),
 	profile: userProfileSchema.optional(),
 	createdAt: acceptedDateSchema.optional(),
-	updatedAt: acceptedDateSchema.optional()
+	updatedAt: acceptedDateSchema.optional(),
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;

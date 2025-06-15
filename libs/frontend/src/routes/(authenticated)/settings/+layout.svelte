@@ -1,11 +1,18 @@
-<script>
+<script lang="ts">
 	import SideNavigationItem from "@/components/nav/side-navigation/side-navigation-item.svelte";
 	import SideNavigation from "@/components/nav/side-navigation/side-navigation.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 
-	import { Bell, MessageCircle, Paintbrush2, Settings, Settings2, User } from "lucide-svelte";
+	import { Bell, MessageCircle, Paintbrush2, Settings, Settings2, User } from "@lucide/svelte";
+	import type { Snippet } from "svelte";
 	import { frontendUrls } from "types";
+
+	let {
+		children
+	}: {
+		children?: Snippet;
+	} = $props();
 </script>
 
 <Container class="flex md:flex-row">
@@ -35,6 +42,6 @@
 	</SideNavigation>
 
 	<LogicalUnit>
-		<slot />
+		{@render children?.()}
 	</LogicalUnit>
 </Container>

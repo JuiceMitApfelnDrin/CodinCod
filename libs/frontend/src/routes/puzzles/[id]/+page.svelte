@@ -22,11 +22,12 @@
 	import H2 from "@/components/typography/h2.svelte";
 	import Comments from "@/features/comment/components/comments.svelte";
 	import AddCommentForm from "@/features/comment/components/add-comment-form.svelte";
+	import { testIds } from "@/config/test-ids";
 
-	export let data;
+	let { data } = $props();
 
 	const { puzzle }: { puzzle: PuzzleDto } = data;
-	$: puzzleComments = puzzle.comments ?? [];
+	let puzzleComments = $derived(puzzle.comments ?? []);
 
 	let puzzleId = $page.params.id;
 	const editUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: puzzleId });
@@ -57,32 +58,48 @@
 
 		<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 			{#if $isAuthenticated && $authenticatedUserInfo != null && isAuthor(getUserIdFromUser(puzzle.author), $authenticatedUserInfo.userId)}
-				<Button variant="outline" href={editUrl}>Edit puzzle</Button>
+				<Button
+					data-testid={testIds.PUZZLES_BY_ID_PAGE_ANCHOR_EDIT_PUZZLE}
+					variant="outline"
+					href={editUrl}
+				>
+					Edit puzzle
+				</Button>
 			{/if}
 
-			<Button href={playUrl}>Play puzzle</Button>
+			<Button data-testid={testIds.PUZZLES_BY_ID_PAGE_ANCHOR_PLAY_PUZZLE} href={playUrl}>
+				Play puzzle
+			</Button>
 		</div>
 	</LogicalUnit>
 
 	<LogicalUnit class="mb-8">
 		<Accordion open={true} id="statement">
-			<h2 slot="title">Statement</h2>
-			<div slot="content" class={cn(!puzzle.statement && "italic opacity-50")}>
-				<Markdown
-					markdown={puzzle.statement}
-					fallbackText={"Author still needs to add a statement"}
-				/>
-			</div>
+			{#snippet title()}
+				<h2>Statement</h2>
+			{/snippet}
+			{#snippet content()}
+				<div class={cn(!puzzle.statement && "italic opacity-50")}>
+					<Markdown
+						markdown={puzzle.statement}
+						fallbackText={"Author still needs to add a statement"}
+					/>
+				</div>
+			{/snippet}
 		</Accordion>
 
 		<Accordion open={true} id="constraints">
-			<h2 slot="title">Constraints</h2>
-			<div slot="content" class={cn(!puzzle.constraints && "italic opacity-50")}>
-				<Markdown
-					markdown={puzzle.constraints}
-					fallbackText={"Author still needs to add constraints"}
-				/>
-			</div>
+			{#snippet title()}
+				<h2>Constraints</h2>
+			{/snippet}
+			{#snippet content()}
+				<div class={cn(!puzzle.constraints && "italic opacity-50")}>
+					<Markdown
+						markdown={puzzle.constraints}
+						fallbackText={"Author still needs to add constraints"}
+					/>
+				</div>
+			{/snippet}
 		</Accordion>
 	</LogicalUnit>
 

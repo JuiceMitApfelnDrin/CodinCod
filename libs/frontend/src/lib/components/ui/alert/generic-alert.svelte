@@ -1,13 +1,16 @@
 <script lang="ts">
-	import { CircleAlert, CircleCheck } from "lucide-svelte";
+	import { CircleAlert, CircleCheck } from "@lucide/svelte";
 	import * as Alert from "./index";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { httpResponseCodes } from "types";
 
-	export let message: string;
+	interface Props {
+		message: string;
+		title: string;
+		status: number;
+	}
 
-	export let title: string;
-	export let status: number;
+	let { message, title, status }: Props = $props();
 </script>
 
 <Alert.Root variant={isHttpErrorCode(status) ? "destructive" : "success"}>

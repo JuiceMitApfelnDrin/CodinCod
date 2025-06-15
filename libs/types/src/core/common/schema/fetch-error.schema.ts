@@ -2,13 +2,13 @@ import { z } from "zod";
 
 const aggregateErrorSchema = z.object({
 	code: z.string().optional(),
-	errors: z.array(z.instanceof(Error))
+	errors: z.array(z.instanceof(Error)),
 });
 
 export const fetchErrorSchema = z.object({
 	name: z.string().optional(),
 	message: z.string(),
-	cause: aggregateErrorSchema.optional()
+	cause: aggregateErrorSchema.optional(),
 });
 
 export type FetchError = z.infer<typeof fetchErrorSchema>;

@@ -7,17 +7,19 @@ import { errorResponseSchema } from "../../common/schema/error-response.schema.j
 export const codeExecutionSuccessResponseSchema = z.object({
 	run: codeRunSchema,
 	compile: codeCompilationSchema.optional(),
-	puzzleResultInformation: puzzleResultInformationSchema
+	puzzleResultInformation: puzzleResultInformationSchema,
 });
-export type CodeExecutionSuccessResponse = z.infer<typeof codeExecutionSuccessResponseSchema>;
+export type CodeExecutionSuccessResponse = z.infer<
+	typeof codeExecutionSuccessResponseSchema
+>;
 export function isCodeExecutionSuccessResponse(
-	data: unknown
+	data: unknown,
 ): data is CodeExecutionSuccessResponse {
 	return codeExecutionSuccessResponseSchema.safeParse(data).success;
 }
 
 export const codeExecutionResponseSchema = errorResponseSchema.or(
-	codeExecutionSuccessResponseSchema
+	codeExecutionSuccessResponseSchema,
 );
 
 export type CodeExecutionResponse = z.infer<typeof codeExecutionResponseSchema>;
