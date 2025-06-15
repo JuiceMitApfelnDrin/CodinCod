@@ -33,15 +33,15 @@
 		</DropdownMenu.Trigger>
 
 		<DropdownMenu.Content>
-			<DropdownMenu.Group>
+			<DropdownMenu.Group class="flex flex-col">
 				{@const profileLink = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
 					username: $authenticatedUserInfo.username
 				})}
 				<DropdownMenu.Item>
 					{#snippet child(props)}
-						<a data-testid={testIds.NAVIGATION_MENU_ANCHOR_PROFILE} href={profileLink} {...props}
-							>Profile</a
-						>
+						<a data-testid={testIds.NAVIGATION_MENU_ANCHOR_PROFILE} href={profileLink} {...props}>
+							Profile
+						</a>
 					{/snippet}
 				</DropdownMenu.Item>
 				<DropdownMenu.Item>
@@ -49,8 +49,10 @@
 						<a
 							data-testid={testIds.NAVIGATION_MENU_ANCHOR_SETTINGS}
 							href={frontendUrls.SETTINGS_PROFILE}
-							{...props}>Settings</a
+							{...props}
 						>
+							Settings
+						</a>
 					{/snippet}
 				</DropdownMenu.Item>
 
@@ -61,8 +63,10 @@
 						<a
 							data-testid={testIds.NAVIGATION_MENU_ANCHOR_LOGOUT}
 							href={frontendUrls.LOGOUT}
-							{...props}>Log out</a
+							{...props}
 						>
+							Log out
+						</a>
 					{/snippet}
 				</DropdownMenu.Item>
 			</DropdownMenu.Group>
