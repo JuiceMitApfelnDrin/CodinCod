@@ -17,6 +17,11 @@ const config: Config = {
 			}
 		},
 		extend: {
+			animation: {
+				"accordion-down": "accordion-down 0.2s ease-out",
+				"accordion-up": "accordion-up 0.2s ease-out",
+				"caret-blink": "caret-blink 1.25s ease-out infinite"
+			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
@@ -56,19 +61,19 @@ const config: Config = {
 					DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
 					foreground: "hsl(var(--secondary-foreground) / <alpha-value>)"
 				},
-				success: {
-					DEFAULT: "hsl(var(--success) / <alpha-value>)",
-					foreground: "hsl(var(--success-foreground) / <alpha-value>)"
-				},
 				sidebar: {
 					DEFAULT: "hsl(var(--sidebar-background))",
-					foreground: "hsl(var(--sidebar-foreground))",
-					primary: "hsl(var(--sidebar-primary))",
-					"primary-foreground": "hsl(var(--sidebar-primary-foreground))",
 					accent: "hsl(var(--sidebar-accent))",
 					"accent-foreground": "hsl(var(--sidebar-accent-foreground))",
 					border: "hsl(var(--sidebar-border))",
+					foreground: "hsl(var(--sidebar-foreground))",
+					primary: "hsl(var(--sidebar-primary))",
+					"primary-foreground": "hsl(var(--sidebar-primary-foreground))",
 					ring: "hsl(var(--sidebar-ring))"
+				},
+				success: {
+					DEFAULT: "hsl(var(--success) / <alpha-value>)",
+					foreground: "hsl(var(--success-foreground) / <alpha-value>)"
 				}
 			},
 			fontFamily: {
@@ -87,11 +92,6 @@ const config: Config = {
 					"0%,70%,100%": { opacity: "1" },
 					"20%,50%": { opacity: "0" }
 				}
-			},
-			animation: {
-				"accordion-down": "accordion-down 0.2s ease-out",
-				"accordion-up": "accordion-up 0.2s ease-out",
-				"caret-blink": "caret-blink 1.25s ease-out infinite"
 			}
 		}
 	}
