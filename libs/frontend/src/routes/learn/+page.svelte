@@ -50,7 +50,7 @@
 			<ul class="list-inside list-disc">
 				{#each slugs as slug}
 					<li>
-						<a href={buildFrontendUrl(frontendUrls.LEARN_SLUG, { slug })}>
+						<a class="styled-link" href={buildFrontendUrl(frontendUrls.LEARN_SLUG, { slug })}>
 							{slug}
 						</a>
 					</li>
@@ -59,9 +59,3 @@
 		{/if}
 	</LogicalUnit>
 </Container>
-
-<style lang="postcss">
-	a {
-		@apply text-teal-800 underline hover:text-teal-600 dark:text-teal-200 hover:dark:text-teal-400;
-	}
-</style>

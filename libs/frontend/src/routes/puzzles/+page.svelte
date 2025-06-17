@@ -102,7 +102,8 @@
 					</Table.Body>
 				</Table.Root>
 			</div>
-			<p class="w-full text-center text-stone-400 dark:text-stone-600">
+
+			<p class="w-full text-center text-stone-300 dark:text-stone-400">
 				Puzzles found {totalItems}
 			</p>
 

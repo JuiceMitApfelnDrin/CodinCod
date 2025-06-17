@@ -31,10 +31,11 @@
 
 		<P class="max-w-[75ch]">
 			This site is under construction &mdash; if you'd like to help check out our <a
+				class="styled-link"
 				href={githubRepo}>Github repository</a
 			>! All kinds of contributions (issues, pull requests, general feedback and ideas) are welcome!
 			You may also participate by chatting on
-			<a href={twitchChannel}>twitch.tv</a> where this project is being coded live.
+			<a class="styled-link" href={twitchChannel}>twitch.tv</a> where this project is being coded live.
 		</P>
 	</LogicalUnit>
 
@@ -48,6 +49,7 @@
 		<ul class="list-inside list-disc space-y-2">
 			<li>
 				Compete against others in real time (similar to <a
+					class="link"
 					href="https://www.codingame.com/multiplayer/clashofcode">Clash of Code</a
 				>)
 			</li>
@@ -77,9 +79,3 @@
 		</ul>
 	</LogicalUnit>
 </Container>
-
-<style lang="postcss">
-	a {
-		@apply text-teal-800 underline hover:text-teal-600 dark:text-teal-200 hover:dark:text-teal-400;
-	}
-</style>

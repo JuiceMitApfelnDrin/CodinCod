@@ -52,7 +52,7 @@
 		--radius: 0.5rem;
 
 		--success: 120 60% 45%;
-		--success-foreground: 120 100% 97%;
+		--success-foreground: 0 0% 98%;
 
 		--code-block-line-height: 1.25;
 	}
@@ -88,7 +88,7 @@
 		--ring: 0 0% 83.1%;
 
 		--success: 120 40% 35%;
-		--success-foreground: 120 30% 90%;
+		--success-foreground: 0 0% 98%;
 	}
 }
 
@@ -123,8 +123,8 @@ a:focus {
 	@apply bg-stone-700  text-white dark:bg-stone-200 dark:text-stone-700;
 }
 
-.link {
-	@apply hover:text-teal-700 hover:underline hover:dark:text-teal-300;
+a.styled-link {
+	@apply text-teal-800 underline hover:text-teal-600 dark:text-teal-200 hover:dark:text-teal-400;
 }
 
 * {
