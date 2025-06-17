@@ -20,6 +20,8 @@
 							variant="outline"
 							{...props}
 						>
+							<span class="sr-only">user menu</span>
+
 							<Avatar.Image
 								class="rounded-full"
 								src={undefined}
