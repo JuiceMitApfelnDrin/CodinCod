@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
@@ -155,7 +153,7 @@
 
 	let endDate: Date | undefined = $derived(game && dayjs(game.endTime).toDate());
 
-	run(() => {
+	$effect(() => {
 		const now = $currentTime;
 
 		const gameIsInThePast =
@@ -225,8 +223,8 @@
 		};
 
 		sendGameMessage(socket, {
-			event: gameEventEnum.SEND_MESSAGE,
-			chatMessage: newChatMessage
+			chatMessage: newChatMessage,
+			event: gameEventEnum.SEND_MESSAGE
 		});
 	}
 

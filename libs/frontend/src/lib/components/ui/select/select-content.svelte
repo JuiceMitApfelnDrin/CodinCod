@@ -5,11 +5,11 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
-		class: className,
-		sideOffset = 4,
-		portalProps,
 		children,
+		class: className,
+		portalProps,
+		ref = $bindable(null),
+		sideOffset = 4,
 		...restProps
 	}: WithoutChild<SelectPrimitive.ContentProps> & {
 		portalProps?: SelectPrimitive.PortalProps;

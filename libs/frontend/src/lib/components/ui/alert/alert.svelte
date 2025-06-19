@@ -9,15 +9,14 @@
 	};
 
 	let {
+		children,
 		class: className = undefined,
 		variant = "default",
-		children,
 		...rest
 	}: {
 		class?: $$Props["class"];
 		variant?: $$Props["variant"];
 		children?: Snippet;
-		[key: string]: any;
 	} = $props();
 </script>
 

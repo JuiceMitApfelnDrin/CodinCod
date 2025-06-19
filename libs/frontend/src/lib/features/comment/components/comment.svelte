@@ -50,7 +50,11 @@
 		const updatedComment = await response.json();
 
 		if (isCommentDto(updatedComment)) {
-			comment = { ...comment, upvote: updatedComment.upvote, downvote: updatedComment.downvote };
+			comment = {
+				...comment,
+				downvote: updatedComment.downvote,
+				upvote: updatedComment.upvote
+			};
 		}
 	}
 
@@ -74,10 +78,10 @@
 			comment = {
 				...comment,
 				comments: [...updatedCommentInfoWithSubComments.comments],
-				upvote: updatedCommentInfoWithSubComments.upvote,
 				downvote: updatedCommentInfoWithSubComments.downvote,
+				text: updatedCommentInfoWithSubComments.text,
 				updatedAt: updatedCommentInfoWithSubComments.updatedAt,
-				text: updatedCommentInfoWithSubComments.text
+				upvote: updatedCommentInfoWithSubComments.upvote
 			};
 		}
 	}
@@ -102,7 +106,7 @@
 				</DropdownMenu.Trigger>
 
 				<DropdownMenu.Content>
-					<DropdownMenu.Group>
+					<DropdownMenu.Group class="flex flex-col">
 						<DropdownMenu.Item onclick={deleteComment}>
 							<Trash class="mr-2 size-4" aria-hidden="true" /> Delete
 						</DropdownMenu.Item>

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import * as Table from "@/components/ui/table";
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
@@ -9,7 +7,7 @@
 	import {
 		buildFrontendUrl,
 		frontendUrls,
-		paginatedQueryResponseSchema,
+		isPaginatedQueryResponse,
 		type PaginatedQueryResponse,
 		type PuzzleDto
 	} from "types";
@@ -22,10 +20,13 @@
 
 	let { data }: { data: PaginatedQueryResponse | undefined } = $props();
 
-	let items: PuzzleDto[] = $derived(data?.items ?? []);
-	let currentPage: number = $derived(data?.page ?? 1);
-	let totalItems: number = $derived(data?.totalItems ?? 0);
-	let totalPages: number = $derived(data?.totalPages ?? 0);
+	const DEFAULT = { items: [], page: 1, totalItems: 0, totalPages: 0 };
+	let paginatedDataOrDefault = $derived(isPaginatedQueryResponse(data) ? data : DEFAULT);
+
+	let items: PuzzleDto[] = $derived(paginatedDataOrDefault.items);
+	let currentPage: number = $derived(paginatedDataOrDefault.page);
+	let totalItems: number = $derived(paginatedDataOrDefault.totalItems);
+	let totalPages: number = $derived(paginatedDataOrDefault.totalPages);
 </script>
 
 <svelte:head>

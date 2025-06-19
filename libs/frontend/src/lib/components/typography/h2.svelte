@@ -7,7 +7,7 @@
 		children?: Snippet;
 	}
 
-	let { class: className = undefined, children }: Props = $props();
+	let { children, class: className = undefined }: Props = $props();
 </script>
 
 <h2

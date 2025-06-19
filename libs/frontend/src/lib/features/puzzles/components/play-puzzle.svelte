@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import {
 		httpRequestMethod,
@@ -42,10 +40,10 @@
 	}
 
 	let {
-		puzzle,
-		onPlayerSubmitCode = () => {},
+		endDate,
 		onPlayerChangeLanguage = () => {},
-		endDate
+		onPlayerSubmitCode = () => {},
+		puzzle
 	}: Props = $props();
 
 	let code: string = $state("");
@@ -93,8 +91,8 @@
 
 	function showToastWhenTestRan(successPercentage: number, isMultipleTests: boolean = false) {
 		const formattedSuccessPercentage = new Intl.NumberFormat("en", {
-			style: "percent",
-			roundingMode: "halfCeil"
+			roundingMode: "halfCeil",
+			style: "percent"
 		}).format(successPercentage);
 
 		if (isMultipleTests) {

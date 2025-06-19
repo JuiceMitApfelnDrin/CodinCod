@@ -3,13 +3,13 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
-		class: className,
-		sideOffset = 8,
-		alignOffset = -4,
 		align = "start",
-		side = "bottom",
+		alignOffset = -4,
+		class: className,
 		portalProps,
+		ref = $bindable(null),
+		side = "bottom",
+		sideOffset = 8,
 		...restProps
 	}: MenubarPrimitive.ContentProps & {
 		portalProps?: MenubarPrimitive.PortalProps;

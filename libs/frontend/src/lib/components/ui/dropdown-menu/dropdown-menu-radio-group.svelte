@@ -3,13 +3,12 @@
 	import type { Snippet } from "svelte";
 
 	let {
-		value = $bindable(""),
 		children,
+		value = $bindable(""),
 		...rest
 	}: {
 		value?: DropdownMenuPrimitive.RadioGroupProps["value"];
 		children?: Snippet;
-		[key: string]: any;
 	} = $props();
 </script>
 

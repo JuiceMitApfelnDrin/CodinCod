@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import DisplayError from "@/components/error/display-error.svelte";
 	import H1 from "@/components/typography/h1.svelte";
-	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
@@ -137,7 +134,7 @@
 		connectWithWebsocket();
 	}
 
-	run(() => {
+	$effect(() => {
 		if (room?.roomId) updateRoomIdInUrl();
 	});
 

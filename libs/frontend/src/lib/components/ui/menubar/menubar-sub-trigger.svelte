@@ -4,10 +4,10 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
+		children,
 		class: className,
 		inset = undefined,
-		children,
+		ref = $bindable(null),
 		...restProps
 	}: WithoutChild<MenubarPrimitive.SubTriggerProps> & {
 		inset?: boolean;

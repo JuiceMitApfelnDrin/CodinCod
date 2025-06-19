@@ -3,9 +3,9 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
 		class: className,
 		inset = undefined,
+		ref = $bindable(null),
 		...restProps
 	}: MenubarPrimitive.ItemProps & {
 		inset?: boolean;

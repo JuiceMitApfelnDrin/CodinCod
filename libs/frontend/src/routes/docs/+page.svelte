@@ -1,6 +1,8 @@
 <script lang="ts">
+	import type { Component } from "svelte";
+
 	interface Props {
-		data: { content: any };
+		data: { content: Component };
 	}
 
 	let { data }: Props = $props();

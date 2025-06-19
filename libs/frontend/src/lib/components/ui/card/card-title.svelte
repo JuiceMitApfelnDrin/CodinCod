@@ -4,10 +4,10 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
+		children,
 		class: className,
 		level = 3,
-		children,
+		ref = $bindable(null),
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
 		level?: 1 | 2 | 3 | 4 | 5 | 6;

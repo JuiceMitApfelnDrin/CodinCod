@@ -24,7 +24,7 @@
 		onCommentAdded: (addedComment: CommentDto) => void;
 	}
 
-	let { commentType, replyOnId, onCommentAdded }: Props = $props();
+	let { commentType, onCommentAdded, replyOnId }: Props = $props();
 
 	let commentText: string = $state("");
 

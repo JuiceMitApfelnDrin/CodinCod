@@ -2,10 +2,10 @@
 	import type { Snippet } from "svelte";
 
 	let {
+		content,
 		id,
 		open = $bindable(false),
-		title,
-		content
+		title
 	}: {
 		id: string;
 		open?: boolean;

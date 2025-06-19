@@ -2,8 +2,8 @@
 	import type { Snippet } from "svelte";
 
 	let {
-		title,
-		children
+		children,
+		title
 	}: {
 		title: string;
 		children?: Snippet;

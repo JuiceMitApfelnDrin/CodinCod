@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
@@ -29,10 +27,9 @@
 	}
 
 	let { game = $bindable() }: Props = $props();
-	let submissions: SubmissionDto[] = $state([]);
-	run(() => {
-		submissions = game.playerSubmissions.filter((submission) => isSubmissionDto(submission));
-	});
+	let submissions: SubmissionDto[] = $derived(
+		game.playerSubmissions.filter((submission) => isSubmissionDto(submission)) ?? []
+	);
 
 	// used to check whether a solution is being viewed
 	let isOpen: Record<string, boolean> = $state({});
@@ -73,7 +70,7 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each submissions as { user, language, createdAt, result, _id }, index}
+			{#each submissions as { _id, createdAt, language, result, user }, index}
 				{#if isUserDto(user)}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>

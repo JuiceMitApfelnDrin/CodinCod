@@ -15,13 +15,13 @@
 	}
 
 	let {
-		status = 500,
-		message = null,
 		header = null,
 		link = {
 			href: frontendUrls.ROOT,
 			text: "Go to Homepage"
-		}
+		},
+		message = null,
+		status = 500
 	}: Props = $props();
 
 	type ErrorTypeDefaultInfo = { header: string; description: string };

@@ -5,13 +5,14 @@
 
 	type $$Props = HTMLAttributes<HTMLDivElement>;
 
-	interface Props {
+	let {
+		children,
+		class: className = undefined,
+		...rest
+	}: {
 		class?: $$Props["class"];
 		children?: Snippet;
-		[key: string]: any;
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
+	} = $props();
 </script>
 
 <div class={cn("text-sm [&_p]:leading-relaxed", className)} {...rest}>

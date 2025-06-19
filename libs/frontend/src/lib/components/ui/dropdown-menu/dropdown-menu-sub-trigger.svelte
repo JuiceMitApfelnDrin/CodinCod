@@ -4,10 +4,10 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
+		children,
 		class: className,
 		inset,
-		children,
+		ref = $bindable(null),
 		...restProps
 	}: DropdownMenuPrimitive.SubTriggerProps & {
 		inset?: boolean;

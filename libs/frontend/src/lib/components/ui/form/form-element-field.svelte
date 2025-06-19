@@ -11,11 +11,11 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
+		children: childrenProp,
 		class: className,
 		form,
 		name,
-		children: childrenProp,
+		ref = $bindable(null),
 		...restProps
 	}: WithoutChildren<WithElementRef<HTMLAttributes<HTMLDivElement>>> &
 		FormPrimitive.ElementFieldProps<T, U> = $props();

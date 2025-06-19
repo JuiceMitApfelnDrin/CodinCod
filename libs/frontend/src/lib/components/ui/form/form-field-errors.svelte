@@ -4,10 +4,10 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
+		children: childrenProp,
 		class: className,
 		errorClasses,
-		children: childrenProp,
+		ref = $bindable(null),
 		...restProps
 	}: WithoutChild<FormPrimitive.FieldErrorsProps> & {
 		errorClasses?: string | undefined | null;
@@ -19,9 +19,9 @@
 	class={cn("text-sm font-medium text-destructive", className)}
 	{...restProps}
 >
-	{#snippet children({ errors, errorProps })}
+	{#snippet children({ errorProps, errors })}
 		{#if childrenProp}
-			{@render childrenProp({ errors, errorProps })}
+			{@render childrenProp({ errorProps, errors })}
 		{:else}
 			{#each errors as error (error)}
 				<div {...errorProps} class={cn(errorClasses)}>{error}</div>

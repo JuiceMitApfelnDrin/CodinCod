@@ -8,7 +8,7 @@
 		fallbackText?: string;
 	}
 
-	let { markdown = undefined, fallbackText = "no fallback provided" }: Props = $props();
+	let { fallbackText = "no fallback provided", markdown = undefined }: Props = $props();
 
 	const parseMarkdown = async (markdown: string) => {
 		const dirtyMarkdown = await marked.parse(markdown);
@@ -21,6 +21,7 @@
 		<P>Loading...</P>
 	{:then parsedMarkdown}
 		<div class="prose prose-stone dark:prose-invert">
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			{@html parsedMarkdown}
 		</div>
 	{/await}

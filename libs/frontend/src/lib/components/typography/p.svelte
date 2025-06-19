@@ -7,7 +7,7 @@
 		children?: Snippet;
 	}
 
-	let { class: className = undefined, children }: Props = $props();
+	let { children, class: className = undefined }: Props = $props();
 </script>
 
 <p class={cn("leading-7 [&:not(:first-child)]:mt-2 lg:[&:not(:first-child)]:mt-4", className)}>

@@ -3,9 +3,9 @@
 	import { cn } from "@/utils/cn";
 
 	let {
+		class: className,
 		ref = $bindable(null),
 		this: paneGroup = $bindable(),
-		class: className,
 		...restProps
 	}: ResizablePrimitive.PaneGroupProps & {
 		this?: ResizablePrimitive.PaneGroup;
