@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import { ChevronDown } from "@lucide/svelte";
 	import { activityTypeEnum, type AcceptedDate, type Activity, type ActivityType } from "types";
@@ -10,15 +8,17 @@
 		activities?: Activity[];
 	}
 
-	let { date, activities = [] }: Props = $props();
+	let { activities = [], date }: Props = $props();
 
-	let activitiesByType = new Map<ActivityType, Activity[]>();
+	let activitiesByType = $derived.by(() => {
+		const activitiesByType = new Map<ActivityType, Activity[]>();
 
-	run(() => {
 		activities.forEach((activity) => {
 			const activities = activitiesByType.get(activity.type) || [];
 			activitiesByType.set(activity.type, [...activities, activity]);
 		});
+
+		return activitiesByType;
 	});
 
 	const typeToHumanText = {

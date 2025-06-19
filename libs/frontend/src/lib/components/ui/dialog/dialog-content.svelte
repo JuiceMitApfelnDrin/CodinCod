@@ -6,10 +6,10 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
+		children,
 		class: className,
 		portalProps,
-		children,
+		ref = $bindable(null),
 		...restProps
 	}: WithoutChildrenOrChild<DialogPrimitive.ContentProps> & {
 		portalProps?: DialogPrimitive.PortalProps;

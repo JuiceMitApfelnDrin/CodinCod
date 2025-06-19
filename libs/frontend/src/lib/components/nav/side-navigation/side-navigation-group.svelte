@@ -8,7 +8,7 @@
 		children?: Snippet;
 	}
 
-	let { icon = null, text, children }: Props = $props();
+	let { children, icon = null, text }: Props = $props();
 
 	const SvelteComponent = $derived(icon);
 </script>

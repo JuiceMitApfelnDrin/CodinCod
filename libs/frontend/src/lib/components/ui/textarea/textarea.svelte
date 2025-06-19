@@ -4,9 +4,9 @@
 	import { cn } from "@/utils/cn";
 
 	let {
+		class: className,
 		ref = $bindable(null),
 		value = $bindable(),
-		class: className,
 		...restProps
 	}: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> = $props();
 </script>

@@ -9,3 +9,8 @@ export const paginatedQueryResponseSchema = paginatedQuerySchema.extend({
 export type PaginatedQueryResponse = z.infer<
 	typeof paginatedQueryResponseSchema
 >;
+export function isPaginatedQueryResponse(
+	data: unknown,
+): data is PaginatedQueryResponse {
+	return paginatedQueryResponseSchema.safeParse(data).success;
+}

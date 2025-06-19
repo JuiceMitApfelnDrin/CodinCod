@@ -11,11 +11,11 @@
 	import type { HTMLAttributes } from "svelte/elements";
 
 	let {
-		ref = $bindable(null),
+		children: childrenProp,
 		class: className,
 		form,
 		name,
-		children: childrenProp,
+		ref = $bindable(null),
 		...restProps
 	}: FormPrimitive.FieldProps<T, U> &
 		WithoutChildren<WithElementRef<HTMLAttributes<HTMLDivElement>>> = $props();

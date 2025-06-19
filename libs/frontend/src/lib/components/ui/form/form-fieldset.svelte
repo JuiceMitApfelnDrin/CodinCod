@@ -10,10 +10,10 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
 		class: className,
 		form,
 		name,
+		ref = $bindable(null),
 		...restProps
 	}: WithoutChild<FormPrimitive.FieldsetProps<T, U>> = $props();
 </script>

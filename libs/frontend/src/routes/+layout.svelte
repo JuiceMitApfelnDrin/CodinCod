@@ -1,14 +1,12 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import Nav from "@/components/nav/navigation/navigation.svelte";
 	import { authenticatedUserInfo } from "@/stores/index.js";
 	import { isAuthenticatedInfo } from "types";
 	import { Toaster } from "$lib/components/ui/sonner";
 
-	let { data, children } = $props();
+	let { children, data } = $props();
 
-	run(() => {
+	$effect(() => {
 		authenticatedUserInfo.set(isAuthenticatedInfo(data) ? data : null);
 	});
 </script>

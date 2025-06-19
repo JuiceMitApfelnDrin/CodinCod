@@ -3,8 +3,8 @@
 	import type { HTMLInputAttributes } from "svelte/elements";
 
 	let {
-		class: className = undefined,
-		children
+		children,
+		class: className = undefined
 	}: {
 		class?: HTMLInputAttributes["class"];
 		children?: Snippet;

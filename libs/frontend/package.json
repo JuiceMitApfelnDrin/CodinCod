@@ -88,6 +88,7 @@
 		"codemirror-lang-prolog": "^0.1.0",
 		"dayjs": "^1.11.13",
 		"dompurify": "^3.2.3",
+		"eslint-plugin-sort-keys-fix": "^1.1.2",
 		"jsonwebtoken": "^9.0.2",
 		"marked": "^15.0.6",
 		"svelte-codemirror-editor": "^1.4.0",

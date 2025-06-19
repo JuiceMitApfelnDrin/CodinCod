@@ -67,7 +67,7 @@
 			</DropdownMenu.Trigger>
 
 			<DropdownMenu.Content>
-				<DropdownMenu.Group>
+				<DropdownMenu.Group class="flex flex-col">
 					<DropdownMenu.Item>
 						{#snippet child(props)}
 							<a href={frontendUrls.ROOT} {...props}>Home</a>

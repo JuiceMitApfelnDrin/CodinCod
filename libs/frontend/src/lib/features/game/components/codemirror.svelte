@@ -41,13 +41,13 @@
 		language?: PuzzleLanguage;
 	}
 
-	let { readonly = false, value = $bindable(""), language = "" }: Props = $props();
+	let { language = "", readonly = false, value = $bindable("") }: Props = $props();
 
 	function createBasicExtensions(editorPreferences: EditorPreferences): Extension[] {
 		const extensions: Extension[] = [];
 
 		function add(condition: boolean, ext: Extension) {
-			condition && extensions.push(ext);
+			if (condition) extensions.push(ext);
 		}
 
 		// Add all extensions from basicSetup with conditional checks
@@ -71,13 +71,13 @@
 
 		// Keymaps
 		const keymaps = [];
-		editorPreferences.defaultKeymap && keymaps.push(...defaultKeymap);
-		editorPreferences.searchKeymap && keymaps.push(...searchKeymap);
-		editorPreferences.foldKeymap && keymaps.push(...foldKeymap);
-		editorPreferences.completionKeymap && keymaps.push(...completionKeymap);
-		editorPreferences.lintKeymap && keymaps.push(...lintKeymap);
-		editorPreferences.closeBrackets && keymaps.push(...closeBracketsKeymap);
-		editorPreferences.history && keymaps.push(...historyKeymap);
+		if (editorPreferences.defaultKeymap) keymaps.push(...defaultKeymap);
+		if (editorPreferences.searchKeymap) keymaps.push(...searchKeymap);
+		if (editorPreferences.foldKeymap) keymaps.push(...foldKeymap);
+		if (editorPreferences.completionKeymap) keymaps.push(...completionKeymap);
+		if (editorPreferences.lintKeymap) keymaps.push(...lintKeymap);
+		if (editorPreferences.closeBrackets) keymaps.push(...closeBracketsKeymap);
+		if (editorPreferences.history) keymaps.push(...historyKeymap);
 
 		extensions.push(codemirrorKeymap.of(keymaps));
 
@@ -100,7 +100,6 @@
 				await getKeymapExtensions(preferences?.editor?.keymap),
 				...languageExtensions
 			],
-			useTab: language === "go",
 			tabSize: (() => {
 				switch (language) {
 					case "javascript":
@@ -115,7 +114,8 @@
 					default:
 						return 4;
 				}
-			})()
+			})(),
+			useTab: language === "go"
 		};
 	}
 
@@ -125,90 +125,112 @@
 		let chosenLanguageExtension: Extension[] = [];
 
 		switch (language) {
-			case "javascript":
+			case "javascript": {
 				return [(await import("@codemirror/lang-javascript")).javascript()];
+			}
 
-			case "python":
+			case "python": {
 				return [(await import("@codemirror/lang-python")).python()];
+			}
 
-			case "typescript":
+			case "typescript": {
 				return [
 					(await import("@codemirror/lang-javascript")).javascript({
 						typescript: true
 					})
 				];
+			}
 
-			case "rust":
+			case "rust": {
 				return [(await import("@codemirror/lang-rust")).rust()];
+			}
 
-			case "c++":
+			case "c++": {
 				return [(await import("@codemirror/lang-cpp")).cpp()];
+			}
 
-			case "elixir":
+			case "elixir": {
 				return [(await import("codemirror-lang-elixir")).elixir()];
+			}
 
-			case "prolog":
+			case "prolog": {
 				return [(await import("codemirror-lang-prolog")).prolog()];
+			}
 
-			case "ruby":
+			case "ruby": {
 				const { ruby } = await import("@codemirror/legacy-modes/mode/ruby");
 				return [StreamLanguage.define(ruby)];
+			}
 
-			case "brainfuck":
+			case "brainfuck": {
 				const { brainfuck } = await import("@codemirror/legacy-modes/mode/brainfuck");
 				return [StreamLanguage.define(brainfuck)];
+			}
 
-			case "dart":
+			case "dart": {
 				const { dart } = await import("@codemirror/legacy-modes/mode/clike");
 				return [StreamLanguage.define(dart)];
+			}
 
-			case "c":
+			case "c": {
 				const { c } = await import("@codemirror/legacy-modes/mode/clike");
 				return [StreamLanguage.define(c)];
+			}
 
-			case "crystal":
+			case "crystal": {
 				const { crystal } = await import("@codemirror/legacy-modes/mode/crystal");
 				return [StreamLanguage.define(crystal)];
+			}
 
-			case "lua":
+			case "lua": {
 				const { lua } = await import("@codemirror/legacy-modes/mode/lua");
 				return [StreamLanguage.define(lua)];
+			}
 
-			case "go":
+			case "go": {
 				const { go } = await import("@codemirror/legacy-modes/mode/go");
 				return [StreamLanguage.define(go)];
+			}
 
-			case "cobol":
+			case "cobol": {
 				const { cobol } = await import("@codemirror/legacy-modes/mode/cobol");
 				return [StreamLanguage.define(cobol)];
+			}
 
-			case "d":
+			case "d": {
 				const { d } = await import("@codemirror/legacy-modes/mode/d");
 				return [StreamLanguage.define(d)];
+			}
 
-			case "fortran":
+			case "fortran": {
 				const { fortran } = await import("@codemirror/legacy-modes/mode/fortran");
 				return [StreamLanguage.define(fortran)];
+			}
 
-			case "haskell":
+			case "haskell": {
 				const { haskell } = await import("@codemirror/legacy-modes/mode/haskell");
 				return [StreamLanguage.define(haskell)];
+			}
 
-			case "julia":
+			case "julia": {
 				const { julia } = await import("@codemirror/legacy-modes/mode/julia");
 				return [StreamLanguage.define(julia)];
+			}
 
-			case "lisp":
+			case "lisp": {
 				const { commonLisp } = await import("@codemirror/legacy-modes/mode/commonlisp");
 				return [StreamLanguage.define(commonLisp)];
+			}
 
-			case "perl":
+			case "perl": {
 				const { perl } = await import("@codemirror/legacy-modes/mode/perl");
 				return [StreamLanguage.define(perl)];
+			}
 
 			case "awk":
 				// awk - No legacy mode available
 				break;
+
 			case "raku":
 				// raku - No legacy mode available
 				// @code-golf has a raku implementation - https://github.com/code-golf/code-golf/blob/master/js/vendor/codemirror-raku.js
@@ -220,17 +242,20 @@
 
 	async function getKeymapExtensions(requestedKeymap?: string): Promise<Extension> {
 		switch (requestedKeymap) {
-			case keymap.EMACS:
+			case keymap.EMACS: {
 				const { emacs } = await import("@replit/codemirror-emacs");
 				return emacs();
+			}
 
-			case keymap.VIM:
+			case keymap.VIM: {
 				const { vim } = await import("@replit/codemirror-vim");
 				return vim();
+			}
 
-			default:
+			default: {
 				const { vscodeKeymap } = await import("@replit/codemirror-vscode-keymap");
 				return codemirrorKeymap.of(vscodeKeymap);
+			}
 		}
 	}
 </script>
@@ -245,13 +270,13 @@
 		{...editorConfig}
 		basic={false}
 		styles={{
+			// TODO: fix this fr fr, since setting maxWidth can only be a temporary solution
+			".cm-content": { maxWidth: "90vw" },
 			".cm-editor": {
 				display: "flex",
 				height: "100%"
 			},
-			".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" },
-			// TODO: fix this fr fr, since setting maxWidth can only be a temporary solution
-			".cm-content": { maxWidth: "90vw" }
+			".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
 		}}
 	/>
 {/await}

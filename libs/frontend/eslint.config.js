@@ -4,6 +4,7 @@ import tseslint from "typescript-eslint";
 import svelte from "eslint-plugin-svelte";
 import prettier from "eslint-config-prettier";
 import sortDestructureKeys from "eslint-plugin-sort-destructure-keys";
+import sortKeysFix from "eslint-plugin-sort-keys-fix";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -33,6 +34,14 @@ export default [
 			parserOptions: {
 				parser: tseslint.parser // Use TypeScript parser for Svelte files
 			}
+		},
+		rules: {
+			"svelte/valid-compile": [
+				"warn",
+				{
+					ignoreWarnings: true
+				}
+			]
 		}
 	},
 
@@ -44,15 +53,17 @@ export default [
 	// Custom rules and plugin configuration
 	{
 		plugins: {
-			"sort-destructure-keys": sortDestructureKeys
+			"sort-destructure-keys": sortDestructureKeys,
+			"sort-keys-fix": sortKeysFix
 		},
 		rules: {
-			"@typescript-eslint/no-unused-vars": "off", // Disable no-unused-vars rule
-			"no-undef": "warn", // Disable no-undef rule
-			"no-unused-vars": "warn", // Disable no-unused-vars rule
-			"sort-destructure-keys/sort-destructure-keys": [2, { caseSensitive: true }], // Sort destructure keys rule
+			"@typescript-eslint/no-unused-vars": "warn",
+			"no-undef": "warn",
+			"no-unused-vars": "warn",
+			"sort-destructure-keys/sort-destructure-keys": [2, { caseSensitive: true }],
 			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
-			yoda: "error" // Yoda conditions rule
+			"sort-keys-fix/sort-keys-fix": "warn",
+			yoda: "error"
 		}
 	}
 ];

@@ -3,8 +3,8 @@
 	import type { Snippet } from "svelte";
 
 	let {
-		class: className = undefined,
-		children
+		children,
+		class: className = undefined
 	}: {
 		class?: string;
 		children?: Snippet;

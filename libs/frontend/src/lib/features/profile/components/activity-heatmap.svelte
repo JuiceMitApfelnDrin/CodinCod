@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import dayjs from "dayjs";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { frontendUrls, type GroupedActivitiesByDate } from "types";
@@ -20,7 +18,6 @@
 
 	const now = dayjs();
 	const startDate = now.subtract(minNumberOfDays, "day");
-	const endDate = now;
 
 	let days = $derived(
 		Array.from({ length: minNumberOfDays }, (_, i) => {
@@ -31,7 +28,7 @@
 
 	let monthGroups: Array<{ month: string; colspan: number }> = $state([]);
 
-	run(() => {
+	$effect(() => {
 		const nonZeroDays = days.filter((count) => count > 0);
 		minAmount = nonZeroDays.length > 0 ? Math.min(...nonZeroDays) : 0;
 		maxAmount = Math.max(...days);
@@ -47,11 +44,13 @@
 
 			if (yearMonth !== currentYearMonth) {
 				if (currentGroup) groups.push(currentGroup);
+
 				currentGroup = {
-					month: weekStartDate.format("MMM"),
 					colspan: 1,
+					month: weekStartDate.format("MMM"),
 					yearMonth: yearMonth
 				};
+
 				currentYearMonth = yearMonth;
 			} else if (currentGroup) {
 				currentGroup.colspan += 1;

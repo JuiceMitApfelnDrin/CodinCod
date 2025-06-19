@@ -2,6 +2,7 @@
 	import { cn } from "@/utils/cn";
 	import type { FrontendUrl } from "types";
 	import type { Button as ButtonPrimitive } from "bits-ui";
+	import { DATA_TESTID_STRING, type DataTestIdProp } from "@/config/test-ids";
 
 	type $$Props = ButtonPrimitive.RootProps & { class?: string; href: FrontendUrl; text: string };
 
@@ -14,8 +15,7 @@
 		class?: $$Props["class"];
 		href: FrontendUrl;
 		text: string;
-		[key: string]: any;
-	} = $props();
+	} & DataTestIdProp = $props();
 </script>
 
 <li class={cn(className)}>

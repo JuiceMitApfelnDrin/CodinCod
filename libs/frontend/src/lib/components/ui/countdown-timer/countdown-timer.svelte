@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import LogicalUnit from "../logical-unit/logical-unit.svelte";
 	import { cn } from "@/utils/cn";
 	import { currentTime } from "@/stores/current-time";
@@ -16,7 +14,7 @@
 
 	let timeRemaining = $state(DEFAULT_TIME_REMAINING);
 
-	run(() => {
+	$effect(() => {
 		if (!endDate) {
 			timeRemaining = DEFAULT_TIME_REMAINING;
 		} else {
@@ -33,16 +31,10 @@
 		}
 	});
 
-	let showDays = $state(false),
-		showHours = $state(false),
-		showMinutes = $state(false),
-		showSeconds = $state(false);
-	run(() => {
-		showDays = timeRemaining.days > 0;
-		showHours = showDays || timeRemaining.hours > 0;
-		showMinutes = showHours || timeRemaining.minutes > 0;
-		showSeconds = true;
-	});
+	let showDays = $derived(timeRemaining.days > 0);
+	let showHours = $derived(showDays || timeRemaining.hours > 0);
+	let showMinutes = $derived(showHours || timeRemaining.minutes > 0);
+	let showSeconds = true;
 
 	function formatToTwoDigits(value: number | string) {
 		return value.toString().padStart(2, "0");

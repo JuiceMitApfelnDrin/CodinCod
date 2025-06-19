@@ -21,7 +21,7 @@
 			| undefined;
 	}
 
-	let { language = $bindable(), languages = [], formAttributes = undefined }: Props = $props();
+	let { formAttributes = undefined, language = $bindable(), languages = [] }: Props = $props();
 
 	if (!language) {
 		if ($preferences?.preferredLanguage && languages.includes($preferences.preferredLanguage)) {

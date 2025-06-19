@@ -3,10 +3,10 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
+		children,
 		class: className,
 		orientation = "vertical",
-		children,
+		ref = $bindable(null),
 		...restProps
 	}: WithoutChild<ScrollAreaPrimitive.ScrollbarProps> = $props();
 </script>

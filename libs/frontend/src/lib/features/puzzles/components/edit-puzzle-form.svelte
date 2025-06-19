@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
 	import * as Form from "$lib/components/ui/form";
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
@@ -10,13 +8,11 @@
 	import {
 		buildFrontendUrl,
 		frontendUrls,
-		isPuzzleVisibilityState,
 		POST,
 		PUZZLE_CONFIG,
 		puzzleEntitySchema,
 		puzzleVisibilityEnum,
 		type EditPuzzle,
-		type GameVisibility,
 		type PuzzleVisibility
 	} from "types";
 	import { page } from "$app/state";
@@ -57,9 +53,9 @@
 			}
 
 			$form.validators.push({
+				createdAt: new Date(),
 				input: "",
 				output: "",
-				createdAt: new Date(),
 				updatedAt: new Date()
 			});
 

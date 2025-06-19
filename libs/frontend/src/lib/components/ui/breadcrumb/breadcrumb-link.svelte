@@ -5,11 +5,11 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
-		class: className,
-		href = undefined,
 		child,
 		children,
+		class: className,
+		href = undefined,
+		ref = $bindable(null),
 		...restProps
 	}: WithElementRef<HTMLAnchorAttributes> & {
 		child?: Snippet<[{ props: HTMLAnchorAttributes }]>;

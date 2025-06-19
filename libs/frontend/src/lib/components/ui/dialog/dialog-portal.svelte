@@ -7,7 +7,6 @@
 		...rest
 	}: {
 		children?: Snippet;
-		[key: string]: any;
 	} = $props();
 	type $$Props = DialogPrimitive.PortalProps;
 </script>

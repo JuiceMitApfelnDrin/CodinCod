@@ -10,7 +10,7 @@
 		icon?: Component | null;
 	}
 
-	let { href, text, icon = null }: Props = $props();
+	let { href, icon = null, text }: Props = $props();
 
 	const SvelteComponent = $derived(icon);
 </script>

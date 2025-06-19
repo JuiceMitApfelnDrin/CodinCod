@@ -5,9 +5,9 @@
 	import { cn } from "@/utils/cn";
 
 	let {
-		ref = $bindable(null),
 		children,
 		class: className,
+		ref = $bindable(null),
 		...restProps
 	}: WithoutChild<FormPrimitive.LabelProps> = $props();
 </script>

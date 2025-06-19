@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import LanguageSelect from "@/features/puzzles/components/language-select.svelte";
 	import H2 from "@/components/typography/h2.svelte";
@@ -23,7 +21,7 @@
 		}
 	}
 
-	run(() => {
+	$effect(() => {
 		updatePreferredLanguage(language);
 	});
 
@@ -38,7 +36,7 @@
 		}
 	}
 
-	const triggerContent = $derived($preferences?.editor?.keymap ?? "Select an editor keymap");
+	let triggerContent = $derived($preferences?.editor?.keymap ?? "Select an editor keymap");
 </script>
 
 <svelte:head>

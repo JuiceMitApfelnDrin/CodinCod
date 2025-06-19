@@ -10,7 +10,7 @@
 		status: number;
 	}
 
-	let { message, title, status }: Props = $props();
+	let { message, status, title }: Props = $props();
 </script>
 
 <Alert.Root variant={isHttpErrorCode(status) ? "destructive" : "success"}>

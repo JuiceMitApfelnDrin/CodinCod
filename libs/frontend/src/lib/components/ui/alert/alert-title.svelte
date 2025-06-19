@@ -4,18 +4,18 @@
 	import { cn } from "@/utils/cn.js";
 	import type { Snippet } from "svelte";
 
-	type $$Props = HTMLAttributes<HTMLHeadingElement> & {
-		level?: HeadingLevel;
-	};
+	type $$Props = HTMLAttributes<HTMLHeadingElement>;
 
-	interface Props {
+	let {
+		children,
+		class: className = undefined,
+		level = "h5",
+		...rest
+	}: {
 		class?: $$Props["class"];
-		level?: $$Props["level"];
+		level?: HeadingLevel;
 		children?: Snippet;
-		[key: string]: any;
-	}
-
-	let { class: className = undefined, level = "h5", children, ...rest }: Props = $props();
+	} = $props();
 </script>
 
 <svelte:element
