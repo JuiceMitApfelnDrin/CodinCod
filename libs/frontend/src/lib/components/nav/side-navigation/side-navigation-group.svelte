@@ -1,16 +1,14 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import type { Component, Snippet } from "svelte";
+	import type { Snippet } from "svelte";
 
 	interface Props {
-		icon?: Component | null;
+		icon?: Snippet;
 		text: string;
 		children?: Snippet;
 	}
 
-	let { children, icon = null, text }: Props = $props();
-
-	const SvelteComponent = $derived(icon);
+	let { children, icon = undefined, text }: Props = $props();
 </script>
 
 <details class="group" open>
@@ -19,7 +17,11 @@
 			"relative block w-full rounded-md px-4 py-2 hover:bg-stone-200 hover:underline hover:dark:bg-stone-800"
 		)}
 	>
-		<SvelteComponent class="mr-2 inline" size={16} aria-hidden="true" />
+		{#if icon}
+			{@const Icon = icon}
+
+			<Icon class="mr-2 inline" size={16} aria-hidden="true" />
+		{/if}
 
 		<span>{text}</span>
 	</summary>
