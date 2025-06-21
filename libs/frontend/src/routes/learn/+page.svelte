@@ -2,7 +2,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
-	import { buildFrontendUrl, frontendUrls } from "types";
+	import { frontendUrls } from "types";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import HighlightText from "@/components/ui/highlight-text/highlight-text.svelte";
 
@@ -50,7 +50,7 @@
 			<ul class="list-inside list-disc">
 				{#each slugs as slug}
 					<li>
-						<a class="styled-link" href={buildFrontendUrl(frontendUrls.LEARN_SLUG, { slug })}>
+						<a class="styled-link" href={frontendUrls.LEARN_SLUG(slug)}>
 							{slug}
 						</a>
 					</li>

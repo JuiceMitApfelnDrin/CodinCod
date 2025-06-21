@@ -5,7 +5,6 @@
 	import { page } from "$app/state";
 	import Pagination from "@/components/nav/pagination.svelte";
 	import {
-		buildFrontendUrl,
 		frontendUrls,
 		isPaginatedQueryResponse,
 		type PaginatedQueryResponse,
@@ -87,7 +86,7 @@
 									<a
 										class="link"
 										data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}
-										href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: _id })}
+										href={frontendUrls.PUZZLE_BY_ID(_id)}
 									>
 										{title}
 									</a>

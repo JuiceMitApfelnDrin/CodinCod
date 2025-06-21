@@ -82,6 +82,9 @@ export const testIds = {
 	PLAY_PUZZLE_COMPONENT_BUTTON_RUN_CODE: "play-puzzle-component-button-run-code",
 	PLAY_PUZZLE_COMPONENT_BUTTON_SUBMIT_CODE: "play-puzzle-component-button-submit-code",
 
+	// profile
+	PROFILE_PAGE_BUTTON_USER_PUZZLES: "profile-page-button-user-puzzles",
+
 	// puzzles by id page
 	PUZZLES_BY_ID_PAGE_ANCHOR_EDIT_PUZZLE: "puzzles-by-id-page-edit-puzzle",
 	PUZZLES_BY_ID_PAGE_ANCHOR_PLAY_PUZZLE: "puzzles-by-id-page-play-puzzle",

@@ -6,7 +6,6 @@
 	import Input from "@/components/ui/input/input.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import {
-		buildFrontendUrl,
 		frontendUrls,
 		POST,
 		PUZZLE_CONFIG,
@@ -31,7 +30,7 @@
 
 	let { data }: Props = $props();
 
-	const learnMarkdownUrl = buildFrontendUrl(frontendUrls.LEARN_MARKDOWN);
+	const learnMarkdownUrl = frontendUrls.LEARN_MARKDOWN;
 
 	const form = superForm(data, {
 		dataType: "json",

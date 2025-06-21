@@ -1,55 +1,56 @@
 export const frontendUrls = {
-	ROOT: "/",
+  ROOT: "/",
 
-	// account activity related
-	// SIGN_OUT: "/sign-out",
-	// SIGN_UP: "/sign-up",
-	// SIGN_IN: "/sign-in",
-	REGISTER: "/register",
-	LOGIN: "/login",
-	LOGOUT: "/logout",
+  // account activity related
+  // SIGN_OUT: "/sign-out",
+  // SIGN_UP: "/sign-up",
+  // SIGN_IN: "/sign-in",
+  REGISTER: "/register",
+  LOGIN: "/login",
+  LOGOUT: "/logout",
 
-	// puzzles
-	PUZZLES: "/puzzles",
-	PUZZLE_BY_ID: "/puzzles/:id",
-	PUZZLE_CREATE: "/puzzles/create",
-	PUZZLE_BY_ID_EDIT: "/puzzles/:id/edit",
-	PUZZLE_BY_ID_PLAY: "/puzzles/:id/play",
+  // puzzles
+  PUZZLES: "/puzzles",
+  PUZZLE_BY_ID: (id: string) => `/puzzles/${id}`,
+  PUZZLE_CREATE: "/puzzles/create",
+  PUZZLE_BY_ID_EDIT: (id: string) => `/puzzles/${id}/edit`,
+  PUZZLE_BY_ID_PLAY: (id: string) => `/puzzles/${id}/play`,
 
-	// personal account settings
-	SETTINGS: "/settings",
-	SETTINGS_PROFILE: "/settings/profile",
-	SETTINGS_ACCOUNT: "/settings/account",
-	SETTINGS_APPEARANCE: "/settings/appearance",
-	SETTINGS_PREFERENCES: "/settings/preferences",
-	SETTINGS_COMMUNITY: "/settings/community",
-	SETTINGS_NOTIFICATIONS: "/settings/notifications",
+  // personal account settings
+  SETTINGS: "/settings",
+  SETTINGS_PROFILE: "/settings/profile",
+  SETTINGS_ACCOUNT: "/settings/account",
+  SETTINGS_APPEARANCE: "/settings/appearance",
+  SETTINGS_PREFERENCES: "/settings/preferences",
+  SETTINGS_COMMUNITY: "/settings/community",
+  SETTINGS_NOTIFICATIONS: "/settings/notifications",
 
-	// user profile
-	USER_PROFILE: "/profile",
-	USER_PROFILE_BY_USERNAME: "/profile/:username",
-	USER_PROFILE_BY_USERNAME_PUZZLES: "/profile/:username/puzzles",
+  // user profile
+  USER_PROFILE: "/profile",
+  USER_PROFILE_BY_USERNAME: (username: string) => `/profile/${username}`,
+  USER_PROFILE_BY_USERNAME_PUZZLES: (username: string) =>
+    `/profile/${username}/puzzles`,
 
-	// play game
-	// PLAY: "/",
-	// multiplayer
-	MULTIPLAYER: "/multiplayer",
-	MULTIPLAYER_ID: "/multiplayer/:id",
+  // play game
+  // PLAY: "/",
+  // multiplayer
+  MULTIPLAYER: "/multiplayer",
+  MULTIPLAYER_ID: (id: string) => `/multiplayer/${id}`,
 
-	// learn
-	LEARN: "/learn",
-	LEARN_SLUG: "/learn/:slug",
-	LEARN_MARKDOWN: "/learn/markdown",
+  // learn
+  LEARN: "/learn",
+  LEARN_SLUG: (slug: string) => `/learn/${slug}`,
+  LEARN_MARKDOWN: "/learn/markdown",
 
-	// community
-	FORUM: "/forum",
-	FRIENDS: "/friends",
-	PLAYERS: "/players",
-	BLOG: "/blog",
+  // community
+  FORUM: "/forum",
+  FRIENDS: "/friends",
+  PLAYERS: "/players",
+  BLOG: "/blog",
 
-	// docs
-	DOCS: "/docs",
-	DOCS_ACTIVITY: "/docs/activity",
+  // docs
+  DOCS: "/docs",
+  DOCS_ACTIVITY: "/docs/activity",
 } as const;
 
 export type FrontendUrl = (typeof frontendUrls)[keyof typeof frontendUrls];
@@ -58,11 +59,11 @@ const frontendUrlsArray: FrontendUrl[] = Object.values(frontendUrls);
 
 const indexNotFound = -1;
 export function isFrontendUrl(
-	supposedFrontendUrl: unknown,
+  supposedFrontendUrl: unknown
 ): supposedFrontendUrl is FrontendUrl {
-	return (
-		typeof supposedFrontendUrl === "string" &&
-		frontendUrlsArray.findIndex((item) => item === supposedFrontendUrl) !==
-			indexNotFound
-	);
+  return (
+    typeof supposedFrontendUrl === "string" &&
+    frontendUrlsArray.findIndex((item) => item === supposedFrontendUrl) !==
+      indexNotFound
+  );
 }

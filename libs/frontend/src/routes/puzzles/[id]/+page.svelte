@@ -2,7 +2,6 @@
 	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
 	import {
-		buildFrontendUrl,
 		commentTypeEnum,
 		frontendUrls,
 		getUserIdFromUser,
@@ -30,8 +29,8 @@
 	let puzzleComments = $derived(puzzle.comments ?? []);
 
 	let puzzleId = $page.params.id;
-	const editUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_EDIT, { id: puzzleId });
-	const playUrl = buildFrontendUrl(frontendUrls.PUZZLE_BY_ID_PLAY, { id: puzzleId });
+	const editUrl = frontendUrls.PUZZLE_BY_ID_EDIT(puzzleId);
+	const playUrl = frontendUrls.PUZZLE_BY_ID_PLAY(puzzleId);
 
 	function onCommentAdded(newComment: CommentDto) {
 		puzzleComments = [...puzzle.comments, newComment];

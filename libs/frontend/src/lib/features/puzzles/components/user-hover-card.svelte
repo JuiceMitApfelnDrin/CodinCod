@@ -2,7 +2,7 @@
 	import * as HoverCard from "$lib/components/ui/hover-card";
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { buildFrontendUrl, frontendUrls, isUserDto, type UserDto } from "types";
+	import { frontendUrls, isUserDto, type UserDto } from "types";
 	import { Calendar } from "@lucide/svelte";
 	import { apiUrls, buildApiUrl } from "@/config/api";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
@@ -20,9 +20,7 @@
 
 	const userInfoCache: Record<string, UserDto> = {};
 
-	const profileUrl = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
-		username
-	});
+	const profileUrl = frontendUrls.USER_PROFILE_BY_USERNAME(username);
 
 	async function fetchUserInfo(username: string) {
 		if (userInfoCache[username]) {
@@ -84,7 +82,7 @@
 
 						<div class="flex items-center pt-2">
 							<Calendar class="mr-2 h-4 w-4 opacity-70" />
-							<span class="text-xs text-muted-foreground"
+							<span class="text-muted-foreground text-xs"
 								>Joined {dayjs(user.createdAt).format("MMMM YYYY")}</span
 							>
 						</div>

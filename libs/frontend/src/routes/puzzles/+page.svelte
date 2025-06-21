@@ -3,12 +3,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import {
-		buildFrontendUrl,
-		frontendUrls,
-		type PaginatedQueryResponse,
-		type PuzzleDto
-	} from "types";
+	import { frontendUrls, type PaginatedQueryResponse, type PuzzleDto } from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
@@ -25,9 +20,7 @@
 
 	let myPuzzlesUrl: string | undefined = $derived(
 		$authenticatedUserInfo?.isAuthenticated
-			? buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME_PUZZLES, {
-					username: $authenticatedUserInfo.username
-				})
+			? frontendUrls.USER_PROFILE_BY_USERNAME_PUZZLES($authenticatedUserInfo.username)
 			: undefined
 	);
 </script>
@@ -84,7 +77,7 @@
 									<a
 										class="link"
 										data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}
-										href={buildFrontendUrl(frontendUrls.PUZZLE_BY_ID, { id: _id })}
+										href={frontendUrls.PUZZLE_BY_ID(_id)}
 									>
 										{title}
 									</a>

@@ -22,7 +22,6 @@
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
 	import {
-		buildFrontendUrl,
 		frontendUrls,
 		httpRequestMethod,
 		httpResponseCodes,
@@ -305,7 +304,7 @@
 			<Button
 				data-testid={testIds.MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER}
 				variant="outline"
-				onclick={() => goto(buildFrontendUrl(frontendUrls.MULTIPLAYER))}
+				onclick={() => goto(frontendUrls.MULTIPLAYER)}
 			>
 				Go to multiplayer
 			</Button>
