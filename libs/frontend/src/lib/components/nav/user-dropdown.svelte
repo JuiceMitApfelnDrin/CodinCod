@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from "#/ui/dropdown-menu";
 	import * as Avatar from "#/ui/avatar";
-	import { buildFrontendUrl, frontendUrls } from "types";
+	import { frontendUrls } from "types";
 	import { testIds } from "@/config/test-ids";
 	import { authenticatedUserInfo } from "@/stores";
 	import { Button } from "#/ui/button";
@@ -36,9 +36,7 @@
 
 		<DropdownMenu.Content>
 			<DropdownMenu.Group class="flex flex-col">
-				{@const profileLink = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
-					username: $authenticatedUserInfo.username
-				})}
+				{@const profileLink = frontendUrls.userProfileByUsername($authenticatedUserInfo.username)}
 				<DropdownMenu.Item>
 					{#snippet child(props)}
 						<a data-testid={testIds.NAVIGATION_MENU_ANCHOR_PROFILE} href={profileLink} {...props}>

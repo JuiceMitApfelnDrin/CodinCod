@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { buildFrontendUrl, frontendUrls } from "types";
+	import { frontendUrls } from "types";
 	import ToggleTheme from "../toggle-theme.svelte";
 	import UserDropdown from "../user-dropdown.svelte";
 	import NavigationItem from "./navigation-item.svelte";
@@ -90,9 +90,10 @@
 					</DropdownMenu.Item>
 
 					{#if $authenticatedUserInfo?.isAuthenticated}
-						{@const profileLink = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
-							username: $authenticatedUserInfo.username
-						})}
+						{@const profileLink = frontendUrls.userProfileByUsername(
+							$authenticatedUserInfo.username
+						)}
+
 						<DropdownMenu.Item>
 							{#snippet child(props)}
 								<a href={profileLink} {...props}>Profile</a>

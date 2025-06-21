@@ -5,33 +5,39 @@ export const backendUrls = {
 	REGISTER: `${baseRoute}/register`,
 	LOGIN: `${baseRoute}/login`,
 	USER: `${baseRoute}/user`,
-	USER_BY_USERNAME: `${baseRoute}/user/:username`,
-	USER_BY_USERNAME_PUZZLE: `${baseRoute}/user/:username/puzzle`,
-	USER_BY_USERNAME_ACTIVITY: `${baseRoute}/user/:username/activity`,
-	USER_BY_USERNAME_IS_AVAILABLE: `${baseRoute}/user/:username/isAvailable`,
+	userByUsername: (username: string) => `${baseRoute}/user/${username}`,
+	userByUsernamePuzzle: (username: string) =>
+		`${baseRoute}/user/${username}/puzzle`,
+	userByUsernameActivity: (username: string) =>
+		`${baseRoute}/user/${username}/activity`,
+	userByUsernameIsAvailable: (username: string) =>
+		`${baseRoute}/user/${username}/isAvailable`,
 	ACCOUNT: `${baseRoute}/account`,
 	ACCOUNT_PREFERENCES: `${baseRoute}/account/preferences`,
 	EXECUTE: `${baseRoute}/execute`,
 
 	// puzzle routes
 	PUZZLE: `${baseRoute}/puzzle`,
-	PUZZLE_DETAIL: `${baseRoute}/puzzle/:id`,
-	PUZZLE_DETAIL_COMMENT: `${baseRoute}/puzzle/:id/comment`,
-	PUZZLE_DETAIL_SOLUTION: `${baseRoute}/puzzle/:id/solution`,
+	puzzleById: (id: string) => `${baseRoute}/puzzle/${id}`,
+	puzzleByIdComment: (id: string) => `${baseRoute}/puzzle/${id}/comment`,
+	puzzleByIdSolution: (id: string) => `${baseRoute}/puzzle/${id}/solution`,
 	PUZZLE_LANGUAGES: `${baseRoute}/puzzle/languages`,
 
 	// comment
 	COMMENT: `${baseRoute}/comment`,
-	COMMENT_BY_ID: `${baseRoute}/comment/:id`,
-	COMMENT_BY_ID_COMMENT: `${baseRoute}/comment/:id/comment`,
-	COMMENT_BY_ID_VOTE: `${baseRoute}/comment/:id/vote`,
+	commentById: (id: string) => `${baseRoute}/comment/${id}`,
+	commentByIdComment: (id: string) => `${baseRoute}/comment/${id}/comment`,
+	commentByIdVote: (id: string) => `${baseRoute}/comment/${id}/vote`,
 
 	HEALTH: `${baseRoute}/health`,
 	VALIDATOR: `${baseRoute}/validator`,
 	SUBMISSION: `${baseRoute}/submission`,
-	SUBMISSION_BY_ID: `${baseRoute}/submission/:id`,
+	submissionById: (id: string) => `${baseRoute}/submission/${id}`,
 	SUBMISSION_GAME: `${baseRoute}/submission/game`,
 	REPORT: `${baseRoute}/report`,
 } as const;
 
-export type BackendUrl = (typeof backendUrls)[keyof typeof backendUrls];
+export const backendParams = {
+	USERNAME: ":username",
+	ID: ":id",
+} as const;

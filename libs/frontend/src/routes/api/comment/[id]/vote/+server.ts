@@ -10,9 +10,7 @@ export async function POST({ params, request }: RequestEvent) {
 	const body = await request.text();
 
 	return await fetchWithAuthenticationCookie(
-		buildBackendUrl(backendUrls.COMMENT_BY_ID_VOTE, {
-			id: params.id
-		}),
+		buildBackendUrl(backendUrls.commentByIdVote(params.id)),
 		{
 			body,
 			headers: getCookieHeader(request),

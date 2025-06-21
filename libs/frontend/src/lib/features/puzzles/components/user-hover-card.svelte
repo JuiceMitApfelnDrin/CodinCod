@@ -2,9 +2,9 @@
 	import * as HoverCard from "$lib/components/ui/hover-card";
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { buildFrontendUrl, frontendUrls, isUserDto, type UserDto } from "types";
+	import { frontendUrls, isUserDto, type UserDto } from "types";
 	import { Calendar } from "@lucide/svelte";
-	import { apiUrls, buildApiUrl } from "@/config/api";
+	import { apiUrls } from "@/config/api";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import dayjs from "dayjs";
@@ -20,16 +20,14 @@
 
 	const userInfoCache: Record<string, UserDto> = {};
 
-	const profileUrl = buildFrontendUrl(frontendUrls.USER_PROFILE_BY_USERNAME, {
-		username
-	});
+	const profileUrl = frontendUrls.userProfileByUsername(username);
 
 	async function fetchUserInfo(username: string) {
 		if (userInfoCache[username]) {
 			return userInfoCache[username];
 		}
 
-		let url = buildApiUrl(apiUrls.USER_BY_USERNAME, { username });
+		let url = apiUrls.userByUsername(username);
 
 		const response = await fetchWithAuthenticationCookie(url).then((res) => res.json());
 

@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+	import Button from "#/ui/button/button.svelte";
+	import LogicalUnit from "#/ui/logical-unit/logical-unit.svelte";
+	import { page } from "$app/state";
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
+	import { testIds } from "@/config/test-ids";
 	import ActivityGroup from "@/features/profile/components/activity-group.svelte";
 	import ActivityHeatmap from "@/features/profile/components/activity-heatmap.svelte";
 	import dayjs from "dayjs";
-	import { isUserDto, type Activity, type GroupedActivitiesByDate } from "types";
+	import { frontendUrls, isUserDto, type Activity, type GroupedActivitiesByDate } from "types";
 
 	function groupByCreatedAtDate(items: Activity[]) {
 		return items.reduce<GroupedActivitiesByDate>((acc, item) => {
@@ -31,10 +34,10 @@
 </script>
 
 <svelte:head>
-	<title>Profile of {$page.params.username} | CodinCod</title>
+	<title>Profile of {page.params.username} | CodinCod</title>
 	<meta
 		name="description"
-		content={`Track ${$page.params.username}'s puzzle wins, open-source contributions, and ranking. Challenge them to a duel or collaborate!`}
+		content={`Track ${page.params.username}'s puzzle wins, open-source contributions, and ranking. Challenge them to a duel or collaborate!`}
 	/>
 	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
@@ -67,6 +70,14 @@
 	{/if}
 
 	<ActivityHeatmap activitiesGroupedByDate={activitiesGroupedByCreatedAtDate} />
+
+	<LogicalUnit>
+		<Button
+			data-testid={testIds.PROFILE_PAGE_BUTTON_USER_PUZZLES}
+			href={frontendUrls.userProfileByUsernamePuzzles(page.params.username)}
+			variant="outline">Created puzzles</Button
+		>
+	</LogicalUnit>
 
 	{#each Object.entries(activitiesGroupedByCreatedAtDate).sort((a, b) => {
 		const aDate = a[0];

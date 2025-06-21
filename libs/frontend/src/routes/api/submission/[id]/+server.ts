@@ -8,7 +8,7 @@ import type { RequestEvent } from "./$types";
 
 export async function GET({ params, request }: RequestEvent) {
 	return await fetchWithAuthenticationCookie(
-		buildBackendUrl(backendUrls.SUBMISSION_BY_ID, { id: params.id }),
+		buildBackendUrl(backendUrls.submissionById(params.id)),
 		{
 			headers: getCookieHeader(request),
 			method: httpRequestMethod.GET

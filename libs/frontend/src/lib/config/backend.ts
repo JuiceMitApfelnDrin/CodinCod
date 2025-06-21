@@ -1,9 +1,3 @@
-import { type BackendUrl, type WebSocketUrl } from "types";
-
-interface Params {
-	[key: string]: string | number;
-}
-
 /**
  * Builds a backend url,
  * with the path added to it,
@@ -14,34 +8,12 @@ interface Params {
  * @param params
  * @returns the desired url
  */
-export function buildBackendUrl(path: BackendUrl, params: Params = {}) {
+export function buildBackendUrl(url: string) {
 	const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 	if (!backendUrl) {
 		throw new Error("Bruh, you forgot to add VITE_BACKEND_URL to your .env");
 	}
 
-	let url = `${backendUrl}${path}`;
-
-	if (params) {
-		// Replace placeholders in the path with actual values
-		Object.entries(params).forEach(([key, value]) => {
-			url = url.replace(`:${key}`, String(value));
-		});
-	}
-
-	return url;
-}
-
-export function buildWebSocketBackendUrl(path: WebSocketUrl, params: Params = {}) {
-	let url = `${path}`;
-
-	if (params) {
-		// Replace placeholders in the path with actual values
-		Object.entries(params).forEach(([key, value]) => {
-			url = url.replace(`:${key}`, String(value));
-		});
-	}
-
-	return url;
+	return `${backendUrl}${url}`;
 }

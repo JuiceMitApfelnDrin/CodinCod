@@ -11,10 +11,10 @@ export const frontendUrls = {
 
 	// puzzles
 	PUZZLES: "/puzzles",
-	PUZZLE_BY_ID: "/puzzles/:id",
+	puzzleById: (id: string) => `/puzzles/${id}`,
 	PUZZLE_CREATE: "/puzzles/create",
-	PUZZLE_BY_ID_EDIT: "/puzzles/:id/edit",
-	PUZZLE_BY_ID_PLAY: "/puzzles/:id/play",
+	puzzleByIdEdit: (id: string) => `/puzzles/${id}/edit`,
+	puzzleByIdPlay: (id: string) => `/puzzles/${id}/play`,
 
 	// personal account settings
 	SETTINGS: "/settings",
@@ -27,18 +27,19 @@ export const frontendUrls = {
 
 	// user profile
 	USER_PROFILE: "/profile",
-	USER_PROFILE_BY_USERNAME: "/profile/:username",
-	USER_PROFILE_BY_USERNAME_PUZZLES: "/profile/:username/puzzles",
+	userProfileByUsername: (username: string) => `/profile/${username}`,
+	userProfileByUsernamePuzzles: (username: string) =>
+		`/profile/${username}/puzzles`,
 
 	// play game
 	// PLAY: "/",
 	// multiplayer
 	MULTIPLAYER: "/multiplayer",
-	MULTIPLAYER_ID: "/multiplayer/:id",
+	multiplayerById: (id: string) => `/multiplayer/${id}`,
 
 	// learn
 	LEARN: "/learn",
-	LEARN_SLUG: "/learn/:slug",
+	learnBySlug: (slug: string) => `/learn/${slug}`,
 	LEARN_MARKDOWN: "/learn/markdown",
 
 	// community
@@ -52,17 +53,4 @@ export const frontendUrls = {
 	DOCS_ACTIVITY: "/docs/activity",
 } as const;
 
-export type FrontendUrl = (typeof frontendUrls)[keyof typeof frontendUrls];
-
-const frontendUrlsArray: FrontendUrl[] = Object.values(frontendUrls);
-
-const indexNotFound = -1;
-export function isFrontendUrl(
-	supposedFrontendUrl: unknown,
-): supposedFrontendUrl is FrontendUrl {
-	return (
-		typeof supposedFrontendUrl === "string" &&
-		frontendUrlsArray.findIndex((item) => item === supposedFrontendUrl) !==
-			indexNotFound
-	);
-}
+export type FrontendUrl = string;

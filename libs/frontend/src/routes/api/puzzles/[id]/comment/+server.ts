@@ -10,9 +10,7 @@ export async function POST({ params, request }: RequestEvent) {
 	const body = await request.text();
 
 	return await fetchWithAuthenticationCookie(
-		buildBackendUrl(backendUrls.PUZZLE_DETAIL_COMMENT, {
-			id: params.id
-		}),
+		buildBackendUrl(backendUrls.puzzleByIdComment(params.id)),
 		{
 			body,
 			headers: getCookieHeader(request),

@@ -1,4 +1,3 @@
-import type { BackendUrl } from "../config/backend-urls.js";
 import type { FrontendUrl } from "../config/frontend-urls.js";
 
 export type Link = {
@@ -12,6 +11,6 @@ export type FrontendLink = {
 };
 
 export type BackendLink = {
-	href: BackendUrl;
+	href: string;
 	text: string;
 };

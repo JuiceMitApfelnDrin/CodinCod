@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-import { apiUrls, buildApiUrl } from "@/config/api";
+import { apiUrls } from "@/config/api";
 import { writable } from "svelte/store";
 import { httpRequestMethod } from "types";
 
@@ -11,7 +11,7 @@ const createLanguagesStore = () => {
 			if (!browser) return;
 
 			try {
-				const response = await fetch(buildApiUrl(apiUrls.SUPPORTED_LANGUAGES), {
+				const response = await fetch(apiUrls.SUPPORTED_LANGUAGES, {
 					method: httpRequestMethod.GET
 				});
 

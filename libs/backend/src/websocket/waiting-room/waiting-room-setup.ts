@@ -1,7 +1,6 @@
 import { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import {
-	buildFrontendUrl,
 	DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
 	frontendUrls,
 	GameEntity,
@@ -125,7 +124,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				usernamesOfUsersInRoom.forEach((username) => {
 					waitingRoom.updateUser(username, {
 						event: waitingRoomEventEnum.START_GAME,
-						gameUrl: buildFrontendUrl(frontendUrls.MULTIPLAYER_ID, { id: newlyCreatedGame.id })
+						gameUrl: frontendUrls.multiplayerById(newlyCreatedGame.id)
 					});
 					waitingRoom.removeUserFromUsers(username);
 				});

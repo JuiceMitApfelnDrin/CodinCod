@@ -5,7 +5,7 @@ import type { PageServerLoadEvent } from "./$types";
 
 export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
-	const url = buildBackendUrl(backendUrls.PUZZLE_DETAIL, { id });
+	const url = buildBackendUrl(backendUrls.puzzleById(id));
 
 	try {
 		const response = await fetch(url);

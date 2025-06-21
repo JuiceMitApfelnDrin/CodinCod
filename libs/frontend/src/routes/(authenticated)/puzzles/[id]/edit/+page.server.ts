@@ -18,7 +18,7 @@ import { handleDeletePuzzleForm } from "../../../../api/handle-delete-puzzle-for
 export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
 
-	const url = buildBackendUrl(backendUrls.PUZZLE_DETAIL_SOLUTION, { id });
+	const url = buildBackendUrl(backendUrls.puzzleByIdSolution(id));
 	const response = await fetch(url);
 
 	if (!response.ok) {
@@ -52,7 +52,7 @@ export const actions = {
 		const body = form.data;
 
 		// Update puzzle data to backend
-		const updateUrl = buildBackendUrl(backendUrls.PUZZLE_DETAIL, { id });
+		const updateUrl = buildBackendUrl(backendUrls.puzzleById(id));
 		const response = await fetchWithAuthenticationCookie(updateUrl, {
 			body: JSON.stringify(body),
 			headers: {
