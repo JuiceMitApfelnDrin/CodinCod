@@ -29,8 +29,8 @@
 	let puzzleComments = $derived(puzzle.comments ?? []);
 
 	let puzzleId = $page.params.id;
-	const editUrl = frontendUrls.PUZZLE_BY_ID_EDIT(puzzleId);
-	const playUrl = frontendUrls.PUZZLE_BY_ID_PLAY(puzzleId);
+	const editUrl = frontendUrls.puzzleByIdEdit(puzzleId);
+	const playUrl = frontendUrls.puzzleByIdPlay(puzzleId);
 
 	function onCommentAdded(newComment: CommentDto) {
 		puzzleComments = [...puzzle.comments, newComment];

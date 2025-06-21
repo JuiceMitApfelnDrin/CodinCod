@@ -90,7 +90,7 @@
 					</DropdownMenu.Item>
 
 					{#if $authenticatedUserInfo?.isAuthenticated}
-						{@const profileLink = frontendUrls.USER_PROFILE_BY_USERNAME(
+						{@const profileLink = frontendUrls.userProfileByUsername(
 							$authenticatedUserInfo.username
 						)}
 

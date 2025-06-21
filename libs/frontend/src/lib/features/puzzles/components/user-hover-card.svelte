@@ -20,7 +20,7 @@
 
 	const userInfoCache: Record<string, UserDto> = {};
 
-	const profileUrl = frontendUrls.USER_PROFILE_BY_USERNAME(username);
+	const profileUrl = frontendUrls.userProfileByUsername(username);
 
 	async function fetchUserInfo(username: string) {
 		if (userInfoCache[username]) {

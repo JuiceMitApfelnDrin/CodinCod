@@ -11,10 +11,10 @@ export const frontendUrls = {
 
   // puzzles
   PUZZLES: "/puzzles",
-  PUZZLE_BY_ID: (id: string) => `/puzzles/${id}`,
+  puzzleById: (id: string) => `/puzzles/${id}`,
   PUZZLE_CREATE: "/puzzles/create",
-  PUZZLE_BY_ID_EDIT: (id: string) => `/puzzles/${id}/edit`,
-  PUZZLE_BY_ID_PLAY: (id: string) => `/puzzles/${id}/play`,
+  puzzleByIdEdit: (id: string) => `/puzzles/${id}/edit`,
+  puzzleByIdPlay: (id: string) => `/puzzles/${id}/play`,
 
   // personal account settings
   SETTINGS: "/settings",
@@ -27,19 +27,19 @@ export const frontendUrls = {
 
   // user profile
   USER_PROFILE: "/profile",
-  USER_PROFILE_BY_USERNAME: (username: string) => `/profile/${username}`,
-  USER_PROFILE_BY_USERNAME_PUZZLES: (username: string) =>
+  userProfileByUsername: (username: string) => `/profile/${username}`,
+  userProfileByUsernamePuzzles: (username: string) =>
     `/profile/${username}/puzzles`,
 
   // play game
   // PLAY: "/",
   // multiplayer
   MULTIPLAYER: "/multiplayer",
-  MULTIPLAYER_ID: (id: string) => `/multiplayer/${id}`,
+  multiplayerById: (id: string) => `/multiplayer/${id}`,
 
   // learn
   LEARN: "/learn",
-  LEARN_SLUG: (slug: string) => `/learn/${slug}`,
+  learnBySlug: (slug: string) => `/learn/${slug}`,
   LEARN_MARKDOWN: "/learn/markdown",
 
   // community

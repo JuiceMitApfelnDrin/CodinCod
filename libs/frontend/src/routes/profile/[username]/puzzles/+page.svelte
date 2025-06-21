@@ -86,7 +86,7 @@
 									<a
 										class="link"
 										data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}
-										href={frontendUrls.PUZZLE_BY_ID(_id)}
+										href={frontendUrls.puzzleById(_id)}
 									>
 										{title}
 									</a>

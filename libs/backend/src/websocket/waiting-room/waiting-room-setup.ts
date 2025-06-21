@@ -124,7 +124,7 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				usernamesOfUsersInRoom.forEach((username) => {
 					waitingRoom.updateUser(username, {
 						event: waitingRoomEventEnum.START_GAME,
-						gameUrl: frontendUrls.MULTIPLAYER_ID(newlyCreatedGame.id)
+						gameUrl: frontendUrls.multiplayerById(newlyCreatedGame.id)
 					});
 					waitingRoom.removeUserFromUsers(username);
 				});

@@ -37,7 +37,7 @@ export const actions = {
 			fail(400, { form, message: data.message });
 		}
 
-		const editPuzzleUrl = frontendUrls.PUZZLE_BY_ID_EDIT(data._id);
+		const editPuzzleUrl = frontendUrls.puzzleByIdEdit(data._id);
 
 		throw redirect(302, editPuzzleUrl);
 	}

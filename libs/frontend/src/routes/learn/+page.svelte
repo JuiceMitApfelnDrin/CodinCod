@@ -50,7 +50,7 @@
 			<ul class="list-inside list-disc">
 				{#each slugs as slug}
 					<li>
-						<a class="styled-link" href={frontendUrls.LEARN_SLUG(slug)}>
+						<a class="styled-link" href={frontendUrls.learnBySlug(slug)}>
 							{slug}
 						</a>
 					</li>
