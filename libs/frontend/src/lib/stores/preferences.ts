@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-import { apiUrls, buildApiUrl } from "@/config/api";
+import { apiUrls } from "@/config/api";
 import { localStorageKeys } from "@/config/local-storage";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { writable } from "svelte/store";
@@ -14,7 +14,7 @@ import {
 const createPreferencesStore = () => {
 	const { set, subscribe, update } = writable<PreferencesDto | null>(null);
 
-	const url = buildApiUrl(apiUrls.ACCOUNT_PREFERENCES);
+	const url = apiUrls.ACCOUNT_PREFERENCES;
 
 	return {
 		async loadPreferences() {

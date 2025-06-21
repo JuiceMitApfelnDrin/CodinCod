@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { page } from "$app/state";
 	import { cn } from "@/utils/cn";
-	import type { Snippet } from "svelte";
+	import type { Component } from "svelte";
 	import type { FrontendUrl } from "types";
 
 	interface Props {
 		href: FrontendUrl;
 		text: string;
-		icon?: Snippet;
+		icon?: Component;
 	}
 
 	let { href, icon = undefined, text }: Props = $props();

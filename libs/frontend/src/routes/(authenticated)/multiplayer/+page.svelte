@@ -7,7 +7,6 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
-	import { buildWebSocketBackendUrl } from "@/config/backend";
 	import { authenticatedUserInfo } from "@/stores";
 	import {
 		frontendUrls,
@@ -66,7 +65,7 @@
 			socket.close();
 		}
 
-		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.WAITING_ROOM);
+		const webSocketUrl = webSocketUrls.WAITING_ROOM;
 		socket = new WebSocket(webSocketUrl);
 
 		socket.onopen = (message) => {

@@ -23,7 +23,7 @@
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
 	import Markdown from "@/components/typography/markdown.svelte";
-	import { apiUrls, buildApiUrl } from "@/config/api";
+	import { apiUrls } from "@/config/api";
 	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
@@ -53,7 +53,7 @@
 	let testResults: Record<number, CodeExecutionResponse> = $state({});
 
 	async function executeCode(itemInList: number, testInput: string, testOutput: string) {
-		const response = await fetch(buildApiUrl(apiUrls.EXECUTE_CODE), {
+		const response = await fetch(apiUrls.EXECUTE_CODE, {
 			body: JSON.stringify({
 				code,
 				language,
@@ -157,7 +157,7 @@
 			userId: $authenticatedUserInfo.userId
 		};
 
-		const response = await fetch(buildApiUrl(apiUrls.SUBMIT_CODE), {
+		const response = await fetch(apiUrls.SUBMIT_CODE, {
 			body: JSON.stringify(submissionParams),
 			method: httpRequestMethod.POST
 		});

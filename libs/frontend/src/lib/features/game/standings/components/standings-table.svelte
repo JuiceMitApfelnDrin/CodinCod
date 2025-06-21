@@ -11,7 +11,7 @@
 	import duration from "dayjs/plugin/duration";
 	import minMax from "dayjs/plugin/minMax";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
-	import { apiUrls, buildApiUrl } from "@/config/api";
+	import { apiUrls } from "@/config/api";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "@lucide/svelte";
@@ -38,7 +38,7 @@
 	let hasBeenOpened: Record<string, boolean> = $state({});
 
 	async function fetchCode(id: string) {
-		const url = buildApiUrl(apiUrls.SUBMISSION_BY_ID, { id });
+		const url = apiUrls.submissionById(id);
 
 		return await fetchWithAuthenticationCookie(url).then((res) => res.json());
 	}

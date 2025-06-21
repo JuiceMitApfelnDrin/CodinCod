@@ -4,6 +4,6 @@ import { backendUrls } from "types";
 
 export async function getUserActivityByUsername(username: string) {
 	return fetchWithAuthenticationCookie(
-		buildBackendUrl(backendUrls.USER_BY_USERNAME_ACTIVITY, { username })
+		buildBackendUrl(backendUrls.userByUsernameActivity(username))
 	);
 }

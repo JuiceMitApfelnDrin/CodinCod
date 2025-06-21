@@ -24,7 +24,7 @@
 		Trash
 	} from "@lucide/svelte";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
-	import { apiUrls, buildApiUrl } from "@/config/api";
+	import { apiUrls } from "@/config/api";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
 	import { testIds } from "@/config/test-ids";
@@ -39,13 +39,10 @@
 	let isReplying: boolean = $state(false);
 
 	async function handleVote(commentVoteRequest: CommentVoteRequest) {
-		const response = await fetchWithAuthenticationCookie(
-			buildApiUrl(apiUrls.COMMENT_BY_ID_VOTE, { id: comment._id }),
-			{
-				body: JSON.stringify(commentVoteRequest),
-				method: httpRequestMethod.POST
-			}
-		);
+		const response = await fetchWithAuthenticationCookie(apiUrls.commentByIdVote(comment._id), {
+			body: JSON.stringify(commentVoteRequest),
+			method: httpRequestMethod.POST
+		});
 
 		const updatedComment = await response.json();
 
@@ -65,12 +62,9 @@
 	}
 
 	async function fetchReplies() {
-		const response = await fetchWithAuthenticationCookie(
-			buildApiUrl(apiUrls.COMMENT_BY_ID, { id: comment._id }),
-			{
-				method: httpRequestMethod.GET
-			}
-		);
+		const response = await fetchWithAuthenticationCookie(apiUrls.commentById(comment._id), {
+			method: httpRequestMethod.GET
+		});
 
 		const updatedCommentInfoWithSubComments = await response.json();
 
@@ -87,7 +81,7 @@
 	}
 
 	async function deleteComment() {
-		await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.COMMENT_BY_ID, { id: comment._id }), {
+		await fetchWithAuthenticationCookie(apiUrls.commentById(comment._id), {
 			method: httpRequestMethod.DELETE
 		});
 

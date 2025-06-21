@@ -17,9 +17,7 @@ export async function handleDeletePuzzleForm({ request }: RequestEvent) {
 
 	// Prepare the url
 	const id = deletePuzzleForm.data.id;
-	const deletePuzzleUrl = buildBackendUrl(backendUrls.PUZZLE_DETAIL, {
-		id: id
-	});
+	const deletePuzzleUrl = buildBackendUrl(backendUrls.puzzleById(id));
 
 	// Update puzzle data to backend
 	const response = await fetchWithAuthenticationCookie(deletePuzzleUrl, {

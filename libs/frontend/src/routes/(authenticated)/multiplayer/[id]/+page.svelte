@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import DisplayError from "@/components/error/display-error.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
 	import H2 from "@/components/typography/h2.svelte";
@@ -11,8 +11,7 @@
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
-	import { apiUrls, buildApiUrl } from "@/config/api";
-	import { buildWebSocketBackendUrl } from "@/config/backend";
+	import { apiUrls } from "@/config/api";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
@@ -49,7 +48,7 @@
 		return players.some((player) => getUserIdFromUser(player) === userId);
 	}
 
-	const gameId = $page.params.id;
+	const gameId = page.params.id;
 
 	let isGameOver = $state(false);
 
@@ -64,7 +63,7 @@
 			socket.close();
 		}
 
-		const webSocketUrl = buildWebSocketBackendUrl(webSocketUrls.GAME, { id: $page.params.id });
+		const webSocketUrl = webSocketUrls.gameById(page.params.id);
 		socket = new WebSocket(webSocketUrl);
 
 		socket.addEventListener("open", (message) => {
@@ -193,7 +192,7 @@
 				userId: $authenticatedUserInfo.userId
 			};
 
-			await fetchWithAuthenticationCookie(buildApiUrl(apiUrls.SUBMIT_GAME), {
+			await fetchWithAuthenticationCookie(apiUrls.SUBMIT_GAME, {
 				body: JSON.stringify(gameSubmissionParams),
 				method: httpRequestMethod.POST
 			});

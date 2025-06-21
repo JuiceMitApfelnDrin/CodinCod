@@ -7,25 +7,15 @@ import {
 import { buildBackendUrl } from "@/config/backend";
 
 export async function GET({ params, request }: RequestEvent) {
-	return await fetchWithAuthenticationCookie(
-		buildBackendUrl(backendUrls.COMMENT_BY_ID, {
-			id: params.id
-		}),
-		{
-			headers: getCookieHeader(request),
-			method: httpRequestMethod.GET
-		}
-	);
+	return await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.commentById(params.id)), {
+		headers: getCookieHeader(request),
+		method: httpRequestMethod.GET
+	});
 }
 
 export async function DELETE({ params, request }: RequestEvent) {
-	return await fetchWithAuthenticationCookie(
-		buildBackendUrl(backendUrls.COMMENT_BY_ID, {
-			id: params.id
-		}),
-		{
-			headers: getCookieHeader(request),
-			method: httpRequestMethod.DELETE
-		}
-	);
+	return await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.commentById(params.id)), {
+		headers: getCookieHeader(request),
+		method: httpRequestMethod.DELETE
+	});
 }
