@@ -85,7 +85,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 						.send({ error: "Puzzle not found" });
 				}
 
-				const user = await User.findById(userId)
+				const user = await User.findById(userId);
 
 				if (!isAuthor(puzzle.author.toString(), userId) || !isModerator(user?.roles)) {
 					return reply
