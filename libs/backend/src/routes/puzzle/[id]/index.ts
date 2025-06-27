@@ -10,12 +10,14 @@ import {
 	httpResponseCodes,
 	PuzzleVisibility,
 	isPuzzleDto,
-	PUZZLE_CONFIG
+	PUZZLE_CONFIG,
+	isModerator
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import { ParamsId } from "@/types/types.js";
 import { checkAllValidators } from "@/utils/functions/check-all-validators.js";
+import User from "@/models/user/user.js";
 
 export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
@@ -83,8 +85,9 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 						.send({ error: "Puzzle not found" });
 				}
 
-				// TODO: eventually make it so contributors / moderators can adjust puzzles
-				if (!isAuthor(puzzle.author.toString(), userId)) {
+				const user = await User.findById(userId)
+
+				if (!isAuthor(puzzle.author.toString(), userId) || !isModerator(user?.roles)) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "Not authorized to edit this puzzle" });

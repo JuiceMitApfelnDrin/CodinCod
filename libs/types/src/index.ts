@@ -120,6 +120,7 @@ export * from "./core/submission/schema/submission-dto.schema.js";
 export * from "./core/submission/schema/submission-entity.schema.js";
 
 // user
+export * from "./core/user/enum/user-role.js";
 export * from "./core/user/schema/user-activity.schema.js";
 export * from "./core/user/schema/user-dto.schema.js";
 export * from "./core/user/schema/user-entity.schema.js";
