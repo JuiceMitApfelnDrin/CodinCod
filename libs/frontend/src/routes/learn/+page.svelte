@@ -29,21 +29,22 @@
 
 	<LogicalUnit>
 		<P>
-			This will eventually show a bunch of resources, that are free and open-source, that people can
-			use to learn new different languages at their own pace and time, and look through resources
-			related to code golfing, ...
+			This will eventually show a bunch of resources, that are free and
+			open-source, that people can use to learn new different languages at their
+			own pace and time, and look through resources related to code golfing, ...
 		</P>
 		<P>
-			There should be a general language learning path with the basics e.g.: "if-else" ..., as well
-			as language specific paths.
+			There should be a general language learning path with the basics e.g.:
+			"if-else" ..., as well as language specific paths.
 		</P>
 		<P>
-			Ideally, there are several levels of understanding, one that just says enough to get going
-			with X (explained in a very rudimentary way, so anyone can understand), then another that goes
-			a more in depth on how X works ...
+			Ideally, there are several levels of understanding, one that just says
+			enough to get going with X (explained in a very rudimentary way, so anyone
+			can understand), then another that goes a more in depth on how X works ...
 			<br />
-			So basically 3 levels, that expect a user to have a different understanding of the language, and
-			each tailored to how much the person would like to know and understand.
+			So basically 3 levels, that expect a user to have a different understanding
+			of the language, and each tailored to how much the person would like to know
+			and understand.
 		</P>
 
 		{#if slugs}

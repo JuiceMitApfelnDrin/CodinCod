@@ -1,10 +1,20 @@
 import { FastifyInstance } from "fastify";
-import { ErrorResponse, httpResponseCodes, isAuthenticatedInfo, isAuthor, isUserDto } from "types";
+import {
+	ErrorResponse,
+	httpResponseCodes,
+	isAuthenticatedInfo,
+	isAuthor,
+	isModerator,
+	isUserDto
+} from "types";
 import { ParamsId } from "@/types/types.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import User from "@/models/user/user.js";
 
-export default async function puzzleByIdSolutionRoutes(fastify: FastifyInstance) {
+export default async function puzzleByIdSolutionRoutes(
+	fastify: FastifyInstance
+) {
 	fastify.get<ParamsId>(
 		"/",
 		{
@@ -21,11 +31,17 @@ export default async function puzzleByIdSolutionRoutes(fastify: FastifyInstance)
 					message: "You need to be logged in."
 				};
 
-				return reply.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED).send(errorResponse);
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
+					.send(errorResponse);
 			}
 
+			const userId = user.userId;
+
 			try {
-				const puzzle = await Puzzle.findById(id).select("+solution").populate("author");
+				const puzzle = await Puzzle.findById(id)
+					.select("+solution")
+					.populate("author");
 
 				if (!puzzle) {
 					return reply
@@ -33,8 +49,14 @@ export default async function puzzleByIdSolutionRoutes(fastify: FastifyInstance)
 						.send({ error: "Puzzle not found" });
 				}
 
-				// TODO: eventually make it so contributors / moderators can adjust puzzles
-				if (isUserDto(puzzle.author) && !isAuthor(puzzle.author._id.toString(), user.userId)) {
+				const user = await User.findById(userId);
+
+				const hasRequiredPermissions =
+					(isUserDto(puzzle.author) &&
+						!isAuthor(puzzle.author._id.toString(), userId)) ||
+					!isModerator(user?.roles);
+
+				if (hasRequiredPermissions) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "Not authorized to edit this puzzle" });

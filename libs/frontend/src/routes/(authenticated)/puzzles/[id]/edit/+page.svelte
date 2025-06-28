@@ -16,7 +16,9 @@
 	const puzzleAuthorId = getUserIdFromUser(puzzle.author);
 
 	let isPuzzleAuthor = $derived(
-		$authenticatedUserInfo ? isAuthor(puzzleAuthorId, $authenticatedUserInfo.userId) : false
+		$authenticatedUserInfo
+			? isAuthor(puzzleAuthorId, $authenticatedUserInfo.userId)
+			: false
 	);
 </script>
 
@@ -35,7 +37,9 @@
 
 {#if isPuzzleAuthor}
 	<Container>
-		<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
+		<LogicalUnit
+			class="flex flex-col md:flex-row md:items-center md:justify-between"
+		>
 			<PuzzleMetaInfo {puzzle} />
 
 			<DeletePuzzleConfirmationDialog data={deletePuzzleFormData} />

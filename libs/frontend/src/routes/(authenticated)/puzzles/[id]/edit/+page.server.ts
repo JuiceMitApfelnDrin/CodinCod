@@ -28,7 +28,10 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 	const puzzle: EditPuzzle = await response.json();
 
 	const validate = await superValidate(puzzle, zod(editPuzzleSchema));
-	const validateDeletePuzzle = await superValidate({ id }, zod(deletePuzzleSchema));
+	const validateDeletePuzzle = await superValidate(
+		{ id },
+		zod(deletePuzzleSchema)
+	);
 
 	return {
 		deletePuzzle: validateDeletePuzzle,

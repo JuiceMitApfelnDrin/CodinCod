@@ -9,7 +9,9 @@ export function debounce<T extends (...args: any[]) => any>(
 	delay: number
 ): DebouncedFunction<T> {
 	let timer: ReturnType<typeof setTimeout> | undefined;
-	let resolveList: Array<(value: ReturnType<T> | PromiseLike<ReturnType<T>>) => void> = [];
+	let resolveList: Array<
+		(value: ReturnType<T> | PromiseLike<ReturnType<T>>) => void
+	> = [];
 
 	return (...args: Parameters<T>): Promise<ReturnType<T>> => {
 		if (timer) {

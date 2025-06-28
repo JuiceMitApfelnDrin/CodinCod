@@ -65,7 +65,11 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 
 			// Fetch puzzles from the database with pagination
 			const [puzzles, total] = await Promise.all([
-				Puzzle.find().populate("author").skip(offsetSkip).limit(pageSize).exec(),
+				Puzzle.find()
+					.populate("author")
+					.skip(offsetSkip)
+					.limit(pageSize)
+					.exec(),
 				Puzzle.countDocuments()
 			]);
 

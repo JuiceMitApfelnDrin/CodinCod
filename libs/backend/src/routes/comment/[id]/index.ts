@@ -72,7 +72,9 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 
 				await comment.deleteOne();
 
-				return reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send(comment);
+				return reply
+					.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT)
+					.send(comment);
 			} catch (error) {
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)

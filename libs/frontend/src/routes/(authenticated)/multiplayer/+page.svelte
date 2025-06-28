@@ -79,7 +79,11 @@
 		};
 
 		socket.onclose = (message) => {
-			console.info("WebSocket connection closed:", message.code, message.reason);
+			console.info(
+				"WebSocket connection closed:",
+				message.code,
+				message.reason
+			);
 
 			setTimeout(function () {
 				connectWithWebsocket();
@@ -139,7 +143,10 @@
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
 
-	export function sendWaitingRoomMessage(socket: WebSocket, data: WaitingRoomRequest) {
+	export function sendWaitingRoomMessage(
+		socket: WebSocket,
+		data: WaitingRoomRequest
+	) {
 		sendMessageOfType<WaitingRoomRequest>(socket, data);
 	}
 </script>
@@ -162,7 +169,9 @@
 	</Container>
 {:else}
 	<Container>
-		<LogicalUnit class="flex flex-col md:flex-row md:items-center md:justify-between">
+		<LogicalUnit
+			class="flex flex-col md:flex-row md:items-center md:justify-between"
+		>
 			<H1>Multiplayer</H1>
 
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
@@ -265,8 +274,8 @@
 			</ul>
 		{:else}
 			<p>
-				No rooms are being hosted by other players. You can host one yourself by clicking on the
-				"host room" button.
+				No rooms are being hosted by other players. You can host one yourself by
+				clicking on the "host room" button.
 			</p>
 		{/if}
 	</Container>

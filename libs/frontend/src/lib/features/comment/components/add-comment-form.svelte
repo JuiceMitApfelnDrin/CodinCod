@@ -38,16 +38,22 @@
 
 		switch (commentType) {
 			case commentTypeEnum.PUZZLE:
-				response = await fetchWithAuthenticationCookie(apiUrls.puzzleByIdComment(replyOnId), {
-					body: JSON.stringify(createComment),
-					method: httpRequestMethod.POST
-				});
+				response = await fetchWithAuthenticationCookie(
+					apiUrls.puzzleByIdComment(replyOnId),
+					{
+						body: JSON.stringify(createComment),
+						method: httpRequestMethod.POST
+					}
+				);
 				break;
 			case commentTypeEnum.COMMENT:
-				response = await fetchWithAuthenticationCookie(apiUrls.puzzleByIdComment(replyOnId), {
-					body: JSON.stringify(createComment),
-					method: httpRequestMethod.POST
-				});
+				response = await fetchWithAuthenticationCookie(
+					apiUrls.puzzleByIdComment(replyOnId),
+					{
+						body: JSON.stringify(createComment),
+						method: httpRequestMethod.POST
+					}
+				);
 				break;
 			default:
 				return;

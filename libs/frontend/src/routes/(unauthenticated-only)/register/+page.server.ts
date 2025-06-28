@@ -2,7 +2,13 @@ import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
-import { backendUrls, frontendUrls, httpResponseCodes, POST, registerSchema } from "types";
+import {
+	backendUrls,
+	frontendUrls,
+	httpResponseCodes,
+	POST,
+	registerSchema
+} from "types";
 import { setCookie } from "@/features/authentication/utils/set-cookie";
 import type { RequestEvent } from "./$types.js";
 
@@ -17,7 +23,10 @@ export const actions = {
 		const form = await superValidate(request, zod(registerSchema));
 
 		if (!form.valid) {
-			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, { form, message: "Form errors" });
+			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
+				form,
+				message: "Form errors"
+			});
 		}
 
 		const result = await fetch(buildBackendUrl(backendUrls.REGISTER), {
@@ -33,7 +42,10 @@ export const actions = {
 		if (!result.ok) {
 			const message: string = data.message;
 
-			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, { form, message });
+			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
+				form,
+				message
+			});
 		}
 
 		setCookie(result, cookies);

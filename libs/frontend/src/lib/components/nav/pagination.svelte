@@ -20,7 +20,9 @@
 </script>
 
 {#if totalPages > DEFAULT_PAGE}
-	<nav class="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-8">
+	<nav
+		class="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-8"
+	>
 		<div class="flex flex-1 justify-end gap-2">
 			{#if currentPage === DEFAULT_PAGE}
 				<Button

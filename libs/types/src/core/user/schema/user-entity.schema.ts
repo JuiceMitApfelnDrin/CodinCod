@@ -3,6 +3,7 @@ import { USERNAME_CONFIG } from "../../authentication/config/username-config.js"
 import { PASSWORD_CONFIG } from "../../authentication/config/password-config.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { userProfileSchema } from "./user-profile.schema.js";
+import { DEFAULT_USER_ROLES, userRoleSchema } from "../enum/user-role.js";
 
 export const userEntitySchema = z.object({
 	username: z
@@ -29,5 +30,6 @@ export const userEntitySchema = z.object({
 	profile: userProfileSchema.optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
+	roles: z.array(userRoleSchema).default(DEFAULT_USER_ROLES),
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;

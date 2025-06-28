@@ -58,7 +58,9 @@
 			class={cn(
 				"countdown flex flex-row text-2xl font-bold",
 				!showMinutes && "text-red-600 dark:text-red-400",
-				!showHours && timeRemaining.minutes == 1 && "text-yellow-600 dark:text-yellow-400"
+				!showHours &&
+					timeRemaining.minutes == 1 &&
+					"text-yellow-600 dark:text-yellow-400"
 			)}
 		>
 			{#if showDays}

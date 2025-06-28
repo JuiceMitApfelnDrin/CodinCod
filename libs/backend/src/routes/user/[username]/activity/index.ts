@@ -4,9 +4,14 @@ import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
 import { httpResponseCodes, isUsername, puzzleVisibilityEnum } from "types";
 import { ParamsUsername } from "../types.js";
-import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
+import {
+	genericReturnMessages,
+	userProperties
+} from "@/config/generic-return-messages.js";
 
-export default async function userByUsernameActivityRoutes(fastify: FastifyInstance) {
+export default async function userByUsernameActivityRoutes(
+	fastify: FastifyInstance
+) {
 	fastify.get<ParamsUsername>("/", async (request, reply) => {
 		const { username } = request.params;
 
@@ -33,7 +38,10 @@ export default async function userByUsernameActivityRoutes(fastify: FastifyInsta
 
 			const [puzzlesByUser, submissionsByUser] = await Promise.all([
 				// TODO: add other puzzle visibility states as well?
-				Puzzle.find({ author: userId, visibility: puzzleVisibilityEnum.APPROVED }),
+				Puzzle.find({
+					author: userId,
+					visibility: puzzleVisibilityEnum.APPROVED
+				}),
 				Submission.find({ user: userId })
 			]);
 

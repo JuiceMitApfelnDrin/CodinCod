@@ -29,7 +29,9 @@
 
 		let url = apiUrls.userByUsername(username);
 
-		const response = await fetchWithAuthenticationCookie(url).then((res) => res.json());
+		const response = await fetchWithAuthenticationCookie(url).then((res) =>
+			res.json()
+		);
 
 		userInfoCache[username] = response;
 

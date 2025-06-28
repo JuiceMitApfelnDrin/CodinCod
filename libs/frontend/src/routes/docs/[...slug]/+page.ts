@@ -11,7 +11,9 @@ export async function load({ params }: LoadEvent) {
 	}
 
 	for (const [path, resolver] of Object.entries(modules)) {
-		const slugFromPath = path.replace("/src/lib/docs/", "").replace(/\.md$/, "");
+		const slugFromPath = path
+			.replace("/src/lib/docs/", "")
+			.replace(/\.md$/, "");
 
 		if (slugFromPath === slug) {
 			const docsPage = (await resolver?.()) as {

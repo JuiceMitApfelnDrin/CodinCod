@@ -14,7 +14,14 @@
 	import { apiUrls } from "@/config/api";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
-	import { Code, CodeXml, FishIcon, FishOffIcon, Hash, Hourglass } from "@lucide/svelte";
+	import {
+		Code,
+		CodeXml,
+		FishIcon,
+		FishOffIcon,
+		Hash,
+		Hourglass
+	} from "@lucide/svelte";
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
@@ -28,7 +35,9 @@
 
 	let { game = $bindable() }: Props = $props();
 	let submissions: SubmissionDto[] = $derived(
-		game.playerSubmissions.filter((submission) => isSubmissionDto(submission)) ?? []
+		game.playerSubmissions.filter((submission) =>
+			isSubmissionDto(submission)
+		) ?? []
 	);
 
 	// used to check whether a solution is being viewed
@@ -60,13 +69,15 @@
 		<Table.Header>
 			<Table.Row>
 				<Table.Head class="w-0"
-					><Hash aria-hidden="true" /><span class="sr-only">Rank</span></Table.Head
+					><Hash aria-hidden="true" /><span class="sr-only">Rank</span
+					></Table.Head
 				>
 				<Table.Head>User</Table.Head>
 				<Table.Head>Language</Table.Head>
 				<Table.Head>Score</Table.Head>
 				<Table.Head>Time</Table.Head>
-				<Table.Head class="w-0"><span class="sr-only">Actions</span></Table.Head>
+				<Table.Head class="w-0"><span class="sr-only">Actions</span></Table.Head
+				>
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
@@ -81,12 +92,18 @@
 								{#if result.successRate === 1}
 									<FishIcon
 										aria-hidden="true"
-										class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
+										class={cn(
+											"icon mr-1",
+											calculatePuzzleResultIconColor(result.result)
+										)}
 									/>
 								{:else}
 									<FishOffIcon
 										aria-hidden="true"
-										class={cn("icon mr-1", calculatePuzzleResultIconColor(result.result))}
+										class={cn(
+											"icon mr-1",
+											calculatePuzzleResultIconColor(result.result)
+										)}
 									/>
 								{/if}{Math.round(result.successRate * 100)}%
 							</span>

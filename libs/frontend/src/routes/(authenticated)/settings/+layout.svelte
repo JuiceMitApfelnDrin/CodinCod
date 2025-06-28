@@ -4,7 +4,14 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 
-	import { Bell, MessageCircle, Paintbrush2, Settings, Settings2, User } from "@lucide/svelte";
+	import {
+		Bell,
+		MessageCircle,
+		Paintbrush2,
+		Settings,
+		Settings2,
+		User
+	} from "@lucide/svelte";
 	import type { Snippet } from "svelte";
 	import { frontendUrls } from "types";
 
@@ -17,7 +24,11 @@
 
 <Container class="flex md:flex-row">
 	<SideNavigation>
-		<SideNavigationItem href={frontendUrls.SETTINGS_PROFILE} icon={User} text="Edit profile" />
+		<SideNavigationItem
+			href={frontendUrls.SETTINGS_PROFILE}
+			icon={User}
+			text="Edit profile"
+		/>
 		<SideNavigationItem
 			href={frontendUrls.SETTINGS_PREFERENCES}
 			icon={Settings2}
@@ -38,7 +49,11 @@
 			icon={Bell}
 			text="Notifications"
 		/>
-		<SideNavigationItem href={frontendUrls.SETTINGS_ACCOUNT} icon={Settings} text="Account" />
+		<SideNavigationItem
+			href={frontendUrls.SETTINGS_ACCOUNT}
+			icon={Settings}
+			text="Account"
+		/>
 	</SideNavigation>
 
 	<LogicalUnit>

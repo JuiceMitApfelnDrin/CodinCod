@@ -10,7 +10,11 @@
 		openTestsAccordion: () => void;
 	}
 
-	let { class: className = undefined, openTestsAccordion, puzzleResults }: Props = $props();
+	let {
+		class: className = undefined,
+		openTestsAccordion,
+		puzzleResults
+	}: Props = $props();
 </script>
 
 {#if puzzleResults}

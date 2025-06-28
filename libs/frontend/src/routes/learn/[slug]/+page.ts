@@ -11,7 +11,9 @@ export async function load({ params }: LoadEvent) {
 	}
 
 	for (const [path, resolver] of Object.entries(modules)) {
-		const slugFromPath = path.replace("/src/content/learn/", "").replace("/README.md", "");
+		const slugFromPath = path
+			.replace("/src/content/learn/", "")
+			.replace("/README.md", "");
 
 		if (slugFromPath === slug) {
 			const learnPage = (await resolver?.()) as {

@@ -39,11 +39,14 @@
 				<Card.Root class="w-full">
 					<Card.Header>
 						<H1>Register</H1>
-						<Card.Description>Join CodinCod, the adventure awaits!</Card.Description>
+						<Card.Description
+							>Join CodinCod, the adventure awaits!</Card.Description
+						>
 					</Card.Header>
 
 					<Card.Content>
-						<RegisterForm message={form?.message} data={data.form}></RegisterForm>
+						<RegisterForm message={form?.message} data={data.form}
+						></RegisterForm>
 					</Card.Content>
 				</Card.Root>
 			</Tabs.Content>

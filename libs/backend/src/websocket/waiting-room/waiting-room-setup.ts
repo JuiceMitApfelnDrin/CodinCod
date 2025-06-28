@@ -18,7 +18,11 @@ import Game from "@/models/game/game.js";
 
 const waitingRoom = new WaitingRoom();
 
-export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance) {
+export function waitingRoomSetup(
+	socket: WebSocket,
+	req: FastifyRequest,
+	fastify: FastifyInstance
+) {
 	if (!isAuthenticatedInfo(req.user)) {
 		return;
 	}
@@ -67,7 +71,8 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 				if (randomPuzzles.length < 1) {
 					waitingRoom.updateUser(req.user.username, {
 						event: waitingRoomEventEnum.NOT_ENOUGH_PUZZLES,
-						message: "Create a puzzle and get it approved in order to play multiplayer games"
+						message:
+							"Create a puzzle and get it approved in order to play multiplayer games"
 					});
 					return;
 				}
@@ -105,7 +110,9 @@ export function waitingRoomSetup(socket: WebSocket, req: FastifyRequest, fastify
 					puzzle: randomPuzzleId,
 					createdAt: now,
 					startTime: now,
-					endTime: new Date(now.getTime() + DEFAULT_GAME_LENGTH_IN_MILLISECONDS),
+					endTime: new Date(
+						now.getTime() + DEFAULT_GAME_LENGTH_IN_MILLISECONDS
+					),
 					options: {
 						allowedLanguages: [],
 						maxGameDurationInSeconds: DEFAULT_GAME_LENGTH_IN_MILLISECONDS,

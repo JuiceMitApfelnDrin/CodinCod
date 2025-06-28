@@ -11,5 +11,5 @@
 	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
-<WorkInProgress />, Eventually you'll be able to adjust your profile, update your bio, add links,
-and so much more...
+<WorkInProgress />, Eventually you'll be able to adjust your profile, update
+your bio, add links, and so much more...

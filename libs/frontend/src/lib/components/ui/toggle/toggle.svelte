@@ -15,7 +15,8 @@
 			},
 			variant: {
 				default: "bg-transparent",
-				outline: "border-input hover:bg-accent hover:text-accent-foreground border bg-transparent"
+				outline:
+					"border-input hover:bg-accent hover:text-accent-foreground border bg-transparent"
 			}
 		}
 	});

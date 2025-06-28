@@ -30,20 +30,28 @@ describe("Execute Endpoint", () => {
 	const tests = [
 		{
 			name: 'execute with "unknown" language',
-			payload: { code: "print('hi')", language: "unknown", testInput: "", testOutput: "hi" },
+			payload: {
+				code: "print('hi')",
+				language: "unknown",
+				testInput: "",
+				testOutput: "hi"
+			},
 			expectedStatus: httpResponseCodes.CLIENT_ERROR.BAD_REQUEST,
 			expectedResponse: executionResponseErrors.UNSUPPORTED_LANGUAGE
 		}
 	];
 
-	it.each(tests)("Test: $name", async ({ payload, expectedStatus, expectedResponse }) => {
-		const response = await app.inject({
-			method: httpRequestMethod.POST,
-			url: backendUrls.EXECUTE,
-			payload
-		});
+	it.each(tests)(
+		"Test: $name",
+		async ({ payload, expectedStatus, expectedResponse }) => {
+			const response = await app.inject({
+				method: httpRequestMethod.POST,
+				url: backendUrls.EXECUTE,
+				payload
+			});
 
-		expect(response.statusCode).toBe(expectedStatus);
-		expect(response.json()).toEqual(expectedResponse);
-	});
+			expect(response.statusCode).toBe(expectedStatus);
+			expect(response.json()).toEqual(expectedResponse);
+		}
+	);
 });

@@ -60,8 +60,15 @@ export default [
 			"@typescript-eslint/no-unused-vars": "warn",
 			"no-undef": "warn",
 			"no-unused-vars": "warn",
-			"sort-destructure-keys/sort-destructure-keys": [2, { caseSensitive: true }],
-			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
+			"sort-destructure-keys/sort-destructure-keys": [
+				2,
+				{ caseSensitive: true }
+			],
+			"sort-keys": [
+				"error",
+				"asc",
+				{ caseSensitive: true, minKeys: 2, natural: false }
+			],
 			"sort-keys-fix/sort-keys-fix": "warn",
 			yoda: "error"
 		}

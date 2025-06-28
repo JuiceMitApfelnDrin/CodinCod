@@ -22,14 +22,17 @@ export const actions = {
 
 		const cookie = request.headers.get("cookie") || "";
 
-		const result = await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.PUZZLE), {
-			body: JSON.stringify(form.data),
-			headers: {
-				"Content-Type": "application/json",
-				Cookie: cookie
-			},
-			method: POST
-		});
+		const result = await fetchWithAuthenticationCookie(
+			buildBackendUrl(backendUrls.PUZZLE),
+			{
+				body: JSON.stringify(form.data),
+				headers: {
+					"Content-Type": "application/json",
+					Cookie: cookie
+				},
+				method: POST
+			}
+		);
 
 		const data = await result.json();
 

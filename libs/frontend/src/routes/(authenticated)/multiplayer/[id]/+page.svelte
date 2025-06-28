@@ -44,7 +44,10 @@
 	} from "types";
 	import { testIds } from "@/config/test-ids";
 
-	function isUserIdInUserList(userId: string, players: (UserDto | string)[] = []): boolean {
+	function isUserIdInUserList(
+		userId: string,
+		players: (UserDto | string)[] = []
+	): boolean {
 		return players.some((player) => getUserIdFromUser(player) === userId);
 	}
 
@@ -122,7 +125,8 @@
 					break;
 				case gameEventEnum.CHANGE_LANGUAGE:
 					{
-						playerLanguages[receivedInformation.username] = receivedInformation.language;
+						playerLanguages[receivedInformation.username] =
+							receivedInformation.language;
 					}
 					break;
 				case gameEventEnum.ERROR:
@@ -149,13 +153,18 @@
 		)
 	);
 
-	let endDate: Date | undefined = $derived(game && dayjs(game.endTime).toDate());
+	let endDate: Date | undefined = $derived(
+		game && dayjs(game.endTime).toDate()
+	);
 
 	$effect(() => {
 		const now = $currentTime;
 
 		const gameIsInThePast =
-			endDate && dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(now);
+			endDate &&
+			dayjs(endDate.getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS).isBefore(
+				now
+			);
 
 		const playerHasSubmitted = game?.playerSubmissions.some((submission) => {
 			if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
@@ -177,7 +186,9 @@
 		const playerSubmissions: SubmissionDto[] =
 			game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
 
-		return playerSubmissions?.find((submission) => getUserIdFromUser(submission.user) === playerId);
+		return playerSubmissions?.find(
+			(submission) => getUserIdFromUser(submission.user) === playerId
+		);
 	}
 
 	async function onPlayerSubmitCode(submissionId: string) {
@@ -331,10 +342,17 @@
 	<Container>
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane class="mr-4 flex flex-col gap-4 md:gap-8 lg:gap-12">
-				<PlayPuzzle {puzzle} {onPlayerSubmitCode} {onPlayerChangeLanguage} {endDate} />
+				<PlayPuzzle
+					{puzzle}
+					{onPlayerSubmitCode}
+					{onPlayerChangeLanguage}
+					{endDate}
+				/>
 			</Resizable.Pane>
 			<Resizable.Handle />
-			<Resizable.Pane class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12">
+			<Resizable.Pane
+				class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12"
+			>
 				<H2>Standings - <WorkInProgress /></H2>
 
 				{#if game.players}
@@ -344,7 +362,9 @@
 								{#if isUserDto(player)}
 									{@const playerSubmission = findPlayerSubmission(player._id)}
 									<UserHoverCard username={player.username} />{` - using ${
-										playerSubmission?.language ?? playerLanguages[player.username] ?? "???"
+										playerSubmission?.language ??
+										playerLanguages[player.username] ??
+										"???"
 									} - ${playerSubmission?.result.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
 									{player}

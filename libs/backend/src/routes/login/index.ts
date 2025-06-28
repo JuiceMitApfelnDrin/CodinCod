@@ -17,15 +17,21 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 		try {
 			const user = isEmail(identifier)
 				? await User.findOne({ email: identifier }).select("+password")
-				: await User.findOne({ username: identifier }).select("+password").exec();
+				: await User.findOne({ username: identifier })
+						.select("+password")
+						.exec();
 
 			if (!user) {
-				return reply.status(400).send({ message: "Invalid email/username or password" });
+				return reply
+					.status(400)
+					.send({ message: "Invalid email/username or password" });
 			}
 			const isMatch = await bcrypt.compare(password, user.password);
 
 			if (!isMatch) {
-				return reply.status(400).send({ message: "Invalid email/username or password" });
+				return reply
+					.status(400)
+					.send({ message: "Invalid email/username or password" });
 			}
 
 			const authenticatedUserInfo = {

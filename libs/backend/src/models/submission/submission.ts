@@ -3,7 +3,9 @@ import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
 import { SubmissionEntity } from "types";
 import { resultInfoSchema } from "./result-info.js";
 
-export interface SubmissionDocument extends Document, Omit<SubmissionEntity, "puzzle" | "user"> {
+export interface SubmissionDocument
+	extends Document,
+		Omit<SubmissionEntity, "puzzle" | "user"> {
 	puzzle: ObjectId;
 	user: ObjectId;
 }
@@ -42,5 +44,8 @@ const submissionSchema = new Schema<SubmissionDocument>({
 	}
 });
 
-const Submission = mongoose.model<SubmissionDocument>(SUBMISSION, submissionSchema);
+const Submission = mongoose.model<SubmissionDocument>(
+	SUBMISSION,
+	submissionSchema
+);
 export default Submission;

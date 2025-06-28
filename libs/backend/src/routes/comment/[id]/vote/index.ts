@@ -47,7 +47,10 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 				}
 
 				// Check if user already voted on this comment
-				let existingVote = await UserVote.findOne({ votedOn: commentId, author: userId });
+				let existingVote = await UserVote.findOne({
+					votedOn: commentId,
+					author: userId
+				});
 
 				// Handle vote toggle/update
 				if (existingVote && existingVote.type === type) {

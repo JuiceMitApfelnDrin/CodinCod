@@ -3,7 +3,11 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import { frontendUrls, type PaginatedQueryResponse, type PuzzleDto } from "types";
+	import {
+		frontendUrls,
+		type PaginatedQueryResponse,
+		type PuzzleDto
+	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
@@ -20,7 +24,9 @@
 
 	let myPuzzlesUrl: string | undefined = $derived(
 		$authenticatedUserInfo?.isAuthenticated
-			? frontendUrls.userProfileByUsernamePuzzles($authenticatedUserInfo.username)
+			? frontendUrls.userProfileByUsernamePuzzles(
+					$authenticatedUserInfo.username
+				)
 			: undefined
 	);
 </script>
@@ -36,7 +42,9 @@
 </svelte:head>
 
 <Container>
-	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+	<LogicalUnit
+		class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+	>
 		<H1>Puzzles</H1>
 
 		<LogicalUnit class="flex flex-row gap-2">
@@ -59,7 +67,9 @@
 	<!-- <Input placeholder="Search through puzzles" /> -->
 	<LogicalUnit class="flex flex-col gap-8">
 		{#if totalItems <= 0}
-			<p data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}>Couldn't find any puzzles!</p>
+			<p data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}>
+				Couldn't find any puzzles!
+			</p>
 		{:else}
 			<div class="rounded-lg border">
 				<Table.Root>

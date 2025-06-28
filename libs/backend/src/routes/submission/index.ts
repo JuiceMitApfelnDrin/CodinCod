@@ -47,7 +47,9 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			if (!arePistonRuntimes(runtimes)) {
 				const error: ErrorResponse = runtimes;
 
-				return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
+					.send(error);
 			}
 
 			const runtimeInfo = findRuntime(runtimes, language);
@@ -62,7 +64,8 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			if (!puzzle.validators) {
 				return reply.send({
 					// TODO: improve this text
-					error: "This puzzle isn't finished, it should have test cases / validators"
+					error:
+						"This puzzle isn't finished, it should have test cases / validators"
 				});
 			}
 
@@ -106,7 +109,9 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 				fastify.log.error("Error saving submission:", error);
 
 				if (isValidationError(error)) {
-					return reply.status(400).send({ error: "Validation failed", details: error.errors });
+					return reply
+						.status(400)
+						.send({ error: "Validation failed", details: error.errors });
 				}
 
 				return reply.status(500).send({ error: "Failed to create submission" });

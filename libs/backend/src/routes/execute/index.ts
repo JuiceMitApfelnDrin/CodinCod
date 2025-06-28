@@ -45,14 +45,19 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 			if (!arePistonRuntimes(runtimes)) {
 				const error: ErrorResponse = runtimes;
 
-				return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
+					.send(error);
 			}
 
 			const runtimeInfo = findRuntime(runtimes, language);
 
 			if (!runtimeInfo) {
-				const error: ErrorResponse = executionResponseErrors.UNSUPPORTED_LANGUAGE;
-				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send(error);
+				const error: ErrorResponse =
+					executionResponseErrors.UNSUPPORTED_LANGUAGE;
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+					.send(error);
 			}
 
 			const requestObject: PistonExecutionRequest = {
@@ -75,12 +80,18 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 				);
 
 				if (isFetchError(err) && err.cause?.code === "ECONNREFUSED") {
-					const error: ErrorResponse = executionResponseErrors.SERVICE_UNAVAILABLE;
-					return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
+					const error: ErrorResponse =
+						executionResponseErrors.SERVICE_UNAVAILABLE;
+					return reply
+						.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
+						.send(error);
 				}
 
-				const error: ErrorResponse = executionResponseErrors.INTERNAL_SERVER_ERROR;
-				return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(error);
+				const error: ErrorResponse =
+					executionResponseErrors.INTERNAL_SERVER_ERROR;
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send(error);
 			}
 
 			if (!isPistonExecutionResponseSuccess(executionRes)) {
@@ -89,7 +100,9 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 					message: executionRes.message
 				};
 
-				return reply.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR).send(error);
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send(error);
 			}
 
 			let run = executionRes.run;
@@ -101,7 +114,9 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 				puzzleResultInformation: calculateResults([testOutput], [executionRes])
 			};
 
-			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(codeExecutionResponse);
+			return reply
+				.status(httpResponseCodes.SUCCESSFUL.OK)
+				.send(codeExecutionResponse);
 		}
 	);
 }

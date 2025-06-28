@@ -8,7 +8,9 @@ import type { RequestEvent } from "./$types";
 
 export async function GET({ params, request, url }: RequestEvent) {
 	const username = params.username;
-	const userPuzzlesByUsernameUrl = buildBackendUrl(backendUrls.userByUsernamePuzzle(username));
+	const userPuzzlesByUsernameUrl = buildBackendUrl(
+		backendUrls.userByUsernamePuzzle(username)
+	);
 
 	return fetchWithAuthenticationCookie(userPuzzlesByUsernameUrl + url.search, {
 		headers: getCookieHeader(request),

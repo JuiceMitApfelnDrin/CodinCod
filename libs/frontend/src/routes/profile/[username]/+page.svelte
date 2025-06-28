@@ -9,7 +9,12 @@
 	import ActivityGroup from "@/features/profile/components/activity-group.svelte";
 	import ActivityHeatmap from "@/features/profile/components/activity-heatmap.svelte";
 	import dayjs from "dayjs";
-	import { frontendUrls, isUserDto, type Activity, type GroupedActivitiesByDate } from "types";
+	import {
+		frontendUrls,
+		isUserDto,
+		type Activity,
+		type GroupedActivitiesByDate
+	} from "types";
 
 	function groupByCreatedAtDate(items: Activity[]) {
 		return items.reduce<GroupedActivitiesByDate>((acc, item) => {
@@ -30,7 +35,8 @@
 
 	const { puzzles, submissions, user } = data;
 	const originalActivities: Activity[] = [...submissions, ...puzzles, user];
-	const activitiesGroupedByCreatedAtDate = groupByCreatedAtDate(originalActivities);
+	const activitiesGroupedByCreatedAtDate =
+		groupByCreatedAtDate(originalActivities);
 </script>
 
 <svelte:head>

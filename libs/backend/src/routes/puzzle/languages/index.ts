@@ -1,5 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { arePistonRuntimes, ErrorResponse, httpResponseCodes, PuzzleLanguage } from "types";
+import {
+	arePistonRuntimes,
+	ErrorResponse,
+	httpResponseCodes,
+	PuzzleLanguage
+} from "types";
 
 export default async function puzzleLanguagesRoutes(fastify: FastifyInstance) {
 	fastify.get("/", async (_, reply) => {
@@ -9,7 +14,9 @@ export default async function puzzleLanguagesRoutes(fastify: FastifyInstance) {
 			if (!arePistonRuntimes(runtimes)) {
 				const error: ErrorResponse = runtimes;
 
-				return reply.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE).send(error);
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
+					.send(error);
 			}
 
 			const languages: PuzzleLanguage[] = runtimes.map((runtime) => {

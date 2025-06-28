@@ -3,10 +3,19 @@ import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/f
 import { redirect, type RequestEvent } from "@sveltejs/kit";
 import { fail, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { backendUrls, DELETE, deletePuzzleSchema, frontendUrls, httpResponseCodes } from "types";
+import {
+	backendUrls,
+	DELETE,
+	deletePuzzleSchema,
+	frontendUrls,
+	httpResponseCodes
+} from "types";
 
 export async function handleDeletePuzzleForm({ request }: RequestEvent) {
-	const deletePuzzleForm = await superValidate(request, zod(deletePuzzleSchema));
+	const deletePuzzleForm = await superValidate(
+		request,
+		zod(deletePuzzleSchema)
+	);
 
 	if (!deletePuzzleForm.valid) {
 		// Again, return { form } and things will just work.
@@ -29,7 +38,10 @@ export async function handleDeletePuzzleForm({ request }: RequestEvent) {
 	});
 
 	if (!response.ok) {
-		fail(response.status, { deletePuzzleForm, error: "Failed to delete the puzzle." });
+		fail(response.status, {
+			deletePuzzleForm,
+			error: "Failed to delete the puzzle."
+		});
 	}
 
 	if (response.ok) {
@@ -37,5 +49,9 @@ export async function handleDeletePuzzleForm({ request }: RequestEvent) {
 	}
 
 	// Display a success status message
-	return { deletePuzzleForm, message: "Puzzle deleted successfully!", success: true };
+	return {
+		deletePuzzleForm,
+		message: "Puzzle deleted successfully!",
+		success: true
+	};
 }

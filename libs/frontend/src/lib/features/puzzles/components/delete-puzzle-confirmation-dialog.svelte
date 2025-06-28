@@ -37,15 +37,16 @@
 						{/snippet}
 					</Form.Control>
 					<Form.Description>
-						This action cannot be undone. This will permanently delete your puzzle and remove this
-						puzzle from our servers.
+						This action cannot be undone. This will permanently delete your
+						puzzle and remove this puzzle from our servers.
 					</Form.Description>
 					<Form.FieldErrors />
 				</Form.Field>
 
 				<Form.Button
 					variant="destructive"
-					data-testid={testIds.DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE}>Delete puzzle</Form.Button
+					data-testid={testIds.DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE}
+					>Delete puzzle</Form.Button
 				>
 			</form>
 		</Dialog.Header>
