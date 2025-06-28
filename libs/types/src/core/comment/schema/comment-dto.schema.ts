@@ -1,19 +1,12 @@
-import { z } from "zod";
-import { objectIdSchema } from "../../common/schema/object-id.js";
-import { baseComment } from "./comment.schema.js";
+import { z } from 'zod';
+import { objectIdSchema } from '../../common/schema/object-id.js';
+import { commentEntitySchema } from './comment-entity.schema.js';
 
-const baseCommentDtoSchema = baseComment.extend({
+const commentDtoSchema = commentEntitySchema.extend({
 	_id: objectIdSchema,
+	comments: z.array(objectIdSchema),
+	parentId: objectIdSchema,
 });
-
-type BaseCommentDto = z.infer<typeof baseCommentDtoSchema> & {
-	comments: (BaseCommentDto | string)[];
-};
-
-export const commentDtoSchema: z.ZodType<BaseCommentDto> =
-	baseCommentDtoSchema.extend({
-		comments: z.array(z.lazy(() => commentDtoSchema)),
-	}) as unknown as z.ZodType<BaseCommentDto>;
 
 export type CommentDto = z.infer<typeof commentDtoSchema>;
 

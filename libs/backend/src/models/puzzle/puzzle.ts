@@ -3,6 +3,7 @@ import { PUZZLE, USER, METRICS, COMMENT } from "../../utils/constants/model.js";
 import { DifficultyEnum, PuzzleEntity, puzzleVisibilityEnum } from "types";
 import solutionSchema from "./solution.js";
 import validatorSchema from "./validator.js";
+import Comment from "../comment/comment.js";
 
 export interface PuzzleDocument
 	extends Document,
@@ -76,6 +77,16 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 		}
 	]
 });
+
+puzzleSchema.pre(
+	"deleteOne",
+	{ document: true, query: false },
+	async function (next) {
+		await Comment.deleteMany({ _id: { $in: this.comments } });
+
+		next();
+	}
+);
 
 const Puzzle = mongoose.model<PuzzleDocument>(PUZZLE, puzzleSchema);
 export default Puzzle;

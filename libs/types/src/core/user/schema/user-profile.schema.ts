@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const userProfileSchema = z.object({
-	picture: z.ostring(),
-	bio: z.ostring(),
-	location: z.ostring(),
+	picture: z.string().optional(),
+	bio: z.string().optional(),
+	location: z.string().optional(),
 	socials: z.array(z.string()).nonempty().optional(),
 });
 

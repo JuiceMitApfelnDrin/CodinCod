@@ -4,9 +4,10 @@ import { commentTypeEnum, type CommentEntity } from "types";
 
 export interface CommentDocument
 	extends Document,
-		Omit<CommentEntity, "author"> {
+		Omit<CommentEntity, "author" & "parentId"> {
 	_id: ObjectId;
 	author: ObjectId;
+	parentId: ObjectId;
 }
 
 export const commentSchema = new Schema<CommentDocument>({
@@ -47,6 +48,11 @@ export const commentSchema = new Schema<CommentDocument>({
 		type: String,
 		required: true,
 		default: commentTypeEnum.COMMENT
+	},
+	parentId: {
+		type: Schema.Types.ObjectId,
+		ref: COMMENT,
+		required: false
 	}
 });
 
