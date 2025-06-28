@@ -1,0 +1,10 @@
+services:
+  database:
+    image: postgres
+    container_name: database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: codin_cod
+    ports:
+      - "5432:5432"
