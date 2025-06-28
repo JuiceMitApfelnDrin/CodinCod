@@ -1,15 +1,15 @@
-import { z } from 'zod';
-import { validatorEntitySchema } from './validator.schema.js';
-import { difficultySchema } from './difficulty.schema.js';
-import { puzzleVisibilitySchema } from './puzzle-visibility.schema.js';
-import { solutionSchema } from './solution.schema.js';
-import { PUZZLE_CONFIG } from '../config/puzzle-config.js';
-import { DifficultyEnum } from '../enum/difficulty-enum.js';
-import { puzzleVisibilityEnum } from '../enum/puzzle-visibility-enum.js';
-import { userDtoSchema } from '../../user/schema/user-dto.schema.js';
-import { acceptedDateSchema } from '../../common/schema/accepted-date.js';
-import { objectIdSchema } from '../../common/schema/object-id.js';
-import { tagSchema } from './tag.schema.js';
+import { z } from "zod";
+import { validatorEntitySchema } from "./validator.schema.js";
+import { difficultySchema } from "./difficulty.schema.js";
+import { puzzleVisibilitySchema } from "./puzzle-visibility.schema.js";
+import { solutionSchema } from "./solution.schema.js";
+import { PUZZLE_CONFIG } from "../config/puzzle-config.js";
+import { DifficultyEnum } from "../enum/difficulty-enum.js";
+import { puzzleVisibilityEnum } from "../enum/puzzle-visibility-enum.js";
+import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
+import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
+import { tagSchema } from "./tag.schema.js";
 
 export const puzzleEntitySchema = z.object({
 	title: z
@@ -26,7 +26,7 @@ export const puzzleEntitySchema = z.object({
 		.min(PUZZLE_CONFIG.minConstraintsLength)
 		.max(PUZZLE_CONFIG.maxConstraintsLength)
 		.optional(),
-	author: objectIdSchema.or(userDtoSchema).default(''),
+	author: objectIdSchema.or(userDtoSchema).default(""),
 	validators: z.array(validatorEntitySchema).optional(),
 	difficulty: difficultySchema.default(DifficultyEnum.INTERMEDIATE),
 	// TODO: later not now !
