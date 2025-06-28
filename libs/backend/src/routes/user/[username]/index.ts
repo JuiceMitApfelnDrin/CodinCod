@@ -2,7 +2,10 @@ import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
 import { httpResponseCodes, isUsername } from "types";
 import { ParamsUsername } from "./types.js";
-import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
+import {
+	genericReturnMessages,
+	userProperties
+} from "@/config/generic-return-messages.js";
 import { USER } from "@/utils/constants/model.js";
 
 export default async function userByUsernameRoutes(fastify: FastifyInstance) {

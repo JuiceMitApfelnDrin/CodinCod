@@ -1,5 +1,9 @@
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isAuthenticatedInfo, preferencesDtoSchema } from "types";
+import {
+	httpResponseCodes,
+	isAuthenticatedInfo,
+	preferencesDtoSchema
+} from "types";
 import Preferences from "../../../models/preferences/preferences.js";
 import authenticated from "../../../plugins/middleware/authenticated.js";
 
@@ -97,7 +101,9 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 						.send({ error: "Preferences not found" });
 				}
 
-				return reply.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT).send(deleted);
+				return reply
+					.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT)
+					.send(deleted);
 			} catch (error) {
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
@@ -112,7 +118,9 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 			onRequest: authenticated
 		},
 		async (request, reply) => {
-			const parseResult = preferencesDtoSchema.partial().safeParse(request.body);
+			const parseResult = preferencesDtoSchema
+				.partial()
+				.safeParse(request.body);
 
 			if (!parseResult.success) {
 				return reply

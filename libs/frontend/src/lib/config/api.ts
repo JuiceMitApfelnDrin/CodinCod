@@ -12,5 +12,6 @@ export const apiUrls = {
 	submissionById: (id: string) => `/api/submission/${id}`,
 	userByUsername: (username: string) => `/api/user/${username}`,
 	userByUsernamePuzzle: (username: string) => `/api/user/${username}/puzzle`,
-	usernameIsAvailable: (username: string) => `/api/username-is-available/${username}`
+	usernameIsAvailable: (username: string) =>
+		`/api/username-is-available/${username}`
 } as const;

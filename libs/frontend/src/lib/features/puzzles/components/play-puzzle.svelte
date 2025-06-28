@@ -52,7 +52,11 @@
 	let isSubmittingCode = $state(false);
 	let testResults: Record<number, CodeExecutionResponse> = $state({});
 
-	async function executeCode(itemInList: number, testInput: string, testOutput: string) {
+	async function executeCode(
+		itemInList: number,
+		testInput: string,
+		testOutput: string
+	) {
 		const response = await fetch(apiUrls.EXECUTE_CODE, {
 			body: JSON.stringify({
 				code,
@@ -71,7 +75,11 @@
 		};
 	}
 
-	async function runSingularTestItem(itemInList: number, testInput: string, testOutput: string) {
+	async function runSingularTestItem(
+		itemInList: number,
+		testInput: string,
+		testOutput: string
+	) {
 		await executeCode(itemInList, testInput, testOutput);
 
 		const testResult = testResults[itemInList];
@@ -89,7 +97,10 @@
 		return new Promise((resolve) => setTimeout(resolve, 500));
 	}
 
-	function showToastWhenTestRan(successPercentage: number, isMultipleTests: boolean = false) {
+	function showToastWhenTestRan(
+		successPercentage: number,
+		isMultipleTests: boolean = false
+	) {
 		const formattedSuccessPercentage = new Intl.NumberFormat("en", {
 			roundingMode: "halfCeil",
 			style: "percent"
@@ -130,15 +141,22 @@
 			});
 
 			const totalTests = Object.keys(testResults).length;
-			const combinedSuccessRate = Object.values(testResults).reduce((sum, res) => {
-				if (isCodeExecutionSuccessResponse(res)) {
-					return sum + res.puzzleResultInformation.successRate;
-				}
+			const combinedSuccessRate = Object.values(testResults).reduce(
+				(sum, res) => {
+					if (isCodeExecutionSuccessResponse(res)) {
+						return sum + res.puzzleResultInformation.successRate;
+					}
 
-				return sum;
-			}, 0);
+					return sum;
+				},
+				0
+			);
 
-			const successPercentage = calculatePercentage(0, totalTests, combinedSuccessRate);
+			const successPercentage = calculatePercentage(
+				0,
+				totalTests,
+				combinedSuccessRate
+			);
 			showToastWhenTestRan(successPercentage, isMultipleTests);
 		}
 	}
@@ -286,18 +304,24 @@
 							<div
 								class={cn(
 									isCodeExecutionSuccessResponse(testResults[index]) &&
-										calculatePuzzleResultColor(testResults[index].puzzleResultInformation.result),
+										calculatePuzzleResultColor(
+											testResults[index].puzzleResultInformation.result
+										),
 									"w-full space-y-4 rounded-lg border-2 p-4 md:p-8 lg:space-y-8"
 								)}
 								id={`validator-${index}`}
 							>
 								<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
 									<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-										<OutputBox title="Input">{validator.input.trimEnd()}</OutputBox>
+										<OutputBox title="Input"
+											>{validator.input.trimEnd()}</OutputBox
+										>
 									</LogicalUnit>
 
 									<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
-										<OutputBox title="Expected output">{validator.output.trimEnd()}</OutputBox>
+										<OutputBox title="Expected output"
+											>{validator.output.trimEnd()}</OutputBox
+										>
 									</LogicalUnit>
 								</div>
 
@@ -306,11 +330,15 @@
 										<h3 class="text-xl font-semibold">Actual output</h3>
 
 										<LogicalUnit class="w-full space-y-2">
-											<OutputBox title="Stdout:">{testResults[index].run.stdout}</OutputBox>
+											<OutputBox title="Stdout:"
+												>{testResults[index].run.stdout}</OutputBox
+											>
 										</LogicalUnit>
 										{#if testResults[index].run.stderr}
 											<LogicalUnit class="w-full space-y-2">
-												<OutputBox title="Stderr:">{testResults[index].run.stderr}</OutputBox>
+												<OutputBox title="Stderr:"
+													>{testResults[index].run.stderr}</OutputBox
+												>
 											</LogicalUnit>
 										{/if}
 									</div>
@@ -321,12 +349,18 @@
 									variant="secondary"
 									aria-live="polite"
 									disabled={isExecutingTests || isSubmittingCode}
-									class={cn((isExecutingTests || isSubmittingCode) && "animate-pulse")}
+									class={cn(
+										(isExecutingTests || isSubmittingCode) && "animate-pulse"
+									)}
 									onclick={() => {
 										isExecutingTests = true;
 
 										Promise.all([
-											runSingularTestItem(index, validator.input, validator.output),
+											runSingularTestItem(
+												index,
+												validator.input,
+												validator.output
+											),
 											patience()
 										]).then(() => {
 											isExecutingTests = false;
@@ -340,7 +374,8 @@
 							{#if isCodeExecutionSuccessResponse(testResults[index])}
 								<ValidatorStatus
 									class="absolute right-0 top-0 mr-4 mt-4 p-0"
-									puzzleResult={testResults[index].puzzleResultInformation.result}
+									puzzleResult={testResults[index].puzzleResultInformation
+										.result}
 								/>
 							{/if}
 						</li>

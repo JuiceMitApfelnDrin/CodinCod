@@ -17,6 +17,9 @@ export async function POST({ request }: RequestEvent) {
 
 		return json(decoded);
 	} catch {
-		return json({ error: "Invalid token", isAuthenticated: false }, { status: 401 });
+		return json(
+			{ error: "Invalid token", isAuthenticated: false },
+			{ status: 401 }
+		);
 	}
 }

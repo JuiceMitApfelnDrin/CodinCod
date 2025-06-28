@@ -55,7 +55,9 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const { id } = request.params;
-			const parseResult = puzzleEntitySchema.omit({ author: true }).safeParse(request.body);
+			const parseResult = puzzleEntitySchema
+				.omit({ author: true })
+				.safeParse(request.body);
 
 			if (!parseResult.success) {
 				return reply
@@ -71,7 +73,9 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					message: "You need to be logged in."
 				};
 
-				return reply.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED).send(errorResponse);
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
+					.send(errorResponse);
 			}
 
 			const userId = user.userId;
@@ -85,9 +89,12 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 						.send({ error: "Puzzle not found" });
 				}
 
-				const user = await User.findById(userId)
+				const user = await User.findById(userId);
 
-				if (!isAuthor(puzzle.author.toString(), userId) || !isModerator(user?.roles)) {
+				if (
+					!isAuthor(puzzle.author.toString(), userId) ||
+					!isModerator(user?.roles)
+				) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "Not authorized to edit this puzzle" });
@@ -105,7 +112,8 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				if (
 					checkWhenEdited.includes(puzzle.visibility) &&
 					puzzle.validators &&
-					puzzle.validators.length >= PUZZLE_CONFIG.requiredNumberOfValidators &&
+					puzzle.validators.length >=
+						PUZZLE_CONFIG.requiredNumberOfValidators &&
 					isPuzzleDto(puzzle)
 				) {
 					try {
@@ -125,7 +133,10 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 
 				return reply.send(puzzle);
 			} catch (error) {
-				const errorResponse: ErrorResponse = { error: "Failed to update puzzle", message: "" };
+				const errorResponse: ErrorResponse = {
+					error: "Failed to update puzzle",
+					message: ""
+				};
 
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
@@ -154,14 +165,18 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 						message: `Couldn't find puzzle with id (${id})`
 					};
 
-					return reply.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND).send(error);
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
+						.send(error);
 				}
 
 				const isAuthorOfPuzzle = isAuthor(puzzle.author.toString(), userId);
 				const isNotAuthorOfPuzzle = !isAuthorOfPuzzle;
 
 				if (isNotAuthorOfPuzzle) {
-					return reply.status(403).send({ error: "Not authorized to delete this puzzle" });
+					return reply
+						.status(403)
+						.send({ error: "Not authorized to delete this puzzle" });
 				}
 
 				const allowedToRemoveState: PuzzleVisibility[] = [
@@ -175,7 +190,10 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					// TODO: figure out: this is a questionable choice at the moment, but might not want to delete an interesting puzzle completely which users already have solved, so maybe archive instead of a full delete??
 					return reply
 						.status(403)
-						.send({ error: "This puzzle was public, contact support to get it deleted." });
+						.send({
+							error:
+								"This puzzle was public, contact support to get it deleted."
+						});
 				}
 
 				await puzzle.deleteOne();

@@ -5,12 +5,19 @@
 	import { preferences } from "@/stores/preferences";
 	import * as Select from "@/components/ui/select";
 	import { ScrollArea } from "@/components/ui/scroll-area";
-	import { DEFAULT_LANGUAGE, keymaps, type EditorPreferences, type PuzzleLanguage } from "types";
+	import {
+		DEFAULT_LANGUAGE,
+		keymaps,
+		type EditorPreferences,
+		type PuzzleLanguage
+	} from "types";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages";
 	import Checkbox from "@/components/ui/toggle/checkbox.svelte";
 
-	let language: PuzzleLanguage = $state($preferences?.preferredLanguage ?? DEFAULT_LANGUAGE);
+	let language: PuzzleLanguage = $state(
+		$preferences?.preferredLanguage ?? DEFAULT_LANGUAGE
+	);
 	let code: string = $state('print("Hello, World!")');
 
 	function updatePreferredLanguage(newPreferredLanguage: string) {
@@ -36,7 +43,9 @@
 		}
 	}
 
-	let triggerContent = $derived($preferences?.editor?.keymap ?? "Select an editor keymap");
+	let triggerContent = $derived(
+		$preferences?.editor?.keymap ?? "Select an editor keymap"
+	);
 </script>
 
 <svelte:head>
@@ -69,8 +78,8 @@
 			<!-- Keymap Selection -->
 			<div class="flex flex-col gap-2">
 				<p class="text-sm text-muted-foreground">
-					Choose between different keyboard shortcut presets (VSCode, Vim, Emacs). Affects
-					navigation, selection, and editing shortcuts.
+					Choose between different keyboard shortcut presets (VSCode, Vim,
+					Emacs). Affects navigation, selection, and editing shortcuts.
 				</p>
 
 				<!-- TODO: check if it works without it, otherwise put it back
@@ -115,7 +124,8 @@
 					<div>
 						<h4 class="text-sm font-medium underline">Line Numbers</h4>
 						<p class="text-sm text-muted-foreground">
-							Show numbered lines in the gutter for easy reference and navigation
+							Show numbered lines in the gutter for easy reference and
+							navigation
 						</p>
 					</div>
 					<Checkbox
@@ -146,7 +156,8 @@
 					</div>
 					<Checkbox
 						checked={$preferences.editor.highlightActiveLineGutter}
-						onChecked={() => CheckboxEditorPreference("highlightActiveLineGutter")}
+						onChecked={() =>
+							CheckboxEditorPreference("highlightActiveLineGutter")}
 					/>
 				</div>
 			</div>
@@ -219,7 +230,8 @@
 					</div>
 					<Checkbox
 						checked={$preferences.editor.highlightSelectionMatches}
-						onChecked={() => CheckboxEditorPreference("highlightSelectionMatches")}
+						onChecked={() =>
+							CheckboxEditorPreference("highlightSelectionMatches")}
 					/>
 				</div>
 
@@ -249,7 +261,8 @@
 					</div>
 					<Checkbox
 						checked={$preferences.editor.allowMultipleSelections}
-						onChecked={() => CheckboxEditorPreference("allowMultipleSelections")}
+						onChecked={() =>
+							CheckboxEditorPreference("allowMultipleSelections")}
 					/>
 				</div>
 
@@ -269,7 +282,9 @@
 				<div class="flex items-center justify-between gap-4">
 					<div>
 						<h4 class="text-sm font-medium underline">Drag-and-Drop</h4>
-						<p class="text-sm text-muted-foreground">Show visual indicator when dragging text</p>
+						<p class="text-sm text-muted-foreground">
+							Show visual indicator when dragging text
+						</p>
 					</div>
 					<Checkbox
 						checked={$preferences.editor.dropCursor}

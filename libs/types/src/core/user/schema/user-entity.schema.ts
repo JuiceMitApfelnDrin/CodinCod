@@ -30,6 +30,6 @@ export const userEntitySchema = z.object({
 	profile: userProfileSchema.optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
-	roles: z.array(userRoleSchema).default(DEFAULT_USER_ROLES)
+	roles: z.array(userRoleSchema).default(DEFAULT_USER_ROLES),
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;

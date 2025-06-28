@@ -39,7 +39,10 @@
 		{/if}
 	</ScrollArea.Root>
 
-	<form class="flex flex-col justify-end gap-2 px-1" onsubmit={preventDefault(executeSend)}>
+	<form
+		class="flex flex-col justify-end gap-2 px-1"
+		onsubmit={preventDefault(executeSend)}
+	>
 		<Label class="sr-only" for="msg-compose">Compose message</Label>
 		<Input
 			maxlength={CHAT_MESSAGE_CONFIG.maxChatMessageLength}

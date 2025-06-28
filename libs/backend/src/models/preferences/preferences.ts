@@ -3,7 +3,9 @@ import { PreferencesEntity } from "types";
 import { PREFERENCES, USER } from "../../utils/constants/model.js";
 import { preferencesEditor } from "./preferences-editor.js";
 
-interface PreferencesDocument extends Document, Omit<PreferencesEntity, "owner" | "_id"> {
+interface PreferencesDocument
+	extends Document,
+		Omit<PreferencesEntity, "owner" | "_id"> {
 	owner: ObjectId;
 }
 
@@ -43,5 +45,8 @@ const preferencesSchema = new Schema<PreferencesDocument>(
 	{ timestamps: true }
 );
 
-const Preferences = mongoose.model<PreferencesDocument>(PREFERENCES, preferencesSchema);
+const Preferences = mongoose.model<PreferencesDocument>(
+	PREFERENCES,
+	preferencesSchema
+);
 export default Preferences;

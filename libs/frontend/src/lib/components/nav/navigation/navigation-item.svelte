@@ -4,7 +4,11 @@
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import { type DataTestIdProp } from "@/config/test-ids";
 
-	type $$Props = ButtonPrimitive.RootProps & { class?: string; href: FrontendUrl; text: string };
+	type $$Props = ButtonPrimitive.RootProps & {
+		class?: string;
+		href: FrontendUrl;
+		text: string;
+	};
 
 	let {
 		class: className = undefined,
@@ -21,7 +25,7 @@
 <li class={cn(className)}>
 	<a
 		{...rest}
-		class="hover:text-foreground dark:hover:text-foreground px-2 py-4 text-sm font-semibold uppercase text-teal-900 hover:underline dark:text-teal-100"
+		class="px-2 py-4 text-sm font-semibold uppercase text-teal-900 hover:text-foreground hover:underline dark:text-teal-100 dark:hover:text-foreground"
 		{href}>{text}</a
 	>
 </li>

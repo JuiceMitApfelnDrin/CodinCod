@@ -39,10 +39,13 @@
 	let isReplying: boolean = $state(false);
 
 	async function handleVote(commentVoteRequest: CommentVoteRequest) {
-		const response = await fetchWithAuthenticationCookie(apiUrls.commentByIdVote(comment._id), {
-			body: JSON.stringify(commentVoteRequest),
-			method: httpRequestMethod.POST
-		});
+		const response = await fetchWithAuthenticationCookie(
+			apiUrls.commentByIdVote(comment._id),
+			{
+				body: JSON.stringify(commentVoteRequest),
+				method: httpRequestMethod.POST
+			}
+		);
 
 		const updatedComment = await response.json();
 
@@ -62,9 +65,12 @@
 	}
 
 	async function fetchReplies() {
-		const response = await fetchWithAuthenticationCookie(apiUrls.commentById(comment._id), {
-			method: httpRequestMethod.GET
-		});
+		const response = await fetchWithAuthenticationCookie(
+			apiUrls.commentById(comment._id),
+			{
+				method: httpRequestMethod.GET
+			}
+		);
 
 		const updatedCommentInfoWithSubComments = await response.json();
 

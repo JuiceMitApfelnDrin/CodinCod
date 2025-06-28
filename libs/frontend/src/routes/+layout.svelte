@@ -13,7 +13,9 @@
 
 <Nav />
 
-<main class="dark:bg-primary-900 dark:text-primary-100 flex min-h-screen flex-col">
+<main
+	class="dark:bg-primary-900 dark:text-primary-100 flex min-h-screen flex-col"
+>
 	{@render children?.()}
 </main>
 

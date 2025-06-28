@@ -12,7 +12,9 @@ import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import User from "@/models/user/user.js";
 
-export default async function puzzleByIdSolutionRoutes(fastify: FastifyInstance) {
+export default async function puzzleByIdSolutionRoutes(
+	fastify: FastifyInstance
+) {
 	fastify.get<ParamsId>(
 		"/",
 		{
@@ -29,13 +31,17 @@ export default async function puzzleByIdSolutionRoutes(fastify: FastifyInstance)
 					message: "You need to be logged in."
 				};
 
-				return reply.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED).send(errorResponse);
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
+					.send(errorResponse);
 			}
 
 			const userId = user.userId;
 
 			try {
-				const puzzle = await Puzzle.findById(id).select("+solution").populate("author");
+				const puzzle = await Puzzle.findById(id)
+					.select("+solution")
+					.populate("author");
 
 				if (!puzzle) {
 					return reply
@@ -46,7 +52,8 @@ export default async function puzzleByIdSolutionRoutes(fastify: FastifyInstance)
 				const user = await User.findById(userId);
 
 				const hasRequiredPermissions =
-					(isUserDto(puzzle.author) && !isAuthor(puzzle.author._id.toString(), userId)) ||
+					(isUserDto(puzzle.author) &&
+						!isAuthor(puzzle.author._id.toString(), userId)) ||
 					!isModerator(user?.roles);
 
 				if (hasRequiredPermissions) {

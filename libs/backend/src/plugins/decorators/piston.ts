@@ -11,34 +11,37 @@ import {
 } from "types";
 
 async function piston(fastify: FastifyInstance) {
-	fastify.decorate("piston", async (pistonExecutionRequestObject: PistonExecutionRequest) => {
-		const PISTON_API = process.env.PISTON_URI;
+	fastify.decorate(
+		"piston",
+		async (pistonExecutionRequestObject: PistonExecutionRequest) => {
+			const PISTON_API = process.env.PISTON_URI;
 
-		if (!PISTON_API) {
-			throw new Error("PISTON_API is not defined in environment variables");
+			if (!PISTON_API) {
+				throw new Error("PISTON_API is not defined in environment variables");
+			}
+
+			const res = await fetch(`${PISTON_API}${pistonUrls.EXECUTE}`, {
+				method: POST,
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(pistonExecutionRequestObject)
+			});
+
+			const executionResponse = await res.json();
+
+			if (!isPistonExecutionResponse(executionResponse)) {
+				const error: ErrorResponse = {
+					error: "Unknown error with piston",
+					message: "response is not a piston execution response"
+				};
+
+				return error;
+			}
+
+			return executionResponse;
 		}
-
-		const res = await fetch(`${PISTON_API}${pistonUrls.EXECUTE}`, {
-			method: POST,
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(pistonExecutionRequestObject)
-		});
-
-		const executionResponse = await res.json();
-
-		if (!isPistonExecutionResponse(executionResponse)) {
-			const error: ErrorResponse = {
-				error: "Unknown error with piston",
-				message: "response is not a piston execution response"
-			};
-
-			return error;
-		}
-
-		return executionResponse;
-	});
+	);
 
 	fastify.decorate("runtimes", async () => {
 		const PISTON_API = process.env.PISTON_URI;
@@ -55,7 +58,9 @@ async function piston(fastify: FastifyInstance) {
 		});
 
 		if (!response.ok) {
-			throw new Error(`Failed to execute code: ${response.status} - ${response.statusText}`);
+			throw new Error(
+				`Failed to execute code: ${response.status} - ${response.statusText}`
+			);
 		}
 
 		const pistonRuntimesResponse = await response.json();

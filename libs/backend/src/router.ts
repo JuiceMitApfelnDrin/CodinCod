@@ -44,22 +44,34 @@ export default async function router(fastify: FastifyInstance) {
 	fastify.register(healthRoutes, { prefix: backendUrls.HEALTH });
 	fastify.register(executeRoutes, { prefix: backendUrls.EXECUTE });
 	fastify.register(submissionRoutes, { prefix: backendUrls.SUBMISSION });
-	fastify.register(submissionByIdRoutes, { prefix: backendUrls.submissionById(backendParams.ID) });
-	fastify.register(submissionGameRoutes, { prefix: backendUrls.SUBMISSION_GAME });
-	fastify.register(puzzleLanguagesRoutes, { prefix: backendUrls.PUZZLE_LANGUAGES });
-	fastify.register(puzzleByIdRoutes, { prefix: backendUrls.puzzleById(backendParams.ID) });
+	fastify.register(submissionByIdRoutes, {
+		prefix: backendUrls.submissionById(backendParams.ID)
+	});
+	fastify.register(submissionGameRoutes, {
+		prefix: backendUrls.SUBMISSION_GAME
+	});
+	fastify.register(puzzleLanguagesRoutes, {
+		prefix: backendUrls.PUZZLE_LANGUAGES
+	});
+	fastify.register(puzzleByIdRoutes, {
+		prefix: backendUrls.puzzleById(backendParams.ID)
+	});
 	fastify.register(puzzleByIdCommentRoutes, {
 		prefix: backendUrls.puzzleByIdComment(backendParams.ID)
 	});
 	fastify.register(puzzleByIdSolutionRoutes, {
 		prefix: backendUrls.puzzleByIdSolution(backendParams.ID)
 	});
-	fastify.register(commentByIdRoutes, { prefix: backendUrls.commentById(backendParams.ID) });
+	fastify.register(commentByIdRoutes, {
+		prefix: backendUrls.commentById(backendParams.ID)
+	});
 	fastify.register(commentByIdCommentRoutes, {
 		prefix: backendUrls.commentByIdComment(backendParams.ID)
 	});
 	fastify.register(commentByIdVoteRoutes, {
 		prefix: backendUrls.commentByIdVote(backendParams.ID)
 	});
-	fastify.register(preferencesRoutes, { prefix: backendUrls.ACCOUNT_PREFERENCES });
+	fastify.register(preferencesRoutes, {
+		prefix: backendUrls.ACCOUNT_PREFERENCES
+	});
 }

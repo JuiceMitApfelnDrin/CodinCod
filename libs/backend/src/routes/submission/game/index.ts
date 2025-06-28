@@ -24,15 +24,21 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 			const { gameId, submissionId, userId } = request.body;
 
 			try {
-				const matchingSubmission = await Submission.findById<SubmissionEntity>(submissionId).exec();
+				const matchingSubmission =
+					await Submission.findById<SubmissionEntity>(submissionId).exec();
 
-				if (!matchingSubmission || matchingSubmission.user.toString() !== userId) {
+				if (
+					!matchingSubmission ||
+					matchingSubmission.user.toString() !== userId
+				) {
 					return reply.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND).send({
 						error: `couldn't find a submission with id (${submissionId}) belonging to user with id (${userId})`
 					});
 				}
 
-				const matchingGame = await Game.findById(gameId).populate("playerSubmissions").exec();
+				const matchingGame = await Game.findById(gameId)
+					.populate("playerSubmissions")
+					.exec();
 
 				if (!matchingGame) {
 					return reply
@@ -41,7 +47,8 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 				}
 
 				const latestSubmissionTime =
-					new Date(matchingSubmission.createdAt).getTime() + SUBMISSION_BUFFER_IN_MILLISECONDS;
+					new Date(matchingSubmission.createdAt).getTime() +
+					SUBMISSION_BUFFER_IN_MILLISECONDS;
 				const currentTime = new Date().getTime();
 
 				const tooFarInThePast = latestSubmissionTime < currentTime;
@@ -51,18 +58,21 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 						.send({ error: `game with id (${gameId}) already finished` });
 				}
 
-				const gameHasExistingUserSubmission = matchingGame.playerSubmissions.find((submission) => {
-					if (isString(submission)) {
-						return false;
-					}
+				const gameHasExistingUserSubmission =
+					matchingGame.playerSubmissions.find((submission) => {
+						if (isString(submission)) {
+							return false;
+						}
 
-					return isAuthor(getUserIdFromUser(submission.user), userId);
-				});
+						return isAuthor(getUserIdFromUser(submission.user), userId);
+					});
 
 				if (gameHasExistingUserSubmission) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-						.send({ error: `game with id (${gameId}) has a game from user with id (${userId})` });
+						.send({
+							error: `game with id (${gameId}) has a game from user with id (${userId})`
+						});
 				}
 
 				const uniquePlayerSubmissions = new Set([
@@ -74,7 +84,9 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 
 				const updatedGame = await matchingGame.save();
 
-				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(updatedGame);
+				return reply
+					.status(httpResponseCodes.SUCCESSFUL.CREATED)
+					.send(updatedGame);
 			} catch (error) {
 				request.log.error("Error saving submission:", error);
 
