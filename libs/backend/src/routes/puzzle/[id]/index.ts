@@ -188,12 +188,9 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				const isNotDraft = !isDraft;
 				if (isNotDraft) {
 					// TODO: figure out: this is a questionable choice at the moment, but might not want to delete an interesting puzzle completely which users already have solved, so maybe archive instead of a full delete??
-					return reply
-						.status(403)
-						.send({
-							error:
-								"This puzzle was public, contact support to get it deleted."
-						});
+					return reply.status(403).send({
+						error: "This puzzle was public, contact support to get it deleted."
+					});
 				}
 
 				await puzzle.deleteOne();

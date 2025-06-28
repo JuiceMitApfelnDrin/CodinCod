@@ -68,11 +68,9 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					});
 
 				if (gameHasExistingUserSubmission) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-						.send({
-							error: `game with id (${gameId}) has a game from user with id (${userId})`
-						});
+					return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+						error: `game with id (${gameId}) has a game from user with id (${userId})`
+					});
 				}
 
 				const uniquePlayerSubmissions = new Set([
