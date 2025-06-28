@@ -36,9 +36,7 @@
 
 		<DropdownMenu.Content>
 			<DropdownMenu.Group class="flex flex-col">
-				{@const profileLink = frontendUrls.userProfileByUsername(
-					$authenticatedUserInfo.username
-				)}
+				{@const profileLink = frontendUrls.userProfileByUsername($authenticatedUserInfo.username)}
 				<DropdownMenu.Item>
 					{#snippet child(props)}
 						<a
