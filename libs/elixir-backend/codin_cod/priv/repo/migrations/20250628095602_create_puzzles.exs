@@ -6,8 +6,8 @@ defmodule CodinCod.Repo.Migrations.CreatePuzzles do
       add(:title, :string)
       add(:statement, :string)
       add(:constraints, :string)
-      add(:difficulty, :string)
       add(:visibility, :string)
+      add(:difficulty, :string)
       add(:tags, {:array, :string})
 
       timestamps(type: :utc_datetime)

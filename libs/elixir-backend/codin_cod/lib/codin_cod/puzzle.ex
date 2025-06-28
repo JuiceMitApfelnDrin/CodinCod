@@ -1,8 +1,11 @@
 defmodule CodinCod.Puzzle do
   use Ecto.Schema
   import Ecto.Changeset
+  alias CodinCod.Accounts.User
 
   schema "puzzles" do
+    belongs_to(:user, User)
+
     field(:title, :string)
     field(:constraints, :string)
     field(:statement, :string)
@@ -24,6 +27,8 @@ defmodule CodinCod.Puzzle do
   def changeset(puzzle, attrs) do
     puzzle
     |> cast(attrs, [:title, :statement, :constraints])
-    |> validate_required([:title, :statement, :constraints])
+    |> cast_assoc(:user)
+    |> assoc_constraint(:user)
+    |> validate_required([:title, :statement, :constraints, :difficulty, :visibility])
   end
 end

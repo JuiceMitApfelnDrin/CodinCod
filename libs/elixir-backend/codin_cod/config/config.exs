@@ -16,11 +16,11 @@ config :codin_cod, CodinCodWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [json: CodinCodWeb.ErrorJSON],
+    formats: [html: CodinCodWeb.ErrorHTML, json: CodinCodWeb.ErrorJSON],
     layout: false
   ],
   pubsub_server: CodinCod.PubSub,
-  live_view: [signing_salt: "VwtkyGT3"]
+  live_view: [signing_salt: "qVEh+2gC"]
 
 # Configures the mailer
 #
@@ -30,6 +30,28 @@ config :codin_cod, CodinCodWeb.Endpoint,
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
 config :codin_cod, CodinCod.Mailer, adapter: Swoosh.Adapters.Local
+
+# Configure esbuild (the version is required)
+config :esbuild,
+  version: "0.17.11",
+  codin_cod: [
+    args:
+      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
+# Configure tailwind (the version is required)
+config :tailwind,
+  version: "3.4.3",
+  codin_cod: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
+  ]
 
 # Configures Elixir's Logger
 config :logger, :console,

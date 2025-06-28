@@ -1,5 +1,8 @@
 import Config
 
+# Only in tests, remove the complexity from the password hashing algorithm
+config :bcrypt_elixir, :log_rounds, 1
+
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
@@ -17,7 +20,7 @@ config :codin_cod, CodinCod.Repo,
 # you can enable the server option below.
 config :codin_cod, CodinCodWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "NJaMbvtP6sprlUijMXBMLevsavOJGArJM4U7s7pRak71MZoPJJ2OtOGT3ummb9Ge",
+  secret_key_base: "Hg4NwJ260PE7c1MMkiaUI/lNXXGkvYysO/rDDScKPBD6vjlKcp9k6p7YI1eU+/bo",
   server: false
 
 # In test we don't send emails
@@ -31,3 +34,7 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Enable helpful, but potentially expensive runtime checks
+config :phoenix_live_view,
+  enable_expensive_runtime_checks: true
