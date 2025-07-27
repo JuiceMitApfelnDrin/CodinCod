@@ -6,15 +6,14 @@ defmodule CodinCod.Repo.Migrations.CreateSubmissions do
       add :code, :string
       add :language, :string
       add :language_version, :string
-      add :result, :string
-      add :puzzle, references(:puzzles, on_delete: :nothing)
-      add :author, references(:users, on_delete: :delete_all)
+      add :puzzle_id, references(:puzzles, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :delete_all)
       add :result, :json
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:submissions, [:puzzle])
-    create index(:submissions, [:author])
+    create index(:submissions, [:puzzle_id])
+    create index(:submissions, [:user_id])
   end
 end

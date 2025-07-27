@@ -12,7 +12,7 @@ defmodule CodinCod.Submission do
     belongs_to :user, User
 
     field :code, :string
-    embeds_one :result, SubmissionResult
+    embeds_one :result, SubmissionResult, on_replace: :update
 
     timestamps(type: :utc_datetime)
   end

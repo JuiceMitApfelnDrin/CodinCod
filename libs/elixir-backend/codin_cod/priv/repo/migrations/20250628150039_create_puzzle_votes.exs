@@ -5,8 +5,8 @@ defmodule CodinCod.Repo.Migrations.CreatePuzzleVotes do
     create table(:puzzle_votes) do
 
       add :type, :string
-      add :user, references(:user)
-      add :puzzle, references(:puzzle)
+      add :user_id, references(:users)
+      add :puzzle_id, references(:puzzles)
 
       timestamps(type: :utc_datetime)
     end
