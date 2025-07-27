@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const userProfileSchema = z.object({
 	picture: z.string().optional(),

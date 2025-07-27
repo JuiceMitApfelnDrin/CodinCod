@@ -1,9 +1,9 @@
-import { z } from 'zod';
-import { acceptedDateSchema } from '../../common/schema/accepted-date.js';
-import { objectIdSchema } from '../../common/schema/object-id.js';
-import { userDtoSchema } from '../../user/schema/user-dto.schema.js';
-import { COMMENT_CONFIG } from '../config/comment-config.js';
-import { commentTypeSchema } from './comment-type.schema.js';
+import { z } from "zod";
+import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
+import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
+import { COMMENT_CONFIG } from "../config/comment-config.js";
+import { commentTypeSchema } from "./comment-type.schema.js";
 
 const authorSchema = z.union([objectIdSchema, userDtoSchema]);
 
