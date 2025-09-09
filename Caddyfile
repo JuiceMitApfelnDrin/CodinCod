@@ -1,0 +1,11 @@
+backend.codincod.com {
+	reverse_proxy localhost:8888
+}
+codincod.com {
+	handle /ws* {
+		reverse_proxy localhost:8888
+	}
+	handle {
+		reverse_proxy localhost:5173
+	}
+}
