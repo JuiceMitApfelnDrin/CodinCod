@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "pnpm -r run format",
-    "lint": "pnpm -r run lint"
+    "lint": "pnpm -r run lint",
+    "build": "pnpm -r run build"
   },
   "keywords": [],
   "author": "",

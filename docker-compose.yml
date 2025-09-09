@@ -2,7 +2,7 @@ services:
   piston:
     image: ghcr.io/engineer-man/piston
     container_name: piston
-    restart: always
+    restart: unless-stopped
     privileged: true
     ports:
       - 2000:2000
@@ -13,6 +13,7 @@ services:
 
   backend:
     container_name: backend
+    restart: unless-stopped
     build:
       context: . # Root directory
       args:
@@ -32,6 +33,7 @@ services:
 
   frontend:
     container_name: frontend
+    restart: unless-stopped
     build:
       context: . # Root directory
       dockerfile: libs/frontend/Dockerfile # Correct path

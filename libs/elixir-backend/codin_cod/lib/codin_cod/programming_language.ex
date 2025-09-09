@@ -3,11 +3,14 @@ defmodule CodinCod.ProgrammingLanguage do
   import Ecto.Changeset
   alias CodinCod.Game.GameOptions
 
+  @primary_key {:id, Ecto.UUID, autogenerate: true}
+  @foreign_key_type :binary_id
+
   @required_fields ~w(language version available_in_piston)a
   @optional_fields ~w()a
 
   schema "programming_languages" do
-    many_to_many :game_options, GameOptions, join_through:  "game_options_programming_languages"
+    many_to_many(:game_options, GameOptions, join_through: "game_options_programming_languages")
 
     field(:language, :string)
     field(:version, :string)
