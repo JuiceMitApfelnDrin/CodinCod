@@ -1,7 +1,12 @@
 <script lang="ts">
 	import CodeMirror from "svelte-codemirror-editor";
 	import { oneDark } from "@codemirror/theme-one-dark";
-	import { keymap, type EditorPreferences, type PreferencesDto, type PuzzleLanguage } from "types";
+	import {
+		keymap,
+		type EditorPreferences,
+		type PreferencesDto,
+		type PuzzleLanguage
+	} from "types";
 	import {
 		bracketMatching,
 		defaultHighlightStyle,
@@ -41,9 +46,15 @@
 		language?: PuzzleLanguage;
 	}
 
-	let { language = "", readonly = false, value = $bindable("") }: Props = $props();
+	let {
+		language = "",
+		readonly = false,
+		value = $bindable("")
+	}: Props = $props();
 
-	function createBasicExtensions(editorPreferences: EditorPreferences): Extension[] {
+	function createBasicExtensions(
+		editorPreferences: EditorPreferences
+	): Extension[] {
 		const extensions: Extension[] = [];
 
 		function add(condition: boolean, ext: Extension) {
@@ -52,13 +63,19 @@
 
 		// Add all extensions from basicSetup with conditional checks
 		add(editorPreferences.lineNumbers, lineNumbers());
-		add(editorPreferences.highlightActiveLineGutter, highlightActiveLineGutter());
+		add(
+			editorPreferences.highlightActiveLineGutter,
+			highlightActiveLineGutter()
+		);
 		add(editorPreferences.highlightSpecialChars, highlightSpecialChars());
 		add(editorPreferences.history, history());
 		add(editorPreferences.foldGutter, foldGutter());
 		add(editorPreferences.drawSelection, drawSelection());
 		add(editorPreferences.dropCursor, dropCursor());
-		add(editorPreferences.allowMultipleSelections, EditorState.allowMultipleSelections.of(true));
+		add(
+			editorPreferences.allowMultipleSelections,
+			EditorState.allowMultipleSelections.of(true)
+		);
 		add(editorPreferences.indentOnInput, indentOnInput());
 		add(true, syntaxHighlighting(defaultHighlightStyle, { fallback: true }));
 		add(editorPreferences.bracketMatching, bracketMatching());
@@ -67,7 +84,10 @@
 		add(editorPreferences.rectangularSelection, rectangularSelection());
 		add(editorPreferences.crosshairCursor, crosshairCursor());
 		add(editorPreferences.highlightActiveLine, highlightActiveLine());
-		add(editorPreferences.highlightSelectionMatches, highlightSelectionMatches());
+		add(
+			editorPreferences.highlightSelectionMatches,
+			highlightSelectionMatches()
+		);
 
 		// Keymaps
 		const keymaps = [];
@@ -84,7 +104,10 @@
 		return extensions;
 	}
 
-	async function getEditorConfig(language: string, preferences: PreferencesDto | null) {
+	async function getEditorConfig(
+		language: string,
+		preferences: PreferencesDto | null
+	) {
 		let defaultConfiguration = [basicSetup];
 
 		if (preferences?.editor) {
@@ -163,7 +186,9 @@
 			}
 
 			case "brainfuck": {
-				const { brainfuck } = await import("@codemirror/legacy-modes/mode/brainfuck");
+				const { brainfuck } = await import(
+					"@codemirror/legacy-modes/mode/brainfuck"
+				);
 				return [StreamLanguage.define(brainfuck)];
 			}
 
@@ -178,7 +203,9 @@
 			}
 
 			case "crystal": {
-				const { crystal } = await import("@codemirror/legacy-modes/mode/crystal");
+				const { crystal } = await import(
+					"@codemirror/legacy-modes/mode/crystal"
+				);
 				return [StreamLanguage.define(crystal)];
 			}
 
@@ -203,12 +230,16 @@
 			}
 
 			case "fortran": {
-				const { fortran } = await import("@codemirror/legacy-modes/mode/fortran");
+				const { fortran } = await import(
+					"@codemirror/legacy-modes/mode/fortran"
+				);
 				return [StreamLanguage.define(fortran)];
 			}
 
 			case "haskell": {
-				const { haskell } = await import("@codemirror/legacy-modes/mode/haskell");
+				const { haskell } = await import(
+					"@codemirror/legacy-modes/mode/haskell"
+				);
 				return [StreamLanguage.define(haskell)];
 			}
 
@@ -218,7 +249,9 @@
 			}
 
 			case "lisp": {
-				const { commonLisp } = await import("@codemirror/legacy-modes/mode/commonlisp");
+				const { commonLisp } = await import(
+					"@codemirror/legacy-modes/mode/commonlisp"
+				);
 				return [StreamLanguage.define(commonLisp)];
 			}
 
@@ -240,7 +273,9 @@
 		return chosenLanguageExtension;
 	}
 
-	async function getKeymapExtensions(requestedKeymap?: string): Promise<Extension> {
+	async function getKeymapExtensions(
+		requestedKeymap?: string
+	): Promise<Extension> {
 		switch (requestedKeymap) {
 			case keymap.EMACS: {
 				const { emacs } = await import("@replit/codemirror-emacs");
@@ -253,7 +288,9 @@
 			}
 
 			default: {
-				const { vscodeKeymap } = await import("@replit/codemirror-vscode-keymap");
+				const { vscodeKeymap } = await import(
+					"@replit/codemirror-vscode-keymap"
+				);
 				return codemirrorKeymap.of(vscodeKeymap);
 			}
 		}
@@ -276,7 +313,11 @@
 				display: "flex",
 				height: "100%"
 			},
-			".cm-scroller, .cm-gutters": { height: "35vh", minHeight: "300px", overflow: "auto" }
+			".cm-scroller, .cm-gutters": {
+				height: "35vh",
+				minHeight: "300px",
+				overflow: "auto"
+			}
 		}}
 	/>
 {/await}

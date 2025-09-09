@@ -39,7 +39,9 @@
 				<Card.Root class="w-full">
 					<Card.Header>
 						<H1>Login</H1>
-						<Card.Description>Welcome, let's login and get playin'!</Card.Description>
+						<Card.Description
+							>Welcome, let's login and get playin'!</Card.Description
+						>
 					</Card.Header>
 
 					<Card.Content>

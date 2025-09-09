@@ -7,25 +7,19 @@ import { commentTypeSchema } from "./comment-type.schema.js";
 
 const authorSchema = z.union([objectIdSchema, userDtoSchema]);
 
-export const baseComment = z.object({
+export const commentEntitySchema = z.object({
 	author: authorSchema,
 	text: z
 		.string()
 		.min(COMMENT_CONFIG.minTextLength)
 		.max(COMMENT_CONFIG.maxTextLength),
-	upvote: z.number(),
-	downvote: z.number(),
+	upvote: z.number().int().min(0).default(0),
+	downvote: z.number().int().min(0).default(0),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
 	commentType: commentTypeSchema,
+	comments: z.array(objectIdSchema),
+	parentId: objectIdSchema,
 });
-
-type BaseCommentEntity = z.infer<typeof baseComment> & {
-	comments: BaseCommentEntity[];
-};
-
-export const commentEntitySchema = baseComment.extend({
-	comments: z.array(z.lazy(() => commentEntitySchema)),
-}) as unknown as z.ZodType<BaseCommentEntity>;
 
 export type CommentEntity = z.infer<typeof commentEntitySchema>;

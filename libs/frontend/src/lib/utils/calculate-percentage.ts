@@ -1,4 +1,8 @@
-export const calculatePercentage = (min: number, max: number, current: number): number => {
+export const calculatePercentage = (
+	min: number,
+	max: number,
+	current: number
+): number => {
 	const range = max - min;
 	const valueRelativeToRange = current - min;
 

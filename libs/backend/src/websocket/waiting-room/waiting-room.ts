@@ -157,9 +157,11 @@ export class WaitingRoom {
 	}
 
 	removeEmptyRooms() {
-		const rooms = Object.entries(this.roomsByRoomId).filter(([_roomId, room]) => {
-			return Object.keys(room).length === 0;
-		});
+		const rooms = Object.entries(this.roomsByRoomId).filter(
+			([_roomId, room]) => {
+				return Object.keys(room).length === 0;
+			}
+		);
 
 		rooms.forEach(([roomId, _room]) => {
 			delete this.roomsByRoomId[roomId];

@@ -22,7 +22,9 @@
 	let days = $derived(
 		Array.from({ length: minNumberOfDays }, (_, i) => {
 			const date = startDate.add(i, "day").format("YYYY-MM-DD");
-			return activitiesGroupedByDate[date] ? activitiesGroupedByDate[date].length : 0;
+			return activitiesGroupedByDate[date]
+				? activitiesGroupedByDate[date].length
+				: 0;
 		})
 	);
 
@@ -36,7 +38,11 @@
 		// Calculate month groups
 		const groups = [];
 		let currentYearMonth: string | null = null;
-		let currentGroup: { month: string; colspan: number; yearMonth: string } | null = null;
+		let currentGroup: {
+			month: string;
+			colspan: number;
+			yearMonth: string;
+		} | null = null;
 
 		for (let weekIndex = 0; weekIndex < totalWeeks; weekIndex++) {
 			const weekStartDate = startDate.add(weekIndex * totalDays, "day");
@@ -72,7 +78,8 @@
 			return "bg-stone-100 dark:bg-stone-800";
 		}
 
-		const opacity = (calculatePercentage(minAmount, maxAmount, count) + 0.15) * 100;
+		const opacity =
+			(calculatePercentage(minAmount, maxAmount, count) + 0.15) * 100;
 
 		if (opacity <= 20) {
 			return "bg-teal-200 dark:bg-teal-700";
@@ -93,8 +100,14 @@
 		return startDate.add(weekIndex * totalDays + dayOffset, "day");
 	}
 
-	function getCellTitle(weekIndex: number, dayOffset: number, count: number): string {
-		const cellDate = getDateFromWeekWithOffset(weekIndex, dayOffset).format("MMMM DD, YYYY");
+	function getCellTitle(
+		weekIndex: number,
+		dayOffset: number,
+		count: number
+	): string {
+		const cellDate = getDateFromWeekWithOffset(weekIndex, dayOffset).format(
+			"MMMM DD, YYYY"
+		);
 
 		return `Solved ${count} puzzles on ${cellDate}`;
 	}
@@ -124,7 +137,11 @@
 					{#each Array(totalWeeks) as _, weekIndex}
 						{@const cellIndex = weekIndex * totalDays + rowIndex}
 						<td
-							class={cn(calcDayStyle(days[cellIndex]), "activity-cell", "square-cell")}
+							class={cn(
+								calcDayStyle(days[cellIndex]),
+								"activity-cell",
+								"square-cell"
+							)}
 							title={getCellTitle(weekIndex, rowIndex, days[cellIndex])}
 						></td>
 					{/each}

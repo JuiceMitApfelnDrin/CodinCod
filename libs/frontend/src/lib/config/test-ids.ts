@@ -6,7 +6,8 @@ export const testIds = {
 	// add comment form
 	ADD_COMMENT_FORM_BUTTON_CANCEL_CREATING_COMMENT:
 		"add-comment-form-button-cancel-creating-comment",
-	ADD_COMMENT_FORM_BUTTON_SUBMIT_NEW_COMMENT: "add-comment-form-button-submit-new-comment",
+	ADD_COMMENT_FORM_BUTTON_SUBMIT_NEW_COMMENT:
+		"add-comment-form-button-submit-new-comment",
 
 	// become a contributor component
 	BECOME_A_CONTRIBUTOR_COMPONENT_ANCHOR_GITHUB:
@@ -18,25 +19,36 @@ export const testIds = {
 	CHAT_COMPONENT_BUTTON_SEND_MESSAGE: "chat-component-button-send-message",
 
 	// comment component
-	COMMENT_COMPONENT_BUTTON_DOWNVOTE_COMMENT: "comment-component-button-downvote-comment",
-	COMMENT_COMPONENT_BUTTON_HIDE_COMMENT: "comment-component-button-hide-comment",
-	COMMENT_COMPONENT_BUTTON_REPLY_TO_COMMENT: "comment-component-button-reply-to-comment",
-	COMMENT_COMPONENT_BUTTON_SHOW_REPLIES: "comment-component-button-show-replies",
-	COMMENT_COMPONENT_BUTTON_UPVOTE_COMMENT: "comment-component-button-upvote-comment",
+	COMMENT_COMPONENT_BUTTON_DOWNVOTE_COMMENT:
+		"comment-component-button-downvote-comment",
+	COMMENT_COMPONENT_BUTTON_HIDE_COMMENT:
+		"comment-component-button-hide-comment",
+	COMMENT_COMPONENT_BUTTON_REPLY_TO_COMMENT:
+		"comment-component-button-reply-to-comment",
+	COMMENT_COMPONENT_BUTTON_SHOW_REPLIES:
+		"comment-component-button-show-replies",
+	COMMENT_COMPONENT_BUTTON_UPVOTE_COMMENT:
+		"comment-component-button-upvote-comment",
 
 	// create puzzle form
-	CREATE_PUZZLE_FORM_BUTTON_CREATE_PUZZLE: "create-puzzle-form-button-create-puzzle",
+	CREATE_PUZZLE_FORM_BUTTON_CREATE_PUZZLE:
+		"create-puzzle-form-button-create-puzzle",
 
 	// delete puzzle dialog
-	DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE: "delete-puzzle-dialog-button-delete-puzzle",
+	DELETE_PUZZLE_DIALOG_BUTTON_DELETE_PUZZLE:
+		"delete-puzzle-dialog-button-delete-puzzle",
 
 	// display error component
-	DISPLAY_ERROR_COMPONENT_ANCHOR_CUSTOM: "display-error-component-anchor-custom",
+	DISPLAY_ERROR_COMPONENT_ANCHOR_CUSTOM:
+		"display-error-component-anchor-custom",
 
 	// edit puzzle form
-	EDIT_PUZZLE_FORM_BUTTON_ADD_VALIDATOR: "edit-puzzle-form-button-add-validator",
-	EDIT_PUZZLE_FORM_BUTTON_REMOVE_VALIDATOR: "edit-puzzle-form-button-remove-validator",
-	EDIT_PUZZLE_FORM_BUTTON_UPDATE_PUZZLE: "edit-puzzle-form-button-update-puzzle",
+	EDIT_PUZZLE_FORM_BUTTON_ADD_VALIDATOR:
+		"edit-puzzle-form-button-add-validator",
+	EDIT_PUZZLE_FORM_BUTTON_REMOVE_VALIDATOR:
+		"edit-puzzle-form-button-remove-validator",
+	EDIT_PUZZLE_FORM_BUTTON_UPDATE_PUZZLE:
+		"edit-puzzle-form-button-update-puzzle",
 
 	// error component
 	ERROR_COMPONENT_ANCHOR_HOMEPAGE: "error-component-anchor-homepage",
@@ -47,7 +59,8 @@ export const testIds = {
 	LOGIN_FORM_INPUT_PASSWORD: "login-form-input-password",
 
 	// multiplayer by id page
-	MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER: "multiplayer-by-id-page-anchor-multiplayer",
+	MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER:
+		"multiplayer-by-id-page-anchor-multiplayer",
 	MULTIPLAYER_BY_ID_PAGE_BUTTON_CREATE_THE_SAME_CONFIGURED_GAME:
 		"multiplayer-by-id-page-button-create-the-same-configured-game",
 	MULTIPLAYER_BY_ID_PAGE_BUTTON_JOIN_ONGOING_GAME:
@@ -78,9 +91,12 @@ export const testIds = {
 	PAGINATION_BUTTON_PREVIOUS: "pagination-button-previous",
 
 	// play puzzle component
-	PLAY_PUZZLE_COMPONENT_BUTTON_RUN_ALL_TESTS: "play-puzzle-component-button-run-all-tests",
-	PLAY_PUZZLE_COMPONENT_BUTTON_RUN_CODE: "play-puzzle-component-button-run-code",
-	PLAY_PUZZLE_COMPONENT_BUTTON_SUBMIT_CODE: "play-puzzle-component-button-submit-code",
+	PLAY_PUZZLE_COMPONENT_BUTTON_RUN_ALL_TESTS:
+		"play-puzzle-component-button-run-all-tests",
+	PLAY_PUZZLE_COMPONENT_BUTTON_RUN_CODE:
+		"play-puzzle-component-button-run-code",
+	PLAY_PUZZLE_COMPONENT_BUTTON_SUBMIT_CODE:
+		"play-puzzle-component-button-submit-code",
 
 	// profile
 	PROFILE_PAGE_BUTTON_USER_PUZZLES: "profile-page-button-user-puzzles",
@@ -98,10 +114,12 @@ export const testIds = {
 	REGISTER_FORM_BUTTON_REGISTER: "register-form-button-register",
 
 	// standings table component
-	STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE: "standings-table-component-toggle-show-code",
+	STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE:
+		"standings-table-component-toggle-show-code",
 
 	// user hover card component
-	USER_HOVER_CARD_COMPONENT_ANCHOR_USER_PROFILE: "user-hover-card-component-anchor-user-profile"
+	USER_HOVER_CARD_COMPONENT_ANCHOR_USER_PROFILE:
+		"user-hover-card-component-anchor-user-profile"
 } as const;
 
 type DataTestIdMap = typeof testIds;

@@ -11,7 +11,9 @@ import {
 	isAuthenticatedInfo
 } from "types";
 
-export default async function puzzleByIdCommentRoutes(fastify: FastifyInstance) {
+export default async function puzzleByIdCommentRoutes(
+	fastify: FastifyInstance
+) {
 	fastify.post<ParamsId>(
 		"/",
 		{
@@ -49,9 +51,15 @@ export default async function puzzleByIdCommentRoutes(fastify: FastifyInstance) 
 				const newComment = new Comment(commentData);
 				await newComment.save();
 
-				await Puzzle.findByIdAndUpdate(id, { $push: { comments: newComment._id } }, { new: true });
+				await Puzzle.findByIdAndUpdate(
+					id,
+					{ $push: { comments: newComment._id } },
+					{ new: true }
+				);
 
-				const comment = await Comment.findById(newComment.id).populate("author");
+				const comment = await Comment.findById(newComment.id).populate(
+					"author"
+				);
 
 				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(comment);
 			} catch (error) {

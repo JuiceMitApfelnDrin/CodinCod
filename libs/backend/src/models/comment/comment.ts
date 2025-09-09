@@ -2,9 +2,12 @@ import { COMMENT, USER } from "@/utils/constants/model.js";
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
 import { commentTypeEnum, type CommentEntity } from "types";
 
-export interface CommentDocument extends Document, Omit<CommentEntity, "author"> {
+export interface CommentDocument
+	extends Document,
+		Omit<CommentEntity, "author" & "parentId"> {
 	_id: ObjectId;
 	author: ObjectId;
+	parentId: ObjectId;
 }
 
 export const commentSchema = new Schema<CommentDocument>({
@@ -45,14 +48,23 @@ export const commentSchema = new Schema<CommentDocument>({
 		type: String,
 		required: true,
 		default: commentTypeEnum.COMMENT
+	},
+	parentId: {
+		type: Schema.Types.ObjectId,
+		ref: COMMENT,
+		required: false
 	}
 });
 
-commentSchema.pre("deleteOne", { document: true, query: false }, async function (next) {
-	await Comment.deleteMany({ _id: { $in: this.comments } });
+commentSchema.pre(
+	"deleteOne",
+	{ document: true, query: false },
+	async function (next) {
+		await Comment.deleteMany({ _id: { $in: this.comments } });
 
-	next();
-});
+		next();
+	}
+);
 
 const Comment = mongoose.model<CommentDocument>(COMMENT, commentSchema);
 export default Comment;

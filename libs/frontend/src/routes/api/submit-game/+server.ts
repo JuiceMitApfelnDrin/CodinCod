@@ -9,9 +9,12 @@ import { buildBackendUrl } from "@/config/backend";
 export async function POST({ request }: RequestEvent) {
 	const body = await request.text();
 
-	return await fetchWithAuthenticationCookie(buildBackendUrl(backendUrls.SUBMISSION_GAME), {
-		body: body,
-		headers: getCookieHeader(request),
-		method: httpRequestMethod.POST
-	});
+	return await fetchWithAuthenticationCookie(
+		buildBackendUrl(backendUrls.SUBMISSION_GAME),
+		{
+			body: body,
+			headers: getCookieHeader(request),
+			method: httpRequestMethod.POST
+		}
+	);
 }

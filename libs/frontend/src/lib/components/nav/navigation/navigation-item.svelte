@@ -4,7 +4,11 @@
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import { type DataTestIdProp } from "@/config/test-ids";
 
-	type $$Props = ButtonPrimitive.RootProps & { class?: string; href: FrontendUrl; text: string };
+	type $$Props = ButtonPrimitive.RootProps & {
+		class?: string;
+		href: FrontendUrl;
+		text: string;
+	};
 
 	let {
 		class: className = undefined,

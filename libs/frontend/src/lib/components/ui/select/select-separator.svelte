@@ -10,4 +10,8 @@
 	}: SeparatorPrimitive.RootProps = $props();
 </script>
 
-<Separator bind:ref class={cn("-mx-1 my-1 h-px bg-muted", className)} {...restProps} />
+<Separator
+	bind:ref
+	class={cn("-mx-1 my-1 h-px bg-muted", className)}
+	{...restProps}
+/>

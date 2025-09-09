@@ -8,7 +8,8 @@
 		fallbackText?: string;
 	}
 
-	let { fallbackText = "no fallback provided", markdown = undefined }: Props = $props();
+	let { fallbackText = "no fallback provided", markdown = undefined }: Props =
+		$props();
 
 	const parseMarkdown = async (markdown: string) => {
 		const dirtyMarkdown = await marked.parse(markdown);

@@ -1,4 +1,9 @@
-import { GameRequest, isGameRequest, isWaitingRoomRequest, WaitingRoomRequest } from "types";
+import {
+	GameRequest,
+	isGameRequest,
+	isWaitingRoomRequest,
+	WaitingRoomRequest
+} from "types";
 import { RawData } from "ws";
 
 function convertRawDataToString(message: RawData): string {
@@ -13,7 +18,9 @@ function convertRawDataToString(message: RawData): string {
 	}
 }
 
-export function parseRawDataWaitingRoomRequest(message: RawData): WaitingRoomRequest {
+export function parseRawDataWaitingRoomRequest(
+	message: RawData
+): WaitingRoomRequest {
 	const messageString = convertRawDataToString(message);
 
 	const receivedMessageData = JSON.parse(messageString);

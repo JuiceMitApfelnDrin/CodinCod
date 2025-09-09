@@ -2,7 +2,12 @@ import type { PageServerLoadEvent } from "./$types";
 import { httpRequestMethod, type PaginatedQueryResponse } from "types";
 import { apiUrls } from "@/config/api";
 
-export async function load({ fetch, params, request, url }: PageServerLoadEvent) {
+export async function load({
+	fetch,
+	params,
+	request,
+	url
+}: PageServerLoadEvent) {
 	const username = params.username;
 
 	const apiUrl = apiUrls.userByUsernamePuzzle(username);

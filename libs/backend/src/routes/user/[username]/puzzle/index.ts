@@ -11,10 +11,15 @@ import {
 	puzzleVisibilityEnum
 } from "types";
 import { ParamsUsername } from "../types.js";
-import { genericReturnMessages, userProperties } from "@/config/generic-return-messages.js";
+import {
+	genericReturnMessages,
+	userProperties
+} from "@/config/generic-return-messages.js";
 import decodeToken from "@/plugins/middleware/decode-token.js";
 
-export default async function userByUsernamePuzzleRoutes(fastify: FastifyInstance) {
+export default async function userByUsernamePuzzleRoutes(
+	fastify: FastifyInstance
+) {
 	fastify.get<ParamsUsername>(
 		"/",
 		{
@@ -26,7 +31,8 @@ export default async function userByUsernamePuzzleRoutes(fastify: FastifyInstanc
 			if (!isUsername(username)) {
 				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
 					message: `${userProperties.USERNAME} ${
-						genericReturnMessages[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST].IS_INVALID
+						genericReturnMessages[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]
+							.IS_INVALID
 					}`
 				});
 			}
@@ -59,7 +65,10 @@ export default async function userByUsernamePuzzleRoutes(fastify: FastifyInstanc
 				const queryCondition: Record<string, any> = { author: userId };
 
 				// If the user is authenticated and is the owner or contributor, fetch all puzzles
-				if (isAuthenticatedInfo(request.user) && request.user.username === user.username) {
+				if (
+					isAuthenticatedInfo(request.user) &&
+					request.user.username === user.username
+				) {
 					// No additional condition needed for visibility
 				} else {
 					// Otherwise, only fetch approved puzzles
@@ -67,7 +76,11 @@ export default async function userByUsernamePuzzleRoutes(fastify: FastifyInstanc
 				}
 
 				const [puzzles, total] = await Promise.all([
-					Puzzle.find(queryCondition).populate("author").skip(offsetSkip).limit(pageSize).exec(),
+					Puzzle.find(queryCondition)
+						.populate("author")
+						.skip(offsetSkip)
+						.limit(pageSize)
+						.exec(),
 					Puzzle.countDocuments(queryCondition)
 				]);
 

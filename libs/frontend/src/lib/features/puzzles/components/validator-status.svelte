@@ -15,7 +15,10 @@
 {#if puzzleResult === PuzzleResultEnum.SUCCESS}
 	<span class="sr-only">successful test</span>
 	<CheckCircle
-		class={cn("text-green-700 dark:border-green-300 dark:text-green-500", className)}
+		class={cn(
+			"text-green-700 dark:border-green-300 dark:text-green-500",
+			className
+		)}
 		aria-hidden="true"
 	/>
 {:else if puzzleResult === PuzzleResultEnum.ERROR || puzzleResult === PuzzleResultEnum.UNKNOWN}
@@ -27,7 +30,10 @@
 {:else}
 	<span class="sr-only">didn't run test yet</span>
 	<Circle
-		class={cn("text-stone-700 dark:border-stone-300 dark:text-stone-500", className)}
+		class={cn(
+			"text-stone-700 dark:border-stone-300 dark:text-stone-500",
+			className
+		)}
 		aria-hidden="true"
 	/>
 {/if}

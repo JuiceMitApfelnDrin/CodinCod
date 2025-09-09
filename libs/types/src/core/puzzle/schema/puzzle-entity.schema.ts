@@ -9,7 +9,7 @@ import { puzzleVisibilityEnum } from "../enum/puzzle-visibility-enum.js";
 import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
-import { commentDtoSchema } from "../../comment/schema/comment-dto.schema.js";
+import { tagSchema } from "./tag.schema.js";
 
 export const puzzleEntitySchema = z.object({
 	title: z
@@ -26,19 +26,19 @@ export const puzzleEntitySchema = z.object({
 		.min(PUZZLE_CONFIG.minConstraintsLength)
 		.max(PUZZLE_CONFIG.maxConstraintsLength)
 		.optional(),
-	author: objectIdSchema.or(userDtoSchema).default(() => ""),
+	author: objectIdSchema.or(userDtoSchema).default(""),
 	validators: z.array(validatorEntitySchema).optional(),
-	difficulty: difficultySchema.default(() => DifficultyEnum.INTERMEDIATE),
+	difficulty: difficultySchema.default(DifficultyEnum.INTERMEDIATE),
 	// TODO: later not now !
-	visibility: puzzleVisibilitySchema.default(() => puzzleVisibilityEnum.DRAFT),
+	visibility: puzzleVisibilitySchema.default(puzzleVisibilityEnum.DRAFT),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
 	solution: solutionSchema,
 	// TODO: later not now !
 	puzzleMetrics: objectIdSchema.optional(),
 	// TODO: later not now !
-	tags: z.array(z.string()).optional(),
-	comments: z.array(commentDtoSchema.or(objectIdSchema)).default([]),
+	tags: z.array(tagSchema).optional(),
+	comments: z.array(objectIdSchema).default([]),
 });
 
 export type PuzzleEntity = z.infer<typeof puzzleEntitySchema>;

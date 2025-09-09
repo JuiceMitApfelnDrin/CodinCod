@@ -11,5 +11,5 @@
 	<meta name="author" content="CodinCod contributors" />
 </svelte:head>
 
-<WorkInProgress />, Eventually you'll be able to choose how your editor looks like, or which theme
-is default for your account, ...
+<WorkInProgress />, Eventually you'll be able to choose how your editor looks
+like, or which theme is default for your account, ...

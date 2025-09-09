@@ -66,10 +66,14 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					error: messages
 				});
 			} else if (error instanceof MongoError && error.code === 11000) {
-				return reply.status(400).send({ message: `Duplicate key, unique value already exists` });
+				return reply
+					.status(400)
+					.send({ message: `Duplicate key, unique value already exists` });
 			}
 
-			return reply.status(500).send({ message: "Internal server error", error });
+			return reply
+				.status(500)
+				.send({ message: "Internal server error", error });
 		}
 	});
 }

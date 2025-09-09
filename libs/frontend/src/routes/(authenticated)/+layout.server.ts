@@ -10,7 +10,10 @@ export async function load({ cookies, fetch, url }: LayoutServerLoadEvent) {
 	const token = cookies.get(cookieKeys.TOKEN);
 
 	if (!token) {
-		throw redirect(303, frontendUrls.LOGIN + `?${searchParamKeys.REDIRECT_URL}=${pathname}`);
+		throw redirect(
+			303,
+			frontendUrls.LOGIN + `?${searchParamKeys.REDIRECT_URL}=${pathname}`
+		);
 	}
 
 	const currentUser = await getAuthenticatedUserInfo(token, cookies, fetch);
@@ -18,7 +21,10 @@ export async function load({ cookies, fetch, url }: LayoutServerLoadEvent) {
 	const isLoggedOut = !currentUser.isAuthenticated;
 
 	if (isLoggedOut) {
-		throw redirect(303, frontendUrls.LOGIN + `?${searchParamKeys.REDIRECT_URL}=${pathname}`);
+		throw redirect(
+			303,
+			frontendUrls.LOGIN + `?${searchParamKeys.REDIRECT_URL}=${pathname}`
+		);
 	}
 
 	return currentUser;

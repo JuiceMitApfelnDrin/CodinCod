@@ -20,7 +20,9 @@
 	let { data }: { data: PaginatedQueryResponse | undefined } = $props();
 
 	const DEFAULT = { items: [], page: 1, totalItems: 0, totalPages: 0 };
-	let paginatedDataOrDefault = $derived(isPaginatedQueryResponse(data) ? data : DEFAULT);
+	let paginatedDataOrDefault = $derived(
+		isPaginatedQueryResponse(data) ? data : DEFAULT
+	);
 
 	let items: PuzzleDto[] = $derived(paginatedDataOrDefault.items);
 	let currentPage: number = $derived(paginatedDataOrDefault.page);
@@ -41,7 +43,9 @@
 </svelte:head>
 
 <Container>
-	<LogicalUnit class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+	<LogicalUnit
+		class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+	>
 		<H1>{page.params.username}'s puzzles</H1>
 
 		{#if page.params.username === $authenticatedUserInfo?.username}

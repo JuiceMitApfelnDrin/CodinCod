@@ -10,7 +10,9 @@ import {
 	isAuthenticatedInfo
 } from "types";
 
-export default async function commentByIdCommentRoutes(fastify: FastifyInstance) {
+export default async function commentByIdCommentRoutes(
+	fastify: FastifyInstance
+) {
 	fastify.post<ParamsId>(
 		"/",
 		{
@@ -48,9 +50,15 @@ export default async function commentByIdCommentRoutes(fastify: FastifyInstance)
 				const newComment = new Comment(newCommentData);
 				await newComment.save();
 
-				await Comment.findByIdAndUpdate(id, { $push: { comments: newComment._id } }, { new: true });
+				await Comment.findByIdAndUpdate(
+					id,
+					{ $push: { comments: newComment._id } },
+					{ new: true }
+				);
 
-				const comment = await Comment.findById(newComment.id).populate("author");
+				const comment = await Comment.findById(newComment.id).populate(
+					"author"
+				);
 
 				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(comment);
 			} catch (error) {

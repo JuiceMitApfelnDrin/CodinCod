@@ -2,7 +2,10 @@
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import * as Form from "$lib/components/ui/form";
 	import { Input } from "@/components/ui/input";
-	import { registerFormSchema, type RegisterForm } from "../config/register-form-schema";
+	import {
+		registerFormSchema,
+		type RegisterForm
+	} from "../config/register-form-schema";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
 	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
@@ -50,8 +53,8 @@
 			{/snippet}
 		</Form.Control>
 		<Form.Description
-			>Username must be {USERNAME_CONFIG.minUsernameLength}-{USERNAME_CONFIG.maxUsernameLength} characters
-			long and can include letters, numbers, hyphens, and underscores.</Form.Description
+			>Username must be {USERNAME_CONFIG.minUsernameLength}-{USERNAME_CONFIG.maxUsernameLength}
+			characters long and can include letters, numbers, hyphens, and underscores.</Form.Description
 		>
 		<Form.FieldErrors />
 	</Form.Field>
@@ -100,11 +103,15 @@
 
 	{#if message}
 		<GenericAlert
-			title={isHttpErrorCode($page.status) ? "Unable to register" : "Registration successful"}
+			title={isHttpErrorCode($page.status)
+				? "Unable to register"
+				: "Registration successful"}
 			status={$page.status}
 			{message}
 		/>
 	{/if}
 
-	<Form.Button data-testid={testIds.REGISTER_FORM_BUTTON_REGISTER}>Register</Form.Button>
+	<Form.Button data-testid={testIds.REGISTER_FORM_BUTTON_REGISTER}
+		>Register</Form.Button
+	>
 </form>

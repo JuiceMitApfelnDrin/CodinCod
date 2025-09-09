@@ -24,7 +24,7 @@ export * from "./core/chat/schema/chat-message.schema.js";
 // comment
 export * from "./core/comment/config/comment-config.js";
 export * from "./core/comment/enum/comment-type-enum.js";
-export * from "./core/comment/schema/comment.schema.js";
+export * from "./core/comment/schema/comment-entity.schema.js";
 export * from "./core/comment/schema/comment-type.schema.js";
 export * from "./core/comment/schema/comment-dto.schema.js";
 export * from "./core/comment/schema/create-comment.schema.js";
@@ -120,6 +120,7 @@ export * from "./core/submission/schema/submission-dto.schema.js";
 export * from "./core/submission/schema/submission-entity.schema.js";
 
 // user
+export * from "./core/user/enum/user-role.js";
 export * from "./core/user/schema/user-activity.schema.js";
 export * from "./core/user/schema/user-dto.schema.js";
 export * from "./core/user/schema/user-entity.schema.js";

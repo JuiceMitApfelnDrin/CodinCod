@@ -28,7 +28,11 @@ export default [
 		rules: {
 			"no-undef": "warn",
 			"no-unused-vars": "warn",
-			"sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
+			"sort-keys": [
+				"error",
+				"asc",
+				{ caseSensitive: true, minKeys: 2, natural: false }
+			],
 			yoda: "error"
 		}
 	}

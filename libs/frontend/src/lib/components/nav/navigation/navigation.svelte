@@ -14,11 +14,16 @@
 	<nav
 		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:mt-6 lg:flex lg:flex-row lg:rounded-2xl"
 	>
-		<a href={frontendUrls.ROOT} class="self-center whitespace-nowrap text-4xl font-bold">
+		<a
+			href={frontendUrls.ROOT}
+			class="self-center whitespace-nowrap text-4xl font-bold"
+		>
 			CodinCod
 		</a>
 
-		<ul class="mt-3 flex w-full flex-1 flex-row items-center justify-center gap-4">
+		<ul
+			class="mt-3 flex w-full flex-1 flex-row items-center justify-center gap-4"
+		>
 			<NavigationItem
 				data-testid={testIds.NAVIGATION_ANCHOR_HOME}
 				href={frontendUrls.ROOT}
@@ -58,7 +63,9 @@
 		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:hidden"
 	>
 		<a href={frontendUrls.ROOT}>
-			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold">CodinCod</span>
+			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold"
+				>CodinCod</span
+			>
 		</a>
 
 		<DropdownMenu.Root>
