@@ -1,11 +1,11 @@
-import { z } from 'zod';
-import { puzzleEntitySchema } from './puzzle-entity.schema.js';
-import { objectIdSchema } from '../../common/schema/object-id.js';
-import { solutionSchema } from './solution.schema.js';
+import { z } from "zod";
+import { puzzleEntitySchema } from "./puzzle-entity.schema.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
+import { solutionSchema } from "./solution.schema.js";
 import {
 	CommentDto,
 	commentDtoSchema,
-} from '../../comment/schema/comment-dto.schema.js';
+} from "../../comment/schema/comment-dto.schema.js";
 
 const basePuzzleDtoSchema = puzzleEntitySchema;
 
