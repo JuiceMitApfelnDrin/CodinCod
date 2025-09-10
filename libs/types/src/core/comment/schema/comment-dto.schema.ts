@@ -1,8 +1,8 @@
-import { z } from "zod";
-import { objectIdSchema } from "../../common/schema/object-id.js";
-import { commentEntitySchema } from "./comment-entity.schema.js";
+import { z } from 'zod';
+import { objectIdSchema } from '../../common/schema/object-id.js';
+import { commentEntitySchema } from './comment-entity.schema.js';
 
-const commentDtoSchema = commentEntitySchema.extend({
+export const commentDtoSchema = commentEntitySchema.extend({
 	_id: objectIdSchema,
 	comments: z.array(objectIdSchema),
 	parentId: objectIdSchema,

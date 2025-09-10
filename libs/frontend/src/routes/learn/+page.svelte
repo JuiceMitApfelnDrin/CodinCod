@@ -15,7 +15,7 @@
 	<title>Learn overview | CodinCod</title>
 	<meta
 		name="description"
-		content={`Structured coding courses with live practice. Solve puzzles, get instant feedback, and level up your skills with community mentorship. Start with a programming language or dive into algorithms.`}
+		content="Structured coding courses with live practice. Solve puzzles, get instant feedback, and level up your skills with community mentorship. Start with a programming language or dive into algorithms."
 	/>
 	<meta
 		name="keywords"

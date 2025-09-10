@@ -18,7 +18,7 @@
 	bind:ref
 	{orientation}
 	class={cn(
-		"flex touch-none select-none transition-colors",
+		"flex touch-none transition-colors select-none",
 		orientation === "vertical" &&
 			"h-full w-2.5 border-l border-l-transparent p-px",
 		orientation === "horizontal" &&
@@ -30,7 +30,7 @@
 	{@render children?.()}
 	<ScrollAreaPrimitive.Thumb
 		class={cn(
-			"relative rounded-full bg-border",
+			"bg-border relative rounded-full",
 			orientation === "vertical" && "flex-1"
 		)}
 	/>

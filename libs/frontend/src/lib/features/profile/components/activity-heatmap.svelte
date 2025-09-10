@@ -113,7 +113,7 @@
 	}
 </script>
 
-<div class="overflow-x-scroll rounded-lg border border-stone-300 p-6 shadow-sm">
+<div class="overflow-x-scroll rounded-lg border border-stone-300 p-6 shadow-xs">
 	<table class="mb-2 w-full border-separate border-spacing-1">
 		<caption class="sr-only">Activity Calendar</caption>
 		<thead>
@@ -167,7 +167,7 @@
 					class={cn(
 						"activity-cell",
 						"rounded-full",
-						"bg-gradient-to-r from-stone-100 via-teal-200 via-25% to-teal-700 dark:from-stone-800 dark:via-teal-700 dark:to-teal-200"
+						"bg-linear-to-r from-stone-100 via-teal-200 via-25% to-teal-700 dark:from-stone-800 dark:via-teal-700 dark:to-teal-200"
 					)}
 				></div>
 			</div>
@@ -177,6 +177,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.activity-cell {
 		@apply h-4 min-h-4 w-4 min-w-4 hover:scale-110 hover:shadow-md motion-safe:transition-transform;
 	}

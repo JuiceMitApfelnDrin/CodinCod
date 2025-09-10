@@ -23,6 +23,8 @@
 </details>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	summary {
 		@apply py-2;
 	}

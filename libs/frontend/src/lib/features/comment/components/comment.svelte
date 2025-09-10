@@ -59,7 +59,11 @@
 	}
 
 	function onCommentAdded(newComment: CommentDto) {
-		comment = { ...comment, comments: [...comment.comments, newComment] };
+		const newComments = [...comment.comments, newComment] as any[]; // unfortunately needed because recursive types are hard
+		comment = {
+			...comment,
+			comments: newComments
+		};
 
 		isReplying = false;
 	}

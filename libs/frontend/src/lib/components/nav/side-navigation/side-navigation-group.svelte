@@ -14,7 +14,7 @@
 <details class="group" open>
 	<summary
 		class={cn(
-			"relative block w-full rounded-md px-4 py-2 hover:bg-stone-200 hover:underline hover:dark:bg-stone-800"
+			"relative block w-full rounded-md px-4 py-2 hover:bg-stone-200 hover:underline dark:hover:bg-stone-800"
 		)}
 	>
 		{#if icon}
@@ -25,7 +25,7 @@
 
 		<span>{text}</span>
 	</summary>
-	<ul class="ml-4 mt-2 flex flex-col gap-1">
+	<ul class="mt-2 ml-4 flex flex-col gap-1">
 		{@render children?.()}
 	</ul>
 </details>

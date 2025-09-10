@@ -1,6 +1,6 @@
 export const webSocketUrls = {
-	ROOT: `/ws`,
-	WAITING_ROOM: `/ws`,
+	ROOT: "/ws",
+	WAITING_ROOM: "/ws",
 	gameById: (id: string) => `/ws/game/${id}`,
 } as const;
 

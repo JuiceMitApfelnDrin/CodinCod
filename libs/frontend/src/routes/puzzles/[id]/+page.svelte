@@ -33,7 +33,7 @@
 	const playUrl = frontendUrls.puzzleByIdPlay(puzzleId);
 
 	function onCommentAdded(newComment: CommentDto) {
-		puzzleComments = [...puzzle.comments, newComment];
+		puzzleComments = [...puzzle.comments, newComment] as any[]; // unfortunately needed because recursive types are hard
 	}
 </script>
 
@@ -88,7 +88,7 @@
 				<div class={cn(!puzzle.statement && "italic opacity-50")}>
 					<Markdown
 						markdown={puzzle.statement}
-						fallbackText={"Author still needs to add a statement"}
+						fallbackText="Author still needs to add a statement"
 					/>
 				</div>
 			{/snippet}
@@ -102,7 +102,7 @@
 				<div class={cn(!puzzle.constraints && "italic opacity-50")}>
 					<Markdown
 						markdown={puzzle.constraints}
-						fallbackText={"Author still needs to add constraints"}
+						fallbackText="Author still needs to add constraints"
 					/>
 				</div>
 			{/snippet}
@@ -152,6 +152,8 @@
 </Container>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	h2 {
 		@apply inline text-xl underline;
 	}

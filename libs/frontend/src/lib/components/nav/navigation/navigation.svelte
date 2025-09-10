@@ -12,11 +12,11 @@
 
 <header class="lg:mx-8">
 	<nav
-		class="container hidden items-center gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:mt-6 lg:flex lg:flex-row lg:rounded-2xl"
+		class="container hidden items-center gap-8 bg-teal-200 bg-linear-to-b from-teal-100 py-6 text-teal-900 lg:mt-6 lg:flex lg:flex-row lg:rounded-2xl dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a
 			href={frontendUrls.ROOT}
-			class="self-center whitespace-nowrap text-4xl font-bold"
+			class="self-center text-4xl font-bold whitespace-nowrap"
 		>
 			CodinCod
 		</a>
@@ -51,7 +51,7 @@
 		{:else}
 			<a
 				data-testid={testIds.NAVIGATION_ANCHOR_LOGIN}
-				class="px-2 pb-2 pt-5 text-sm font-semibold uppercase text-teal-900 underline underline-offset-8 hover:text-foreground hover:underline hover:underline-offset-2 dark:text-teal-100 dark:hover:text-foreground"
+				class="hover:text-foreground dark:hover:text-foreground px-2 pt-5 pb-2 text-sm font-semibold text-teal-900 uppercase underline underline-offset-8 hover:underline hover:underline-offset-2 dark:text-teal-100"
 				href={frontendUrls.LOGIN}>Login</a
 			>
 		{/if}
@@ -60,10 +60,10 @@
 	</nav>
 
 	<div
-		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-gradient-to-b from-teal-100 py-6 text-teal-900 dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100 lg:hidden"
+		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-linear-to-b from-teal-100 py-6 text-teal-900 lg:hidden dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a href={frontendUrls.ROOT}>
-			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold"
+			<span class="self-center font-mono text-4xl font-bold whitespace-nowrap"
 				>CodinCod</span
 			>
 		</a>

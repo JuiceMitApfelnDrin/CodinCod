@@ -84,7 +84,7 @@
 
 						<div class="flex items-center pt-2">
 							<Calendar class="mr-2 h-4 w-4 opacity-70" />
-							<span class="text-xs text-muted-foreground"
+							<span class="text-muted-foreground text-xs"
 								>Joined {dayjs(user.createdAt).format("MMMM YYYY")}</span
 							>
 						</div>
