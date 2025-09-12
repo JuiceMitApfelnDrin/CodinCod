@@ -12,7 +12,7 @@
 	const hasBeenUpdated = comment && comment.updatedAt !== comment.createdAt;
 </script>
 
-<dl class="flex gap-1 text-sm text-stone-600 dark:text-stone-400 lg:flex-row">
+<dl class="flex gap-1 text-sm text-stone-600 lg:flex-row dark:text-stone-400">
 	{#if isUserDto(comment.author)}
 		<dt class="font-semibold">Comment by</dt>
 		<dd>

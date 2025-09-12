@@ -267,7 +267,7 @@
 	<title>Multiplayer game | CodinCod</title>
 	<meta
 		name="description"
-		content={`Sharpen your skills in live coding duels! Get instant feedback from opponents and learn faster through collaborative competition.`}
+		content="Sharpen your skills in live coding duels! Get instant feedback from opponents and learn faster through collaborative competition."
 	/>
 	{#if puzzle && isUserDto(puzzle.author)}
 		<meta name="author" content={`${puzzle.author.username}`} />
@@ -281,7 +281,7 @@
 		<DisplayError
 			link={{ href: frontendUrls.LOGIN, text: "Go to login" }}
 			status={httpResponseCodes.CLIENT_ERROR.FORBIDDEN}
-			message={"You have to login in order to play!"}
+			message="You have to login in order to play!"
 		/>
 	</Container>
 {:else if errorMessage}
@@ -351,7 +351,7 @@
 			</Resizable.Pane>
 			<Resizable.Handle />
 			<Resizable.Pane
-				class="ml-4 flex min-w-[10%] max-w-sm flex-col gap-4 md:gap-8 lg:gap-12"
+				class="ml-4 flex max-w-sm min-w-[10%] flex-col gap-4 md:gap-8 lg:gap-12"
 			>
 				<H2>Standings - <WorkInProgress /></H2>
 

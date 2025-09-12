@@ -373,7 +373,7 @@
 
 							{#if isCodeExecutionSuccessResponse(testResults[index])}
 								<ValidatorStatus
-									class="absolute right-0 top-0 mr-4 mt-4 p-0"
+									class="absolute top-0 right-0 mt-4 mr-4 p-0"
 									puzzleResult={testResults[index].puzzleResultInformation
 										.result}
 								/>
@@ -387,6 +387,8 @@
 {/if}
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	h2 {
 		@apply inline text-xl underline;
 	}

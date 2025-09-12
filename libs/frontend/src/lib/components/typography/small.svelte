@@ -8,6 +8,6 @@
 	} = $props();
 </script>
 
-<small class="text-sm font-medium leading-none">
+<small class="text-sm leading-none font-medium">
 	{@render children?.()}
 </small>

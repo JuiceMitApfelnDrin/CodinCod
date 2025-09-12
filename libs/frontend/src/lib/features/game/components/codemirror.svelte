@@ -1,44 +1,10 @@
 <script lang="ts">
 	import CodeMirror from "svelte-codemirror-editor";
 	import { oneDark } from "@codemirror/theme-one-dark";
-	import {
-		keymap,
-		type EditorPreferences,
-		type PreferencesDto,
-		type PuzzleLanguage
-	} from "types";
-	import {
-		bracketMatching,
-		defaultHighlightStyle,
-		foldGutter,
-		foldKeymap,
-		indentOnInput,
-		StreamLanguage,
-		syntaxHighlighting
-	} from "@codemirror/language";
-	import { basicSetup } from "codemirror";
-	import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
-	import { lintKeymap } from "@codemirror/lint";
-	import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
-	import {
-		autocompletion,
-		completionKeymap,
-		closeBrackets,
-		closeBracketsKeymap
-	} from "@codemirror/autocomplete";
-	import { EditorState, type Extension } from "@codemirror/state";
+	import { keymap, type PreferencesDto, type PuzzleLanguage } from "types";
+	import { StreamLanguage } from "@codemirror/language";
 	import { preferences } from "@/stores/preferences";
-	import {
-		keymap as codemirrorKeymap,
-		crosshairCursor,
-		drawSelection,
-		dropCursor,
-		highlightActiveLine,
-		highlightActiveLineGutter,
-		highlightSpecialChars,
-		lineNumbers,
-		rectangularSelection
-	} from "@codemirror/view";
+	import type { Extension } from "@codemirror/state";
 
 	interface Props {
 		readonly?: boolean;
@@ -52,77 +18,33 @@
 		value = $bindable("")
 	}: Props = $props();
 
-	function createBasicExtensions(
-		editorPreferences: EditorPreferences
-	): Extension[] {
-		const extensions: Extension[] = [];
-
-		function add(condition: boolean, ext: Extension) {
-			if (condition) extensions.push(ext);
-		}
-
-		// Add all extensions from basicSetup with conditional checks
-		add(editorPreferences.lineNumbers, lineNumbers());
-		add(
-			editorPreferences.highlightActiveLineGutter,
-			highlightActiveLineGutter()
-		);
-		add(editorPreferences.highlightSpecialChars, highlightSpecialChars());
-		add(editorPreferences.history, history());
-		add(editorPreferences.foldGutter, foldGutter());
-		add(editorPreferences.drawSelection, drawSelection());
-		add(editorPreferences.dropCursor, dropCursor());
-		add(
-			editorPreferences.allowMultipleSelections,
-			EditorState.allowMultipleSelections.of(true)
-		);
-		add(editorPreferences.indentOnInput, indentOnInput());
-		add(true, syntaxHighlighting(defaultHighlightStyle, { fallback: true }));
-		add(editorPreferences.bracketMatching, bracketMatching());
-		add(editorPreferences.closeBrackets, closeBrackets());
-		add(editorPreferences.autocompletion, autocompletion());
-		add(editorPreferences.rectangularSelection, rectangularSelection());
-		add(editorPreferences.crosshairCursor, crosshairCursor());
-		add(editorPreferences.highlightActiveLine, highlightActiveLine());
-		add(
-			editorPreferences.highlightSelectionMatches,
-			highlightSelectionMatches()
-		);
-
-		// Keymaps
-		const keymaps = [];
-		if (editorPreferences.defaultKeymap) keymaps.push(...defaultKeymap);
-		if (editorPreferences.searchKeymap) keymaps.push(...searchKeymap);
-		if (editorPreferences.foldKeymap) keymaps.push(...foldKeymap);
-		if (editorPreferences.completionKeymap) keymaps.push(...completionKeymap);
-		if (editorPreferences.lintKeymap) keymaps.push(...lintKeymap);
-		if (editorPreferences.closeBrackets) keymaps.push(...closeBracketsKeymap);
-		if (editorPreferences.history) keymaps.push(...historyKeymap);
-
-		extensions.push(codemirrorKeymap.of(keymaps));
-
-		return extensions;
-	}
-
 	async function getEditorConfig(
 		language: string,
 		preferences: PreferencesDto | null
 	) {
-		let defaultConfiguration = [basicSetup];
-
-		if (preferences?.editor) {
-			defaultConfiguration = createBasicExtensions(preferences?.editor);
-		}
-
 		const languageExtensions = await getLanguageExtensions(language);
+		const keymapExtension = await getKeymapExtensions(
+			preferences?.editor?.keymap
+		);
 
 		return {
-			extensions: [
-				...defaultConfiguration,
-				oneDark,
-				await getKeymapExtensions(preferences?.editor?.keymap),
-				...languageExtensions
-			],
+			drawSelection: preferences?.editor?.drawSelection ?? true,
+			dropCursor: preferences?.editor?.dropCursor ?? true,
+			extensions: [...languageExtensions, keymapExtension],
+			bracketMatching: preferences?.editor?.bracketMatching ?? true,
+			foldGutter: preferences?.editor?.foldGutter ?? true,
+			autocompletion: preferences?.editor?.autocompletion ?? true,
+			highlight: {
+				activeLine: preferences?.editor?.highlightActiveLine ?? true,
+				activeLineGutter:
+					preferences?.editor?.highlightActiveLineGutter ?? true,
+				selectionMatches:
+					preferences?.editor?.highlightSelectionMatches ?? true,
+				specialChars: preferences?.editor?.highlightSpecialChars ?? true
+			},
+			closeBrackets: preferences?.editor?.closeBrackets ?? true,
+			lineNumbers: preferences?.editor?.lineNumbers ?? true,
+			allowMultiSelect: preferences?.editor?.allowMultipleSelections ?? true,
 			tabSize: (() => {
 				switch (language) {
 					case "javascript":
@@ -138,15 +60,17 @@
 						return 4;
 				}
 			})(),
-			useTab: language === "go"
+			crosshairCursor: preferences?.editor?.crosshairCursor ?? true,
+			useTab: language === "go",
+			history: preferences?.editor?.history ?? true,
+			indentOnInput: preferences?.editor?.indentOnInput ?? true,
+			rectangularSelection: preferences?.editor?.rectangularSelection ?? true
 		};
 	}
 
 	async function getLanguageExtensions(
 		language: PuzzleLanguage
-	): Promise<Extension[] | StreamLanguage<unknown>[]> {
-		let chosenLanguageExtension: Extension[] = [];
-
+	): Promise<Extension[]> {
 		switch (language) {
 			case "javascript": {
 				return [(await import("@codemirror/lang-javascript")).javascript()];
@@ -259,38 +183,26 @@
 				const { perl } = await import("@codemirror/legacy-modes/mode/perl");
 				return [StreamLanguage.define(perl)];
 			}
-
-			case "awk":
-				// awk - No legacy mode available
-				break;
-
-			case "raku":
-				// raku - No legacy mode available
-				// @code-golf has a raku implementation - https://github.com/code-golf/code-golf/blob/master/js/vendor/codemirror-raku.js
-				break;
+			default:
+				return [];
 		}
-
-		return chosenLanguageExtension;
 	}
 
-	async function getKeymapExtensions(
-		requestedKeymap?: string
-	): Promise<Extension> {
+	async function getKeymapExtensions(requestedKeymap?: string) {
 		switch (requestedKeymap) {
 			case keymap.EMACS: {
 				const { emacs } = await import("@replit/codemirror-emacs");
 				return emacs();
 			}
-
 			case keymap.VIM: {
 				const { vim } = await import("@replit/codemirror-vim");
 				return vim();
 			}
-
 			default: {
 				const { vscodeKeymap } = await import(
 					"@replit/codemirror-vscode-keymap"
 				);
+				const { keymap: codemirrorKeymap } = await import("@codemirror/view");
 				return codemirrorKeymap.of(vscodeKeymap);
 			}
 		}
@@ -305,9 +217,7 @@
 		theme={oneDark}
 		{readonly}
 		{...editorConfig}
-		basic={false}
 		styles={{
-			// TODO: fix this fr fr, since setting maxWidth can only be a temporary solution
 			".cm-content": { maxWidth: "90vw" },
 			".cm-editor": {
 				display: "flex",

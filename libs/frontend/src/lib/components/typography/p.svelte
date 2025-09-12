@@ -10,11 +10,6 @@
 	let { children, class: className = undefined }: Props = $props();
 </script>
 
-<p
-	class={cn(
-		"leading-7 [&:not(:first-child)]:mt-2 lg:[&:not(:first-child)]:mt-4",
-		className
-	)}
->
+<p class={cn("leading-7 not-first:mt-2 lg:not-first:mt-4", className)}>
 	{@render children?.()}
 </p>

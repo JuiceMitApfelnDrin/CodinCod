@@ -35,7 +35,7 @@
 
 <details
 	open
-	class="w-full max-w-md rounded-lg border border-stone-300 shadow-sm"
+	class="w-full max-w-md rounded-lg border border-stone-300 shadow-xs"
 >
 	<summary
 		class="flex cursor-pointer list-none items-center justify-between px-4 py-3"

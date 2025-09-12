@@ -1,22 +1,42 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@font-face {
-	font-family: "Inconsolata";
-	src: url("/fonts/Inconsolata-VariableFont_wdth,wght.ttf") format("truetype");
-	font-weight: 200 900;
-	font-stretch: 50% 200%;
-	font-display: swap;
+@config '../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentcolor);
+	}
 }
 
-@font-face {
-	font-family: "Nunito Sans";
-	src: url("/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf")
-		format("truetype");
-	font-weight: 200 1000;
-	font-stretch: 75% 125%;
-	font-display: swap;
+@layer utilities {
+	@font-face {
+		font-family: "Inconsolata";
+		src: url("/fonts/Inconsolata-VariableFont_wdth,wght.ttf") format("truetype");
+		font-weight: 200 900;
+		font-stretch: 50% 200%;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: "Nunito Sans";
+		src: url("/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf")
+			format("truetype");
+		font-weight: 200 1000;
+		font-stretch: 75% 125%;
+		font-display: swap;
+	}
 }
 
 @layer base {
@@ -121,11 +141,11 @@ a:focus {
 	@apply inline-flex items-center justify-center rounded-full p-1 text-lg;
 }
 .icon.default {
-	@apply bg-stone-700  text-white dark:bg-stone-200 dark:text-stone-700;
+	@apply bg-stone-700 text-white dark:bg-stone-200 dark:text-stone-700;
 }
 
 a.styled-link {
-	@apply text-teal-800 underline hover:text-teal-600 dark:text-teal-200 hover:dark:text-teal-400;
+	@apply text-teal-800 underline hover:text-teal-600 dark:text-teal-200 dark:hover:text-teal-400;
 }
 
 * {

@@ -8,6 +8,6 @@
 	} = $props();
 </script>
 
-<p class="text-sm text-muted-foreground">
+<p class="text-muted-foreground text-sm">
 	{@render children?.()}
 </p>

@@ -7,7 +7,7 @@
 	<title>Docs | CodinCod</title>
 	<meta
 		name="description"
-		content={`Learn how to contribute to CodinCod's open-source platform, design puzzles, or integrate our API into your projects.`}
+		content="Learn how to contribute to CodinCod's open-source platform, design puzzles, or integrate our API into your projects."
 	/>
 	<meta name="author" content="CodinCod contributors" />
 </svelte:head>

@@ -52,7 +52,9 @@ class="inline"
 </li>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.highlight {
-		@apply bg-red-500 bg-opacity-25;
+		@apply bg-red-500/25;
 	}
 </style>
