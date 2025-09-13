@@ -1,10 +1,12 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, ObjectId, Schema } from "mongoose";
 import { DEFAULT_USER_ROLES, UserEntity } from "types";
 import bcrypt from "bcryptjs";
 import { USER } from "../../utils/constants/model.js";
 import { profileSchema } from "./user-profile.js";
 
-interface UserDocument extends Document, UserEntity {}
+export interface UserDocument extends Document, UserEntity {
+	_id: ObjectId;
+}
 
 const userSchema = new Schema<UserDocument>({
 	createdAt: {

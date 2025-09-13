@@ -4,7 +4,7 @@ import { commentTypeEnum, type CommentEntity } from "types";
 
 export interface CommentDocument
 	extends Document,
-		Omit<CommentEntity, "author" & "parentId"> {
+		Omit<CommentEntity, "author" | "parentId"> {
 	_id: ObjectId;
 	author: ObjectId;
 	parentId: ObjectId;

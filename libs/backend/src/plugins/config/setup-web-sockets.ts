@@ -9,12 +9,14 @@ export async function setupWebSockets(fastify: FastifyInstance) {
 	// needs to happen before other routes in the whole flow
 
 	fastify.addHook("preValidation", authenticated);
-	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (...props) =>
-		waitingRoomSetup(...props, fastify)
+	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (socket, req) =>
+		waitingRoomSetup(socket, req)
 	);
 
 	fastify.addHook("preValidation", authenticated);
-	fastify.get<ParamsId>(
+	fastify.get<{
+		Params: ParamsId;
+	}>(
 		webSocketUrls.gameById(webSocketParams.ID),
 		{ websocket: true },
 		(...props) => gameSetup(...props, fastify)

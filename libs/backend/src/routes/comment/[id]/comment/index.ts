@@ -4,33 +4,41 @@ import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
 import {
 	CommentEntity,
+	CommentErrorResponse,
 	commentTypeEnum,
+	CreateCommentRequest,
 	createCommentSchema,
-	httpResponseCodes,
-	isAuthenticatedInfo
+	CreateCommentSuccessResponse,
+	isAuthenticatedInfo,
+	isCreateCommentSuccessResponse
 } from "types";
+import {
+	handleAndSendError,
+	sendUnauthorizedError
+} from "@/helpers/error.helpers.js";
+import { ClientSession } from "mongoose";
 
 export default async function commentByIdCommentRoutes(
 	fastify: FastifyInstance
 ) {
-	fastify.post<ParamsId>(
+	fastify.post<{
+		Params: ParamsId;
+		Body: CreateCommentRequest;
+		Reply: CreateCommentSuccessResponse | CommentErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			const parseResult = createCommentSchema.safeParse(request.body);
 
 			if (!parseResult.success) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+				return handleAndSendError(reply, parseResult.error, request.url);
 			}
 
 			if (!isAuthenticatedInfo(request.user)) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send({ error: "Invalid credentials" });
+				return sendUnauthorizedError(reply, "Invalid credentials");
 			}
 
 			const id = request.params.id;
@@ -43,28 +51,47 @@ export default async function commentByIdCommentRoutes(
 				upvote: 0,
 				downvote: 0,
 				comments: [],
-				commentType: commentTypeEnum.COMMENT
+				commentType: commentTypeEnum.COMMENT,
+				parentId: id
 			};
 
+			let session: ClientSession | null = null;
 			try {
+				session = await Comment.startSession();
+				session.startTransaction();
+
 				const newComment = new Comment(newCommentData);
-				await newComment.save();
+				await newComment.save({ session });
 
 				await Comment.findByIdAndUpdate(
 					id,
 					{ $push: { comments: newComment._id } },
-					{ new: true }
+					{ session, new: true }
 				);
 
-				const comment = await Comment.findById(newComment.id).populate(
+				await session.commitTransaction();
+				session.endSession();
+
+				const comment = await Comment.findById(newComment._id).populate(
 					"author"
 				);
 
-				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(comment);
+				if (!comment) {
+					throw new Error("Failed to retrieve created comment");
+				}
+
+				if (!isCreateCommentSuccessResponse(comment)) {
+					throw new Error("Invalid comment structure");
+				}
+
+				return reply.status(201).send(comment);
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to create comment" });
+				if (session) {
+					await session.abortTransaction();
+					session.endSession();
+				}
+
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);

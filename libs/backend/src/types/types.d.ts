@@ -1,1 +1,1 @@
-export type ParamsId = { Params: { id: string } };
+export type ParamsId = { id: string };

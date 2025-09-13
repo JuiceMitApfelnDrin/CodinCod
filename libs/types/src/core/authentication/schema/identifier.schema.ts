@@ -7,7 +7,7 @@ export const identifierSchema = z.string().refine(
 		return isEmail(value) || isUsername(value);
 	},
 	{
-		message: "Invalid username or email",
+		error: "Invalid username or email",
 	},
 );
 

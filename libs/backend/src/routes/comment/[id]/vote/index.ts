@@ -9,29 +9,30 @@ import {
 	isAuthenticatedInfo,
 	voteTypeEnum
 } from "types";
+import {
+	handleAndSendError,
+	sendUnauthorizedError,
+	sendNotFoundError
+} from "@/helpers/error.helpers.js";
 
 export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
-	fastify.post<ParamsId>(
+	fastify.post<{
+		Params: ParamsId;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
-			// Validate vote type input
 			const parsed = commentVoteRequestSchema.safeParse(request.body);
 
 			if (!parsed.success) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parsed.error.errors });
+				return handleAndSendError(reply, parsed.error, request.url);
 			}
 			const { type } = parsed.data;
 
-			// Ensure user is authenticated
 			if (!isAuthenticatedInfo(request.user)) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send({ error: "Invalid credentials" });
+				return sendUnauthorizedError(reply, "Invalid credentials");
 			}
 
 			const userId = request.user.userId;
@@ -41,18 +42,14 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 				const comment = await Comment.findById(commentId);
 
 				if (!comment) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: "Comment not found" });
+					return sendNotFoundError(reply, "Comment not found");
 				}
 
-				// Check if user already voted on this comment
 				let existingVote = await UserVote.findOne({
 					votedOn: commentId,
 					author: userId
 				});
 
-				// Handle vote toggle/update
 				if (existingVote && existingVote.type === type) {
 					await existingVote.deleteOne();
 				} else if (existingVote) {
@@ -88,7 +85,6 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 					}
 				]);
 
-				// Extract counts from aggregation result
 				const { upvote = 0, downvote = 0 } = voteCounts[0] || {};
 
 				comment.upvote = upvote;
@@ -99,9 +95,7 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 				return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(comment);
 			} catch (error) {
 				fastify.log.error(error);
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Internal server error" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);
