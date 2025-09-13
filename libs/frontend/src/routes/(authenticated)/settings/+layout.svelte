@@ -3,11 +3,10 @@
 	import SideNavigation from "@/components/nav/side-navigation/side-navigation.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
-
 	import {
 		Bell,
 		MessageCircle,
-		Paintbrush2,
+		PaintbrushVertical,
 		Settings,
 		Settings2,
 		User
@@ -36,7 +35,7 @@
 		/>
 		<SideNavigationItem
 			href={frontendUrls.SETTINGS_APPEARANCE}
-			icon={Paintbrush2}
+			icon={PaintbrushVertical}
 			text="Appearance"
 		/>
 		<SideNavigationItem

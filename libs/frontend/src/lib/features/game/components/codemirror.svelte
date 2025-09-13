@@ -28,12 +28,15 @@
 		);
 
 		return {
+			allowMultiSelect: preferences?.editor?.allowMultipleSelections ?? true,
+			autocompletion: preferences?.editor?.autocompletion ?? true,
+			bracketMatching: preferences?.editor?.bracketMatching ?? true,
+			closeBrackets: preferences?.editor?.closeBrackets ?? true,
+			crosshairCursor: preferences?.editor?.crosshairCursor ?? true,
 			drawSelection: preferences?.editor?.drawSelection ?? true,
 			dropCursor: preferences?.editor?.dropCursor ?? true,
 			extensions: [...languageExtensions, keymapExtension],
-			bracketMatching: preferences?.editor?.bracketMatching ?? true,
 			foldGutter: preferences?.editor?.foldGutter ?? true,
-			autocompletion: preferences?.editor?.autocompletion ?? true,
 			highlight: {
 				activeLine: preferences?.editor?.highlightActiveLine ?? true,
 				activeLineGutter:
@@ -42,9 +45,10 @@
 					preferences?.editor?.highlightSelectionMatches ?? true,
 				specialChars: preferences?.editor?.highlightSpecialChars ?? true
 			},
-			closeBrackets: preferences?.editor?.closeBrackets ?? true,
+			history: preferences?.editor?.history ?? true,
+			indentOnInput: preferences?.editor?.indentOnInput ?? true,
 			lineNumbers: preferences?.editor?.lineNumbers ?? true,
-			allowMultiSelect: preferences?.editor?.allowMultipleSelections ?? true,
+			rectangularSelection: preferences?.editor?.rectangularSelection ?? true,
 			tabSize: (() => {
 				switch (language) {
 					case "javascript":
@@ -60,11 +64,7 @@
 						return 4;
 				}
 			})(),
-			crosshairCursor: preferences?.editor?.crosshairCursor ?? true,
-			useTab: language === "go",
-			history: preferences?.editor?.history ?? true,
-			indentOnInput: preferences?.editor?.indentOnInput ?? true,
-			rectangularSelection: preferences?.editor?.rectangularSelection ?? true
+			useTab: language === "go"
 		};
 	}
 
