@@ -1,8 +1,11 @@
-export const baseRoute = "/api/v1";
+import { API_VERSION } from "../../../api/index.js";
+
+export const baseRoute = `/api/${API_VERSION}`;
 
 export const backendUrls = {
 	ROOT: "/",
 	REGISTER: `${baseRoute}/register`,
+	DOCUMENTATION: `${baseRoute}/documentation`,
 	LOGIN: `${baseRoute}/login`,
 	USER: `${baseRoute}/user`,
 	userByUsername: (username: string) => `${baseRoute}/user/${username}`,

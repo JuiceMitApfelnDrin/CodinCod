@@ -1,23 +1,52 @@
 import { FastifyInstance } from "fastify";
 import {
-	httpResponseCodes,
+	AccountErrorResponse,
+	GetPreferencesSuccessResponse,
 	isAuthenticatedInfo,
-	preferencesDtoSchema
+	PatchPreferencesRequest,
+	PatchPreferencesSuccessResponse,
+	preferencesDtoSchema,
+	UpdatePreferencesRequest,
+	UpdatePreferencesSuccessResponse,
+	getPreferencesSuccessResponseSchema,
+	updatePreferencesRequestSchema,
+	updatePreferencesSuccessResponseSchema,
+	deletePreferencesSuccessResponseSchema,
+	patchPreferencesRequestSchema,
+	patchPreferencesSuccessResponseSchema,
+	accountErrorResponseSchema,
+	httpResponseCodes
 } from "types";
 import Preferences from "../../../models/preferences/preferences.js";
 import authenticated from "../../../plugins/middleware/authenticated.js";
+import {
+	handleAndSendError,
+	sendUnauthorizedError,
+	sendNotFoundError
+} from "../../../helpers/error.helpers.js";
 
 export default async function preferencesRoutes(fastify: FastifyInstance) {
-	fastify.get(
+	fastify.get<{
+		Reply: GetPreferencesSuccessResponse | AccountErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Get user account preferences",
+				tags: ["Account"],
+				security: [{ bearerAuth: [] }],
+				response: {
+					[httpResponseCodes.SUCCESSFUL.OK]: getPreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			if (!isAuthenticatedInfo(request.user)) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send({ error: "Invalid credentials" });
+				return sendUnauthorizedError(reply, "Invalid credentials");
 			}
 
 			const userId = request.user.userId;
@@ -26,38 +55,45 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 				const preferences = await Preferences.findOne({ owner: userId });
 
 				if (!preferences) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: "Preferences not found" });
+					return sendNotFoundError(reply, "Preferences not found");
 				}
 
 				return reply.send(preferences);
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to fetch preferences" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);
 
-	fastify.put(
+	fastify.put<{
+		Body: UpdatePreferencesRequest;
+		Reply: UpdatePreferencesSuccessResponse | AccountErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Update user account preferences",
+				tags: ["Account"],
+				security: [{ bearerAuth: [] }],
+				body: updatePreferencesRequestSchema,
+				response: {
+					[httpResponseCodes.SUCCESSFUL.OK]: updatePreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			if (!isAuthenticatedInfo(request.user)) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send({ error: "Invalid credentials" });
+				return sendUnauthorizedError(reply, "Invalid credentials");
 			}
 
 			const parseResult = preferencesDtoSchema.safeParse(request.body);
 
 			if (!parseResult.success) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+				return handleAndSendError(reply, parseResult.error, request.url);
 			}
 
 			const userId = request.user.userId;
@@ -71,23 +107,32 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to update preferences" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);
 
-	fastify.delete(
+	fastify.delete<{
+		Reply: void | AccountErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Delete user account preferences",
+				tags: ["Account"],
+				security: [{ bearerAuth: [] }],
+				response: {
+					[httpResponseCodes.SUCCESSFUL.NO_CONTENT]: deletePreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			if (!isAuthenticatedInfo(request.user)) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send({ error: "Invalid credentials" });
+				return sendUnauthorizedError(reply, "Invalid credentials");
 			}
 
 			const userId = request.user.userId;
@@ -96,42 +141,47 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 				const deleted = await Preferences.findOneAndDelete({ owner: userId });
 
 				if (!deleted) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: "Preferences not found" });
+					return sendNotFoundError(reply, "Preferences not found");
 				}
 
-				return reply
-					.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT)
-					.send(deleted);
+				return reply.status(204).send();
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to delete preferences" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);
 
-	fastify.patch(
+	fastify.patch<{
+		Body: PatchPreferencesRequest;
+		Reply: PatchPreferencesSuccessResponse | AccountErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Partially update user account preferences",
+				tags: ["Account"],
+				security: [{ bearerAuth: [] }],
+				body: patchPreferencesRequestSchema,
+				response: {
+					[httpResponseCodes.SUCCESSFUL.OK]: patchPreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
+			if (!isAuthenticatedInfo(request.user)) {
+				return sendUnauthorizedError(reply, "Invalid credentials");
+			}
+
 			const parseResult = preferencesDtoSchema
 				.partial()
 				.safeParse(request.body);
 
 			if (!parseResult.success) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
-			}
-
-			if (!isAuthenticatedInfo(request.user)) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send({ error: "Invalid credentials" });
+				return handleAndSendError(reply, parseResult.error, request.url);
 			}
 
 			const userId = request.user.userId;
@@ -145,9 +195,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to update preferences" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);

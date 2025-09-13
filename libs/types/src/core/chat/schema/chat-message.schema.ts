@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
-import { CHAT_MESSAGE_CONFIG } from "../config/chat-message-config.js";
+import { CHAT_MESSAGE_CONFIG } from "../config/chat-message.config.js";
 
 export const chatMessageSchema = z.object({
 	username: z.string(),

@@ -1,63 +1,77 @@
 import { FastifyInstance } from "fastify";
 import {
-	arePistonRuntimes,
-	CodeExecutionParams,
-	ErrorResponse,
-	httpResponseCodes,
-	isFetchError,
-	isPistonExecutionResponseSuccess,
+	executeCodeRequestSchema,
+	executeCodeSuccessResponseSchema,
+	executeErrorResponseSchema,
+	type ExecuteCodeRequest,
+	type ExecuteCodeSuccessResponse,
+	type ExecuteErrorResponse,
 	PistonExecutionRequest,
-	PistonExecutionResponse
+	isPistonExecutionResponseSuccess,
+	httpResponseCodes
 } from "types";
-import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
-
-export const executionResponseErrors = {
-	UNSUPPORTED_LANGUAGE: {
-		error: "Unsupported language",
-		message: "At the moment we don't support this language."
-	},
-	SERVICE_UNAVAILABLE: {
-		error: "Service unavailable",
-		message: "Unable to reach piston code execution service"
-	},
-	INTERNAL_SERVER_ERROR: {
-		error: "Internal Server Error",
-		message: "Something went wrong during piston code execution"
-	},
-	PISTON_ERROR: {
-		error: "Piston error"
-	}
-} as const;
+import {
+	validatePistonService,
+	validateLanguageSupport,
+	executePistonRequest
+} from "@/helpers/piston.helpers.js";
+import {
+	formatZodIssues,
+	sendValidationError
+} from "@/helpers/error.helpers.js";
 
 export default async function executeRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: CodeExecutionParams }>(
+	fastify.post<{
+		Body: ExecuteCodeRequest;
+		Reply: ExecuteCodeSuccessResponse | ExecuteErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Execute code with test inputs and get results",
+				tags: ["Code Execution"],
+				security: [{ bearerAuth: [] }],
+				body: executeCodeRequestSchema,
+				response: {
+					200: executeCodeSuccessResponseSchema,
+					400: executeErrorResponseSchema,
+					401: executeErrorResponseSchema,
+					500: executeErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
-			const { code, language, testInput, testOutput } = request.body;
+			const result = executeCodeRequestSchema.safeParse(request.body);
 
-			const runtimes = await fastify.runtimes();
-
-			if (!arePistonRuntimes(runtimes)) {
-				const error: ErrorResponse = runtimes;
-
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
-					.send(error);
+			if (!result.success) {
+				return sendValidationError(
+					reply,
+					"Invalid request data",
+					formatZodIssues(result.error),
+					request.url
+				);
 			}
 
-			const runtimeInfo = findRuntime(runtimes, language);
+			const { code, language, testInput, testOutput } = result.data;
+
+			const runtimes = await validatePistonService(fastify, reply, request.url);
+
+			if (!runtimes) {
+				return;
+			}
+
+			const runtimeInfo = validateLanguageSupport(
+				runtimes,
+				language,
+				reply,
+				request.url
+			);
 
 			if (!runtimeInfo) {
-				const error: ErrorResponse =
-					executionResponseErrors.UNSUPPORTED_LANGUAGE;
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send(error);
+				return;
 			}
 
 			const requestObject: PistonExecutionRequest = {
@@ -67,56 +81,31 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 				stdin: testInput
 			};
 
-			let executionRes: PistonExecutionResponse;
-			try {
-				executionRes = await fastify.piston(requestObject);
-			} catch (err: unknown) {
-				request.log.error(
-					{
-						err,
-						requestBody: request.body
-					},
-					"Error during code execution"
-				);
-
-				if (isFetchError(err) && err.cause?.code === "ECONNREFUSED") {
-					const error: ErrorResponse =
-						executionResponseErrors.SERVICE_UNAVAILABLE;
-					return reply
-						.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
-						.send(error);
-				}
-
-				const error: ErrorResponse =
-					executionResponseErrors.INTERNAL_SERVER_ERROR;
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send(error);
+			const executionRes = await executePistonRequest(
+				fastify,
+				requestObject,
+				reply,
+				request.url
+			);
+			if (!executionRes) {
+				return;
 			}
 
 			if (!isPistonExecutionResponseSuccess(executionRes)) {
-				const error: ErrorResponse = {
-					error: executionResponseErrors.PISTON_ERROR.error,
-					message: executionRes.message
-				};
-
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send(error);
+				return reply.status(400).send({
+					error: "EXECUTION_ERROR",
+					message: "Code execution failed",
+					timestamp: new Date().toISOString(),
+					url: request.url,
+					details: { output: executionRes.message }
+				});
 			}
 
-			let run = executionRes.run;
-			let compile = executionRes.compile;
-
-			const codeExecutionResponse = {
-				run,
-				compile,
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({
+				run: executionRes.run,
+				compile: executionRes.compile,
 				puzzleResultInformation: calculateResults([testOutput], [executionRes])
-			};
-
-			return reply
-				.status(httpResponseCodes.SUCCESSFUL.OK)
-				.send(codeExecutionResponse);
+			});
 		}
 	);
 }

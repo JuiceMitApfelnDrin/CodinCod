@@ -1,18 +1,47 @@
 import Comment from "@/models/comment/comment.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
-import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
-import { commentTypeEnum, httpResponseCodes, objectIdSchema } from "types";
+import {
+	commentTypeEnum,
+	httpResponseCodes,
+	objectIdSchema,
+	commentDtoSchema,
+	commentErrorResponseSchema,
+	deleteCommentSuccessResponseSchema,
+	idParamSchema,
+	type CommentErrorResponse,
+	type DeleteCommentSuccessResponse
+} from "types";
+import {
+	handleAndSendError,
+	sendNotFoundError
+} from "@/helpers/error.helpers.js";
 
 export default async function commentByIdRoutes(fastify: FastifyInstance) {
-	fastify.get<ParamsId>("/", async (request, reply) => {
+	fastify.get<{
+		Params: { id: string };
+		Reply: any | CommentErrorResponse;
+	}>(
+		"/",
+		{
+			schema: {
+				description: "Get a specific comment by ID",
+				tags: ["Comments"],
+				params: idParamSchema,
+				response: {
+					[httpResponseCodes.SUCCESSFUL.OK]: commentDtoSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: commentErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: commentErrorResponseSchema
+				}
+			}
+		},
+		async (request, reply) => {
 		const parseResult = objectIdSchema.safeParse(request.params.id);
 
 		if (!parseResult.success) {
-			return reply
-				.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-				.send({ error: parseResult.error.errors });
+			return handleAndSendError(reply, parseResult.error, request.url);
 		}
 
 		try {
@@ -27,32 +56,43 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 				});
 
 			if (!comment) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-					.send({ error: "Comment not found" });
+				return sendNotFoundError(reply, "Comment not found");
 			}
 
 			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(comment);
 		} catch (error) {
-			return reply
-				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ error: "Failed to fetch comment" });
+			return handleAndSendError(reply, error, request.url);
 		}
 	});
 
-	fastify.delete<ParamsId>(
+	fastify.delete<{
+		Params: { id: string };
+		Reply: DeleteCommentSuccessResponse | CommentErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Delete a specific comment",
+				tags: ["Comments"],
+				security: [{ bearerAuth: [] }],
+				params: idParamSchema,
+				response: {
+					[httpResponseCodes.SUCCESSFUL.OK]: deleteCommentSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.FORBIDDEN]: commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: commentErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: commentErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			try {
 				const comment = await Comment.findById(request.params.id);
 
 				if (!comment) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: "Comment not found" });
+					return sendNotFoundError(reply, "Comment not found");
 				}
 
 				if (comment.commentType === commentTypeEnum.COMMENT) {
@@ -72,13 +112,9 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 
 				await comment.deleteOne();
 
-				return reply
-					.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT)
-					.send(comment);
+				return reply.status(204).send();
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to fetch comment" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);

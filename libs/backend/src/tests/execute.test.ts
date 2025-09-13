@@ -2,7 +2,6 @@ import { describe, beforeAll, afterAll, it, expect, vi } from "vitest";
 import fastify, { FastifyInstance } from "fastify";
 import router from "@/router.js";
 import { backendUrls, httpRequestMethod, httpResponseCodes } from "types";
-import { executionResponseErrors } from "@/routes/execute/index.js";
 
 vi.mock("@/plugins/middleware/authenticated.js", () => ({
 	default: vi.fn((request, _reply, done) => {
@@ -37,7 +36,12 @@ describe("Execute Endpoint", () => {
 				testOutput: "hi"
 			},
 			expectedStatus: httpResponseCodes.CLIENT_ERROR.BAD_REQUEST,
-			expectedResponse: executionResponseErrors.UNSUPPORTED_LANGUAGE
+			expectedResponse: {
+				error: "UNSUPPORTED_LANGUAGE",
+				message: "The specified language is not supported",
+				timestamp: expect.any(String),
+				url: expect.any(String)
+			}
 		}
 	];
 

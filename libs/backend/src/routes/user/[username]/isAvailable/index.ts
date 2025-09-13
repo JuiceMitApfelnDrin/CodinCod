@@ -1,38 +1,54 @@
 import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isUsername } from "types";
-import { ParamsUsername } from "../types.js";
+import { validateUsername } from "@/helpers/user.helpers.js";
+import { handleAndSendError } from "@/helpers/error.helpers.js";
 import {
-	genericReturnMessages,
-	userProperties
-} from "@/config/generic-return-messages.js";
+	checkUsernameAvailabilitySuccessResponseSchema,
+	userErrorResponseSchema,
+	usernameParamSchema,
+	type CheckUsernameAvailabilitySuccessResponse,
+	type UserErrorResponse,
+	httpResponseCodes
+} from "types";
 
 export default async function userByUsernameIsAvailableRoutes(
 	fastify: FastifyInstance
 ) {
-	fastify.get<ParamsUsername>("/", async (request, reply) => {
+	fastify.get<{
+		Params: { username: string };
+		Reply: CheckUsernameAvailabilitySuccessResponse | UserErrorResponse;
+	}>(
+		"/",
+		{
+			schema: {
+				description: "Check if username is available for registration",
+				tags: ["Users"],
+				params: usernameParamSchema,
+				response: {
+					[httpResponseCodes.SUCCESSFUL.OK]: checkUsernameAvailabilitySuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: userErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: userErrorResponseSchema
+				}
+			}
+		},
+		async (request, reply) => {
 		const { username } = request.params;
 
-		if (!isUsername(username)) {
-			const { BAD_REQUEST } = httpResponseCodes.CLIENT_ERROR;
-			const { IS_INVALID } = genericReturnMessages[BAD_REQUEST];
-			const { USERNAME } = userProperties;
-
-			return reply.status(BAD_REQUEST).send({
-				message: `${USERNAME} ${IS_INVALID}`
-			});
+		if (!validateUsername(username, reply, request.url)) {
+			return;
 		}
 
 		try {
 			const existingUser = await User.findOne({ username });
-
-			if (existingUser) {
-				return reply.status(200).send({ isAvailable: false });
-			}
-
-			return reply.status(200).send({ isAvailable: true });
+			const response: CheckUsernameAvailabilitySuccessResponse = {
+				available: !existingUser,
+				message: existingUser ? "Username is already taken" : "Username is available"
+			};
+			return reply
+				.status(httpResponseCodes.SUCCESSFUL.OK)
+				.send(response);
 		} catch (error) {
-			reply.status(500).send({ message: "Internal Server Error" });
+			return handleAndSendError(reply, error, request.url);
 		}
 	});
 }

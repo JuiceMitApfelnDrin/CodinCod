@@ -1,39 +1,36 @@
 import { FastifyInstance } from "fastify";
-import {
-	ErrorResponse,
-	httpResponseCodes,
-	isAuthenticatedInfo,
-	isAuthor,
-	isModerator,
-	isUserDto
-} from "types";
+import { isAuthenticatedInfo, isAuthor, isModerator, isUserDto } from "types";
 import { ParamsId } from "@/types/types.js";
-import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
-import User from "@/models/user/user.js";
+import Puzzle from "@/models/puzzle/puzzle.js";
+import {
+	handleAndSendError,
+	sendUnauthorizedError,
+	sendNotFoundError,
+	sendForbiddenError
+} from "@/helpers/error.helpers.js";
+import { findUserById } from "@/helpers/user.helpers.js";
 
 export default async function puzzleByIdSolutionRoutes(
 	fastify: FastifyInstance
 ) {
-	fastify.get<ParamsId>(
+	fastify.get<{
+		Params: ParamsId;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			const { id } = request.params;
-
 			const user = request.user;
 
 			if (!isAuthenticatedInfo(user)) {
-				const errorResponse: ErrorResponse = {
-					error: "Missing credentials",
-					message: "You need to be logged in."
-				};
-
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send(errorResponse);
+				return sendUnauthorizedError(
+					reply,
+					"Missing credentials",
+					"You need to be logged in"
+				);
 			}
 
 			const userId = user.userId;
@@ -44,29 +41,27 @@ export default async function puzzleByIdSolutionRoutes(
 					.populate("author");
 
 				if (!puzzle) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: "Puzzle not found" });
+					return sendNotFoundError(reply, "Puzzle not found");
 				}
 
-				const user = await User.findById(userId);
+				const currentUser = await findUserById(userId, reply, request.url);
+				if (!currentUser) return; // Error already handled
 
 				const hasRequiredPermissions =
 					(isUserDto(puzzle.author) &&
 						!isAuthor(puzzle.author._id.toString(), userId)) ||
-					!isModerator(user?.roles);
+					!isModerator(currentUser?.roles);
 
 				if (hasRequiredPermissions) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
-						.send({ error: "Not authorized to edit this puzzle" });
+					return sendForbiddenError(
+						reply,
+						"Not authorized to edit this puzzle"
+					);
 				}
 
 				return reply.send(puzzle);
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to fetch puzzle" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);

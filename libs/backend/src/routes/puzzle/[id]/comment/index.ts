@@ -7,31 +7,31 @@ import {
 	CommentEntity,
 	commentTypeEnum,
 	createCommentSchema,
-	httpResponseCodes,
 	isAuthenticatedInfo
 } from "types";
+import {
+	handleAndSendError,
+	sendUnauthorizedError
+} from "@/helpers/error.helpers.js";
 
 export default async function puzzleByIdCommentRoutes(
 	fastify: FastifyInstance
 ) {
-	fastify.post<ParamsId>(
+	fastify.post<{
+		Params: ParamsId;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			const parseResult = createCommentSchema.safeParse(request.body);
-
 			if (!parseResult.success) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+				return handleAndSendError(reply, parseResult.error, request.url);
 			}
 
 			if (!isAuthenticatedInfo(request.user)) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-					.send({ error: "Invalid credentials" });
+				return sendUnauthorizedError(reply, "Invalid credentials");
 			}
 
 			const id = request.params.id;
@@ -44,7 +44,8 @@ export default async function puzzleByIdCommentRoutes(
 				upvote: 0,
 				downvote: 0,
 				comments: [],
-				commentType: commentTypeEnum.PUZZLE
+				commentType: commentTypeEnum.PUZZLE,
+				parentId: id
 			};
 
 			try {
@@ -61,11 +62,9 @@ export default async function puzzleByIdCommentRoutes(
 					"author"
 				);
 
-				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(comment);
+				return reply.status(201).send(comment);
 			} catch (error) {
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to create comment" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);

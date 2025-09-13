@@ -1,16 +1,19 @@
+import {
+	sendInternalError,
+	sendUnauthorizedError
+} from "@/helpers/error.helpers.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { AuthenticatedInfo, httpResponseCodes } from "types";
+import { AuthenticatedInfo, cookieKeys } from "types";
 
 export default async function authenticated(
 	request: FastifyRequest,
 	reply: FastifyReply
 ) {
-	const token = request.cookies.token;
+	const token = request.cookies[cookieKeys.TOKEN];
 
 	if (!token) {
-		return reply
-			.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-			.send({ message: "Unauthorized" });
+		sendUnauthorizedError(reply, "Invalid token", request.url);
+		return;
 	}
 
 	try {
@@ -22,13 +25,9 @@ export default async function authenticated(
 		request.user = decoded;
 	} catch (err) {
 		if (err instanceof Error) {
-			return reply
-				.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-				.send({ message: "Invalid token" });
+			sendUnauthorizedError(reply, "Invalid token", request.url);
+		} else {
+			sendInternalError(reply, "An unexpected error occurred", request.url);
 		}
-
-		return reply
-			.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-			.send({ message: "An unexpected error occurred." });
 	}
 }

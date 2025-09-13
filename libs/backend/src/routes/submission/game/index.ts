@@ -1,23 +1,48 @@
 import { FastifyInstance } from "fastify";
 import {
-	GameSubmissionParams,
 	getUserIdFromUser,
-	httpResponseCodes,
 	isAuthor,
 	isString,
 	SUBMISSION_BUFFER_IN_MILLISECONDS,
-	SubmissionEntity
+	SubmissionEntity,
+	linkSubmissionToGameRequestSchema,
+	linkSubmissionToGameSuccessResponseSchema,
+	submissionErrorResponseSchema,
+	type LinkSubmissionToGameRequest,
+	type LinkSubmissionToGameSuccessResponse,
+	type SubmissionErrorResponse,
+	httpResponseCodes
 } from "types";
-import { isValidationError } from "../../../utils/functions/is-validation-error.js";
 import Game from "@/models/game/game.js";
 import Submission from "@/models/submission/submission.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import {
+	handleAndSendError,
+	sendNotFoundError,
+	sendValidationError
+} from "@/helpers/error.helpers.js";
 
 export default async function submissionGameRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: GameSubmissionParams }>(
+	fastify.post<{
+		Body: LinkSubmissionToGameRequest;
+		Reply: LinkSubmissionToGameSuccessResponse | SubmissionErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Link an existing submission to a game",
+				tags: ["Submissions", "Games"],
+				security: [{ bearerAuth: [] }],
+				body: linkSubmissionToGameRequestSchema,
+				response: {
+					[httpResponseCodes.SUCCESSFUL.CREATED]: linkSubmissionToGameSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: submissionErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: submissionErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: submissionErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: submissionErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
 			// unpacking body
@@ -31,9 +56,10 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					!matchingSubmission ||
 					matchingSubmission.user.toString() !== userId
 				) {
-					return reply.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND).send({
-						error: `couldn't find a submission with id (${submissionId}) belonging to user with id (${userId})`
-					});
+					return sendNotFoundError(
+						reply,
+						`Couldn't find a submission with id (${submissionId}) belonging to user with id (${userId})`
+					);
 				}
 
 				const matchingGame = await Game.findById(gameId)
@@ -41,9 +67,10 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					.exec();
 
 				if (!matchingGame) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: `couldn't find a game with id (${gameId})` });
+					return sendNotFoundError(
+						reply,
+						`Couldn't find a game with id (${gameId})`
+					);
 				}
 
 				const latestSubmissionTime =
@@ -53,9 +80,10 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 
 				const tooFarInThePast = latestSubmissionTime < currentTime;
 				if (tooFarInThePast) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-						.send({ error: `game with id (${gameId}) already finished` });
+					return sendValidationError(
+						reply,
+						`Game with id (${gameId}) already finished`
+					);
 				}
 
 				const gameHasExistingUserSubmission =
@@ -68,9 +96,10 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					});
 
 				if (gameHasExistingUserSubmission) {
-					return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
-						error: `game with id (${gameId}) has a game from user with id (${userId})`
-					});
+					return sendValidationError(
+						reply,
+						`Game with id (${gameId}) has a game from user with id (${userId})`
+					);
 				}
 
 				const uniquePlayerSubmissions = new Set([
@@ -80,23 +109,18 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 
 				matchingGame.playerSubmissions = Array.from(uniquePlayerSubmissions);
 
-				const updatedGame = await matchingGame.save();
+				await matchingGame.save();
 
-				return reply
-					.status(httpResponseCodes.SUCCESSFUL.CREATED)
-					.send(updatedGame);
+				return reply.status(201).send({
+					message: "Submission linked to game successfully",
+					gameId: gameId,
+					submissionId: submissionId
+				});
 			} catch (error) {
-				request.log.error("Error saving submission:", error);
-
-				if (isValidationError(error)) {
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-						.send({ error: "Validation failed", details: error.errors });
-				}
-
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-					.send({ error: "Failed to create submission" });
+				request.log.error(
+					`Error saving submission: ${error instanceof Error ? error.message : String(error)}`
+				);
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);

@@ -1,96 +1,126 @@
 import { FastifyInstance } from "fastify";
 import {
-	httpResponseCodes,
-	PistonExecutionResponse,
+	createSubmissionRequestSchema,
+	createSubmissionSuccessResponseSchema,
+	submissionErrorResponseSchema,
+	type CreateSubmissionRequest,
+	type CreateSubmissionSuccessResponse,
+	type SubmissionErrorResponse,
 	SubmissionEntity,
-	CodeSubmissionParams,
-	codeSubmissionParamsSchema,
-	PistonExecutionRequest,
-	ErrorResponse,
-	arePistonRuntimes
+	PistonExecutionRequest
 } from "types";
 import Submission from "../../models/submission/submission.js";
-import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
-import { isValidationError } from "../../utils/functions/is-validation-error.js";
-import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
+import {
+	validatePistonService,
+	validateLanguageSupport
+} from "@/helpers/piston.helpers.js";
+import {
+	findPuzzleById,
+	validatePuzzleForSubmission
+} from "@/helpers/puzzle.helpers.js";
+import {
+	sendValidationError,
+	handleAndSendError,
+	formatZodIssues
+} from "@/helpers/error.helpers.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: CodeSubmissionParams }>(
+	fastify.post<{
+		Body: CreateSubmissionRequest;
+		Reply: CreateSubmissionSuccessResponse | SubmissionErrorResponse;
+	}>(
 		"/",
 		{
-			onRequest: authenticated
+			schema: {
+				description: "Submit code for a puzzle to be validated",
+				tags: ["Submissions"],
+				security: [{ bearerAuth: [] }],
+				body: createSubmissionRequestSchema,
+				response: {
+					201: createSubmissionSuccessResponseSchema,
+					400: submissionErrorResponseSchema,
+					401: submissionErrorResponseSchema,
+					404: submissionErrorResponseSchema,
+					500: submissionErrorResponseSchema
+				}
+			},
+			preHandler: [authenticated]
 		},
 		async (request, reply) => {
-			const parseResult = codeSubmissionParamsSchema.safeParse(request.body);
+			const parseResult = createSubmissionRequestSchema.safeParse(request.body);
 
 			if (!parseResult.success) {
-				return reply.status(400).send({ error: parseResult.error.errors });
+				sendValidationError(
+					reply,
+					"Invalid submission data",
+					formatZodIssues(parseResult.error),
+					request.url
+				);
+				return;
 			}
 
-			// unpacking body
-			const { language, puzzleId, code, userId } = request.body;
+			const { language, puzzleId, code, userId } = parseResult.data;
 
-			// retrieve test cases
-			const puzzle: PuzzleDocument | null = await Puzzle.findById(puzzleId);
-
+			const puzzle = await findPuzzleById(puzzleId, reply, request.url);
 			if (!puzzle) {
-				return reply.send({
-					error: `Puzzle with id (${puzzleId}) couldn't be found.`
-				});
+				return;
 			}
 
-			// prepare the execution of tests
-			const runtimes = await fastify.runtimes();
-
-			if (!arePistonRuntimes(runtimes)) {
-				const error: ErrorResponse = runtimes;
-
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
-					.send(error);
+			if (!validatePuzzleForSubmission(puzzle, reply, request.url)) {
+				return;
 			}
 
-			const runtimeInfo = findRuntime(runtimes, language);
+			const runtimes = await validatePistonService(fastify, reply, request.url);
+
+			if (!runtimes) {
+				return;
+			}
+
+			const runtimeInfo = validateLanguageSupport(
+				runtimes,
+				language,
+				reply,
+				request.url
+			);
 
 			if (!runtimeInfo) {
-				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
-					error: "Unsupported language"
-				});
+				return;
 			}
 
-			// foreach test case, execute the code and see the result, compare to test-case expected output
-			if (!puzzle.validators) {
-				return reply.send({
-					// TODO: improve this text
-					error:
-						"This puzzle isn't finished, it should have test cases / validators"
-				});
+			if (!puzzle.validators || puzzle.validators.length === 0) {
+				return sendValidationError(
+					reply,
+					"Puzzle has no validators",
+					{},
+					request.url
+				);
 			}
 
-			const pistonExecutionResults: PistonExecutionResponse[] = [];
-			const expectedOutputs: string[] = [];
+			const executionPromises = puzzle.validators.map(
+				async (validator: any) => {
+					const pistonRequest: PistonExecutionRequest = {
+						language: runtimeInfo.language,
+						version: runtimeInfo.version,
+						files: [{ content: code }],
+						stdin: validator.input
+					};
 
-			const promises = puzzle.validators.map(async (validator) => {
-				const pistonRequest: PistonExecutionRequest = {
-					language: runtimeInfo.language,
-					version: runtimeInfo.version,
-					files: [{ content: code }],
-					stdin: validator.input
-				};
-				const executionResponse = await fastify.piston(pistonRequest);
-				return { executionResponse, output: validator.output };
-			});
+					const executionResponse = await fastify.piston(pistonRequest);
 
-			const results = await Promise.all(promises);
-
-			results.forEach(({ executionResponse, output }) => {
-				pistonExecutionResults.push(executionResponse);
-				expectedOutputs.push(output);
-			});
+					return { executionResponse, output: validator.output };
+				}
+			);
 
 			try {
+				const results = await Promise.all(executionPromises);
+
+				const pistonExecutionResults = results.map(
+					(r: any) => r.executionResponse
+				);
+				const expectedOutputs = results.map((r: any) => r.output);
+
 				const submissionData: SubmissionEntity = {
 					code: code,
 					puzzle: puzzleId,
@@ -104,17 +134,9 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 				const submission = new Submission(submissionData);
 				await submission.save();
 
-				return reply.status(201).send(submission);
+				return reply.status(201).send(submissionData);
 			} catch (error) {
-				fastify.log.error("Error saving submission:", error);
-
-				if (isValidationError(error)) {
-					return reply
-						.status(400)
-						.send({ error: "Validation failed", details: error.errors });
-				}
-
-				return reply.status(500).send({ error: "Failed to create submission" });
+				return handleAndSendError(reply, error, request.url);
 			}
 		}
 	);

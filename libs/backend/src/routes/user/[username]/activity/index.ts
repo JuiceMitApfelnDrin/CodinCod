@@ -1,43 +1,58 @@
 import Puzzle from "@/models/puzzle/puzzle.js";
 import Submission from "@/models/submission/submission.js";
-import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isUsername, puzzleVisibilityEnum } from "types";
-import { ParamsUsername } from "../types.js";
 import {
-	genericReturnMessages,
-	userProperties
-} from "@/config/generic-return-messages.js";
+	getUserActivitySuccessResponseSchema,
+	userErrorResponseSchema,
+	usernameParamSchema,
+	puzzleVisibilityEnum,
+	type GetUserActivitySuccessResponse,
+	type UserErrorResponse,
+	httpResponseCodes
+} from "types";
+import {
+	validateUsername,
+	findUserByUsername
+} from "@/helpers/user.helpers.js";
+import { handleAndSendError } from "@/helpers/error.helpers.js";
 
 export default async function userByUsernameActivityRoutes(
 	fastify: FastifyInstance
 ) {
-	fastify.get<ParamsUsername>("/", async (request, reply) => {
+	fastify.get<{
+		Params: { username: string };
+		Reply: GetUserActivitySuccessResponse | UserErrorResponse;
+	}>(
+		"/",
+		{
+			schema: {
+				description: "Get user's activity including puzzles created and submissions",
+				tags: ["Users"],
+				params: usernameParamSchema,
+				response: {
+					[httpResponseCodes.SUCCESSFUL.OK]: getUserActivitySuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: userErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: userErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: userErrorResponseSchema
+				}
+			}
+		},
+		async (request, reply) => {
 		const { username } = request.params;
 
-		if (!isUsername(username)) {
-			const { BAD_REQUEST } = httpResponseCodes.CLIENT_ERROR;
-			const { IS_INVALID } = genericReturnMessages[BAD_REQUEST];
-			const { USERNAME } = userProperties;
+		if (!validateUsername(username, reply, request.url)) {
+			return;
+		}
 
-			return reply.status(BAD_REQUEST).send({
-				message: `${USERNAME} ${IS_INVALID}`
-			});
+		const user = await findUserByUsername(username, reply, request.url);
+		if (!user) {
+			return;
 		}
 
 		try {
-			const user = await User.findOne({ username });
-
-			if (!user) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-					.send({ message: "User not found" });
-			}
-
 			const userId = user._id;
 
 			const [puzzlesByUser, submissionsByUser] = await Promise.all([
-				// TODO: add other puzzle visibility states as well?
 				Puzzle.find({
 					author: userId,
 					visibility: puzzleVisibilityEnum.APPROVED
@@ -45,15 +60,37 @@ export default async function userByUsernameActivityRoutes(
 				Submission.find({ user: userId })
 			]);
 
-			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({
-				user,
-				message: "User activity found",
-				activity: { puzzles: puzzlesByUser, submissions: submissionsByUser }
-			});
+			// Transform to the expected activity format
+			const puzzleActivities = puzzlesByUser.map(puzzle => ({
+				type: "puzzle_created",
+				timestamp: puzzle.createdAt instanceof Date ? puzzle.createdAt.toISOString() : puzzle.createdAt || "",
+				details: {
+					puzzleId: puzzle._id?.toString() || "",
+					title: puzzle.title,
+					difficulty: puzzle.difficulty
+				}
+			}));
+
+			const submissionActivities = submissionsByUser.map(submission => ({
+				type: "submission_created", 
+				timestamp: submission.createdAt instanceof Date ? submission.createdAt.toISOString() : submission.createdAt || "",
+				details: {
+					submissionId: submission._id?.toString() || "",
+					puzzleId: submission.puzzle?.toString() || "",
+					language: submission.language
+				}
+			}));
+
+			const activityResponse: GetUserActivitySuccessResponse = {
+				data: {
+					"puzzles": puzzleActivities,
+					"submissions": submissionActivities
+				}
+			};
+
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(activityResponse);
 		} catch (error) {
-			return reply
-				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
-				.send({ message: "Internal Server Error" });
+			return handleAndSendError(reply, error, request.url);
 		}
 	});
 }

@@ -1,8 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect } from "vitest";
 import fastify, { FastifyInstance } from "fastify";
-import { backendUrls, httpRequestMethod, httpResponseCodes } from "types";
+import { backendUrls, healthResponse, httpRequestMethod, httpResponseCodes } from "types";
 import router from "@/router.js";
-import { healthResponse } from "@/routes/health/index.js";
 
 describe("Health Check Endpoint", () => {
 	let app: FastifyInstance;

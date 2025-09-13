@@ -25,7 +25,9 @@ function isPlayerInGame(game: GameDocument, userId: ObjectId) {
 
 export function gameSetup(
 	socket: WebSocket,
-	req: FastifyRequest<ParamsId>,
+	req: FastifyRequest<{
+		Params: ParamsId;
+	}>,
 	fastify: FastifyInstance
 ) {
 	const { id } = req.params;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ProblemTypeEnum } from "../enum/problem-type-enum.js";
-import { REPORT_CONFIG } from "../config/report-config.js";
+import { REPORT_CONFIG } from "../config/report.config.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 
 /**

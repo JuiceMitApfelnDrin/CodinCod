@@ -7,7 +7,8 @@ import {
 	isPistonExecutionResponse,
 	PistonExecutionRequest,
 	pistonUrls,
-	POST
+	POST,
+	createInternalError
 } from "types";
 
 async function piston(fastify: FastifyInstance) {
@@ -32,8 +33,11 @@ async function piston(fastify: FastifyInstance) {
 
 			if (!isPistonExecutionResponse(executionResponse)) {
 				const error: ErrorResponse = {
-					error: "Unknown error with piston",
-					message: "response is not a piston execution response"
+					error: createInternalError(
+						"response is not a piston execution response"
+					),
+					timestamp: new Date().toISOString(),
+					path: pistonUrls.EXECUTE
 				};
 
 				return error;
@@ -67,8 +71,11 @@ async function piston(fastify: FastifyInstance) {
 
 		if (!arePistonRuntimes(pistonRuntimesResponse)) {
 			const error: ErrorResponse = {
-				error: "Unknown error with piston",
-				message: "response are not a piston runtimes"
+				error: createInternalError(
+					"response is not a piston runtimes response"
+				),
+				timestamp: new Date().toISOString(),
+				path: pistonUrls.RUNTIMES
 			};
 
 			return error;

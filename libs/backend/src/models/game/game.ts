@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { GAME, PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
 import { DEFAULT_GAME_LENGTH_IN_MILLISECONDS, GameEntity } from "types";
-import gameOptionsSchema from "./game-config.js";
+import gameOptionsSchema from "./game-options.js";
 
 export interface GameDocument extends Document, GameEntity {}
 

@@ -1,5 +1,5 @@
-import { EMAIL_CONFIG } from "./email-config.js";
-import { USERNAME_CONFIG } from "./username-config.js";
+import { EMAIL_CONFIG } from "./email.config.js";
+import { USERNAME_CONFIG } from "./username.config.js";
 
 export const IDENTIFIER_CONFIG = {
 	maxIdentifierLength: Math.max(

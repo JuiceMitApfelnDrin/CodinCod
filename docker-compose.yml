@@ -26,10 +26,22 @@ services:
     environment:
       - NODE_ENV=production
       - PISTON_URI=http://piston:2000
+      - REDIS_URL=redis://:codincod-dev-password@dragonfly:6379
     depends_on:
       - piston
+      - dragonfly
   #   # optional for when you want to run mongodb locally
   #     - mongo
+
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    container_name: dragonfly
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - dragonfly_data:/data
+    command: ["--logtostderr", "--requirepass=codincod-dev-password"]
 
   frontend:
     container_name: frontend
@@ -56,5 +68,7 @@ services:
 #     volumes:
 #       - mongo_data:/data/db
 
+volumes:
+  dragonfly_data:
 # volumes:
 #   mongo_data:

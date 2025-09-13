@@ -1,3 +1,9 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+import { validateAuthConfig } from "./config/auth.config.js";
+validateAuthConfig();
+
 import server from "./app.js";
 
 const FASTIFY_HOST = process.env.FASTIFY_HOST ?? "0.0.0.0";
