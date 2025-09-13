@@ -5,25 +5,25 @@ import { objectIdSchema } from "./object-id.js";
 
 // Generic ID parameter (for /resource/:id routes)
 export const idParamSchema = z.object({
-	id: z.string().min(1)
+	id: z.string().min(1),
 });
 export type IdParam = z.infer<typeof idParamSchema>;
 
 // Username parameter (for /user/:username routes)
 export const usernameParamSchema = z.object({
-	username: z.string().min(1)
+	username: z.string().min(1),
 });
 export type UsernameParam = z.infer<typeof usernameParamSchema>;
 
 // ObjectId parameter (for resources that use MongoDB ObjectIds)
 export const objectIdParamSchema = z.object({
-	id: objectIdSchema
+	id: objectIdSchema,
 });
 export type ObjectIdParam = z.infer<typeof objectIdParamSchema>;
 
 // Username with ObjectId validation
 export const usernameObjectIdParamSchema = z.object({
-	username: objectIdSchema
+	username: objectIdSchema,
 });
 export type UsernameObjectIdParam = z.infer<typeof usernameObjectIdParamSchema>;
 

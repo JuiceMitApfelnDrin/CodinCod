@@ -44,43 +44,46 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				params: idParamSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.OK]: getPuzzleSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: puzzleErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						puzzleErrorResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: puzzleErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: puzzleErrorResponseSchema
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						puzzleErrorResponseSchema
 				}
 			}
 		},
 		async (request, reply) => {
-		const { id } = request.params;
+			const { id } = request.params;
 
-		const puzzle = await findPuzzleById(id, reply, request.url);
+			const puzzle = await findPuzzleById(id, reply, request.url);
 
-		if (!puzzle) return; // Error already handled
+			if (!puzzle) return; // Error already handled
 
-		try {
-			const populatedPuzzle = await Puzzle.findById(id)
-				.populate("author")
-				.populate("comments")
-				.populate({
-					path: "comments",
-					populate: {
-						path: "author"
-					}
-				});
+			try {
+				const populatedPuzzle = await Puzzle.findById(id)
+					.populate("author")
+					.populate("comments")
+					.populate({
+						path: "comments",
+						populate: {
+							path: "author"
+						}
+					});
 
-			if (!populatedPuzzle) {
-				return sendNotFoundError(reply, "Puzzle not found");
+				if (!populatedPuzzle) {
+					return sendNotFoundError(reply, "Puzzle not found");
+				}
+
+				if (!isPuzzleDto(populatedPuzzle)) {
+					return sendNotFoundError(reply, "Puzzle not found");
+				}
+
+				return reply.send(populatedPuzzle);
+			} catch (error) {
+				return handleAndSendError(reply, error, request.url);
 			}
-
-			if (!isPuzzleDto(populatedPuzzle)) {
-				return sendNotFoundError(reply, "Puzzle not found");
-			}
-
-			return reply.send(populatedPuzzle);
-		} catch (error) {
-			return handleAndSendError(reply, error, request.url);
 		}
-	});
+	);
 
 	fastify.put<{
 		Params: { id: string };
@@ -94,14 +97,21 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				tags: ["Puzzles"],
 				security: [{ bearerAuth: [] }],
 				params: idParamSchema,
-				body: puzzleEntitySchema.omit({ author: true, createdAt: true, updatedAt: true }),
+				body: puzzleEntitySchema.omit({
+					author: true,
+					createdAt: true,
+					updatedAt: true
+				}),
 				response: {
 					[httpResponseCodes.SUCCESSFUL.OK]: updatePuzzleSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: puzzleErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: puzzleErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						puzzleErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						puzzleErrorResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.FORBIDDEN]: puzzleErrorResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: puzzleErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: puzzleErrorResponseSchema
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						puzzleErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]
@@ -185,11 +195,18 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					validators: puzzle.validators || [],
 					difficulty: puzzle.difficulty,
 					visibility: puzzle.visibility,
-					createdAt: puzzle.createdAt instanceof Date ? puzzle.createdAt.toISOString() : puzzle.createdAt || "",
-					updatedAt: puzzle.updatedAt instanceof Date ? puzzle.updatedAt.toISOString() : puzzle.updatedAt || "",
+					createdAt:
+						puzzle.createdAt instanceof Date
+							? puzzle.createdAt.toISOString()
+							: puzzle.createdAt || "",
+					updatedAt:
+						puzzle.updatedAt instanceof Date
+							? puzzle.updatedAt.toISOString()
+							: puzzle.updatedAt || "",
 					tags: puzzle.tags || [],
-					comments: (puzzle.comments || []).map((comment: any) => 
-						comment._id?.toString() || comment?.toString() || ""
+					comments: (puzzle.comments || []).map(
+						(comment: any) =>
+							comment._id?.toString() || comment?.toString() || ""
 					),
 					solution: {
 						code: "",
@@ -218,11 +235,14 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				params: idParamSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.NO_CONTENT]: emptyResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: puzzleErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: puzzleErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						puzzleErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						puzzleErrorResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.FORBIDDEN]: puzzleErrorResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: puzzleErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: puzzleErrorResponseSchema
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						puzzleErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]

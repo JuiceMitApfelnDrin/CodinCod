@@ -28,62 +28,66 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				body: registerRequestSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.CREATED]: registerSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: registerErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.CONFLICT]: registerErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: registerErrorResponseSchema
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						registerErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.CONFLICT]:
+						registerErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						registerErrorResponseSchema
 				}
 			}
 		},
 		async (request, reply) => {
 			const parseResult = registerRequestSchema.safeParse(request.body);
 
-		if (!parseResult.success) {
-			return handleAndSendError(reply, parseResult.error, request.url);
-		}
-
-		const { email, password, username } = parseResult.data;
-
-		try {
-			// Check if username already exists
-			const existingUserByUsername = await User.findOne({ username });
-			if (existingUserByUsername) {
-				return sendConflictError(
-					reply,
-					"Username already exists",
-					"Please choose a different username",
-					request.url
-				);
+			if (!parseResult.success) {
+				return handleAndSendError(reply, parseResult.error, request.url);
 			}
 
-			// Check if email already exists
-			const existingUserByEmail = await User.findOne({ email });
-			if (existingUserByEmail) {
-				return sendConflictError(
+			const { email, password, username } = parseResult.data;
+
+			try {
+				// Check if username already exists
+				const existingUserByUsername = await User.findOne({ username });
+				if (existingUserByUsername) {
+					return sendConflictError(
+						reply,
+						"Username already exists",
+						"Please choose a different username",
+						request.url
+					);
+				}
+
+				// Check if email already exists
+				const existingUserByEmail = await User.findOne({ email });
+				if (existingUserByEmail) {
+					return sendConflictError(
+						reply,
+						"Email already exists",
+						"Please use a different email address",
+						request.url
+					);
+				}
+
+				// Create a new user
+				const user = new User({ email, password, username });
+				await user.save();
+
+				const authenticatedUserInfo = {
+					userId: (user._id as any)?.toString() || "",
+					username: user.username,
+					isAuthenticated: true
+				};
+
+				return createAuthResponse(
+					fastify,
 					reply,
-					"Email already exists",
-					"Please use a different email address",
-					request.url
+					authenticatedUserInfo,
+					"User registered successfully"
 				);
+			} catch (error) {
+				return handleAndSendError(reply, error, request.url);
 			}
-
-			// Create a new user
-			const user = new User({ email, password, username });
-			await user.save();
-
-			const authenticatedUserInfo = {
-				userId: (user._id as any)?.toString() || "",
-				username: user.username,
-				isAuthenticated: true
-			};
-
-			return createAuthResponse(
-				fastify,
-				reply,
-				authenticatedUserInfo,
-				"User registered successfully"
-			);
-		} catch (error) {
-			return handleAndSendError(reply, error, request.url);
 		}
-	});
+	);
 }

@@ -36,10 +36,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 				tags: ["Account"],
 				security: [{ bearerAuth: [] }],
 				response: {
-					[httpResponseCodes.SUCCESSFUL.OK]: getPreferencesSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: accountErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+					[httpResponseCodes.SUCCESSFUL.OK]:
+						getPreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						accountErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]
@@ -77,10 +81,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 				security: [{ bearerAuth: [] }],
 				body: updatePreferencesRequestSchema,
 				response: {
-					[httpResponseCodes.SUCCESSFUL.OK]: updatePreferencesSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: accountErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+					[httpResponseCodes.SUCCESSFUL.OK]:
+						updatePreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						accountErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]
@@ -122,10 +130,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 				tags: ["Account"],
 				security: [{ bearerAuth: [] }],
 				response: {
-					[httpResponseCodes.SUCCESSFUL.NO_CONTENT]: deletePreferencesSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: accountErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+					[httpResponseCodes.SUCCESSFUL.NO_CONTENT]:
+						deletePreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						accountErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]
@@ -163,10 +175,14 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 				security: [{ bearerAuth: [] }],
 				body: patchPreferencesRequestSchema,
 				response: {
-					[httpResponseCodes.SUCCESSFUL.OK]: patchPreferencesSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: accountErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: accountErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: accountErrorResponseSchema
+					[httpResponseCodes.SUCCESSFUL.OK]:
+						patchPreferencesSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						accountErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						accountErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]

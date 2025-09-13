@@ -1,6 +1,10 @@
 import { WebSocket } from "@fastify/websocket";
 import type { UserState } from "./types.js";
-import { setUserState, removeUserState, getUserIdByUsername } from "./state-manager.js";
+import {
+	setUserState,
+	removeUserState,
+	getUserIdByUsername
+} from "./state-manager.js";
 import { publishEvent } from "./simple-event-bus.js";
 import { WEBSOCKET_CONSTANTS } from "@/config/constants.js";
 
@@ -8,39 +12,45 @@ import { WEBSOCKET_CONSTANTS } from "@/config/constants.js";
 const socketsByUsername = new Map<string, WebSocket>();
 
 // Connect user
-export async function connectUser(username: string, socket: WebSocket): Promise<void> {
+export async function connectUser(
+	username: string,
+	socket: WebSocket
+): Promise<void> {
 	const socketId = generateSocketId();
-	
+
 	// Get user ID from database
 	const userId = await getUserIdByUsername(username);
 	if (!userId) {
 		console.error(`Could not find user ID for username: ${username}`);
-		socket.close(WEBSOCKET_CONSTANTS.SOCKET.CLOSE_CODES.USER_NOT_FOUND, "User not found");
+		socket.close(
+			WEBSOCKET_CONSTANTS.SOCKET.CLOSE_CODES.USER_NOT_FOUND,
+			"User not found"
+		);
 		return;
 	}
-	
+
 	// Store socket locally
 	socketsByUsername.set(username, socket);
-	
+
 	// Store state in Redis
 	const userState: UserState = {
 		username,
 		userId,
 		socketId,
 		roomId: null,
-		lastSeen: Date.now(),
+		lastSeen: Date.now()
 	};
-	
+
 	await setUserState(username, userState);
-	
+
 	// Publish event
 	await publishEvent({
 		type: "user",
 		action: "connected",
 		username,
-		socketId,
+		socketId
 	});
-	
+
 	// Set up disconnect handler
 	socket.on("close", () => disconnectUser(username));
 	socket.on("error", () => disconnectUser(username));
@@ -50,18 +60,18 @@ export async function connectUser(username: string, socket: WebSocket): Promise<
 export async function disconnectUser(username: string): Promise<void> {
 	const socket = socketsByUsername.get(username);
 	if (!socket) return;
-	
+
 	// Clean up local state
 	socketsByUsername.delete(username);
-	
+
 	// Clean up Redis state
 	await removeUserState(username);
-	
+
 	// Publish event
 	await publishEvent({
 		type: "user",
 		action: "disconnected",
-		username,
+		username
 	});
 }
 
@@ -69,7 +79,7 @@ export async function disconnectUser(username: string): Promise<void> {
 export function sendToUser(username: string, message: object): boolean {
 	const socket = socketsByUsername.get(username);
 	if (!socket) return false;
-	
+
 	try {
 		socket.send(JSON.stringify(message));
 		return true;

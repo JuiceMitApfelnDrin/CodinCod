@@ -5,7 +5,7 @@ export const UserEvent = z.object({
 	type: z.literal("user"),
 	action: z.enum(["connected", "disconnected"]),
 	username: z.string(),
-	socketId: z.string().optional(),
+	socketId: z.string().optional()
 });
 
 export const RoomEvent = z.object({
@@ -13,7 +13,7 @@ export const RoomEvent = z.object({
 	action: z.enum(["created", "joined", "left", "deleted"]),
 	roomId: z.string(),
 	username: z.string(),
-	playerCount: z.number().optional(),
+	playerCount: z.number().optional()
 });
 
 export const GameEvent = z.object({
@@ -21,13 +21,13 @@ export const GameEvent = z.object({
 	action: z.enum(["started"]),
 	roomId: z.string(),
 	gameUrl: z.string(),
-	players: z.array(z.string()),
+	players: z.array(z.string())
 });
 
 export const WaitingRoomEvent = z.discriminatedUnion("type", [
 	UserEvent,
 	RoomEvent,
-	GameEvent,
+	GameEvent
 ]);
 
 export type UserEvent = z.infer<typeof UserEvent>;

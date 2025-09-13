@@ -10,7 +10,7 @@ export async function createRedisClient(): Promise<Redis> {
 	}
 
 	const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
-	
+
 	redisClient = new Redis(redisUrl);
 
 	redisClient.on("error", (err: Error) => {
@@ -24,17 +24,20 @@ export async function createRedisClient(): Promise<Redis> {
 	redisClient.on("disconnect", () => {
 		console.log("Redis Client Disconnected");
 	});
-	
+
 	return redisClient;
 }
 
-export async function createRedisPubSubClients(): Promise<{ pub: Redis; sub: Redis }> {
+export async function createRedisPubSubClients(): Promise<{
+	pub: Redis;
+	sub: Redis;
+}> {
 	if (redisPubClient && redisSubClient) {
 		return { pub: redisPubClient, sub: redisSubClient };
 	}
 
 	const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
-	
+
 	redisPubClient = new Redis(redisUrl);
 	redisSubClient = new Redis(redisUrl);
 
@@ -50,7 +53,7 @@ export async function getRedisClient(): Promise<Redis> {
 
 export async function closeRedisClients(): Promise<void> {
 	const clients = [redisClient, redisPubClient, redisSubClient].filter(Boolean);
-	await Promise.all(clients.map(client => client?.quit()));
+	await Promise.all(clients.map((client) => client?.quit()));
 	redisClient = null;
 	redisPubClient = null;
 	redisSubClient = null;

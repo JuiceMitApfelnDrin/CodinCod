@@ -84,7 +84,9 @@ export type GameSubmissionSuccessResponse = z.infer<
 	typeof gameSubmissionSuccessResponseSchema
 >;
 
-export type LinkSubmissionToGameRequest = z.infer<typeof linkSubmissionToGameRequestSchema>;
+export type LinkSubmissionToGameRequest = z.infer<
+	typeof linkSubmissionToGameRequestSchema
+>;
 export type LinkSubmissionToGameSuccessResponse = z.infer<
 	typeof linkSubmissionToGameSuccessResponseSchema
 >;

@@ -1,8 +1,8 @@
 import type { RoomState } from "./types.js";
-import { 
-	setRoomState, 
-	getRoomState, 
-	removeRoomState, 
+import {
+	setRoomState,
+	getRoomState,
+	removeRoomState,
 	getAllRoomStates,
 	addUserToRoom,
 	removeUserFromRoom,
@@ -12,10 +12,10 @@ import {
 import { publishEvent } from "./simple-event-bus.js";
 import Game from "@/models/game/game.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
-import { 
-	DEFAULT_GAME_LENGTH_IN_MILLISECONDS, 
-	GameEntity, 
-	GameModeEnum, 
+import {
+	DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
+	GameEntity,
+	GameModeEnum,
 	GameVisibilityEnum,
 	puzzleVisibilityEnum,
 	frontendUrls
@@ -25,13 +25,13 @@ import { WEBSOCKET_CONSTANTS } from "@/config/constants.js";
 // Create a new room
 export async function createRoom(ownerUsername: string): Promise<string> {
 	const roomId = generateRoomId();
-	
+
 	// Get owner's user ID
 	const userState = await getUserState(ownerUsername);
 	if (!userState) {
 		throw new Error(`User ${ownerUsername} not found`);
 	}
-	
+
 	const roomState: RoomState = {
 		id: roomId,
 		owner: userState.userId,
@@ -39,69 +39,75 @@ export async function createRoom(ownerUsername: string): Promise<string> {
 		players: [userState.userId],
 		playerUsernames: [ownerUsername],
 		createdAt: Date.now(),
-		maxPlayers: WEBSOCKET_CONSTANTS.ROOM.DEFAULT_MAX_PLAYERS,
+		maxPlayers: WEBSOCKET_CONSTANTS.ROOM.DEFAULT_MAX_PLAYERS
 	};
-	
+
 	await setRoomState(roomId, roomState);
-	
+
 	// Update user state
 	userState.roomId = roomId;
 	await setUserState(ownerUsername, userState);
-	
+
 	await publishEvent({
 		type: "room",
 		action: "created",
 		roomId,
 		username: ownerUsername,
-		playerCount: 1,
+		playerCount: 1
 	});
-	
+
 	return roomId;
 }
 
 // Join a room
-export async function joinRoom(username: string, roomId: string): Promise<boolean> {
+export async function joinRoom(
+	username: string,
+	roomId: string
+): Promise<boolean> {
 	const room = await getRoomState(roomId);
 	if (!room) return false;
-	
+
 	if (room.players.length >= room.maxPlayers) return false;
 	if (room.playerUsernames.includes(username)) return false; // Already in room
-	
+
 	const success = await addUserToRoom(username, roomId);
 	if (!success) return false;
-	
+
 	// Update user state
 	const userState = await getUserState(username);
 	if (userState) {
 		userState.roomId = roomId;
 		await setUserState(username, userState);
 	}
-	
+
 	await publishEvent({
 		type: "room",
 		action: "joined",
 		roomId,
 		username,
-		playerCount: room.players.length + 1,
+		playerCount: room.players.length + 1
 	});
-	
+
 	return true;
 }
 
 // Leave a room
-export async function leaveRoom(username: string, roomId: string): Promise<boolean> {
+export async function leaveRoom(
+	username: string,
+	roomId: string
+): Promise<boolean> {
 	const room = await getRoomState(roomId);
 	if (!room || !room.playerUsernames.includes(username)) return false;
-	
+
 	const success = await removeUserFromRoom(username, roomId);
-	
+
 	// Update user state
 	const userState = await getUserState(username);
 	if (userState) {
 		userState.roomId = null;
 		await setUserState(username, userState);
 	}
-	
+
 	// Check if room was deleted (empty)
 	const updatedRoom = await getRoomState(roomId);
 	if (!updatedRoom) {
@@ -109,7 +115,7 @@ export async function leaveRoom(username: string, roomId: string): Promise<boole
 			type: "room",
 			action: "deleted",
 			roomId,
-			username,
+			username
 		});
 	} else {
 		await publishEvent({
@@ -117,10 +123,10 @@ export async function leaveRoom(username: string, roomId: string): Promise<boole
 			action: "left",
 			roomId,
 			username,
-			playerCount: updatedRoom.players.length,
+			playerCount: updatedRoom.players.length
 		});
 	}
-	
+
 	return success;
 }
 
@@ -130,7 +136,9 @@ export async function getAllRooms(): Promise<RoomState[]> {
 }
 
 // Start a game from a room - creates actual MongoDB game
-export async function startGame(roomId: string): Promise<{ success: boolean; gameUrl?: string; error?: string }> {
+export async function startGame(
+	roomId: string
+): Promise<{ success: boolean; gameUrl?: string; error?: string }> {
 	const room = await getRoomState(roomId);
 	if (!room) {
 		return { success: false, error: "Room not found" };
@@ -148,9 +156,10 @@ export async function startGame(roomId: string): Promise<{ success: boolean; gam
 		]).exec();
 
 		if (randomPuzzles.length < 1) {
-			return { 
-				success: false, 
-				error: "No approved puzzles available. Create and approve puzzles to play games." 
+			return {
+				success: false,
+				error:
+					"No approved puzzles available. Create and approve puzzles to play games."
 			};
 		}
 
@@ -187,7 +196,7 @@ export async function startGame(roomId: string): Promise<{ success: boolean; gam
 			action: "started",
 			roomId,
 			gameUrl,
-			players: room.playerUsernames, // Send usernames for the event
+			players: room.playerUsernames // Send usernames for the event
 		});
 
 		// Clean up: remove all players from room and delete room
@@ -202,7 +211,6 @@ export async function startGame(roomId: string): Promise<{ success: boolean; gam
 		await removeRoomState(roomId);
 
 		return { success: true, gameUrl };
-
 	} catch (error) {
 		console.error("Failed to start game:", error);
 		return { success: false, error: "Failed to create game" };

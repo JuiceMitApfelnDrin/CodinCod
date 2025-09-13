@@ -25,30 +25,33 @@ export default async function userByUsernameIsAvailableRoutes(
 				tags: ["Users"],
 				params: usernameParamSchema,
 				response: {
-					[httpResponseCodes.SUCCESSFUL.OK]: checkUsernameAvailabilitySuccessResponseSchema,
+					[httpResponseCodes.SUCCESSFUL.OK]:
+						checkUsernameAvailabilitySuccessResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: userErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: userErrorResponseSchema
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						userErrorResponseSchema
 				}
 			}
 		},
 		async (request, reply) => {
-		const { username } = request.params;
+			const { username } = request.params;
 
-		if (!validateUsername(username, reply, request.url)) {
-			return;
-		}
+			if (!validateUsername(username, reply, request.url)) {
+				return;
+			}
 
-		try {
-			const existingUser = await User.findOne({ username });
-			const response: CheckUsernameAvailabilitySuccessResponse = {
-				available: !existingUser,
-				message: existingUser ? "Username is already taken" : "Username is available"
-			};
-			return reply
-				.status(httpResponseCodes.SUCCESSFUL.OK)
-				.send(response);
-		} catch (error) {
-			return handleAndSendError(reply, error, request.url);
+			try {
+				const existingUser = await User.findOne({ username });
+				const response: CheckUsernameAvailabilitySuccessResponse = {
+					available: !existingUser,
+					message: existingUser
+						? "Username is already taken"
+						: "Username is available"
+				};
+				return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(response);
+			} catch (error) {
+				return handleAndSendError(reply, error, request.url);
+			}
 		}
-	});
+	);
 }

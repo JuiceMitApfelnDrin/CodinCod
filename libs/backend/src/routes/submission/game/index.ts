@@ -35,11 +35,16 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 				security: [{ bearerAuth: [] }],
 				body: linkSubmissionToGameRequestSchema,
 				response: {
-					[httpResponseCodes.SUCCESSFUL.CREATED]: linkSubmissionToGameSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: submissionErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: submissionErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: submissionErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: submissionErrorResponseSchema
+					[httpResponseCodes.SUCCESSFUL.CREATED]:
+						linkSubmissionToGameSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						submissionErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						submissionErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]:
+						submissionErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						submissionErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]

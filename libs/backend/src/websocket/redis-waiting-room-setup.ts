@@ -16,39 +16,39 @@ export async function redisWaitingRoomSetup(
 		socket.close(1008, "Unauthorized");
 		return;
 	}
-	
+
 	// Initialize event system once
 	if (!isInitialized) {
 		setupEventListener();
 		isInitialized = true;
 	}
-	
+
 	const username = req.user.username;
-	
+
 	// Connect user
 	await connectUser(username, socket);
-	
+
 	// Send initial room list using existing enum
 	const rooms = await getAllRooms();
 	sendToUser(username, {
 		event: waitingRoomEventEnum.OVERVIEW_OF_ROOMS,
-		rooms: rooms.map(room => ({
+		rooms: rooms.map((room) => ({
 			id: room.id,
 			owner: room.ownerUsername,
 			playerCount: room.players.length,
 			maxPlayers: room.maxPlayers,
-			players: room.playerUsernames,
-		})),
+			players: room.playerUsernames
+		}))
 	});
-	
+
 	// Handle messages
 	socket.on("message", (rawMessage) => {
 		if (!isAuthenticatedInfo(req.user)) return;
-		
-		const message = Buffer.isBuffer(rawMessage) 
-			? rawMessage 
+
+		const message = Buffer.isBuffer(rawMessage)
+			? rawMessage
 			: Buffer.from(rawMessage as ArrayBuffer);
-			
+
 		handleMessage(socket, req.user, message);
 	});
 }

@@ -31,39 +31,43 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 				params: idParamSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.OK]: commentDtoSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: commentErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: commentErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: commentErrorResponseSchema
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]:
+						commentErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						commentErrorResponseSchema
 				}
 			}
 		},
 		async (request, reply) => {
-		const parseResult = objectIdSchema.safeParse(request.params.id);
+			const parseResult = objectIdSchema.safeParse(request.params.id);
 
-		if (!parseResult.success) {
-			return handleAndSendError(reply, parseResult.error, request.url);
-		}
-
-		try {
-			const comment = await Comment.findById(request.params.id)
-				.populate("author")
-				.populate("comments")
-				.populate({
-					path: "comments",
-					populate: {
-						path: "author"
-					}
-				});
-
-			if (!comment) {
-				return sendNotFoundError(reply, "Comment not found");
+			if (!parseResult.success) {
+				return handleAndSendError(reply, parseResult.error, request.url);
 			}
 
-			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(comment);
-		} catch (error) {
-			return handleAndSendError(reply, error, request.url);
+			try {
+				const comment = await Comment.findById(request.params.id)
+					.populate("author")
+					.populate("comments")
+					.populate({
+						path: "comments",
+						populate: {
+							path: "author"
+						}
+					});
+
+				if (!comment) {
+					return sendNotFoundError(reply, "Comment not found");
+				}
+
+				return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(comment);
+			} catch (error) {
+				return handleAndSendError(reply, error, request.url);
+			}
 		}
-	});
+	);
 
 	fastify.delete<{
 		Params: { id: string };
@@ -78,11 +82,16 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 				params: idParamSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.OK]: deleteCommentSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: commentErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: commentErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.FORBIDDEN]: commentErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: commentErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: commentErrorResponseSchema
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.FORBIDDEN]:
+						commentErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]:
+						commentErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						commentErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]

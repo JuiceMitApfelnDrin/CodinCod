@@ -37,10 +37,14 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 				security: [{ bearerAuth: [] }],
 				body: createPuzzleRequestSchema,
 				response: {
-					[httpResponseCodes.SUCCESSFUL.CREATED]: createPuzzleSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: puzzleErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: puzzleErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: puzzleErrorResponseSchema
+					[httpResponseCodes.SUCCESSFUL.CREATED]:
+						createPuzzleSuccessResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						puzzleErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						puzzleErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						puzzleErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]
@@ -112,8 +116,10 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 				querystring: listPuzzlesRequestSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.OK]: listPuzzlesSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: puzzleErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: puzzleErrorResponseSchema
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						puzzleErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						puzzleErrorResponseSchema
 				}
 			}
 		},

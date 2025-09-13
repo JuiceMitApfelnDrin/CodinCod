@@ -29,9 +29,12 @@ export default async function submissionByIdRoutes(fastify: FastifyInstance) {
 				params: idParamSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.OK]: getSubmissionSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]: submissionErrorResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: submissionErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: submissionErrorResponseSchema
+					[httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED]:
+						submissionErrorResponseSchema,
+					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]:
+						submissionErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						submissionErrorResponseSchema
 				}
 			},
 			preHandler: [authenticated]

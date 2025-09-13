@@ -36,10 +36,12 @@ export default async function userByUsernamePuzzleRoutes(
 				params: usernameParamSchema,
 				querystring: paginatedQuerySchema,
 				response: {
-					[httpResponseCodes.SUCCESSFUL.OK]: getUserPuzzlesSuccessResponseSchema,
+					[httpResponseCodes.SUCCESSFUL.OK]:
+						getUserPuzzlesSuccessResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: userErrorResponseSchema,
 					[httpResponseCodes.CLIENT_ERROR.NOT_FOUND]: userErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: userErrorResponseSchema
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						userErrorResponseSchema
 				}
 			},
 			onRequest: decodeToken
@@ -93,11 +95,14 @@ export default async function userByUsernamePuzzleRoutes(
 				const totalPages = Math.ceil(total / pageSize);
 
 				// Transform puzzles to the expected format
-				const puzzleData = puzzles.map(puzzle => ({
+				const puzzleData = puzzles.map((puzzle) => ({
 					id: puzzle._id?.toString() || "",
 					title: puzzle.title,
 					difficulty: puzzle.difficulty,
-					createdAt: puzzle.createdAt instanceof Date ? puzzle.createdAt.toISOString() : puzzle.createdAt || "",
+					createdAt:
+						puzzle.createdAt instanceof Date
+							? puzzle.createdAt.toISOString()
+							: puzzle.createdAt || "",
 					visibility: puzzle.visibility
 				}));
 

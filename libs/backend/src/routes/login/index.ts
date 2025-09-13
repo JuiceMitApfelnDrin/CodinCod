@@ -33,8 +33,10 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				body: loginRequestSchema,
 				response: {
 					[httpResponseCodes.SUCCESSFUL.OK]: loginSuccessResponseSchema,
-					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]: loginErrorResponseSchema,
-					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]: loginErrorResponseSchema
+					[httpResponseCodes.CLIENT_ERROR.BAD_REQUEST]:
+						loginErrorResponseSchema,
+					[httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR]:
+						loginErrorResponseSchema
 				}
 			}
 		},
