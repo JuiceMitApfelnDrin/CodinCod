@@ -8,17 +8,23 @@
 	import { authenticatedUserInfo } from "@/stores";
 	import { Menu, Moon, Sun } from "@lucide/svelte";
 	import { testIds } from "@/config/test-ids";
+
+	const version = import.meta.env.VITE_APP_VERSION;
 </script>
 
 <header class="lg:mx-8">
 	<nav
-		class="container hidden items-center gap-8 bg-teal-200 bg-linear-to-b from-teal-100 py-6 text-teal-900 lg:mt-6 lg:flex lg:flex-row lg:rounded-2xl dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
+		class="bg-linear-to-b container hidden items-center gap-8 bg-teal-200 from-teal-100 py-6 text-teal-900 lg:mt-4 lg:flex lg:flex-row lg:rounded-2xl dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a
 			href={frontendUrls.ROOT}
-			class="self-center text-4xl font-bold whitespace-nowrap"
+			class="self-center whitespace-nowrap text-4xl font-bold"
 		>
-			CodinCod
+			CodinCod<span
+				class="text-sm"
+				title="Current version of the site! Hopefully next time you come we'll have made an update!"
+				>v{version}</span
+			>
 		</a>
 
 		<ul
@@ -51,7 +57,7 @@
 		{:else}
 			<a
 				data-testid={testIds.NAVIGATION_ANCHOR_LOGIN}
-				class="hover:text-foreground dark:hover:text-foreground px-2 pt-5 pb-2 text-sm font-semibold text-teal-900 uppercase underline underline-offset-8 hover:underline hover:underline-offset-2 dark:text-teal-100"
+				class="hover:text-foreground dark:hover:text-foreground px-2 pb-2 pt-5 text-sm font-semibold uppercase text-teal-900 underline underline-offset-8 hover:underline hover:underline-offset-2 dark:text-teal-100"
 				href={frontendUrls.LOGIN}>Login</a
 			>
 		{/if}
@@ -60,10 +66,10 @@
 	</nav>
 
 	<div
-		class="container flex flex-row items-center justify-between gap-8 bg-teal-200 bg-linear-to-b from-teal-100 py-6 text-teal-900 lg:hidden dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
+		class="bg-linear-to-b container flex flex-row items-center justify-between gap-8 bg-teal-200 from-teal-100 py-6 text-teal-900 lg:hidden dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a href={frontendUrls.ROOT}>
-			<span class="self-center font-mono text-4xl font-bold whitespace-nowrap"
+			<span class="self-center whitespace-nowrap font-mono text-4xl font-bold"
 				>CodinCod</span
 			>
 		</a>
