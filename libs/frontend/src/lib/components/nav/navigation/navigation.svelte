@@ -8,17 +8,23 @@
 	import { authenticatedUserInfo } from "@/stores";
 	import { Menu, Moon, Sun } from "@lucide/svelte";
 	import { testIds } from "@/config/test-ids";
+
+	const version = import.meta.env.VITE_APP_VERSION;
 </script>
 
 <header class="lg:mx-8">
 	<nav
-		class="container hidden items-center gap-8 bg-teal-200 bg-linear-to-b from-teal-100 py-6 text-teal-900 lg:mt-6 lg:flex lg:flex-row lg:rounded-2xl dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
+		class="container hidden items-center gap-8 bg-teal-200 bg-linear-to-b from-teal-100 py-6 text-teal-900 lg:mt-4 lg:flex lg:flex-row lg:rounded-2xl dark:bg-teal-950 dark:from-teal-950 dark:text-teal-100"
 	>
 		<a
 			href={frontendUrls.ROOT}
 			class="self-center text-4xl font-bold whitespace-nowrap"
 		>
-			CodinCod
+			CodinCod<span
+				class="text-sm"
+				title="Current version of the site! Hopefully next time you come we'll have made an update!"
+				>v{version}</span
+			>
 		</a>
 
 		<ul
