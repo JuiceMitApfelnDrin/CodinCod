@@ -1,170 +1,181 @@
 import { WebSocket } from "@fastify/websocket";
 import mongoose from "mongoose";
 import {
-	AuthenticatedInfo,
-	GameUserInfo,
-	ObjectId,
-	waitingRoomEventEnum,
-	WaitingRoomResponse
+  AuthenticatedInfo,
+  GameUserInfo,
+  ObjectId,
+  waitingRoomEventEnum,
+  WaitingRoomResponse
 } from "types";
+import { ConnectionManager } from "../connection-manager.js";
 
 type Username = string;
 type RoomId = ObjectId;
 type Room = Record<Username, GameUserInfo>;
 
 export class WaitingRoom {
-	private roomsByRoomId: Record<RoomId, Room>;
-	private socketByUsername: Record<Username, WebSocket>;
-	private roomsByUsername: Record<Username, RoomId>;
+  private roomsByRoomId: Record<RoomId, Room>;
+  private roomsByUsername: Record<Username, RoomId>;
+  private connectionManager: ConnectionManager;
 
-	constructor() {
-		this.roomsByRoomId = {};
-		this.socketByUsername = {};
-		this.roomsByUsername = {};
-	}
+  constructor() {
+    this.roomsByRoomId = {};
+    this.roomsByUsername = {};
+    this.connectionManager = new ConnectionManager({
+      onConnectionLost: (username) => {
+        this.handleDisconnectedUser(username);
+      }
+    });
+  }
 
-	addUserToUsers(username: Username, socket: WebSocket) {
-		this.socketByUsername[username] = socket;
-	}
+  private handleDisconnectedUser(username: Username): void {
+    console.info(`Waiting room connection lost for user: ${username}`);
+    const roomId = this.roomsByUsername[username];
+    if (roomId) {
+      this.leaveRoom(username, roomId);
+    }
+    this.removeEmptyRooms();
+  }
 
-	removeUserFromUsers(username: Username) {
-		const roomId = this.roomsByUsername[username];
+  addUserToUsers(username: Username, socket: WebSocket, user: AuthenticatedInfo): void {
+    this.connectionManager.add(user, socket);
+  }
 
-		if (roomId) {
-			this.leaveRoom(username, roomId);
-		}
+  removeUserFromUsers(username: Username): void {
+    const roomId = this.roomsByUsername[username];
+    if (roomId) {
+      this.leaveRoom(username, roomId);
+    }
+    this.connectionManager.remove(username);
+  }
 
-		delete this.socketByUsername[username];
-	}
+  hostRoom(user: AuthenticatedInfo): RoomId {
+    const randomId = new mongoose.Types.ObjectId().toString();
 
-	hostRoom(user: AuthenticatedInfo) {
-		const randomId = new mongoose.Types.ObjectId().toString();
+    this.roomsByRoomId[randomId] = {
+      [user.username]: {
+        joinedAt: new Date(),
+        userId: user.userId,
+        username: user.username
+      }
+    };
 
-		// make the room
-		this.roomsByRoomId[randomId] = {
-			[user.username]: {
-				joinedAt: new Date(),
-				userId: user.userId,
-				username: user.username
-			}
-		};
+    this.joinRoom(user, randomId);
+    return randomId;
+  }
 
-		this.joinRoom(user, randomId);
-	}
+  joinRoom(user: AuthenticatedInfo, roomId: RoomId): boolean {
+    const room = this.getRoom(roomId);
+    if (!room) {
+      console.warn(`Room ${roomId} not found`);
+      return false;
+    }
 
-	joinRoom(user: AuthenticatedInfo, roomId: RoomId) {
-		const room = this.getRoom(roomId);
+    room[user.username] = {
+      joinedAt: new Date(),
+      userId: user.userId,
+      username: user.username
+    };
 
-		if (!room) {
-			return;
-		}
+    this.roomsByUsername[user.username] = roomId;
+    this.updateUsersOnRoomState(roomId);
+    return true;
+  }
 
-		room[user.username] = {
-			joinedAt: new Date(),
-			userId: user.userId,
-			username: user.username
-		};
+  leaveRoom(username: Username, roomId: RoomId): void {
+    const room = this.getRoom(roomId);
+    if (!room) {
+      return;
+    }
 
-		this.roomsByUsername[user.username] = roomId;
+    delete room[username];
+    delete this.roomsByUsername[username];
 
-		this.updateUsersOnRoomState(roomId);
-	}
+    if (Object.keys(room).length <= 0) {
+      delete this.roomsByRoomId[roomId];
+      console.info(`Room ${roomId} is now empty and removed`);
+    } else {
+      this.updateUsersOnRoomState(roomId);
+    }
+  }
 
-	leaveRoom(username: Username, roomId: RoomId) {
-		const room = this.getRoom(roomId);
+  getRoom(roomId: RoomId): Room | undefined {
+    return this.roomsByRoomId[roomId];
+  }
 
-		if (!room) {
-			return;
-		}
+  getRooms(): Array<{ roomId: RoomId; amountOfPlayersJoined: number }> {
+    return Object.entries(this.roomsByRoomId).map(([roomId, room]) => {
+      return { roomId, amountOfPlayersJoined: Object.keys(room).length };
+    });
+  }
 
-		delete room[username];
+  updateUsersOnRoomState(roomId: RoomId): void {
+    const room = this.getRoom(roomId);
+    if (!room) {
+      return;
+    }
 
-		if (Object.keys(room).length <= 0) {
-			delete this.roomsByRoomId[roomId];
-		}
+    const usersInRoom = Object.values(room);
+    this.updateUsersInRoom(roomId, {
+      event: waitingRoomEventEnum.OVERVIEW_ROOM,
+      room: {
+        users: usersInRoom,
+        owner: this.findRoomOwner(room),
+        roomId
+      }
+    });
+  }
 
-		this.updateUsersOnRoomState(roomId);
-	}
+  findRoomOwner(room: Room): GameUserInfo {
+    const usersInRoom = Object.values(room);
+    return usersInRoom.sort((userA, userB) => {
+      const userAJoinDate = new Date(userA.joinedAt).getTime();
+      const userBJoinDate = new Date(userB.joinedAt).getTime();
+      return userAJoinDate - userBJoinDate;
+    })[0];
+  }
 
-	getRoom(roomId: RoomId) {
-		return this.roomsByRoomId[roomId];
-	}
+  updateUsersInRoom(roomId: RoomId, response: WaitingRoomResponse): void {
+    const room = this.getRoom(roomId);
+    if (!room) {
+      return;
+    }
 
-	getRooms() {
-		return Object.entries(this.roomsByRoomId).map(([roomId, room]) => {
-			return { roomId, amountOfPlayersJoined: Object.keys(room).length };
-		});
-	}
+    Object.keys(room).forEach((username) => {
+      this.updateUser(username, response);
+    });
+  }
 
-	updateUsersOnRoomState(roomId: RoomId) {
-		const room = this.getRoom(roomId);
+  updateAllUsers(response: WaitingRoomResponse): void {
+    const usernames = this.connectionManager.getAllUsernames();
+    usernames.forEach(username => {
+      this.updateUser(username, response);
+    });
+  }
 
-		if (!room) {
-			return;
-		}
+  updateUser(username: string, response: WaitingRoomResponse): boolean {
+    return this.connectionManager.send(username, response);
+  }
 
-		const usersInRoom = Object.values(room);
+  removeEmptyRooms(): void {
+    const emptyRoomIds = Object.entries(this.roomsByRoomId)
+      .filter(([_roomId, room]) => Object.keys(room).length === 0)
+      .map(([roomId]) => roomId);
 
-		this.updateUsersInRoom(roomId, {
-			event: waitingRoomEventEnum.OVERVIEW_ROOM,
-			room: {
-				users: usersInRoom,
-				owner: this.findRoomOwner(room),
-				roomId
-			}
-		});
-	}
+    emptyRoomIds.forEach(roomId => {
+      delete this.roomsByRoomId[roomId];
+    });
 
-	findRoomOwner(room: Room) {
-		const usersInRoom = Object.values(room);
+    if (emptyRoomIds.length > 0) {
+      console.info(`Removed ${emptyRoomIds.length} empty rooms`);
+    }
+  }
 
-		return usersInRoom.sort((userA, userB) => {
-			const userAJoinDate = new Date(userA.joinedAt).getTime();
-			const userBJoinDate = new Date(userB.joinedAt).getTime();
+  isUserConnected(username: Username): boolean {
+    return this.connectionManager.isConnected(username);
+  }
 
-			return userAJoinDate - userBJoinDate;
-		})[0];
-	}
-
-	updateUsersInRoom(roomId: RoomId, response: WaitingRoomResponse) {
-		const room = this.getRoom(roomId);
-
-		if (!room) {
-			return;
-		}
-
-		Object.keys(room).forEach((username) => {
-			this.updateUser(username, response);
-		});
-	}
-
-	updateAllUsers(data: string) {
-		Object.values(this.socketByUsername).forEach((socket) => {
-			socket.send(data);
-		});
-	}
-
-	updateUser(username: string, response: WaitingRoomResponse) {
-		const socket = this.socketByUsername[username];
-
-		if (!socket) {
-			return;
-		}
-
-		const data = JSON.stringify(response);
-
-		socket.send(data);
-	}
-
-	removeEmptyRooms() {
-		const rooms = Object.entries(this.roomsByRoomId).filter(
-			([_roomId, room]) => {
-				return Object.keys(room).length === 0;
-			}
-		);
-
-		rooms.forEach(([roomId, _room]) => {
-			delete this.roomsByRoomId[roomId];
-		});
-	}
+  destroy(): void {
+    this.connectionManager.destroy();
+  }
 }

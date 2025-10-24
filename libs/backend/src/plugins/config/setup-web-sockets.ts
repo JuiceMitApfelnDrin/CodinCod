@@ -4,19 +4,27 @@ import { gameSetup } from "@/websocket/game/game-setup.js";
 import authenticated from "../middleware/authenticated.js";
 import { webSocketParams, webSocketUrls } from "types";
 import { ParamsId } from "@/types/types.js";
+import { ConnectionManager } from "@/websocket/connection-manager.js";
 
 export async function setupWebSockets(fastify: FastifyInstance) {
-	// needs to happen before other routes in the whole flow
+  const connectionManager = new ConnectionManager();
 
-	fastify.addHook("preValidation", authenticated);
-	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (...props) =>
-		waitingRoomSetup(...props, fastify)
-	);
+  // needs to happen before other routes in the whole flow
 
-	fastify.addHook("preValidation", authenticated);
-	fastify.get<ParamsId>(
-		webSocketUrls.gameById(webSocketParams.ID),
-		{ websocket: true },
-		(...props) => gameSetup(...props, fastify)
-	);
+  fastify.addHook("preValidation", authenticated);
+  fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (...props) =>
+    waitingRoomSetup(...props, fastify)
+  );
+
+  fastify.addHook("preValidation", authenticated);
+  fastify.get<ParamsId>(
+    webSocketUrls.gameById(webSocketParams.ID),
+    { websocket: true },
+    (...props) => gameSetup(...props, fastify)
+  );
+
+  fastify.addHook('onClose', async () => {
+    console.info('Shutting down WebSocket connections...');
+    connectionManager.destroy();
+  });
 }

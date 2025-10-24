@@ -1,38 +1,48 @@
 import { WebSocket } from "@fastify/websocket";
-import { GameResponse } from "types";
+import { AuthenticatedInfo, GameResponse } from "types";
+import { ConnectionManager } from "../connection-manager.js";
 
 type Username = string;
 
 export class UserWebSockets {
-	private socketByUsername: Record<Username, WebSocket>;
+  private connectionManager: ConnectionManager;
 
-	constructor() {
-		this.socketByUsername = {};
-	}
+  constructor() {
+    this.connectionManager = new ConnectionManager({
+      onConnectionLost: (username: string) => {
+        console.info(`Game connection lost for user: ${username}`);
+      }
+    });
+  }
 
-	add(username: Username, socket: WebSocket) {
-		this.socketByUsername[username] = socket;
-	}
+  add(username: Username, socket: WebSocket, user: AuthenticatedInfo): void {
+    this.connectionManager.add(user, socket);
+  }
 
-	remove(username: Username) {
-		delete this.socketByUsername[username];
-	}
+  remove(username: Username): void {
+    this.connectionManager.remove(username);
+  }
 
-	updateAllUsers(response: GameResponse) {
-		Object.keys(this.socketByUsername).forEach((username) => {
-			this.updateUser(username, response);
-		});
-	}
+  updateAllUsers(response: GameResponse): void {
+    const usernames = this.connectionManager.getAllUsernames();
+    usernames.forEach((username: string) => {
+      this.updateUser(username, response);
+    });
+  }
 
-	updateUser(username: string, response: GameResponse) {
-		const socket = this.socketByUsername[username];
+  updateUser(username: string, response: GameResponse): boolean {
+    return this.connectionManager.send(username, response);
+  }
 
-		if (!socket) {
-			return;
-		}
+  isConnected(username: Username): boolean {
+    return this.connectionManager.isConnected(username);
+  }
 
-		const data = JSON.stringify(response);
+  getConnectionCount(): number {
+    return this.connectionManager.getConnectionCount();
+  }
 
-		socket.send(data);
-	}
+  destroy(): void {
+    this.connectionManager.destroy();
+  }
 }
