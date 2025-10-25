@@ -3,27 +3,31 @@
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import DisplayError from "@/components/error/display-error.svelte";
+	import ConnectionStatus from "@/components/websocket/connection-status.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import { authenticatedUserInfo } from "@/stores";
+	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
+	import { WEBSOCKET_STATES, type WebSocketState } from "@/websocket/websocket-constants";
 	import {
 		frontendUrls,
 		isAuthor,
 		isWaitingRoomResponse,
-		sendMessageOfType,
 		waitingRoomEventEnum,
 		webSocketUrls,
 		type RoomOverviewResponse,
 		type RoomStateResponse,
-		type WaitingRoomRequest
+		type WaitingRoomRequest,
+		type WaitingRoomResponse
 	} from "types";
 	import { testIds } from "@/config/test-ids";
 
 	let room: RoomStateResponse | undefined = $state();
 	let rooms: RoomOverviewResponse[] = $state([]);
 	let errorMessage: string | undefined = $state();
+	let connectionState = $state<WebSocketState>(WEBSOCKET_STATES.DISCONNECTED);
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"
@@ -42,17 +46,13 @@
 	}
 
 	function checkForRoomId() {
-		if (!socket) {
-			return;
-		}
-
 		const roomId = query.get(queryParamKeys.ROOM_ID);
 
 		if (!roomId) {
 			return;
 		}
 
-		sendWaitingRoomMessage(socket, {
+		wsManager.send({
 			event: waitingRoomEventEnum.JOIN_ROOM,
 			roomId
 		});
@@ -60,94 +60,71 @@
 		updateRoomIdInUrl();
 	}
 
-	function connectWithWebsocket() {
-		if (socket) {
-			socket.close();
+	function handleWaitingRoomMessage(data: WaitingRoomResponse) {
+		const { event } = data;
+
+		switch (event) {
+			case waitingRoomEventEnum.OVERVIEW_OF_ROOMS:
+				{
+					rooms = data.rooms;
+				}
+				break;
+			case waitingRoomEventEnum.OVERVIEW_ROOM:
+				{
+					room = data.room;
+				}
+				break;
+			case waitingRoomEventEnum.START_GAME:
+				{
+					goto(data.gameUrl);
+				}
+				break;
+			case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
+				{
+					errorMessage = data.message;
+				}
+				break;
+			case waitingRoomEventEnum.ERROR:
+				{
+					console.error(data.message);
+				}
+				break;
+			default:
+				data satisfies never;
+				break;
 		}
-
-		const webSocketUrl = webSocketUrls.WAITING_ROOM;
-		socket = new WebSocket(webSocketUrl);
-
-		socket.onopen = (message) => {
-			console.info("WebSocket connection opened");
-
-			checkForRoomId();
-		};
-
-		socket.onerror = (e) => {
-			console.error("Closing websocket", e);
-		};
-
-		socket.onclose = (message) => {
-			console.info(
-				"WebSocket connection closed:",
-				message.code,
-				message.reason
-			);
-
-			setTimeout(function () {
-				connectWithWebsocket();
-			}, 1000);
-		};
-
-		socket.onmessage = (message) => {
-			const receivedInformation = JSON.parse(message.data);
-
-			if (!isWaitingRoomResponse(receivedInformation)) {
-				throw new Error("unknown / unhandled waiting room response");
-			}
-
-			const { event } = receivedInformation;
-
-			switch (event) {
-				case waitingRoomEventEnum.OVERVIEW_OF_ROOMS:
-					{
-						rooms = receivedInformation.rooms;
-					}
-					break;
-				case waitingRoomEventEnum.OVERVIEW_ROOM:
-					{
-						room = receivedInformation.room;
-					}
-					break;
-				case waitingRoomEventEnum.START_GAME:
-					{
-						goto(receivedInformation.gameUrl);
-					}
-					break;
-				case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
-					{
-						errorMessage = receivedInformation.message;
-					}
-					break;
-				case waitingRoomEventEnum.ERROR:
-					{
-						console.error(receivedInformation.message);
-					}
-					break;
-				default:
-					receivedInformation satisfies never;
-					break;
-			}
-		};
 	}
 
-	let socket: WebSocket | undefined = $state();
+	const wsManager = new WebSocketManager<WaitingRoomRequest, WaitingRoomResponse>({
+		url: webSocketUrls.WAITING_ROOM,
+		onMessage: handleWaitingRoomMessage,
+		onStateChange: (state) => {
+			connectionState = state;
+			if (state === 'connected') {
+				checkForRoomId();
+			}
+		},
+		validateResponse: isWaitingRoomResponse
+	});
+
 	if (browser) {
-		connectWithWebsocket();
+		wsManager.connect();
 	}
 
 	$effect(() => {
 		if (room?.roomId) updateRoomIdInUrl();
 	});
 
+	$effect(() => {
+		return () => {
+			wsManager.destroy();
+		};
+	});
+
 	let query = new URLSearchParams($page.url.searchParams.toString());
 
-	export function sendWaitingRoomMessage(
-		socket: WebSocket,
-		data: WaitingRoomRequest
-	) {
-		sendMessageOfType<WaitingRoomRequest>(socket, data);
+	function sendWaitingRoomMessage(data: WaitingRoomRequest) {
+		wsManager.send(data);
 	}
 </script>
 
@@ -172,22 +149,21 @@
 		<LogicalUnit
 			class="flex flex-col md:flex-row md:items-center md:justify-between"
 		>
-			<H1>Multiplayer</H1>
+			<div class="flex items-center gap-4">
+				<H1>Multiplayer</H1>
+				<ConnectionStatus {wsManager} state={connectionState} />
+			</div>
 
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 				{#if room && room.roomId}
 					<Button
 						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_LEAVE_ROOM}
 						onclick={() => {
-							if (!socket) {
-								return;
-							}
-
 							if (!room?.roomId) {
 								return;
 							}
 
-							sendWaitingRoomMessage(socket, {
+							sendWaitingRoomMessage({
 								event: waitingRoomEventEnum.LEAVE_ROOM,
 								roomId: room.roomId
 							});
@@ -202,15 +178,11 @@
 						<Button
 							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_START_ROOM}
 							onclick={() => {
-								if (!socket) {
-									return;
-								}
-
 								if (!room?.roomId) {
 									return;
 								}
 
-								sendWaitingRoomMessage(socket, {
+								sendWaitingRoomMessage({
 									event: waitingRoomEventEnum.START_GAME,
 									roomId: room.roomId
 								});
@@ -223,11 +195,7 @@
 					<Button
 						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_HOST_ROOM}
 						onclick={() => {
-							if (!socket) {
-								return;
-							}
-
-							sendWaitingRoomMessage(socket, {
+							sendWaitingRoomMessage({
 								event: waitingRoomEventEnum.HOST_ROOM
 							});
 						}}
@@ -257,11 +225,7 @@
 						<Button
 							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_JOIN_ROOM}
 							onclick={() => {
-								if (!socket) {
-									return;
-								}
-
-								sendWaitingRoomMessage(socket, {
+								sendWaitingRoomMessage({
 									event: waitingRoomEventEnum.JOIN_ROOM,
 									roomId: joinableRoom.roomId
 								});
