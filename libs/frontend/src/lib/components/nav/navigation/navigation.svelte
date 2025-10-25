@@ -70,8 +70,11 @@
 	>
 		<a href={frontendUrls.ROOT}>
 			<span class="self-center font-mono text-4xl font-bold whitespace-nowrap"
-				>CodinCod</span
-			>
+				>CodinCod<span
+				class="text-sm"
+				title="Current version of the site! Hopefully next time you come we'll have made an update!"
+				>v{version}</span
+			></span>
 		</a>
 
 		<DropdownMenu.Root>

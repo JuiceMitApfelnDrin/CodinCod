@@ -3,11 +3,19 @@
 	import { authenticatedUserInfo } from "@/stores/index.js";
 	import { isAuthenticatedInfo } from "types";
 	import { Toaster } from "$lib/components/ui/sonner";
+	import { untrack } from "svelte";
 
 	let { children, data } = $props();
 
+	// Use untrack to prevent the store read from causing infinite loops
 	$effect(() => {
-		authenticatedUserInfo.set(isAuthenticatedInfo(data) ? data : null);
+		const newAuthInfo = isAuthenticatedInfo(data) ? data : null;
+		const currentAuthInfo = untrack(() => $authenticatedUserInfo);
+		
+		// Only update if the data has actually changed
+		if (JSON.stringify(newAuthInfo) !== JSON.stringify(currentAuthInfo)) {
+			authenticatedUserInfo.set(newAuthInfo);
+		}
 	});
 </script>
 

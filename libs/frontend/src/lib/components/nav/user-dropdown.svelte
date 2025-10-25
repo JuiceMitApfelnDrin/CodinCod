@@ -67,6 +67,20 @@
 				<DropdownMenu.Item>
 					{#snippet child(props)}
 						<a
+							data-testid={testIds.NAVIGATION_MENU_ANCHOR_MODERATION}
+							href={frontendUrls.MODERATION}
+							{...props}
+						>
+							Moderation
+						</a>
+					{/snippet}
+				</DropdownMenu.Item>
+
+				<DropdownMenu.Separator />
+
+				<DropdownMenu.Item>
+					{#snippet child(props)}
+						<a
 							data-testid={testIds.NAVIGATION_MENU_ANCHOR_LOGOUT}
 							href={frontendUrls.LOGOUT}
 							{...props}

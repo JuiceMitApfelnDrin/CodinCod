@@ -4,6 +4,7 @@ export const backendUrls = {
 	ROOT: "/",
 	REGISTER: `${baseRoute}/register`,
 	LOGIN: `${baseRoute}/login`,
+	LOGOUT: `${baseRoute}/logout`,
 	USER_ME: `${baseRoute}/user/me`,
 	USER: `${baseRoute}/user`,
 	userByUsername: (username: string) => `${baseRoute}/user/${username}`,
@@ -35,6 +36,15 @@ export const backendUrls = {
 	SUBMISSION: `${baseRoute}/submission`,
 	submissionById: (id: string) => `${baseRoute}/submission/${id}`,
 	SUBMISSION_GAME: `${baseRoute}/submission/game`,
+
+	// moderation routes
+	MODERATION_REVIEW: `${baseRoute}/moderation/review`,
+	moderationPuzzleApprove: (id: string) =>
+		`${baseRoute}/moderation/puzzle/${id}/approve`,
+	moderationPuzzleRevise: (id: string) =>
+		`${baseRoute}/moderation/puzzle/${id}/revise`,
+	moderationReportResolve: (id: string) =>
+		`${baseRoute}/moderation/report/${id}/resolve`,
 	REPORT: `${baseRoute}/report`,
 } as const;
 

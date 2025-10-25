@@ -1,5 +1,4 @@
 import { httpRequestMethod, backendUrls, cookieKeys } from "types";
-import { logout } from "./logout";
 import type { Cookies } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
 
@@ -32,7 +31,7 @@ export async function getAuthenticatedUserInfo(
 
 		if (!response.ok) {
 			if (response.status === 401) {
-				logout(cookies);
+				// Token is invalid, just return unauthenticated
 				return {
 					isAuthenticated: false
 				};

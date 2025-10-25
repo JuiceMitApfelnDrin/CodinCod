@@ -1,19 +1,33 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
+	import { enhance } from "$app/forms";
+	import { invalidateAll } from "$app/navigation";
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
-	import { frontendUrls } from "types";
 
-	interface Props {
-		data: { loggedOut: boolean };
-	}
+	let formElement: HTMLFormElement;
 
-	let { data }: Props = $props();
-
-	onMount(() => {
-		if (data.loggedOut) {
-			authenticatedUserInfo.set(null);
-			goto(frontendUrls.ROOT);
-		}
+	// Clear the store and submit the logout form immediately
+	onMount(async () => {
+		authenticatedUserInfo.set(null);
+		await invalidateAll();
+		formElement?.requestSubmit();
 	});
 </script>
+
+<div class="flex min-h-screen items-center justify-center">
+	<div class="text-center">
+		<h1 class="mb-4 text-2xl font-bold">Logging out...</h1>
+		<form 
+			method="POST" 
+			use:enhance={() => {
+				return async ({ update }) => {
+					await invalidateAll();
+					await update();
+				};
+			}}
+			bind:this={formElement}
+		>
+			<!-- Form auto-submits on mount -->
+		</form>
+	</div>
+</div>

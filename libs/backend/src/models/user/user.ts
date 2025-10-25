@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { DEFAULT_USER_ROLES, UserEntity } from "types";
+import { DEFAULT_USER_ROLE, UserEntity } from "types";
 import bcrypt from "bcryptjs";
 import { USER } from "../../utils/constants/model.js";
 import { profileSchema } from "./user-profile.js";
@@ -40,15 +40,11 @@ const userSchema = new Schema<UserDocument>({
 		type: profileSchema,
 		required: false
 	},
-	roles: {
-		type: [
-			{
-				type: String,
-				trim: true
-			}
-		],
+	role: {
+		type: String,
+		trim: true,
 		required: false,
-		default: () => DEFAULT_USER_ROLES
+		default: () => DEFAULT_USER_ROLE
 	}
 });
 

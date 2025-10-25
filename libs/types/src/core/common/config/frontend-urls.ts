@@ -51,6 +51,9 @@ export const frontendUrls = {
 	// docs
 	DOCS: "/docs",
 	DOCS_ACTIVITY: "/docs/activity",
+
+	// moderation (moderator-only)
+	MODERATION: "/moderation",
 } as const;
 
 export type FrontendUrl = string;

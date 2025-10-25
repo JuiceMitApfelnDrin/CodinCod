@@ -10,8 +10,8 @@ export const userRoleSchema = z.enum(getValues(userRole));
 
 export type UserRole = z.infer<typeof userRoleSchema>;
 
-export const DEFAULT_USER_ROLES: UserRole[] = [userRole.USER];
+export const DEFAULT_USER_ROLE: UserRole = userRole.USER;
 
 export function isModerator(data: unknown): boolean {
-	return Array.isArray(data) && data.includes(userRole.MODERATOR);
+	return data === userRole.MODERATOR;
 }

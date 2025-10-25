@@ -5,6 +5,7 @@ import submissionRoutes from "./routes/submission/index.js";
 import indexRoutes from "./routes/index.js";
 import registerRoutes from "./routes/register/index.js";
 import loginRoutes from "./routes/login/index.js";
+import logoutRoutes from "./routes/logout/index.js";
 import userRoutes from "./routes/user/index.js";
 import { backendParams, backendUrls } from "types";
 import puzzleByIdRoutes from "./routes/puzzle/[id]/index.js";
@@ -23,11 +24,16 @@ import commentByIdVoteRoutes from "./routes/comment/[id]/vote/index.js";
 import commentByIdCommentRoutes from "./routes/comment/[id]/comment/index.js";
 import userByUsernamePuzzleRoutes from "./routes/user/[username]/puzzle/index.js";
 import userMeRoutes from "./routes/user/me/index.js";
+import reportRoutes from "./routes/report/index.js";
+import moderationPuzzleByIdRoutes from "./routes/moderation/puzzle/[id]/index.js";
+import moderationReportByIdRoutes from "./routes/moderation/report/[id]/index.js";
+import moderationReviewRoutes from "./routes/moderation/review/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
 	fastify.register(registerRoutes, { prefix: backendUrls.REGISTER });
 	fastify.register(loginRoutes, { prefix: backendUrls.LOGIN });
+	fastify.register(logoutRoutes, { prefix: backendUrls.LOGOUT });
 	fastify.register(userRoutes, { prefix: backendUrls.USER });
 	fastify.register(userMeRoutes, { prefix: backendUrls.USER_ME });
 	fastify.register(userByUsernameRoutes, {
@@ -75,5 +81,21 @@ export default async function router(fastify: FastifyInstance) {
 	});
 	fastify.register(preferencesRoutes, {
 		prefix: backendUrls.ACCOUNT_PREFERENCES
+	});
+	fastify.register(reportRoutes, { prefix: backendUrls.REPORT });
+	fastify.register(moderationReviewRoutes, {
+		prefix: backendUrls.MODERATION_REVIEW
+	});
+	fastify.register(moderationPuzzleByIdRoutes, {
+		prefix: backendUrls.moderationPuzzleApprove(backendParams.ID).replace(
+			"/approve",
+			""
+		)
+	});
+	fastify.register(moderationReportByIdRoutes, {
+		prefix: backendUrls.moderationReportResolve(backendParams.ID).replace(
+			"/resolve",
+			""
+		)
 	});
 }
