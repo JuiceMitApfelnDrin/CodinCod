@@ -7,8 +7,18 @@ import { cookieKeys, environment, registerSchema } from "types";
 import { generateToken } from "../../utils/functions/generate-token.js";
 
 export default async function registerRoutes(fastify: FastifyInstance) {
-	fastify.post("/", async (request, reply) => {
-		let parsedBody;
+	fastify.post(
+		"/",
+		{
+			config: {
+				rateLimit: {
+					max: 3,
+					timeWindow: "15 minutes"
+				}
+			}
+		},
+		async (request, reply) => {
+			let parsedBody;
 		try {
 			parsedBody = registerSchema.parse(request.body);
 		} catch (error) {

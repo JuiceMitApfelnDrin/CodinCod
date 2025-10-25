@@ -9,11 +9,21 @@ import { ConnectionManager } from "@/websocket/connection-manager.js";
 export async function setupWebSockets(fastify: FastifyInstance) {
 	const connectionManager = new ConnectionManager();
 
+	// Rate limit config for WebSocket upgrade requests
+	// This limits the initial connection attempts, not the messages sent over the connection
+	const wsRateLimit = {
+		max: 20,
+		timeWindow: "1 minute"
+	};
+
 	fastify.get(
 		webSocketUrls.WAITING_ROOM,
 		{
 			websocket: true,
-			preHandler: authenticated
+			preHandler: authenticated,
+			config: {
+				rateLimit: wsRateLimit
+			}
 		},
 		(...props) => waitingRoomSetup(...props, fastify)
 	);
@@ -22,7 +32,10 @@ export async function setupWebSockets(fastify: FastifyInstance) {
 		webSocketUrls.gameById(webSocketParams.ID),
 		{
 			websocket: true,
-			preHandler: authenticated
+			preHandler: authenticated,
+			config: {
+				rateLimit: wsRateLimit
+			}
 		},
 		(...props) => gameSetup(...props, fastify)
 	);

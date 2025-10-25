@@ -5,8 +5,18 @@ import { generateToken } from "../../utils/functions/generate-token.js";
 import { cookieKeys, environment, isEmail, loginSchema } from "types";
 
 export default async function loginRoutes(fastify: FastifyInstance) {
-	fastify.post("/", async (request, reply) => {
-		const parseResult = loginSchema.safeParse(request.body);
+	fastify.post(
+		"/",
+		{
+			config: {
+				rateLimit: {
+					max: 5, 
+					timeWindow: "1 minute" 
+				}
+			}
+		},
+		async (request, reply) => {
+			const parseResult = loginSchema.safeParse(request.body);
 
 		if (!parseResult.success) {
 			return reply.status(400).send({ message: "Invalid request data" });

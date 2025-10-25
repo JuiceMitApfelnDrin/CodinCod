@@ -14,7 +14,7 @@ import piston from "./plugins/decorators/piston.js";
 import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
 import requestLogger from "./plugins/middleware/request-logger.js";
-import { environment } from "types";
+import { environment, httpResponseCodes } from "types";
 
 const server = Fastify({
 	logger: Boolean(process.env.NODE_ENV !== environment.DEVELOPMENT)
@@ -27,7 +27,15 @@ server.register(fastifyCookie, {
 server.register(requestLogger);
 server.register(fastifyRateLimit, {
 	max: 100,
-	timeWindow: "1 minute"
+	timeWindow: "1 minute",
+	errorResponseBuilder: (request, context) => {
+		return {
+			statusCode: httpResponseCodes.CLIENT_ERROR.TOO_MANY_REQUESTS,
+			error: "Too Many Requests",
+			message: `Rate limit exceeded. Please try again in ${Math.ceil(context.ttl / 1000)} seconds.`,
+			retryAfter: Math.ceil(context.ttl / 1000)
+		};
+	}
 });
 server.register(cors);
 server.register(jwt);
