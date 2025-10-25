@@ -30,7 +30,7 @@
 					pulse: false,
 					icon: "●",
 					canReconnect: false,
-					tooltip: "WebSocket connected"
+					tooltip: "Connected to server"
 				};
 			case WEBSOCKET_STATES.CONNECTING:
 				return {
@@ -103,7 +103,7 @@
 	<span class="relative flex h-3 w-3">
 		{#if statusConfig.pulse}
 			<span
-				class="absolute inline-flex h-full w-full animate-ping rounded-full {statusConfig.color} opacity-75"
+				class="absolute inline-flex h-full w-full rounded-full motion-safe:animate-ping {statusConfig.color} opacity-75"
 			></span>
 		{/if}
 		<span class="relative inline-flex h-3 w-3 rounded-full {statusConfig.color}"

@@ -92,15 +92,14 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				const user = await User.findById(userId);
 
 				if (
-					!isAuthor(puzzle.author.toString(), userId) ||
-					!isModerator(user?.roles)
+					!isAuthor(puzzle.author.toString(), userId) &&
+					!isModerator(user?.role)
 				) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "Not authorized to edit this puzzle" });
 				}
 				Object.assign(puzzle, parseResult.data);
-
 				await puzzle.save();
 
 				const checkWhenEdited: PuzzleVisibility[] = [

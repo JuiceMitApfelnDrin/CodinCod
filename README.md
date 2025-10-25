@@ -5,6 +5,10 @@
 - [Introduction](#introduction)
 - [Project overview](#project-overview)
 - [Getting started](#getting-started)
+- [Features](#features)
+  - [User Roles](#user-roles)
+  - [Puzzle Workflow](#puzzle-workflow)
+  - [Moderation System](#moderation-system)
 
 ## Introduction
 
@@ -51,3 +55,42 @@ The [docs](https://codincod.com/docs) exist to:
    ```
 
 4. Follow the instructions for the [backend](./libs/backend/README.md) and/or [frontend](./libs/frontend/README.md) depending on what you're working on
+
+## Features
+
+### User Roles
+
+CodinCod uses a simple role-based system:
+
+- **User** (default): Can create puzzles, play games, submit solutions, and report issues
+- **Moderator**: Has all user permissions plus the ability to review and moderate content
+
+The role system is designed to be simple and maintainable, with plans for more granular permissions in the future.
+
+### Puzzle Workflow
+
+Puzzles go through a structured review process:
+
+1. **Draft**: Author is working on the puzzle
+2. **Ready**: Puzzle is complete and ready for moderator review
+3. **Review**: Currently being reviewed by moderators
+4. **Revise**: Moderator requested changes
+5. **Approved**: Puzzle is approved and visible to all users
+6. **Inactive**: Temporarily hidden
+7. **Archived**: No longer active
+
+### Moderation System
+
+The moderation system allows moderators to:
+
+- **Review Pending Puzzles**: Approve or request revisions on puzzles submitted for publication
+- **Handle Reports**: Review and resolve reports for:
+  - Puzzles with inappropriate content or issues
+  - Users violating community guidelines
+  - Comments that are offensive or spam
+
+Moderators can access the moderation dashboard at `/moderation` to:
+- View all pending items in a unified table
+- Switch between different review types
+- Take actions (approve, revise, resolve, reject)
+- Track who reported issues and when

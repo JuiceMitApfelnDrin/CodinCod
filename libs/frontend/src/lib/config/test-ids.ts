@@ -82,6 +82,7 @@ export const testIds = {
 	NAVIGATION_MENU_ANCHOR_PROFILE: "navigation-menu-anchor-profile",
 	NAVIGATION_MENU_ANCHOR_SETTINGS: "navigation-menu-anchor-settings",
 	NAVIGATION_MENU_BUTTON_OPEN: "navigation-menu-button-open",
+	NAVIGATION_MENU_ANCHOR_MODERATION: "navigation-menu-anchor-moderation",
 	NAVIGATION_TOGGLE_THEME: "navigation-toggle-theme",
 
 	// pagination

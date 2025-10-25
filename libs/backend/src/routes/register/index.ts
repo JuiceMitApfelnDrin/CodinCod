@@ -51,10 +51,10 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				const authenticatedUserInfo = {
 					userId: `${user._id}`,
 					username: user.username,
+					role: user.role,
 					isAuthenticated: true
 				};
 				const token = generateToken(fastify, authenticatedUserInfo);
-
 				const cookieOptions: any = {
 					path: "/",
 					httpOnly: true,

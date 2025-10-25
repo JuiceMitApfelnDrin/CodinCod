@@ -47,11 +47,11 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				const authenticatedUserInfo = {
 					userId: String(user._id),
 					username: user.username,
+					role: user.role,
 					isAuthenticated: true
 				};
 				const token = generateToken(fastify, authenticatedUserInfo);
 				const maxAge = 7 * 24 * 60 * 60;
-
 				const isProduction = process.env.NODE_ENV === environment.PRODUCTION;
 
 				const cookieOptions: any = {

@@ -52,16 +52,15 @@ export default async function puzzleByIdSolutionRoutes(
 				const user = await User.findById(userId);
 
 				const hasRequiredPermissions =
-					(isUserDto(puzzle.author) &&
-						!isAuthor(puzzle.author._id.toString(), userId)) ||
-					!isModerator(user?.roles);
+					isUserDto(puzzle.author) &&
+					!isAuthor(puzzle.author._id.toString(), userId) &&
+					!isModerator(user?.role);
 
 				if (hasRequiredPermissions) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "Not authorized to edit this puzzle" });
 				}
-
 				return reply.send(puzzle);
 			} catch (error) {
 				return reply
