@@ -14,7 +14,7 @@ async function jwtSetup(fastify: FastifyInstance) {
 		secret: JWT_SECRET,
 		cookie: {
 			cookieName: cookieKeys.TOKEN,
-			signed: false,
+			signed: false
 		},
 		formatUser: function (payload) {
 			// Return the payload as-is without any transformation or validation

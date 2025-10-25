@@ -46,12 +46,16 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				path: "/",
 				httpOnly: true,
 				secure: process.env.NODE_ENV === environment.PRODUCTION,
-				sameSite: process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
+				sameSite:
+					process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
 				maxAge
 			};
 
 			// Only set domain in production, omit for localhost development
-			if (process.env.NODE_ENV === environment.PRODUCTION && process.env.FRONTEND_HOST) {
+			if (
+				process.env.NODE_ENV === environment.PRODUCTION &&
+				process.env.FRONTEND_HOST
+			) {
 				cookieOptions.domain = process.env.FRONTEND_HOST;
 			}
 

@@ -11,10 +11,10 @@ export default async function mongooseConnector(fastify: FastifyInstance) {
 
 	try {
 		console.log("Connecting to MongoDB...");
-		await mongoose.connect(uri, { 
+		await mongoose.connect(uri, {
 			dbName: dbName ?? "codincod",
-			serverSelectionTimeoutMS: 5*1000,
-			connectTimeoutMS: 10*1000
+			serverSelectionTimeoutMS: 5 * 1000,
+			connectTimeoutMS: 10 * 1000
 		});
 		console.log("MongoDB connected successfully!");
 		mongoose.connection.on("connected", () => {

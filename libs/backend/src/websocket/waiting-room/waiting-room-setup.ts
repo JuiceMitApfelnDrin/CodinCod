@@ -80,8 +80,10 @@ export function waitingRoomSetup(
 
 			case waitingRoomEventEnum.START_GAME: {
 				try {
-					console.log(`START_GAME requested by ${req.user.username} for room ${parsedMessage.roomId}`);
-					
+					console.log(
+						`START_GAME requested by ${req.user.username} for room ${parsedMessage.roomId}`
+					);
+
 					const randomPuzzles = await Puzzle.aggregate([
 						{ $match: { visibility: puzzleVisibilityEnum.APPROVED } },
 						{ $sample: { size: 1 } }
@@ -99,7 +101,10 @@ export function waitingRoomSetup(
 					const room = waitingRoom.getRoom(parsedMessage.roomId);
 
 					if (!room) {
-						console.error(`Room ${parsedMessage.roomId} not found. Available rooms:`, waitingRoom.getAllRoomIds());
+						console.error(
+							`Room ${parsedMessage.roomId} not found. Available rooms:`,
+							waitingRoom.getAllRoomIds()
+						);
 						waitingRoom.updateUser(req.user.username, {
 							event: waitingRoomEventEnum.ERROR,
 							message: `Room ${parsedMessage.roomId} not found`

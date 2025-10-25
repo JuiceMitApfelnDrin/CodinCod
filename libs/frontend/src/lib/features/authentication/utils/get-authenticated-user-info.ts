@@ -9,22 +9,22 @@ export async function getAuthenticatedUserInfo(
 ) {
 	try {
 		const url = buildBackendUrl(backendUrls.ME);
-		
+
 		// Get the token cookie to forward to the backend
 		const token = cookies.get(cookieKeys.TOKEN);
-		
+
 		if (!token) {
 			return {
 				isAuthenticated: false
 			};
 		}
-		
+
 		const headers: HeadersInit = {
 			"Content-Type": "application/json",
 			// Forward the cookie to the backend
-			"Cookie": `${cookieKeys.TOKEN}=${token}`
+			Cookie: `${cookieKeys.TOKEN}=${token}`
 		};
-		
+
 		const response = await eventFetch(url, {
 			method: httpRequestMethod.GET,
 			headers
@@ -40,7 +40,9 @@ export async function getAuthenticatedUserInfo(
 			console.error(
 				`Failed to verify authentication: ${response.status} ${response.statusText} from ${url}`
 			);
-			const errorBody = await response.text().catch(() => "Unable to read response body");
+			const errorBody = await response
+				.text()
+				.catch(() => "Unable to read response body");
 			console.error("Response body:", errorBody);
 			throw new Error(
 				`Failed to verify authentication: ${response.status} ${response.statusText}`
@@ -55,7 +57,7 @@ export async function getAuthenticatedUserInfo(
 	} catch (err) {
 		if (err instanceof Error) {
 			console.error("Error verifying authentication:", err.message);
-			if ('cause' in err) {
+			if ("cause" in err) {
 				console.error("Error cause:", err.cause);
 			}
 		} else {

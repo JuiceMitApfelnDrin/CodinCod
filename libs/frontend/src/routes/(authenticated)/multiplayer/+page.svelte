@@ -89,9 +89,12 @@
 			case waitingRoomEventEnum.ERROR:
 				{
 					console.error(data.message);
-					
+
 					// If we got an error about room not found, clear the URL param
-					if (data.message.includes("Room") && data.message.includes("not found")) {
+					if (
+						data.message.includes("Room") &&
+						data.message.includes("not found")
+					) {
 						query.delete(queryParamKeys.ROOM_ID);
 						goto(`?${query.toString()}`, { replaceState: true });
 					}

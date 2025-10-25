@@ -51,7 +51,8 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					path: "/",
 					httpOnly: true,
 					secure: process.env.NODE_ENV === environment.PRODUCTION,
-					sameSite: process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
+					sameSite:
+						process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
 					domain: process.env.FRONTEND_HOST ?? "localhost",
 					maxAge: 3600
 				})
