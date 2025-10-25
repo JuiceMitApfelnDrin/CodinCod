@@ -49,7 +49,12 @@ server.register(websocket, {
 			const origin = info.origin || info.req.headers.origin;
 			const allowedOrigin = process.env.FRONTEND_URL ?? "http://localhost:5173";
 			
-			if (origin === allowedOrigin) {
+			console.log("WebSocket connection attempt from origin:", origin);
+			console.log("Allowed origin:", allowedOrigin);
+			
+			// Allow if origin matches exactly OR if no origin is provided (some clients don't send it)
+			if (!origin || origin === allowedOrigin) {
+				console.log("WebSocket connection accepted");
 				next(true);
 			} else {
 				console.warn(`WebSocket connection rejected from origin: ${origin}`);
