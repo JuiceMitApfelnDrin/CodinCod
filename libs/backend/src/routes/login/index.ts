@@ -66,7 +66,7 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				// codincod.com (frontend) and backend.codincod.com (backend) need .codincod.com
 				if (isProduction) {
 					// Leading dot is critical for cross-subdomain cookies!
-					cookieOptions.domain = ".codincod.com";
+					cookieOptions.domain = process.env.FRONTEND_HOST;
 					console.log("Setting cookie with domain:", cookieOptions.domain);
 				} else {
 					console.log("Development mode - cookie domain not set");
