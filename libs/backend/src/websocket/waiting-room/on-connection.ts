@@ -6,11 +6,10 @@ export function onConnection(
 	waitingRoom: WaitingRoom,
 	socket: WebSocket,
 	user: AuthenticatedInfo
-) {
-	waitingRoom.addUserToUsers(user.username, socket);
+): void {
+	waitingRoom.addUserToUsers(user.username, socket, user);
 
 	const openRooms = waitingRoom.getRooms();
-
 	waitingRoom.updateUser(user.username, {
 		event: waitingRoomEventEnum.OVERVIEW_OF_ROOMS,
 		rooms: openRooms

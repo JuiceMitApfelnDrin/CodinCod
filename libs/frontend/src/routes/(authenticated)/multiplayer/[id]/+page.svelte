@@ -3,6 +3,7 @@
 	import { goto } from "$app/navigation";
 	import { page } from "$app/state";
 	import DisplayError from "@/components/error/display-error.svelte";
+	import ConnectionStatus from "@/components/websocket/connection-status.svelte";
 	import WorkInProgress from "@/components/status/work-in-progress.svelte";
 	import H2 from "@/components/typography/h2.svelte";
 	import P from "@/components/typography/p.svelte";
@@ -12,6 +13,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
 	import { apiUrls } from "@/config/api";
+	import { buildWebSocketUrl } from "@/config/websocket";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
@@ -19,6 +21,11 @@
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
+	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
+	import {
+		WEBSOCKET_STATES,
+		type WebSocketState
+	} from "@/websocket/websocket-constants";
 	import dayjs from "dayjs";
 	import {
 		frontendUrls,
@@ -39,8 +46,8 @@
 		type ChatMessage,
 		isGameResponse,
 		gameEventEnum,
-		sendMessageOfType,
-		type GameRequest
+		type GameRequest,
+		type GameResponse
 	} from "types";
 	import { testIds } from "@/config/test-ids";
 
@@ -51,7 +58,13 @@
 		return players.some((player) => getUserIdFromUser(player) === userId);
 	}
 
-	const gameId = page.params.id;
+	const gameIdParam = page.params.id;
+
+	if (!gameIdParam) {
+		throw new Error("Game ID is required");
+	}
+
+	const gameId: string = gameIdParam;
 
 	let isGameOver = $state(false);
 
@@ -60,91 +73,73 @@
 	let errorMessage: string | undefined = $state();
 	let chatMessages: ChatMessage[] = $state([]);
 	const playerLanguages: Record<string, string> = $state({});
+	let connectionState = $state<WebSocketState>(WEBSOCKET_STATES.DISCONNECTED);
 
-	function connectWithWebsocket() {
-		if (socket) {
-			socket.close();
+	function handleGameMessage(data: GameResponse) {
+		const { event } = data;
+
+		switch (event) {
+			case gameEventEnum.OVERVIEW_GAME:
+				{
+					game = data.game;
+
+					if (data.puzzle) {
+						puzzle = data.puzzle;
+					}
+				}
+				break;
+			case gameEventEnum.NONEXISTENT_GAME:
+				errorMessage = data.message;
+				break;
+			case gameEventEnum.FINISHED_GAME:
+				{
+					game = data.game;
+					isGameOver = true;
+				}
+				break;
+			case gameEventEnum.SEND_MESSAGE:
+				{
+					chatMessages = [...chatMessages, data.chatMessage];
+				}
+				break;
+			case gameEventEnum.CHANGE_LANGUAGE:
+				{
+					playerLanguages[data.username] = data.language;
+				}
+				break;
+			case gameEventEnum.ERROR:
+				{
+					console.error(data.message);
+				}
+				break;
+				break;
+			default: {
+				// Exhaustiveness check - all cases should be handled above
+				const _exhaustive: never = data as never;
+				console.error("Unhandled event type:", _exhaustive);
+				break;
+			}
 		}
-
-		const webSocketUrl = webSocketUrls.gameById(page.params.id);
-		socket = new WebSocket(webSocketUrl);
-
-		socket.addEventListener("open", (message) => {
-			console.info("WebSocket connection opened");
-		});
-
-		socket.addEventListener("close", (message) => {
-			console.info("WebSocket connection closed");
-
-			setTimeout(function () {
-				connectWithWebsocket();
-			}, 1000);
-		});
-
-		socket.addEventListener("error", (message) => {
-			if (!socket) {
-				return;
-			}
-
-			console.info("WebSocket connection error");
-			socket.close();
-		});
-
-		socket.addEventListener("message", async (message) => {
-			const receivedInformation = JSON.parse(message.data);
-
-			if (!isGameResponse(receivedInformation)) {
-				throw new Error("unknown / unhandled game response");
-			}
-
-			const { event } = receivedInformation;
-
-			switch (event) {
-				case gameEventEnum.OVERVIEW_GAME:
-					{
-						game = receivedInformation.game;
-
-						if (receivedInformation.puzzle) {
-							puzzle = receivedInformation.puzzle;
-						}
-					}
-					break;
-				case gameEventEnum.NONEXISTENT_GAME:
-					errorMessage = receivedInformation.message;
-					break;
-				case gameEventEnum.FINISHED_GAME:
-					{
-						game = receivedInformation.game;
-						isGameOver = true;
-					}
-					break;
-				case gameEventEnum.SEND_MESSAGE:
-					{
-						chatMessages = [...chatMessages, receivedInformation.chatMessage];
-					}
-					break;
-				case gameEventEnum.CHANGE_LANGUAGE:
-					{
-						playerLanguages[receivedInformation.username] =
-							receivedInformation.language;
-					}
-					break;
-				case gameEventEnum.ERROR:
-					{
-						console.error(receivedInformation.message);
-					}
-					break;
-				default:
-					receivedInformation satisfies never;
-					break;
-			}
-		});
 	}
 
-	let socket: WebSocket | undefined = $state();
+	const wsManager = new WebSocketManager<GameRequest, GameResponse>({
+		url: buildWebSocketUrl(webSocketUrls.gameById(gameId)),
+		onMessage: handleGameMessage,
+		onStateChange: (state) => {
+			connectionState = state;
+		},
+		validateResponse: isGameResponse
+	});
+
 	if (browser) {
-		connectWithWebsocket();
+		wsManager.connect();
 	}
+
+	$effect(() => {
+		return () => {
+			wsManager.destroy();
+		};
+	});
 
 	let isNotPlayerInGame = $derived(
 		Boolean(
@@ -166,15 +161,16 @@
 				now
 			);
 
-		const playerHasSubmitted = game?.playerSubmissions.some((submission) => {
-			if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
-				return false;
+		const playerHasSubmitted = game?.playerSubmissions.some(
+			(submission: unknown) => {
+				if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
+					return false;
+				}
+
+				const playerId = getUserIdFromUser(submission.user);
+				return isAuthor(playerId, $authenticatedUserInfo?.userId);
 			}
-
-			const playerId = getUserIdFromUser(submission.user);
-			return isAuthor(playerId, $authenticatedUserInfo?.userId);
-		});
-
+		);
 		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
 	});
 
@@ -184,18 +180,15 @@
 		}
 
 		const playerSubmissions: SubmissionDto[] =
-			game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
-
+			game.playerSubmissions?.filter((item: unknown): item is SubmissionDto =>
+				isSubmissionDto(item)
+			) ?? [];
 		return playerSubmissions?.find(
 			(submission) => getUserIdFromUser(submission.user) === playerId
 		);
 	}
 
 	async function onPlayerSubmitCode(submissionId: string) {
-		if (!socket) {
-			return;
-		}
-
 		if (!isGameOver && $authenticatedUserInfo) {
 			const gameSubmissionParams: GameSubmissionParams = {
 				gameId,
@@ -208,7 +201,7 @@
 				method: httpRequestMethod.POST
 			});
 
-			sendGameMessage(socket, {
+			sendGameMessage({
 				event: gameEventEnum.SUBMITTED_PLAYER
 			});
 
@@ -217,10 +210,6 @@
 	}
 
 	async function sendMessage(composedMessage: string) {
-		if (!socket) {
-			return;
-		}
-
 		if (!$authenticatedUserInfo) {
 			return;
 		}
@@ -231,33 +220,25 @@
 			username: $authenticatedUserInfo?.username
 		};
 
-		sendGameMessage(socket, {
+		sendGameMessage({
 			chatMessage: newChatMessage,
 			event: gameEventEnum.SEND_MESSAGE
 		});
 	}
 
 	function onPlayerChangeLanguage(language: string) {
-		if (!socket) {
-			return;
-		}
-
-		sendGameMessage(socket, {
+		sendGameMessage({
 			event: gameEventEnum.CHANGE_LANGUAGE,
 			language
 		});
 	}
 
-	function sendGameMessage(socket: WebSocket, data: GameRequest) {
-		sendMessageOfType<GameRequest>(socket, data);
+	function sendGameMessage(data: GameRequest) {
+		wsManager.send(data);
 	}
 
 	function joinGame() {
-		if (!socket) {
-			return;
-		}
-
-		sendGameMessage(socket, {
+		sendGameMessage({
 			event: gameEventEnum.JOIN_GAME
 		});
 	}
@@ -353,7 +334,10 @@
 			<Resizable.Pane
 				class="ml-4 flex max-w-sm min-w-[10%] flex-col gap-4 md:gap-8 lg:gap-12"
 			>
-				<H2>Standings - <WorkInProgress /></H2>
+				<div class="flex items-center gap-2">
+					<H2>Standings - <WorkInProgress /></H2>
+					<ConnectionStatus {wsManager} state={connectionState} />
+				</div>
 
 				{#if game.players}
 					<ul>

@@ -4,5 +4,5 @@ import { getValues } from "../../../utils/functions/get-values.js";
 
 export const gameVisibilitySchema = z
 	.enum(getValues(GameVisibilityEnum))
-	.default(GameVisibilityEnum.PUBLIC);
+	.prefault(GameVisibilityEnum.PUBLIC);
 export type GameVisibility = z.infer<typeof gameVisibilitySchema>;

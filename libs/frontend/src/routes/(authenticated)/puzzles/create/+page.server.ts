@@ -1,5 +1,5 @@
 import { superValidate } from "sveltekit-superforms";
-import { zod } from "sveltekit-superforms/adapters";
+import { zod4 } from "sveltekit-superforms/adapters";
 import { backendUrls, createPuzzleSchema, frontendUrls, POST } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
@@ -7,14 +7,14 @@ import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/f
 import type { RequestEvent } from "./$types.js";
 
 export async function load() {
-	const form = await superValidate(zod(createPuzzleSchema));
+	const form = await superValidate(zod4(createPuzzleSchema));
 
 	return { form };
 }
 
 export const actions = {
 	default: async ({ request }: RequestEvent) => {
-		const form = await superValidate(request, zod(createPuzzleSchema));
+		const form = await superValidate(request, zod4(createPuzzleSchema));
 
 		if (!form.valid) {
 			fail(400, { form });

@@ -57,7 +57,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 			if (!parseResult.success) {
 				return reply
 					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+					.send({ error: parseResult.error.issues });
 			}
 
 			const userId = request.user.userId;
@@ -125,7 +125,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 			if (!parseResult.success) {
 				return reply
 					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+					.send({ error: parseResult.error.issues });
 			}
 
 			if (!isAuthenticatedInfo(request.user)) {

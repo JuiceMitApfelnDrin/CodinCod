@@ -19,8 +19,18 @@ import Puzzle from "@/models/puzzle/puzzle.js";
 
 const userWebSockets = new UserWebSockets();
 
-function isPlayerInGame(game: GameDocument, userId: ObjectId) {
+function isPlayerInGame(game: GameDocument, userId: ObjectId): boolean {
 	return game.players.some((player) => getUserIdFromUser(player) === userId);
+}
+
+function sendErrorAndClose(socket: WebSocket, message: string): void {
+	socket.send(
+		JSON.stringify({
+			event: gameEventEnum.ERROR,
+			message
+		})
+	);
+	socket.close(1008, message);
 }
 
 export function gameSetup(
@@ -31,26 +41,22 @@ export function gameSetup(
 	const { id } = req.params;
 
 	if (!isAuthenticatedInfo(req.user)) {
+		sendErrorAndClose(socket, "Authentication required");
 		return;
 	}
-	if (!isValidObjectId(id)) {
-		socket.send(
-			JSON.stringify({
-				socket,
-				event: gameEventEnum.NONEXISTENT_GAME,
-				message: "invalid id"
-			})
-		);
 
-		// TODO: give a good reason code
-		socket.close();
+	if (!isValidObjectId(id)) {
+		sendErrorAndClose(socket, "Invalid game ID");
 		return;
 	}
+
 	onConnection(userWebSockets, req.user, id, socket);
 
-	if (!isAuthenticatedInfo(req.user)) {
-		return;
-	}
+	// Handle ping from client
+	socket.on("ping", () => {
+		socket.pong();
+	});
+
 	socket.on("message", async (message) => {
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
@@ -62,27 +68,26 @@ export function gameSetup(
 			parsedMessage = parseRawDataGameRequest(message);
 		} catch (e) {
 			const error = e as Error;
-
-			return userWebSockets.updateUser(req.user.username, {
+			userWebSockets.updateUser(req.user.username, {
 				event: gameEventEnum.ERROR,
 				message: error.message
 			});
+			return;
 		}
 
 		const { event } = parsedMessage;
 
 		switch (event) {
-			case gameEventEnum.JOIN_GAME:
-				{
-					userWebSockets.add(req.user.username, socket);
-
+			case gameEventEnum.JOIN_GAME: {
+				try {
 					const gameToUpdate = await Game.findById(id);
 
 					if (!isGameDto(gameToUpdate)) {
-						return userWebSockets.updateUser(req.user.username, {
+						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.NONEXISTENT_GAME,
-							message: "game couldn't be found"
+							message: "Game not found"
 						});
+						return;
 					}
 
 					if (!isPlayerInGame(gameToUpdate, req.user.userId)) {
@@ -93,29 +98,28 @@ export function gameSetup(
 					const game = await Game.findById(id)
 						.populate("owner")
 						.populate("players")
-						/* deeply populated, for every playerSubmission populate the userId field with a user */
 						.populate({
 							path: "playerSubmissions",
-							populate: {
-								path: "user"
-							}
+							populate: { path: "user" }
 						})
 						.exec();
 
 					if (!isGameDto(game)) {
-						return userWebSockets.updateUser(req.user.username, {
+						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.NONEXISTENT_GAME,
-							message: "game couldn't be found"
+							message: "Game not found"
 						});
+						return;
 					}
 
 					const puzzle = await Puzzle.findById(game.puzzle).populate("author");
 
 					if (!isPuzzleDto(puzzle)) {
-						return userWebSockets.updateUser(req.user.username, {
+						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.ERROR,
-							message: "puzzle couldn't be found"
+							message: "Puzzle not found"
 						});
+						return;
 					}
 
 					userWebSockets.updateAllUsers({
@@ -123,65 +127,77 @@ export function gameSetup(
 						game,
 						puzzle
 					});
+				} catch (error) {
+					fastify.log.error({ err: error }, "Error in JOIN_GAME");
+					userWebSockets.updateUser(req.user.username, {
+						event: gameEventEnum.ERROR,
+						message: "Failed to join game"
+					});
 				}
 				break;
-			case gameEventEnum.SUBMITTED_PLAYER:
-				{
+			}
+
+			case gameEventEnum.SUBMITTED_PLAYER: {
+				try {
 					const game = await Game.findById(id)
 						.populate("owner")
 						.populate("players")
-						/* deeply populated, for every playerSubmission populate the userId field with a user */
 						.populate({
 							path: "playerSubmissions",
-							populate: {
-								path: "user"
-							}
+							populate: { path: "user" }
 						})
 						.exec();
 
 					if (!isGameDto(game)) {
-						return userWebSockets.updateUser(req.user.username, {
+						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.NONEXISTENT_GAME,
-							message: "game couldn't be found"
+							message: "Game not found"
 						});
+						return;
 					}
 
 					userWebSockets.updateAllUsers({
 						event: gameEventEnum.OVERVIEW_GAME,
 						game
 					});
-				}
-				break;
-
-			case gameEventEnum.SEND_MESSAGE:
-				{
-					const updatedChatMessage: ChatMessage = {
-						...parsedMessage.chatMessage,
-						createdAt: new Date().toISOString()
-					};
-
-					userWebSockets.updateAllUsers({
-						event: gameEventEnum.SEND_MESSAGE,
-						chatMessage: updatedChatMessage
+				} catch (error) {
+					fastify.log.error({ err: error }, "Error in SUBMITTED_PLAYER");
+					userWebSockets.updateUser(req.user.username, {
+						event: gameEventEnum.ERROR,
+						message: "Failed to update submission"
 					});
 				}
 				break;
+			}
 
-			case gameEventEnum.CHANGE_LANGUAGE:
-				{
-					const language = parsedMessage.language;
+			case gameEventEnum.SEND_MESSAGE: {
+				const updatedChatMessage: ChatMessage = {
+					...parsedMessage.chatMessage,
+					createdAt: new Date().toISOString()
+				};
 
-					if (!language) {
-						return;
-					}
-
-					userWebSockets.updateAllUsers({
-						event: gameEventEnum.CHANGE_LANGUAGE,
-						language,
-						username: req.user.username
-					});
-				}
+				userWebSockets.updateAllUsers({
+					event: gameEventEnum.SEND_MESSAGE,
+					chatMessage: updatedChatMessage
+				});
 				break;
+			}
+
+			case gameEventEnum.CHANGE_LANGUAGE: {
+				const language = parsedMessage.language;
+
+				if (!language) {
+					return;
+				}
+
+				userWebSockets.updateAllUsers({
+					event: gameEventEnum.CHANGE_LANGUAGE,
+					language,
+					username: req.user.username
+				});
+				break;
+			}
+
 			default:
 				parsedMessage satisfies never;
 				break;
@@ -192,17 +208,20 @@ export function gameSetup(
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
-
-		console.log("closed", req.user.username);
+		console.info(
+			`Game socket closed for ${req.user.username}: ${code} - ${reason}`
+		);
+		userWebSockets.remove(req.user.username);
 	});
 
-	socket.on("error", () => {
-		console.log("error", req.user);
-
+	socket.on("error", (error) => {
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
-
+		fastify.log.error(
+			{ err: error },
+			`Game socket error for ${req.user.username}`
+		);
 		userWebSockets.remove(req.user.username);
 	});
 }

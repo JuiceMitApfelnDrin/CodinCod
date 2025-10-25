@@ -1,5 +1,5 @@
 import { superValidate } from "sveltekit-superforms";
-import { zod } from "sveltekit-superforms/adapters";
+import { zod4 } from "sveltekit-superforms/adapters";
 import { fail, redirect } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
 import {
@@ -13,14 +13,14 @@ import { setCookie } from "@/features/authentication/utils/set-cookie";
 import type { RequestEvent } from "./$types.js";
 
 export async function load() {
-	const form = await superValidate(zod(registerSchema));
+	const form = await superValidate(zod4(registerSchema));
 
 	return { form };
 }
 
 export const actions = {
 	default: async ({ cookies, request }: RequestEvent) => {
-		const form = await superValidate(request, zod(registerSchema));
+		const form = await superValidate(request, zod4(registerSchema));
 
 		if (!form.valid) {
 			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {

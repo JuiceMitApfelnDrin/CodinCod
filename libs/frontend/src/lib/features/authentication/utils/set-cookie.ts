@@ -1,11 +1,11 @@
 import type { Cookies } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
-import { frontendUrls } from "types";
+import { environment, frontendUrls } from "types";
 
 export function setCookie(result: Response, cookies: Cookies) {
 	const setCookieHeader = result.headers.get("set-cookie");
 
-	const isProduction = env.NODE_ENV === "production";
+	const isProduction = env.NODE_ENV === environment.PRODUCTION;
 
 	if (setCookieHeader) {
 		// Parse the set-cookie header and set cookies
@@ -13,13 +13,19 @@ export function setCookie(result: Response, cookies: Cookies) {
 		const [cookieNameValue] = cookieParts;
 		const [name, value] = cookieNameValue.split("=");
 
-		// Set the cookie using SvelteKit's cookies API
-		cookies.set(name, value, {
-			domain: env.FRONTEND_HOST ?? "localhost",
+		const cookieOptions: any = {
 			httpOnly: true,
 			path: frontendUrls.ROOT,
 			sameSite: isProduction ? "none" : "lax",
 			secure: isProduction
-		});
+		};
+
+		// Only set domain in production, omit for localhost development
+		if (isProduction && env.FRONTEND_HOST) {
+			cookieOptions.domain = env.FRONTEND_HOST;
+		}
+
+		// Set the cookie using SvelteKit's cookies API
+		cookies.set(name, value, cookieOptions);
 	}
 }

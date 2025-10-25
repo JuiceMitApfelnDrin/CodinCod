@@ -33,6 +33,7 @@ export * from "./core/comment/schema/comment-vote.schema.js";
 // common
 export * from "./core/common/config/backend-urls.js";
 export * from "./core/common/config/cookie.js";
+export * from "./core/common/config/environment.js";
 export * from "./core/common/config/default-values-query-params.js";
 export * from "./core/common/config/frontend-urls.js";
 export * from "./core/common/config/web-socket-urls.js";

@@ -22,12 +22,14 @@ import commentByIdRoutes from "./routes/comment/[id]/index.js";
 import commentByIdVoteRoutes from "./routes/comment/[id]/vote/index.js";
 import commentByIdCommentRoutes from "./routes/comment/[id]/comment/index.js";
 import userByUsernamePuzzleRoutes from "./routes/user/[username]/puzzle/index.js";
+import userMeRoutes from "./routes/user/me/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
 	fastify.register(registerRoutes, { prefix: backendUrls.REGISTER });
 	fastify.register(loginRoutes, { prefix: backendUrls.LOGIN });
 	fastify.register(userRoutes, { prefix: backendUrls.USER });
+	fastify.register(userMeRoutes, { prefix: backendUrls.USER_ME });
 	fastify.register(userByUsernameRoutes, {
 		prefix: backendUrls.userByUsername(backendParams.USERNAME)
 	});

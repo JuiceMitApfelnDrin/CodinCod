@@ -13,8 +13,8 @@ export const commentEntitySchema = z.object({
 		.string()
 		.min(COMMENT_CONFIG.minTextLength)
 		.max(COMMENT_CONFIG.maxTextLength),
-	upvote: z.number().int().min(0).default(0),
-	downvote: z.number().int().min(0).default(0),
+	upvote: z.int().min(0).prefault(0),
+	downvote: z.int().min(0).prefault(0),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
 	commentType: commentTypeSchema,

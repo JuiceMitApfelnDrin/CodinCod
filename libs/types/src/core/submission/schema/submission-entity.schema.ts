@@ -13,7 +13,7 @@ export const submissionEntitySchema = z.object({
 	code: z.string().optional(),
 	language: puzzleLanguage,
 	languageVersion: puzzleLanguageVersion,
-	createdAt: acceptedDateSchema.default(() => new Date()),
+	createdAt: acceptedDateSchema.prefault(() => new Date()),
 	puzzle: objectIdSchema.or(puzzleDtoSchema),
 	result: puzzleResultInformationSchema,
 	user: objectIdSchema.or(userDtoSchema),

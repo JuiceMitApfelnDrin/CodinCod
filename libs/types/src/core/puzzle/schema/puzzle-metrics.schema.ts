@@ -21,9 +21,9 @@ import { z } from "zod";
  * };
  */
 export const puzzleMetricsSchema = z.object({
-	totalAttempts: z.number().default(0),
-	successfulAttempts: z.number().default(0),
-	upvote: z.number().default(0),
-	downvote: z.number().default(0),
+	totalAttempts: z.number().prefault(0),
+	successfulAttempts: z.number().prefault(0),
+	upvote: z.number().prefault(0),
+	downvote: z.number().prefault(0),
 });
 export type PuzzleMetrics = z.infer<typeof puzzleMetricsSchema>;

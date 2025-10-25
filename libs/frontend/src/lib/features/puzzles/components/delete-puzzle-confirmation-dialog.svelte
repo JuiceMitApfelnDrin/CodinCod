@@ -5,7 +5,7 @@
 	import Input from "@/components/ui/input/input.svelte";
 	import { testIds } from "@/config/test-ids";
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
-	import { zodClient } from "sveltekit-superforms/adapters";
+	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { deletePuzzleSchema, type DeletePuzzle } from "types";
 
 	interface Props {
@@ -15,7 +15,7 @@
 	let { data }: Props = $props();
 
 	const form = superForm(data, {
-		validators: zodClient(deletePuzzleSchema)
+		validators: zod4Client(deletePuzzleSchema)
 	});
 
 	const { enhance, form: formData } = form;

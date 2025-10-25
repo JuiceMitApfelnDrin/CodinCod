@@ -1,5 +1,5 @@
 import { superValidate } from "sveltekit-superforms";
-import { zod } from "sveltekit-superforms/adapters";
+import { zod4 } from "sveltekit-superforms/adapters";
 import type { RequestEvent } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
 import { frontendUrls, httpResponseCodes, loginSchema } from "types";
@@ -8,14 +8,14 @@ import { login } from "../../api/login";
 import { searchParamKeys } from "@/config/search-params";
 
 export async function load() {
-	const form = await superValidate(zod(loginSchema));
+	const form = await superValidate(zod4(loginSchema));
 
 	return { form };
 }
 
 export const actions = {
 	default: async ({ cookies, request, url }: RequestEvent) => {
-		const form = await superValidate(request, zod(loginSchema));
+		const form = await superValidate(request, zod4(loginSchema));
 
 		if (!form.valid) {
 			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {

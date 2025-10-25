@@ -35,7 +35,13 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: CodeExecutionParams }>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: authenticated,
+			config: {
+				rateLimit: {
+					max: 30,
+					timeWindow: "1 minute"
+				}
+			}
 		},
 		async (request, reply) => {
 			const { code, language, testInput, testOutput } = request.body;

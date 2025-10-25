@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from "$app/stores";
 	import Container from "@/components/ui/container/container.svelte";
 	import {
 		commentTypeEnum,
@@ -22,13 +21,14 @@
 	import Comments from "@/features/comment/components/comments.svelte";
 	import AddCommentForm from "@/features/comment/components/add-comment-form.svelte";
 	import { testIds } from "@/config/test-ids";
+	import { page } from "$app/state";
 
 	let { data } = $props();
 
 	const { puzzle }: { puzzle: PuzzleDto } = data;
 	let puzzleComments = $derived(puzzle.comments ?? []);
 
-	let puzzleId = $page.params.id;
+	let puzzleId = page.params.id ?? "";
 	const editUrl = frontendUrls.puzzleByIdEdit(puzzleId);
 	const playUrl = frontendUrls.puzzleByIdPlay(puzzleId);
 
@@ -152,8 +152,6 @@
 </Container>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	h2 {
 		@apply inline text-xl underline;
 	}

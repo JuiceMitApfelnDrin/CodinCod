@@ -34,7 +34,7 @@ The [docs](https://codincod.com/docs) exist to:
    - [NodeJs](https://nodejs.org/en/download/package-manager)
    - [Pnpm](https://pnpm.io/)
    - MongoDb instance: can be either [locally](https://www.mongodb.com/try/download/community) or in [mongodb's online environment](https://www.mongodb.com/cloud/atlas/register).
-   - [Piston](https://github.com/engineer-man/piston), used for code execution in a safe environment, **if** you are **not** going to **execute code**, **you don't** technically **need it**
+   - [Piston](https://github.com/engineer-man/piston), used for code execution in a safe environment, **if** you are **not** going to **execute code**, **you don't** technically **need it**, if you want to use the [just files](https://just.systems/), you will probably need to install [jq](https://jqlang.org/).
 
 2. Clone the project structure and its submodules:
 
