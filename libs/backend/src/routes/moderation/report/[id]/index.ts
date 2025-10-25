@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import {
 	httpResponseCodes,
 	isAuthenticatedInfo,
-	resolveReportSchema,
+	resolveReportSchema
 } from "types";
 import mongoose from "mongoose";
 import moderatorOnly from "../../../../plugins/middleware/moderator-only.js";
@@ -15,7 +15,7 @@ export default async function moderationReportByIdRoutes(
 	fastify.post<ParamsId>(
 		"/resolve",
 		{
-			onRequest: moderatorOnly,
+			onRequest: moderatorOnly
 		},
 		async (request, reply) => {
 			const { id } = request.params;
@@ -44,13 +44,14 @@ export default async function moderationReportByIdRoutes(
 						.send({ error: "Report not found" });
 				}
 
-			// Update report status
-			report.status = parseResult.data.status;
-			report.resolvedBy = new mongoose.Types.ObjectId(userId);
-			report.updatedAt = new Date();
-			await report.save();				return reply.send({
+				// Update report status
+				report.status = parseResult.data.status;
+				report.resolvedBy = new mongoose.Types.ObjectId(userId);
+				report.updatedAt = new Date();
+				await report.save();
+				return reply.send({
 					message: "Report resolved successfully",
-					report,
+					report
 				});
 			} catch (error) {
 				fastify.log.error(error, "Failed to resolve report");

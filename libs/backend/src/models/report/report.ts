@@ -19,7 +19,11 @@ const reportSchema = new Schema<ReportDocument>({
 	problemType: {
 		type: String,
 		required: true,
-		enum: [ProblemTypeEnum.PUZZLE, ProblemTypeEnum.USER, ProblemTypeEnum.COMMENT]
+		enum: [
+			ProblemTypeEnum.PUZZLE,
+			ProblemTypeEnum.USER,
+			ProblemTypeEnum.COMMENT
+		]
 	},
 	reportedBy: {
 		type: Schema.Types.ObjectId,

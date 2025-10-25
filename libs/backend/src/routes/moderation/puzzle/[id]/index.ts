@@ -3,7 +3,7 @@ import {
 	httpResponseCodes,
 	puzzleVisibilityEnum,
 	approvePuzzleSchema,
-	revisePuzzleSchema,
+	revisePuzzleSchema
 } from "types";
 import moderatorOnly from "../../../../plugins/middleware/moderator-only.js";
 import Puzzle from "../../../../models/puzzle/puzzle.js";
@@ -16,7 +16,7 @@ export default async function moderationPuzzleByIdRoutes(
 	fastify.post<ParamsId>(
 		"/approve",
 		{
-			onRequest: moderatorOnly,
+			onRequest: moderatorOnly
 		},
 		async (request, reply) => {
 			const { id } = request.params;
@@ -44,7 +44,7 @@ export default async function moderationPuzzleByIdRoutes(
 
 				return reply.send({
 					message: "Puzzle approved successfully",
-					puzzle,
+					puzzle
 				});
 			} catch (error) {
 				fastify.log.error(error, "Failed to approve puzzle");
@@ -59,7 +59,7 @@ export default async function moderationPuzzleByIdRoutes(
 	fastify.post<ParamsId>(
 		"/revise",
 		{
-			onRequest: moderatorOnly,
+			onRequest: moderatorOnly
 		},
 		async (request, reply) => {
 			const { id } = request.params;
@@ -87,7 +87,7 @@ export default async function moderationPuzzleByIdRoutes(
 
 				return reply.send({
 					message: "Puzzle sent back for revisions",
-					puzzle,
+					puzzle
 				});
 			} catch (error) {
 				fastify.log.error(error, "Failed to request puzzle revisions");

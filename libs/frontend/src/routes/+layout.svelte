@@ -11,7 +11,7 @@
 	$effect(() => {
 		const newAuthInfo = isAuthenticatedInfo(data) ? data : null;
 		const currentAuthInfo = untrack(() => $authenticatedUserInfo);
-		
+
 		// Only update if the data has actually changed
 		if (JSON.stringify(newAuthInfo) !== JSON.stringify(currentAuthInfo)) {
 			authenticatedUserInfo.set(newAuthInfo);

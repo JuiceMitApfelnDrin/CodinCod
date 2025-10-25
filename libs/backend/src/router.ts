@@ -87,15 +87,13 @@ export default async function router(fastify: FastifyInstance) {
 		prefix: backendUrls.MODERATION_REVIEW
 	});
 	fastify.register(moderationPuzzleByIdRoutes, {
-		prefix: backendUrls.moderationPuzzleApprove(backendParams.ID).replace(
-			"/approve",
-			""
-		)
+		prefix: backendUrls
+			.moderationPuzzleApprove(backendParams.ID)
+			.replace("/approve", "")
 	});
 	fastify.register(moderationReportByIdRoutes, {
-		prefix: backendUrls.moderationReportResolve(backendParams.ID).replace(
-			"/resolve",
-			""
-		)
+		prefix: backendUrls
+			.moderationReportResolve(backendParams.ID)
+			.replace("/resolve", "")
 	});
 }

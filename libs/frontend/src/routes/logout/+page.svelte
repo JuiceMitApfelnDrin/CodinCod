@@ -17,8 +17,8 @@
 <div class="flex min-h-screen items-center justify-center">
 	<div class="text-center">
 		<h1 class="mb-4 text-2xl font-bold">Logging out...</h1>
-		<form 
-			method="POST" 
+		<form
+			method="POST"
 			use:enhance={() => {
 				return async ({ update }) => {
 					await invalidateAll();

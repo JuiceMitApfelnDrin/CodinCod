@@ -4,7 +4,7 @@ import {
 	httpResponseCodes,
 	isAuthenticatedInfo,
 	ReportEntity,
-	reviewStatusEnum,
+	reviewStatusEnum
 } from "types";
 import Report from "../../models/report/report.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
@@ -14,7 +14,7 @@ export default async function reportRoutes(fastify: FastifyInstance) {
 	fastify.post(
 		"/",
 		{
-			onRequest: authenticated,
+			onRequest: authenticated
 		},
 		async (request, reply) => {
 			const parseResult = createReportSchema.safeParse(request.body);
@@ -36,7 +36,7 @@ export default async function reportRoutes(fastify: FastifyInstance) {
 			const newReportData: Omit<ReportEntity, "createdAt" | "updatedAt"> = {
 				...parseResult.data,
 				reportedBy: userId,
-				status: reviewStatusEnum.PENDING,
+				status: reviewStatusEnum.PENDING
 			};
 
 			try {

@@ -87,19 +87,20 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
 						.send({ error: "Puzzle not found" });
-			}
+				}
 
-			const user = await User.findById(userId);
+				const user = await User.findById(userId);
 
-			if (
-				!isAuthor(puzzle.author.toString(), userId) &&
-				!isModerator(user?.role)
-			) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
-					.send({ error: "Not authorized to edit this puzzle" });
-			}
-			Object.assign(puzzle, parseResult.data);				await puzzle.save();
+				if (
+					!isAuthor(puzzle.author.toString(), userId) &&
+					!isModerator(user?.role)
+				) {
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
+						.send({ error: "Not authorized to edit this puzzle" });
+				}
+				Object.assign(puzzle, parseResult.data);
+				await puzzle.save();
 
 				const checkWhenEdited: PuzzleVisibility[] = [
 					puzzleVisibilityEnum.DRAFT,

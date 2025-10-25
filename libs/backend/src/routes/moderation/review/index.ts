@@ -5,7 +5,7 @@ import {
 	reviewStatusEnum,
 	puzzleVisibilityEnum,
 	ReviewItem,
-	DEFAULT_PAGE,
+	DEFAULT_PAGE
 } from "types";
 import moderatorOnly from "../../../plugins/middleware/moderator-only.js";
 import Puzzle from "../../../models/puzzle/puzzle.js";
@@ -16,7 +16,7 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 	fastify.get(
 		"/",
 		{
-			onRequest: moderatorOnly,
+			onRequest: moderatorOnly
 		},
 		async (request, reply) => {
 			const query = request.query as {
@@ -37,7 +37,7 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 				if (type === reviewItemTypeEnum.PENDING_PUZZLE) {
 					// Get puzzles that are ready for review
 					const puzzles = await Puzzle.find({
-						visibility: puzzleVisibilityEnum.READY,
+						visibility: puzzleVisibilityEnum.READY
 					})
 						.populate("author", "username")
 						.sort({ createdAt: -1 })
@@ -45,7 +45,7 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 						.limit(limit);
 
 					total = await Puzzle.countDocuments({
-						visibility: puzzleVisibilityEnum.READY,
+						visibility: puzzleVisibilityEnum.READY
 					});
 
 					items = puzzles.map((puzzle: any) => ({
@@ -55,9 +55,11 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 						description: puzzle.statement,
 						createdAt: puzzle.createdAt || new Date(),
 						authorName:
-							typeof puzzle.author === "object" && puzzle.author && "username" in puzzle.author
+							typeof puzzle.author === "object" &&
+							puzzle.author &&
+							"username" in puzzle.author
 								? String(puzzle.author.username)
-								: undefined,
+								: undefined
 					}));
 				} else {
 					// Get reports filtered by type
@@ -111,7 +113,7 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 									report.reportedBy &&
 									"username" in report.reportedBy
 										? String(report.reportedBy.username)
-										: undefined,
+										: undefined
 							};
 						})
 					);
@@ -123,8 +125,8 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 						page,
 						limit,
 						total,
-						totalPages: Math.ceil(total / limit),
-					},
+						totalPages: Math.ceil(total / limit)
+					}
 				};
 
 				return reply.send(response);

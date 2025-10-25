@@ -1,13 +1,13 @@
 import { buildBackendUrl } from "@/config/backend";
 import {
 	fetchWithAuthenticationCookie,
-	getCookieHeader,
+	getCookieHeader
 } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import {
 	backendUrls,
 	httpRequestMethod,
 	reviewItemTypeEnum,
-	type ReviewItem,
+	type ReviewItem
 } from "types";
 import type { PageServerLoadEvent } from "./$types";
 
@@ -34,17 +34,17 @@ export async function load({ request, url }: PageServerLoadEvent) {
 	try {
 		const response = await fetchWithAuthenticationCookie(reviewUrl, {
 			headers: getCookieHeader(request),
-			method: httpRequestMethod.GET,
+			method: httpRequestMethod.GET
 		});
 
 		if (!response.ok) {
 			return {
 				reviewItems: {
 					data: [],
-					pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
+					pagination: { page: 1, limit: 20, total: 0, totalPages: 0 }
 				} as PaginatedResponse,
 				currentType: type,
-				error: "Failed to fetch review items",
+				error: "Failed to fetch review items"
 			};
 		}
 
@@ -52,17 +52,17 @@ export async function load({ request, url }: PageServerLoadEvent) {
 
 		return {
 			reviewItems,
-			currentType: type,
+			currentType: type
 		};
 	} catch (error) {
 		console.error("Error fetching review items:", error);
 		return {
 			reviewItems: {
 				data: [],
-				pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
+				pagination: { page: 1, limit: 20, total: 0, totalPages: 0 }
 			} as PaginatedResponse,
 			currentType: type,
-			error: "Failed to fetch review items",
+			error: "Failed to fetch review items"
 		};
 	}
 }

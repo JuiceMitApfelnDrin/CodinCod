@@ -10,20 +10,20 @@
 	const reviewTypes = [
 		{
 			value: reviewItemTypeEnum.PENDING_PUZZLE,
-			label: "Pending Puzzles",
+			label: "Pending Puzzles"
 		},
 		{
 			value: reviewItemTypeEnum.REPORTED_PUZZLE,
-			label: "Reported Puzzles",
+			label: "Reported Puzzles"
 		},
 		{
 			value: reviewItemTypeEnum.REPORTED_USER,
-			label: "Reported Users",
+			label: "Reported Users"
 		},
 		{
 			value: reviewItemTypeEnum.REPORTED_COMMENT,
-			label: "Reported Comments",
-		},
+			label: "Reported Comments"
+		}
 	];
 
 	function changeType(newType: string) {
@@ -37,14 +37,14 @@
 		return new Date(date).toLocaleDateString("en-US", {
 			year: "numeric",
 			month: "short",
-			day: "numeric",
+			day: "numeric"
 		});
 	}
 
 	async function handleApprove(id: string) {
 		try {
 			const response = await fetch(`/api/moderation/puzzle/${id}/approve`, {
-				method: "POST",
+				method: "POST"
 			});
 
 			if (!response.ok) {
@@ -62,7 +62,7 @@
 	async function handleRevise(id: string) {
 		try {
 			const response = await fetch(`/api/moderation/puzzle/${id}/revise`, {
-				method: "POST",
+				method: "POST"
 			});
 
 			if (!response.ok) {
@@ -82,9 +82,9 @@
 			const response = await fetch(`/api/moderation/report/${id}/resolve`, {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ status }),
+				body: JSON.stringify({ status })
 			});
 
 			if (!response.ok) {
@@ -122,34 +122,53 @@
 
 	<!-- Error Message -->
 	{#if data.error}
-		<div class="mb-4 rounded-md bg-red-100 p-4 text-red-700 dark:bg-red-900 dark:text-red-200">
+		<div
+			class="mb-4 rounded-md bg-red-100 p-4 text-red-700 dark:bg-red-900 dark:text-red-200"
+		>
 			{data.error}
 		</div>
 	{/if}
 
 	<!-- Review Items Table -->
-	<div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+	<div
+		class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700"
+	>
 		<table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
 			<thead class="bg-gray-50 dark:bg-gray-800">
 				<tr>
-					<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
+					<th
+						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
+					>
 						Title
 					</th>
-					<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
-						{data.currentType === reviewItemTypeEnum.PENDING_PUZZLE ? "Author" : "Reported By"}
+					<th
+						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
+					>
+						{data.currentType === reviewItemTypeEnum.PENDING_PUZZLE
+							? "Author"
+							: "Reported By"}
 					</th>
-					<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
+					<th
+						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
+					>
 						Date
 					</th>
-					<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
+					<th
+						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
+					>
 						Actions
 					</th>
 				</tr>
 			</thead>
-			<tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+			<tbody
+				class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900"
+			>
 				{#if data.reviewItems.data.length === 0}
 					<tr>
-						<td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+						<td
+							colspan="4"
+							class="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
+						>
 							No items to review
 						</td>
 					</tr>
@@ -157,7 +176,9 @@
 					{#each data.reviewItems.data as item}
 						<tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
 							<td class="px-6 py-4">
-								<div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+								<div
+									class="text-sm font-medium text-gray-900 dark:text-gray-100"
+								>
 									{item.title}
 								</div>
 								{#if item.description}
@@ -167,7 +188,9 @@
 									</div>
 								{/if}
 								{#if item.reportExplanation}
-									<div class="mt-2 text-sm italic text-orange-600 dark:text-orange-400">
+									<div
+										class="mt-2 text-sm text-orange-600 italic dark:text-orange-400"
+									>
 										Report: {item.reportExplanation}
 									</div>
 								{/if}
@@ -225,7 +248,10 @@
 				<button
 					onclick={() => {
 						const url = new URL($page.url);
-						url.searchParams.set("page", String(data.reviewItems.pagination.page - 1));
+						url.searchParams.set(
+							"page",
+							String(data.reviewItems.pagination.page - 1)
+						);
 						goto(url.toString());
 					}}
 					class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
@@ -235,14 +261,18 @@
 			{/if}
 
 			<span class="px-4 py-2">
-				Page {data.reviewItems.pagination.page} of {data.reviewItems.pagination.totalPages}
+				Page {data.reviewItems.pagination.page} of {data.reviewItems.pagination
+					.totalPages}
 			</span>
 
 			{#if data.reviewItems.pagination.page < data.reviewItems.pagination.totalPages}
 				<button
 					onclick={() => {
 						const url = new URL($page.url);
-						url.searchParams.set("page", String(data.reviewItems.pagination.page + 1));
+						url.searchParams.set(
+							"page",
+							String(data.reviewItems.pagination.page + 1)
+						);
 						goto(url.toString());
 					}}
 					class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"

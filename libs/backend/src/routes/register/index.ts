@@ -44,17 +44,18 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					return reply.status(400).send({ message: "Email already exists" });
 				}
 
-			// Create a new user
-			const user = new User({ email, password, username });
-			await user.save();
+				// Create a new user
+				const user = new User({ email, password, username });
+				await user.save();
 
-			const authenticatedUserInfo = {
-				userId: `${user._id}`,
-				username: user.username,
-				role: user.role,
-				isAuthenticated: true
-			};
-			const token = generateToken(fastify, authenticatedUserInfo);				const cookieOptions: any = {
+				const authenticatedUserInfo = {
+					userId: `${user._id}`,
+					username: user.username,
+					role: user.role,
+					isAuthenticated: true
+				};
+				const token = generateToken(fastify, authenticatedUserInfo);
+				const cookieOptions: any = {
 					path: "/",
 					httpOnly: true,
 					secure: process.env.NODE_ENV === environment.PRODUCTION,

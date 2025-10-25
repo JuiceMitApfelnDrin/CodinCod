@@ -6,10 +6,10 @@ import { redirect } from "@sveltejs/kit";
 export const actions = {
 	default: async ({ cookies, fetch }) => {
 		const token = cookies.get(cookieKeys.TOKEN);
-		
+
 		try {
 			const backendUrl = `${env.BACKEND_HOST}${backendUrls.LOGOUT}`;
-			
+
 			// Call the backend logout endpoint to clear the httpOnly cookie
 			const response = await fetch(backendUrl, {
 				method: "POST",
@@ -25,7 +25,6 @@ export const actions = {
 
 			// Also clear it on the frontend side just to be safe
 			cookies.delete(cookieKeys.TOKEN, { path: "/" });
-			
 		} catch (error) {
 			console.error("Error calling logout endpoint:", error);
 		}
