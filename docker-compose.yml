@@ -26,6 +26,7 @@ services:
     environment:
       - NODE_ENV=production
       - PISTON_URI=http://piston:2000
+      - FRONTEND_URL=https://codincod.com
     depends_on:
       - piston
   #   # optional for when you want to run mongodb locally

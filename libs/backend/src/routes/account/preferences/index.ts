@@ -33,6 +33,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
+				console.error("Failed to fetch preferences:", error);
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
 					.send({ error: "Failed to fetch preferences" });
@@ -71,6 +72,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
+				console.error("Failed to update preferences:", error);
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
 					.send({ error: "Failed to update preferences" });
@@ -105,6 +107,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 					.status(httpResponseCodes.SUCCESSFUL.NO_CONTENT)
 					.send(deleted);
 			} catch (error) {
+				console.error("Failed to delete preferences:", error);
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
 					.send({ error: "Failed to delete preferences" });
@@ -145,6 +148,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 
 				return reply.send(preferences);
 			} catch (error) {
+				console.error("Failed to update preferences (PATCH):", error);
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
 					.send({ error: "Failed to update preferences" });
