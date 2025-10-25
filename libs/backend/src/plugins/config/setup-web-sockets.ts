@@ -41,7 +41,7 @@ export async function setupWebSockets(fastify: FastifyInstance) {
 	);
 
 	fastify.addHook("onClose", async () => {
-		console.info("Shutting down WebSocket connections...");
+		fastify.log.info("Shutting down WebSocket connections...");
 		connectionManager.destroy();
 	});
 }

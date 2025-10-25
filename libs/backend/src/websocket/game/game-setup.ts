@@ -208,8 +208,9 @@ export function gameSetup(
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
-		console.info(
-			`Game socket closed for ${req.user.username}: ${code} - ${reason}`
+		fastify.log.info(
+			{ username: req.user.username, code, reason: reason.toString() },
+			"Game socket closed"
 		);
 		userWebSockets.remove(req.user.username);
 	});
