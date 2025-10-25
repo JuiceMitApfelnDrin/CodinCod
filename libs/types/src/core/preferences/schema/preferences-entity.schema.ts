@@ -8,7 +8,7 @@ export const preferencesEntitySchema = z.object({
 	owner: objectIdSchema,
 	preferredLanguage: z.string().optional(),
 	theme: themeOptionSchema.optional(),
-	blockedUsers: z.set(objectIdSchema).prefault(new Set()).optional(),
+	blockedUsers: z.array(objectIdSchema).prefault([]).optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
 	editor: editorPreferencesSchema.optional(),
