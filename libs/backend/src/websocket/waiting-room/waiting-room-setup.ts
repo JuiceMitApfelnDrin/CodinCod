@@ -58,7 +58,10 @@ export function waitingRoomSetup(
 		switch (event) {
 			case waitingRoomEventEnum.HOST_ROOM: {
 				const roomId = waitingRoom.hostRoom(req.user);
-				console.info(`${req.user.username} hosted room ${roomId}`);
+				fastify.log.info(
+					{ username: req.user.username, roomId },
+					"User hosted room"
+				);
 				break;
 			}
 
@@ -80,8 +83,9 @@ export function waitingRoomSetup(
 
 			case waitingRoomEventEnum.START_GAME: {
 				try {
-					console.log(
-						`START_GAME requested by ${req.user.username} for room ${parsedMessage.roomId}`
+					fastify.log.info(
+						{ username: req.user.username, roomId: parsedMessage.roomId },
+						"START_GAME requested"
 					);
 
 					const randomPuzzles = await Puzzle.aggregate([
@@ -101,9 +105,12 @@ export function waitingRoomSetup(
 					const room = waitingRoom.getRoom(parsedMessage.roomId);
 
 					if (!room) {
-						console.error(
-							`Room ${parsedMessage.roomId} not found. Available rooms:`,
-							waitingRoom.getAllRoomIds()
+						fastify.log.error(
+							{
+								roomId: parsedMessage.roomId,
+								availableRooms: waitingRoom.getAllRoomIds()
+							},
+							"Room not found"
 						);
 						waitingRoom.updateUser(req.user.username, {
 							event: waitingRoomEventEnum.ERROR,
@@ -160,8 +167,9 @@ export function waitingRoomSetup(
 						});
 					}, 100);
 
-					console.info(
-						`Game ${newlyCreatedGame.id} started with ${players.length} players`
+					fastify.log.info(
+						{ gameId: newlyCreatedGame.id, playerCount: players.length },
+						"Game started"
 					);
 				} catch (error) {
 					fastify.log.error({ err: error }, "Error starting game");
@@ -189,8 +197,9 @@ export function waitingRoomSetup(
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
-		console.info(
-			`Waiting room socket closed for ${req.user.username}: ${code} - ${reason}`
+		fastify.log.info(
+			{ username: req.user.username, code, reason: reason.toString() },
+			"Waiting room socket closed"
 		);
 		waitingRoom.removeUserFromUsers(req.user.username);
 		waitingRoom.removeEmptyRooms();
