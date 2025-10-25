@@ -26,7 +26,7 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			const parseResult = codeSubmissionParamsSchema.safeParse(request.body);
 
 			if (!parseResult.success) {
-				return reply.status(400).send({ error: parseResult.error.errors });
+				return reply.status(400).send({ error: parseResult.error.issues });
 			}
 
 			// unpacking body
@@ -106,14 +106,13 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 				return reply.status(201).send(submission);
 			} catch (error) {
-				fastify.log.error("Error saving submission:", error);
+				fastify.log.error("Error saving submission:", String(error));
 
 				if (isValidationError(error)) {
 					return reply
 						.status(400)
-						.send({ error: "Validation failed", details: error.errors });
+						.send({ error: "Validation failed", details: error.issues });
 				}
-
 				return reply.status(500).send({ error: "Failed to create submission" });
 			}
 		}

@@ -29,7 +29,7 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 
 				if (
 					!matchingSubmission ||
-					matchingSubmission.user.toString() !== userId
+					getUserIdFromUser(matchingSubmission.user) !== userId
 				) {
 					return reply.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND).send({
 						error: `couldn't find a submission with id (${submissionId}) belonging to user with id (${userId})`
@@ -49,8 +49,7 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 				const latestSubmissionTime =
 					new Date(matchingSubmission.createdAt).getTime() +
 					SUBMISSION_BUFFER_IN_MILLISECONDS;
-				const currentTime = new Date().getTime();
-
+				const currentTime = Date.now();
 				const tooFarInThePast = latestSubmissionTime < currentTime;
 				if (tooFarInThePast) {
 					return reply
@@ -86,14 +85,13 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					.status(httpResponseCodes.SUCCESSFUL.CREATED)
 					.send(updatedGame);
 			} catch (error) {
-				request.log.error("Error saving submission:", error);
+				request.log.error({ err: error }, "Error saving submission");
 
 				if (isValidationError(error)) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
 						.send({ error: "Validation failed", details: error.errors });
 				}
-
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
 					.send({ error: "Failed to create submission" });

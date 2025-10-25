@@ -24,7 +24,7 @@ export default async function commentByIdCommentRoutes(
 			if (!parseResult.success) {
 				return reply
 					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+					.send({ error: parseResult.error.issues });
 			}
 
 			if (!isAuthenticatedInfo(request.user)) {
@@ -43,9 +43,9 @@ export default async function commentByIdCommentRoutes(
 				upvote: 0,
 				downvote: 0,
 				comments: [],
-				commentType: commentTypeEnum.COMMENT
+				commentType: commentTypeEnum.COMMENT,
+				parentId: id
 			};
-
 			try {
 				const newComment = new Comment(newCommentData);
 				await newComment.save();

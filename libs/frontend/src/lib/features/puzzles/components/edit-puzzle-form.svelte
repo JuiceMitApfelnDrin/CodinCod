@@ -2,7 +2,7 @@
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
 	import * as Form from "$lib/components/ui/form";
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
-	import { zodClient } from "sveltekit-superforms/adapters";
+	import { zod4Client } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import {
@@ -36,7 +36,7 @@
 		dataType: "json",
 		multipleSubmits: "allow",
 		resetForm: false,
-		validators: zodClient(
+		validators: zod4Client(
 			puzzleEntitySchema.omit({
 				author: true,
 				createdAt: true,

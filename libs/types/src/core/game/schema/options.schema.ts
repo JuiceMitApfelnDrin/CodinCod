@@ -17,9 +17,9 @@ export const gameOptionsSchema = z.object({
 				languageVersion: puzzleLanguageVersion,
 			}),
 		)
-		.default([]),
-	maxGameDurationInSeconds: z.number().default(DEFAULT_GAME_LENGTH_IN_SECONDS),
-	visibility: gameVisibilitySchema.default(GameVisibilityEnum.PUBLIC),
-	mode: gameModeSchema.default(GameModeEnum.RATED),
+		.prefault([]),
+	maxGameDurationInSeconds: z.number().prefault(DEFAULT_GAME_LENGTH_IN_SECONDS),
+	visibility: gameVisibilitySchema.prefault(GameVisibilityEnum.PUBLIC),
+	mode: gameModeSchema.prefault(GameModeEnum.RATED),
 });
 export type GameOptions = z.infer<typeof gameOptionsSchema>;

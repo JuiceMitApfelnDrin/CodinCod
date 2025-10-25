@@ -1,3 +1,6 @@
+set dotenv-load := true
+set dotenv-path := "./libs/backend/.env"
+
 default:
     @just --list
 

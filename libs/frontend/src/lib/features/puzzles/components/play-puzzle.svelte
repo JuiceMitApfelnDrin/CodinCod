@@ -9,7 +9,8 @@
 		type ValidatorEntity,
 		type CodeExecutionResponse,
 		isCodeExecutionSuccessResponse,
-		PuzzleResultEnum
+		PuzzleResultEnum,
+		httpResponseCodes
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -66,6 +67,16 @@
 			}),
 			method: httpRequestMethod.POST
 		});
+
+		// Handle rate limiting
+		if (response.status === httpResponseCodes.CLIENT_ERROR.TOO_MANY_REQUESTS) {
+			const errorData = await response.json();
+			toast.error(
+				errorData.message ||
+					`Rate limit exceeded. Please wait ${errorData.retryAfter || "a moment"} before trying again.`
+			);
+			return;
+		}
 
 		const testResult: CodeExecutionResponse = await response.json();
 
@@ -132,7 +143,7 @@
 
 			const convertToPromises = puzzle.validators.map(
 				(validator: ValidatorEntity, index: number) => {
-					executeCode(index, validator.input, validator.output);
+					return executeCode(index, validator.input, validator.output);
 				}
 			);
 

@@ -2,8 +2,8 @@ import { z } from "zod";
 import { paginatedQuerySchema } from "./paginated-query.schema.js";
 
 export const paginatedQueryResponseSchema = paginatedQuerySchema.extend({
-	totalPages: z.number().min(0).default(0),
-	totalItems: z.number().min(0).default(0),
+	totalPages: z.number().min(0).prefault(0),
+	totalItems: z.number().min(0).prefault(0),
 	items: z.array(z.any()),
 });
 export type PaginatedQueryResponse = z.infer<

@@ -23,7 +23,7 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 			if (!parsed.success) {
 				return reply
 					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parsed.error.errors });
+					.send({ error: parsed.error.issues });
 			}
 			const { type } = parsed.data;
 

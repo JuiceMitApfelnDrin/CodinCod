@@ -25,7 +25,7 @@ export default async function puzzleByIdCommentRoutes(
 			if (!parseResult.success) {
 				return reply
 					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+					.send({ error: parseResult.error.issues });
 			}
 
 			if (!isAuthenticatedInfo(request.user)) {
@@ -44,9 +44,9 @@ export default async function puzzleByIdCommentRoutes(
 				upvote: 0,
 				downvote: 0,
 				comments: [],
-				commentType: commentTypeEnum.PUZZLE
+				commentType: commentTypeEnum.PUZZLE,
+				parentId: id
 			};
-
 			try {
 				const newComment = new Comment(commentData);
 				await newComment.save();
@@ -63,6 +63,7 @@ export default async function puzzleByIdCommentRoutes(
 
 				return reply.status(httpResponseCodes.SUCCESSFUL.CREATED).send(comment);
 			} catch (error) {
+				request.log.error({ err: error }, "Failed to create comment");
 				return reply
 					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
 					.send({ error: "Failed to create comment" });

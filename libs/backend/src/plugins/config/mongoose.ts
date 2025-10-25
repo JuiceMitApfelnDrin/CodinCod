@@ -10,7 +10,13 @@ export default async function mongooseConnector(fastify: FastifyInstance) {
 	}
 
 	try {
-		await mongoose.connect(uri, { dbName: dbName ?? "codincod" });
+		console.log("Connecting to MongoDB...");
+		await mongoose.connect(uri, {
+			dbName: dbName ?? "codincod",
+			serverSelectionTimeoutMS: 5 * 1000,
+			connectTimeoutMS: 10 * 1000
+		});
+		console.log("MongoDB connected successfully!");
 		mongoose.connection.on("connected", () => {
 			fastify.log.info({ actor: "MongoDB" }, "connected");
 		});
@@ -18,6 +24,7 @@ export default async function mongooseConnector(fastify: FastifyInstance) {
 			fastify.log.error({ actor: "MongoDB" }, "disconnected");
 		});
 	} catch (error) {
+		console.error(`MongoDB connection error:`, error);
 		fastify.log.error(`MongoDB connection error (${error})`);
 		process.exit(1);
 	}

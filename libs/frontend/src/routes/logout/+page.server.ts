@@ -1,9 +1,9 @@
-import { cookieKeys, frontendUrls } from "types";
+import { cookieKeys, environment, frontendUrls } from "types";
 import type { PageServerLoadEvent } from "./$types";
 import { env } from "$env/dynamic/private";
 
 export const load = async ({ cookies }: PageServerLoadEvent) => {
-	const isProduction = env.NODE_ENV === "production";
+	const isProduction = env.NODE_ENV === environment.PRODUCTION;
 
 	cookies.delete(cookieKeys.TOKEN, {
 		domain: env.FRONTEND_HOST ?? "localhost",
