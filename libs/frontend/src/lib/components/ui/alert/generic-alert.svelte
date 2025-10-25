@@ -18,7 +18,11 @@
 </script>
 
 <Alert.Root
-	variant={isHttpErrorCode(status) ? (isRateLimited ? "default" : "destructive") : "success"}
+	variant={isHttpErrorCode(status)
+		? isRateLimited
+			? "default"
+			: "destructive"
+		: "success"}
 >
 	{#if isRateLimited}
 		<Clock class="h-4 w-4" />

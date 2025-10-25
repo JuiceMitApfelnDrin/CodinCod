@@ -10,9 +10,7 @@
 		type CodeExecutionResponse,
 		isCodeExecutionSuccessResponse,
 		PuzzleResultEnum,
-
 		httpResponseCodes
-
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -71,7 +69,7 @@
 		});
 
 		// Handle rate limiting
-		if (response.status ===  httpResponseCodes.CLIENT_ERROR.TOO_MANY_REQUESTS) {
+		if (response.status === httpResponseCodes.CLIENT_ERROR.TOO_MANY_REQUESTS) {
 			const errorData = await response.json();
 			toast.error(
 				errorData.message ||
