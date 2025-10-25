@@ -55,17 +55,25 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				};
 				const token = generateToken(fastify, authenticatedUserInfo);
 
+				const cookieOptions: any = {
+					path: "/",
+					httpOnly: true,
+					secure: process.env.NODE_ENV === environment.PRODUCTION,
+					sameSite:
+						process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
+					maxAge: 7 * 24 * 60 * 60 // 7 days
+				};
+
+				// Set domain for cross-subdomain cookies in production
+				// codincod.com (frontend) and backend.codincod.com (backend) need .codincod.com
+				if (process.env.NODE_ENV === environment.PRODUCTION) {
+					// Leading dot is critical for cross-subdomain cookies!
+					cookieOptions.domain = process.env.FRONTEND_HOST;
+				}
+
 				return reply
 					.status(200)
-					.setCookie(cookieKeys.TOKEN, token, {
-						path: "/",
-						httpOnly: true,
-						secure: process.env.NODE_ENV === environment.PRODUCTION,
-						sameSite:
-							process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
-						domain: process.env.FRONTEND_HOST ?? "localhost",
-						maxAge: 3600
-					})
+					.setCookie(cookieKeys.TOKEN, token, cookieOptions)
 					.send({ message: "User registered successfully" });
 			} catch (error) {
 				if (error instanceof Error.ValidationError) {

@@ -52,22 +52,27 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				const token = generateToken(fastify, authenticatedUserInfo);
 				const maxAge = 7 * 24 * 60 * 60;
 
+				const isProduction = process.env.NODE_ENV === environment.PRODUCTION;
+
 				const cookieOptions: any = {
 					path: "/",
 					httpOnly: true,
-					secure: process.env.NODE_ENV === environment.PRODUCTION,
-					sameSite:
-						process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
+					secure: isProduction,
+					sameSite: isProduction ? "none" : "lax",
 					maxAge
 				};
 
-				// Only set domain in production, omit for localhost development
-				if (
-					process.env.NODE_ENV === environment.PRODUCTION &&
-					process.env.FRONTEND_HOST
-				) {
+				// Set domain for cross-subdomain cookies in production
+				// codincod.com (frontend) and backend.codincod.com (backend) need .codincod.com
+				if (isProduction) {
+					// Leading dot is critical for cross-subdomain cookies!
 					cookieOptions.domain = process.env.FRONTEND_HOST;
+					console.log("Setting cookie with domain:", cookieOptions.domain);
+				} else {
+					console.log("Development mode - cookie domain not set");
 				}
+
+				console.log("Cookie options:", JSON.stringify(cookieOptions, null, 2));
 
 				return reply
 					.status(200)
