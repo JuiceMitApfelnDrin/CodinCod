@@ -1,10 +1,17 @@
 name: Build Check
 
+# Security: Using pull_request instead of workflow_run to avoid privileged context issues
 on:
-  workflow_run:
-    workflows: ["Format"]
-    types:
-      - completed
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+# Limit permissions to read-only
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}-build-check
@@ -13,12 +20,9 @@ concurrency:
 jobs:
   build-backend:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -29,7 +33,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          # Remove cache to prevent cache poisoning from untrusted PRs
 
       - name: Install packages
         run: pnpm i
@@ -42,12 +46,9 @@ jobs:
 
   build-frontend:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -58,7 +59,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          # Remove cache to prevent cache poisoning from untrusted PRs
 
       - name: Install packages
         run: pnpm i
