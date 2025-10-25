@@ -170,3 +170,6 @@ dist
 
 .dev.vars
 .wrangler/
+
+# Auto-generated maintenance page from frontend build
+src/maintenance.html.ts

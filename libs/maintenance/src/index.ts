@@ -1,4 +1,4 @@
-import maintenanceHtml from './maintenance.html';
+import maintenanceHtml from './maintenance.html.ts';
 import { websiteUrl } from 'types';
 
 export default {

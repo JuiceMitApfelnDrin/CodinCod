@@ -42,7 +42,22 @@ server.register(jwt);
 server.register(fastifyFormbody);
 server.register(mongooseConnector);
 server.register(piston);
-server.register(websocket);
+server.register(websocket, {
+	options: {
+		verifyClient: (info, next) => {
+			// Allow WebSocket connections from the configured frontend URL
+			const origin = info.origin || info.req.headers.origin;
+			const allowedOrigin = process.env.FRONTEND_URL ?? "http://localhost:5173";
+
+			if (origin === allowedOrigin) {
+				next(true);
+			} else {
+				console.warn(`WebSocket connection rejected from origin: ${origin}`);
+				next(false, 403, "Forbidden");
+			}
+		}
+	}
+});
 server.register(setupWebSockets);
 
 // routes
