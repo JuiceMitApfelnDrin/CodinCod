@@ -39,6 +39,10 @@ services:
     build:
       context: . # Root directory
       dockerfile: libs/frontend/Dockerfile # Correct path
+      args:
+        - VITE_BACKEND_URL=https://backend.codincod.com
+        - VITE_BACKEND_WEBSOCKET_MULTIPLAYER=wss://backend.codincod.com
+        - ORIGIN=https://codincod.com
     ports:
       - "5173:5173"
     # env_file:
