@@ -1,0 +1,75 @@
+name: Build Check
+
+# Security: Using pull_request instead of workflow_run to avoid privileged context issues
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+# Limit permissions to read-only
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}-build-check
+  cancel-in-progress: true
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          # Remove cache to prevent cache poisoning from untrusted PRs
+
+      - name: Install packages
+        run: pnpm i
+
+      - name: Build types
+        run: pnpm --filter types build
+
+      - name: Build backend
+        run: pnpm --filter backend build
+
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          # Remove cache to prevent cache poisoning from untrusted PRs
+
+      - name: Install packages
+        run: pnpm i
+
+      - name: Build types
+        run: pnpm --filter types build
+
+      - name: Build frontend
+        run: pnpm --filter frontend build
+        env:
+          # Use placeholder values for build check - these are baked into the build
+          VITE_BACKEND_URL: https://backend.codincod.com
+          VITE_BACKEND_WEBSOCKET_MULTIPLAYER: wss://backend.codincod.com
