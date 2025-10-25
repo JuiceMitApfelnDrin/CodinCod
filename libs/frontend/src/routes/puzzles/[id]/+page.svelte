@@ -152,6 +152,8 @@
 </Container>
 
 <style lang="postcss">
+	@import "tailwindcss" reference;
+	
 	h2 {
 		@apply inline text-xl underline;
 	}
