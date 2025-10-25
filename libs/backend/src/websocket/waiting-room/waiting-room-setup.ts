@@ -58,7 +58,10 @@ export function waitingRoomSetup(
 		switch (event) {
 			case waitingRoomEventEnum.HOST_ROOM: {
 				const roomId = waitingRoom.hostRoom(req.user);
-				fastify.log.info({ username: req.user.username, roomId }, "User hosted room");
+				fastify.log.info(
+					{ username: req.user.username, roomId },
+					"User hosted room"
+				);
 				break;
 			}
 
@@ -103,7 +106,10 @@ export function waitingRoomSetup(
 
 					if (!room) {
 						fastify.log.error(
-							{ roomId: parsedMessage.roomId, availableRooms: waitingRoom.getAllRoomIds() },
+							{
+								roomId: parsedMessage.roomId,
+								availableRooms: waitingRoom.getAllRoomIds()
+							},
 							"Room not found"
 						);
 						waitingRoom.updateUser(req.user.username, {

@@ -1,26 +1,28 @@
 #!/usr/bin/env node
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Paths - adapter-node puts prerendered pages in build/prerendered
-const frontendBuildDir = join(__dirname, '..', 'build', 'prerendered');
-const maintenanceSrcDir = join(__dirname, '..', '..', 'maintenance', 'src');
+const frontendBuildDir = join(__dirname, "..", "build", "prerendered");
+const maintenanceSrcDir = join(__dirname, "..", "..", "maintenance", "src");
 
 // Read the prerendered maintenance HTML
-const maintenanceHtmlPath = join(frontendBuildDir, 'maintenance.html');
+const maintenanceHtmlPath = join(frontendBuildDir, "maintenance.html");
 
 if (!existsSync(maintenanceHtmlPath)) {
-  console.error('❌ Maintenance page not found!');
-  console.error('   Expected:', maintenanceHtmlPath);
-  console.error('   Make sure the /maintenance route is set to prerender in +page.ts');
-  process.exit(1);
+	console.error("❌ Maintenance page not found!");
+	console.error("   Expected:", maintenanceHtmlPath);
+	console.error(
+		"   Make sure the /maintenance route is set to prerender in +page.ts"
+	);
+	process.exit(1);
 }
 
-const maintenanceHtml = readFileSync(maintenanceHtmlPath, 'utf-8');
+const maintenanceHtml = readFileSync(maintenanceHtmlPath, "utf-8");
 
 // Create TypeScript file that exports the HTML
 const tsContent = `// Auto-generated from frontend build - DO NOT EDIT
@@ -32,14 +34,13 @@ export default ${JSON.stringify(maintenanceHtml)};
 
 // Ensure maintenance src directory exists
 if (!existsSync(maintenanceSrcDir)) {
-  mkdirSync(maintenanceSrcDir, { recursive: true });
+	mkdirSync(maintenanceSrcDir, { recursive: true });
 }
 
 // Write the TypeScript file
-const outputPath = join(maintenanceSrcDir, 'maintenance.html.ts');
-writeFileSync(outputPath, tsContent, 'utf-8');
+const outputPath = join(maintenanceSrcDir, "maintenance.html.ts");
+writeFileSync(outputPath, tsContent, "utf-8");
 
-console.log('✅ Maintenance page copied successfully!');
-console.log('   From:', maintenanceHtmlPath);
-console.log('   To:', outputPath);
-
+console.log("✅ Maintenance page copied successfully!");
+console.log("   From:", maintenanceHtmlPath);
+console.log("   To:", outputPath);
