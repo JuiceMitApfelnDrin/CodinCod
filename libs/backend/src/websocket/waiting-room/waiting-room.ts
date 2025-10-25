@@ -71,7 +71,7 @@ export class WaitingRoom {
 	joinRoom(user: AuthenticatedInfo, roomId: RoomId): boolean {
 		const room = this.getRoom(roomId);
 		if (!room) {
-			console.warn(`Room ${roomId} not found`);
+			console.warn(`Room ${roomId} not found when user ${user.username} tried to join`);
 			return false;
 		}
 
@@ -82,6 +82,7 @@ export class WaitingRoom {
 		};
 
 		this.roomsByUsername[user.username] = roomId;
+		console.info(`User ${user.username} joined room ${roomId}`);
 		this.updateUsersOnRoomState(roomId);
 		return true;
 	}
@@ -89,11 +90,13 @@ export class WaitingRoom {
 	leaveRoom(username: Username, roomId: RoomId): void {
 		const room = this.getRoom(roomId);
 		if (!room) {
+			console.warn(`Room ${roomId} not found when user ${username} tried to leave`);
 			return;
 		}
 
 		delete room[username];
 		delete this.roomsByUsername[username];
+		console.info(`User ${username} left room ${roomId}. Remaining players: ${Object.keys(room).length}`);
 
 		if (Object.keys(room).length <= 0) {
 			delete this.roomsByRoomId[roomId];
@@ -111,6 +114,10 @@ export class WaitingRoom {
 		return Object.entries(this.roomsByRoomId).map(([roomId, room]) => {
 			return { roomId, amountOfPlayersJoined: Object.keys(room).length };
 		});
+	}
+
+	getAllRoomIds(): RoomId[] {
+		return Object.keys(this.roomsByRoomId);
 	}
 
 	updateUsersOnRoomState(roomId: RoomId): void {
@@ -167,6 +174,7 @@ export class WaitingRoom {
 			.map(([roomId]) => roomId);
 
 		emptyRoomIds.forEach((roomId) => {
+			console.info(`Removing empty room: ${roomId}`);
 			delete this.roomsByRoomId[roomId];
 		});
 

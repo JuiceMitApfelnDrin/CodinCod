@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 import { USERNAME_CONFIG } from "../../authentication/config/username-config.js";
 import { PASSWORD_CONFIG } from "../../authentication/config/password-config.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
@@ -26,10 +26,10 @@ export const userEntitySchema = z.object({
 			PASSWORD_CONFIG.minPasswordLength,
 			`Password must be at least ${PASSWORD_CONFIG.minPasswordLength} characters long`,
 		),
-	email: z.string().email("Invalid email address"),
+	email: z.email("Invalid email address"),
 	profile: userProfileSchema.optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
-	roles: z.array(userRoleSchema).default(DEFAULT_USER_ROLES),
+	roles: z.array(userRoleSchema).prefault(DEFAULT_USER_ROLES),
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;

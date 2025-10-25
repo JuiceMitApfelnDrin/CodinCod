@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Form from "$lib/components/ui/form";
 	import { type SuperValidated, superForm } from "sveltekit-superforms";
-	import { zodClient } from "sveltekit-superforms/adapters";
+	import { zod4Client } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
 	import { createPuzzleSchema, POST, type CreatePuzzle } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
@@ -16,7 +16,7 @@
 	let { data }: Props = $props();
 
 	const form = superForm(data, {
-		validators: zodClient(createPuzzleSchema)
+		validators: zod4Client(createPuzzleSchema)
 	});
 
 	const { enhance, form: formData, message } = form;

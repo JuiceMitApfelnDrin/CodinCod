@@ -13,17 +13,18 @@ import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 import piston from "./plugins/decorators/piston.js";
 import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
+import requestLogger from "./plugins/middleware/request-logger.js";
+import { environment } from "types";
 
 const server = Fastify({
-	logger: Boolean(process.env.NODE_ENV !== "development")
+	logger: Boolean(process.env.NODE_ENV !== environment.DEVELOPMENT)
 });
 
 // register fastify ecosystem plugins
 server.register(fastifyCookie, {
-	secret: process.env.COOKIE_SECRET,
-	hook: "onRequest",
-	parseOptions: {}
+	secret: process.env.COOKIE_SECRET
 } as FastifyCookieOptions);
+server.register(requestLogger);
 server.register(fastifyRateLimit, {
 	max: 100,
 	timeWindow: "1 minute"

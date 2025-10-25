@@ -8,9 +8,13 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
+	import { buildWebSocketUrl } from "@/config/websocket";
 	import { authenticatedUserInfo } from "@/stores";
 	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
-	import { WEBSOCKET_STATES, type WebSocketState } from "@/websocket/websocket-constants";
+	import {
+		WEBSOCKET_STATES,
+		type WebSocketState
+	} from "@/websocket/websocket-constants";
 	import {
 		frontendUrls,
 		isAuthor,
@@ -37,11 +41,11 @@
 		if (room?.roomId) {
 			query.set(queryParamKeys.ROOM_ID, room.roomId);
 
-			goto(`?${query.toString()}`);
+			goto(`?${query.toString()}`, { replaceState: true });
 		} else {
 			query.delete(queryParamKeys.ROOM_ID);
 
-			goto(`?${query.toString()}`);
+			goto(`?${query.toString()}`, { replaceState: true });
 		}
 	}
 
@@ -56,8 +60,6 @@
 			event: waitingRoomEventEnum.JOIN_ROOM,
 			roomId
 		});
-
-		updateRoomIdInUrl();
 	}
 
 	function handleWaitingRoomMessage(data: WaitingRoomResponse) {
@@ -87,21 +89,35 @@
 			case waitingRoomEventEnum.ERROR:
 				{
 					console.error(data.message);
+					
+					// If we got an error about room not found, clear the URL param
+					if (data.message.includes("Room") && data.message.includes("not found")) {
+						query.delete(queryParamKeys.ROOM_ID);
+						goto(`?${query.toString()}`, { replaceState: true });
+					}
 				}
 				break;
-			default:
-				data satisfies never;
+			default: {
+				// Exhaustiveness check - all cases should be handled above
+				const _exhaustive: never = data as never;
+				console.error("Unhandled event type:", _exhaustive);
 				break;
+			}
 		}
 	}
-
-	const wsManager = new WebSocketManager<WaitingRoomRequest, WaitingRoomResponse>({
-		url: webSocketUrls.WAITING_ROOM,
+	const wsManager = new WebSocketManager<
+		WaitingRoomRequest,
+		WaitingRoomResponse
+	>({
+		url: buildWebSocketUrl(webSocketUrls.WAITING_ROOM),
 		onMessage: handleWaitingRoomMessage,
 		onStateChange: (state) => {
 			connectionState = state;
-			if (state === 'connected') {
+			if (state === "connected") {
 				checkForRoomId();
+			} else if (state === "disconnected") {
+				// Only clear room state, keep URL param for sharing/rejoining
+				room = undefined;
 			}
 		},
 		validateResponse: isWaitingRoomResponse

@@ -9,17 +9,21 @@ import { ConnectionManager } from "@/websocket/connection-manager.js";
 export async function setupWebSockets(fastify: FastifyInstance) {
 	const connectionManager = new ConnectionManager();
 
-	// needs to happen before other routes in the whole flow
-
-	fastify.addHook("preValidation", authenticated);
-	fastify.get(webSocketUrls.WAITING_ROOM, { websocket: true }, (...props) =>
-		waitingRoomSetup(...props, fastify)
+	fastify.get(
+		webSocketUrls.WAITING_ROOM,
+		{
+			websocket: true,
+			preHandler: authenticated
+		},
+		(...props) => waitingRoomSetup(...props, fastify)
 	);
 
-	fastify.addHook("preValidation", authenticated);
 	fastify.get<ParamsId>(
 		webSocketUrls.gameById(webSocketParams.ID),
-		{ websocket: true },
+		{
+			websocket: true,
+			preHandler: authenticated
+		},
 		(...props) => gameSetup(...props, fastify)
 	);
 

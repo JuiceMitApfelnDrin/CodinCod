@@ -4,6 +4,7 @@ export const backendUrls = {
 	ROOT: "/",
 	REGISTER: `${baseRoute}/register`,
 	LOGIN: `${baseRoute}/login`,
+	ME: `${baseRoute}/user/me`,
 	USER: `${baseRoute}/user`,
 	userByUsername: (username: string) => `${baseRoute}/user/${username}`,
 	userByUsernamePuzzle: (username: string) =>

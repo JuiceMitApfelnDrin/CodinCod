@@ -2,7 +2,7 @@ import { buildBackendUrl } from "@/config/backend";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import { redirect, type RequestEvent } from "@sveltejs/kit";
 import { fail, superValidate } from "sveltekit-superforms";
-import { zod } from "sveltekit-superforms/adapters";
+import { zod4 } from "sveltekit-superforms/adapters";
 import {
 	backendUrls,
 	DELETE,
@@ -14,7 +14,7 @@ import {
 export async function handleDeletePuzzleForm({ request }: RequestEvent) {
 	const deletePuzzleForm = await superValidate(
 		request,
-		zod(deletePuzzleSchema)
+		zod4(deletePuzzleSchema)
 	);
 
 	if (!deletePuzzleForm.valid) {

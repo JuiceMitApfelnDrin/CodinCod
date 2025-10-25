@@ -42,7 +42,7 @@ export default async function userByUsernamePuzzleRoutes(
 			if (!parseResult.success) {
 				return reply
 					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parseResult.error.errors });
+					.send({ error: parseResult.error.issues });
 			}
 
 			try {

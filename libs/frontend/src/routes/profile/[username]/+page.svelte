@@ -80,7 +80,9 @@
 	<LogicalUnit>
 		<Button
 			data-testid={testIds.PROFILE_PAGE_BUTTON_USER_PUZZLES}
-			href={frontendUrls.userProfileByUsernamePuzzles(page.params.username)}
+			href={frontendUrls.userProfileByUsernamePuzzles(
+				page.params.username ?? ""
+			)}
 			variant="outline">Created puzzles</Button
 		>
 	</LogicalUnit>

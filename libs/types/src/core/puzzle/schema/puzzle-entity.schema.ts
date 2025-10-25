@@ -26,11 +26,11 @@ export const puzzleEntitySchema = z.object({
 		.min(PUZZLE_CONFIG.minConstraintsLength)
 		.max(PUZZLE_CONFIG.maxConstraintsLength)
 		.optional(),
-	author: objectIdSchema.or(userDtoSchema).default(""),
+	author: objectIdSchema.or(userDtoSchema).prefault(""),
 	validators: z.array(validatorEntitySchema).optional(),
-	difficulty: difficultySchema.default(DifficultyEnum.INTERMEDIATE),
+	difficulty: difficultySchema.prefault(DifficultyEnum.INTERMEDIATE),
 	// TODO: later not now !
-	visibility: puzzleVisibilitySchema.default(puzzleVisibilityEnum.DRAFT),
+	visibility: puzzleVisibilitySchema.prefault(puzzleVisibilityEnum.DRAFT),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
 	solution: solutionSchema,
@@ -38,7 +38,7 @@ export const puzzleEntitySchema = z.object({
 	puzzleMetrics: objectIdSchema.optional(),
 	// TODO: later not now !
 	tags: z.array(tagSchema).optional(),
-	comments: z.array(objectIdSchema).default([]),
+	comments: z.array(objectIdSchema).prefault([]),
 });
 
 export type PuzzleEntity = z.infer<typeof puzzleEntitySchema>;

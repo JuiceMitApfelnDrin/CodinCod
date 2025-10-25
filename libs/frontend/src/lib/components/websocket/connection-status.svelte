@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { WebSocketManager } from "@/websocket/websocket-manager.svelte";
-	import { WEBSOCKET_STATES, type WebSocketState } from "@/websocket/websocket-constants";
+	import {
+		WEBSOCKET_STATES,
+		type WebSocketState
+	} from "@/websocket/websocket-constants";
 
 	interface Props {
 		wsManager: WebSocketManager<any, any>;
@@ -9,7 +12,12 @@
 		showLabel?: boolean;
 	}
 
-	let { wsManager, state, class: className = '', showLabel = false }: Props = $props();
+	let {
+		wsManager,
+		state,
+		class: className = "",
+		showLabel = false
+	}: Props = $props();
 
 	const statusConfig = $derived.by(() => {
 		const isOnline = wsManager.isNetworkOnline();
@@ -17,57 +25,61 @@
 		switch (state) {
 			case WEBSOCKET_STATES.CONNECTED:
 				return {
-					color: 'bg-green-500',
-					text: 'Connected',
+					color: "bg-green-500",
+					text: "Connected",
 					pulse: false,
-					icon: '●',
+					icon: "●",
 					canReconnect: false,
-					tooltip: 'WebSocket connected'
+					tooltip: "WebSocket connected"
 				};
 			case WEBSOCKET_STATES.CONNECTING:
 				return {
-					color: 'bg-yellow-500',
-					text: 'Connecting...',
+					color: "bg-yellow-500",
+					text: "Connecting...",
 					pulse: true,
-					icon: '●',
+					icon: "●",
 					canReconnect: false,
-					tooltip: 'Connecting to server...'
+					tooltip: "Connecting to server..."
 				};
 			case WEBSOCKET_STATES.RECONNECTING:
 				return {
-					color: 'bg-orange-500',
-					text: 'Reconnecting...',
+					color: "bg-orange-500",
+					text: "Reconnecting...",
 					pulse: true,
-					icon: '●',
+					icon: "●",
 					canReconnect: true,
-					tooltip: 'Reconnecting... Click to retry now'
+					tooltip: "Reconnecting... Click to retry now"
 				};
 			case WEBSOCKET_STATES.DISCONNECTED:
 				return {
-					color: isOnline ? 'bg-gray-500' : 'bg-gray-400',
-					text: isOnline ? 'Disconnected' : 'No Internet',
+					color: isOnline ? "bg-gray-500" : "bg-gray-400",
+					text: isOnline ? "Disconnected" : "No Internet",
 					pulse: false,
-					icon: '○',
+					icon: "○",
 					canReconnect: isOnline,
-					tooltip: isOnline ? 'Click to reconnect' : 'No internet connection detected'
+					tooltip: isOnline
+						? "Click to reconnect"
+						: "No internet connection detected"
 				};
 			case WEBSOCKET_STATES.ERROR:
 				return {
-					color: 'bg-red-500',
-					text: 'Connection Error',
+					color: "bg-red-500",
+					text: "Connection Error",
 					pulse: false,
-					icon: '✕',
+					icon: "✕",
 					canReconnect: isOnline,
-					tooltip: isOnline ? 'Error - Click to retry' : 'Error - No internet connection'
+					tooltip: isOnline
+						? "Error - Click to retry"
+						: "Error - No internet connection"
 				};
 			default:
 				return {
-					color: 'bg-gray-500',
-					text: 'Unknown',
+					color: "bg-gray-500",
+					text: "Unknown",
 					pulse: false,
-					icon: '?',
+					icon: "?",
 					canReconnect: false,
-					tooltip: 'Unknown connection state'
+					tooltip: "Unknown connection state"
 				};
 		}
 	});
@@ -83,7 +95,9 @@
 	onclick={handleClick}
 	disabled={!statusConfig.canReconnect}
 	title={statusConfig.tooltip}
-	class="flex items-center gap-2 text-sm motion-safe:transition-opacity {className} {statusConfig.canReconnect ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}"
+	class="flex items-center gap-2 text-sm motion-safe:transition-opacity {className} {statusConfig.canReconnect
+		? 'cursor-pointer hover:opacity-80'
+		: 'cursor-default'}"
 	aria-label={statusConfig.tooltip}
 >
 	<span class="relative flex h-3 w-3">
@@ -92,7 +106,8 @@
 				class="absolute inline-flex h-full w-full animate-ping rounded-full {statusConfig.color} opacity-75"
 			></span>
 		{/if}
-		<span class="relative inline-flex h-3 w-3 rounded-full {statusConfig.color}"></span>
+		<span class="relative inline-flex h-3 w-3 rounded-full {statusConfig.color}"
+		></span>
 	</span>
 	{#if showLabel}
 		<span class="text-muted-foreground">{statusConfig.text}</span>

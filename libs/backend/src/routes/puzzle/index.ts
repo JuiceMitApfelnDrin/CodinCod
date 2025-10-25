@@ -21,7 +21,7 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 			const parseResult = createPuzzleSchema.safeParse(request.body);
 
 			if (!parseResult.success) {
-				return reply.status(400).send({ error: parseResult.error.errors });
+				return reply.status(400).send({ error: parseResult.error.issues });
 			}
 
 			if (!isAuthenticatedInfo(request.user)) {
@@ -53,7 +53,7 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 		if (!parseResult.success) {
 			return reply
 				.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-				.send({ error: parseResult.error.errors });
+				.send({ error: parseResult.error.issues });
 		}
 
 		const query = parseResult.data;

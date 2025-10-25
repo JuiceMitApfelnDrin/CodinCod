@@ -1,9 +1,9 @@
 import { env } from "$env/dynamic/private";
 import { redirect, type Cookies } from "@sveltejs/kit";
-import { cookieKeys, frontendUrls } from "types";
+import { cookieKeys, environment, frontendUrls } from "types";
 
 export function logout(cookies: Cookies) {
-	const isProduction = env.NODE_ENV === "production";
+	const isProduction = env.NODE_ENV === environment.PRODUCTION;
 
 	cookies.delete(cookieKeys.TOKEN, {
 		domain: env.FRONTEND_HOST ?? "localhost",

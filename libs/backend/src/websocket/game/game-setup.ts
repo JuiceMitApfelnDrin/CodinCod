@@ -52,6 +52,11 @@ export function gameSetup(
 
 	onConnection(userWebSockets, req.user, id, socket);
 
+	// Handle ping from client
+	socket.on("ping", () => {
+		socket.pong();
+	});
+
 	socket.on("message", async (message) => {
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
@@ -123,7 +128,7 @@ export function gameSetup(
 						puzzle
 					});
 				} catch (error) {
-					fastify.log.error("Error in JOIN_GAME:", error);
+					fastify.log.error({ err: error }, "Error in JOIN_GAME");
 					userWebSockets.updateUser(req.user.username, {
 						event: gameEventEnum.ERROR,
 						message: "Failed to join game"
@@ -156,7 +161,7 @@ export function gameSetup(
 						game
 					});
 				} catch (error) {
-					fastify.log.error("Error in SUBMITTED_PLAYER:", error);
+					fastify.log.error({ err: error }, "Error in SUBMITTED_PLAYER");
 					userWebSockets.updateUser(req.user.username, {
 						event: gameEventEnum.ERROR,
 						message: "Failed to update submission"
@@ -213,7 +218,10 @@ export function gameSetup(
 		if (!isAuthenticatedInfo(req.user)) {
 			return;
 		}
-		fastify.log.error(`Game socket error for ${req.user.username}:`, error);
+		fastify.log.error(
+			{ err: error },
+			`Game socket error for ${req.user.username}`
+		);
 		userWebSockets.remove(req.user.username);
 	});
 }

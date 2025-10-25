@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import bcrypt from "bcryptjs";
 import User from "../../models/user/user.js";
 import { generateToken } from "../../utils/functions/generate-token.js";
-import { cookieKeys, isEmail, loginSchema } from "types";
+import { cookieKeys, environment, isEmail, loginSchema } from "types";
 
 export default async function loginRoutes(fastify: FastifyInstance) {
 	fastify.post("/", async (request, reply) => {
@@ -35,22 +35,29 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 			}
 
 			const authenticatedUserInfo = {
-				userId: `${user._id}`,
+				userId: String(user._id),
 				username: user.username,
 				isAuthenticated: true
 			};
 			const token = generateToken(fastify, authenticatedUserInfo);
+			const maxAge = 7 * 24 * 60 * 60;
+
+			const cookieOptions: any = {
+				path: "/",
+				httpOnly: true,
+				secure: process.env.NODE_ENV === environment.PRODUCTION,
+				sameSite: process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
+				maxAge
+			};
+
+			// Only set domain in production, omit for localhost development
+			if (process.env.NODE_ENV === environment.PRODUCTION && process.env.FRONTEND_HOST) {
+				cookieOptions.domain = process.env.FRONTEND_HOST;
+			}
 
 			return reply
 				.status(200)
-				.setCookie(cookieKeys.TOKEN, token, {
-					path: "/",
-					httpOnly: true,
-					secure: process.env.NODE_ENV === "production",
-					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-					domain: process.env.FRONTEND_HOST ?? "localhost",
-					maxAge: 3600
-				})
+				.setCookie(cookieKeys.TOKEN, token, cookieOptions)
 				.send({ message: "Login successful" });
 		} catch (error) {
 			return reply.status(500).send({ message: error });

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Error } from "mongoose";
 import { MongoError } from "mongodb";
 import User from "../../models/user/user.js";
-import { cookieKeys, registerSchema } from "types";
+import { cookieKeys, environment, registerSchema } from "types";
 import { generateToken } from "../../utils/functions/generate-token.js";
 
 export default async function registerRoutes(fastify: FastifyInstance) {
@@ -13,7 +13,7 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 			parsedBody = registerSchema.parse(request.body);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return reply.status(400).send({ message: error.errors });
+				return reply.status(400).send({ message: error.issues });
 			}
 
 			return reply.status(500).send({ message: "Internal Server Error" });
@@ -38,8 +38,6 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 			const user = new User({ email, password, username });
 			await user.save();
 
-			// TODO: give information back to the user about the user in question, see registerresponseschema
-
 			const authenticatedUserInfo = {
 				userId: `${user._id}`,
 				username: user.username,
@@ -52,8 +50,8 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				.setCookie(cookieKeys.TOKEN, token, {
 					path: "/",
 					httpOnly: true,
-					secure: process.env.NODE_ENV === "production",
-					sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+					secure: process.env.NODE_ENV === environment.PRODUCTION,
+					sameSite: process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
 					domain: process.env.FRONTEND_HOST ?? "localhost",
 					maxAge: 3600
 				})

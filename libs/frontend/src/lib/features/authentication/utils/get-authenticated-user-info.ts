@@ -1,46 +1,65 @@
-import jwt from "jsonwebtoken";
-import { httpRequestMethod, isAuthenticatedInfo } from "types";
+import { httpRequestMethod, backendUrls, cookieKeys } from "types";
 import { logout } from "./logout";
 import type { Cookies } from "@sveltejs/kit";
-import { apiUrls } from "@/config/api";
+import { buildBackendUrl } from "@/config/backend";
 
 export async function getAuthenticatedUserInfo(
-	token: string,
 	cookies: Cookies,
 	eventFetch = fetch
 ) {
 	try {
-		const response = await eventFetch(apiUrls.VERIFY_TOKEN, {
-			body: JSON.stringify({ token }),
-			method: httpRequestMethod.POST
+		const url = buildBackendUrl(backendUrls.ME);
+		
+		// Get the token cookie to forward to the backend
+		const token = cookies.get(cookieKeys.TOKEN);
+		
+		if (!token) {
+			return {
+				isAuthenticated: false
+			};
+		}
+		
+		const headers: HeadersInit = {
+			"Content-Type": "application/json",
+			// Forward the cookie to the backend
+			"Cookie": `${cookieKeys.TOKEN}=${token}`
+		};
+		
+		const response = await eventFetch(url, {
+			method: httpRequestMethod.GET,
+			headers
 		});
+
+		if (!response.ok) {
+			if (response.status === 401) {
+				logout(cookies);
+				return {
+					isAuthenticated: false
+				};
+			}
+			console.error(
+				`Failed to verify authentication: ${response.status} ${response.statusText} from ${url}`
+			);
+			const errorBody = await response.text().catch(() => "Unable to read response body");
+			console.error("Response body:", errorBody);
+			throw new Error(
+				`Failed to verify authentication: ${response.status} ${response.statusText}`
+			);
+		}
 
 		const authenticatedInfo = await response.json();
 
-		if (isAuthenticatedInfo(authenticatedInfo)) {
+		if (authenticatedInfo.isAuthenticated) {
 			return authenticatedInfo;
 		}
 	} catch (err) {
-		if (err instanceof jwt.TokenExpiredError) {
-			logout(cookies);
-
-			return {
-				isAuthenticated: false
-			};
-		} else if (err instanceof jwt.JsonWebTokenError) {
-			console.error("Invalid token:", err);
-			return {
-				error: "Invalid token",
-				isAuthenticated: false
-			};
-		} else if (err instanceof jwt.NotBeforeError) {
-			console.error("Token not active yet:", err);
-			return {
-				error: "Token not active",
-				isAuthenticated: false
-			};
+		if (err instanceof Error) {
+			console.error("Error verifying authentication:", err.message);
+			if ('cause' in err) {
+				console.error("Error cause:", err.cause);
+			}
 		} else {
-			console.error("Error verifying token:", err);
+			console.error("Error verifying authentication:", err);
 		}
 	}
 

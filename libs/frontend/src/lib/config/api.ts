@@ -4,7 +4,6 @@ export const apiUrls = {
 	SUBMIT_CODE: `/api/submit-code`,
 	SUBMIT_GAME: `/api/submit-game`,
 	SUPPORTED_LANGUAGES: `/api/supported-languages`,
-	VERIFY_TOKEN: `/api/verify-token`,
 	commentById: (id: string) => `/api/comment/${id}`,
 	commentByIdComment: (id: string) => `/api/comment/${id}/comment`,
 	commentByIdVote: (id: string) => `/api/comment/${id}/vote`,

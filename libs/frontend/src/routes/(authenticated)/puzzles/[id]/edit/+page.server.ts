@@ -1,5 +1,5 @@
-import { superValidate } from "sveltekit-superforms";
-import { zod } from "sveltekit-superforms/adapters";
+import { superValidate, message } from "sveltekit-superforms";
+import { zod4 } from "sveltekit-superforms/adapters";
 import { buildBackendUrl } from "@/config/backend";
 import {
 	backendUrls,
@@ -9,7 +9,6 @@ import {
 	PUT,
 	type EditPuzzle
 } from "types";
-import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
 import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
@@ -27,10 +26,10 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 
 	const puzzle: EditPuzzle = await response.json();
 
-	const validate = await superValidate(puzzle, zod(editPuzzleSchema));
+	const validate = await superValidate(puzzle, zod4(editPuzzleSchema));
 	const validateDeletePuzzle = await superValidate(
 		{ id },
-		zod(deletePuzzleSchema)
+		zod4(deletePuzzleSchema)
 	);
 
 	return {
@@ -42,7 +41,7 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 export const actions = {
 	deletePuzzle: handleDeletePuzzleForm,
 	editPuzzle: async ({ params, request }: RequestEvent) => {
-		const form = await superValidate(request, zod(editPuzzleSchema));
+		const form = await superValidate(request, zod4(editPuzzleSchema));
 
 		if (!form.valid) {
 			fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, { form });

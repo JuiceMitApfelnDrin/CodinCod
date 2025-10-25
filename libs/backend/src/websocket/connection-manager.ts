@@ -1,6 +1,9 @@
 import websocket from "@fastify/websocket";
 import { AuthenticatedInfo } from "types";
 
+// WebSocket ready states (from ws library):
+// CONNECTING = 0, OPEN = 1, CLOSING = 2, CLOSED = 3
+
 type Username = string;
 type ConnectionId = string;
 
@@ -49,7 +52,8 @@ export class ConnectionManager {
 				continue;
 			}
 
-			if (connection.socket.readyState === WebSocket.OPEN) {
+			// WebSocket.OPEN = 1 (from ws library)
+			if (connection.socket.readyState === 1) {
 				try {
 					connection.socket.ping();
 				} catch (error) {
@@ -77,7 +81,8 @@ export class ConnectionManager {
 		const existing = this.connections.get(user.username);
 		if (existing) {
 			socket.removeListener("pong", existing.pongHandler);
-			if (existing.socket.readyState === WebSocket.OPEN) {
+			// WebSocket.OPEN = 1 (from ws library)
+			if (existing.socket.readyState === 1) {
 				existing.socket.close();
 			}
 		}
@@ -113,7 +118,8 @@ export class ConnectionManager {
 
 		connection.socket.removeListener("pong", connection.pongHandler);
 
-		if (connection.socket.readyState === WebSocket.OPEN) {
+		// WebSocket.OPEN = 1 (from ws library)
+		if (connection.socket.readyState === 1) {
 			try {
 				connection.socket.close();
 			} catch (error) {
@@ -131,7 +137,8 @@ export class ConnectionManager {
 
 	send(username: Username, data: any): boolean {
 		const connection = this.connections.get(username);
-		if (!connection || connection.socket.readyState !== WebSocket.OPEN) {
+		// WebSocket.OPEN = 1 (from ws library)
+		if (!connection || connection.socket.readyState !== 1) {
 			return false;
 		}
 
@@ -150,7 +157,8 @@ export class ConnectionManager {
 		this.connections.forEach((connection, username) => {
 			if (excludeUsers.includes(username)) return;
 
-			if (connection.socket.readyState === WebSocket.OPEN) {
+			// WebSocket.OPEN = 1 (from ws library)
+			if (connection.socket.readyState === 1) {
 				try {
 					connection.socket.send(message);
 				} catch (error) {
@@ -163,7 +171,8 @@ export class ConnectionManager {
 
 	isConnected(username: Username): boolean {
 		const connection = this.connections.get(username);
-		return connection?.socket.readyState === WebSocket.OPEN;
+		// WebSocket.OPEN = 1 (from ws library)
+		return connection?.socket.readyState === 1;
 	}
 
 	getConnectionCount(): number {
@@ -181,7 +190,8 @@ export class ConnectionManager {
 
 		for (const [_username, connection] of this.connections.entries()) {
 			connection.socket.removeListener("pong", connection.pongHandler);
-			if (connection.socket.readyState === WebSocket.OPEN) {
+			// WebSocket.OPEN = 1 (from ws library)
+			if (connection.socket.readyState === 1) {
 				connection.socket.close(1001, "Server shutting down");
 			}
 		}

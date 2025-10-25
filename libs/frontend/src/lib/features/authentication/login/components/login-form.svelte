@@ -2,7 +2,7 @@
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import * as Form from "$lib/components/ui/form";
 	import { Input } from "@/components/ui/input";
-	import { zodClient } from "sveltekit-superforms/adapters";
+	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
 	import {
 		loginSchema,
@@ -24,7 +24,7 @@
 	let { data, message }: Props = $props();
 
 	const form = superForm(data, {
-		validators: zodClient(loginSchema)
+		validators: zod4Client(loginSchema)
 	});
 
 	const { enhance, form: formData, validateForm } = form;

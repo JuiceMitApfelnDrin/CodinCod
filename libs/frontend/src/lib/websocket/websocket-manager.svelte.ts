@@ -1,6 +1,6 @@
 /**
  * WebSocket Manager
- * 
+ *
  * Provides reliable WebSocket connection management with:
  * - Automatic reconnection with exponential backoff
  * - Connection state tracking
@@ -13,7 +13,7 @@ import {
 	WEBSOCKET_RECONNECT,
 	WEBSOCKET_CLOSE_CODES,
 	type WebSocketState
-} from './websocket-constants';
+} from "./websocket-constants";
 
 export interface WebSocketManagerOptions<TRequest, TResponse> {
 	url: string;
@@ -35,11 +35,11 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	private isOnline = $state(true);
 
 	state = $state<WebSocketState>(WEBSOCKET_STATES.DISCONNECTED);
-	
+
 	private readonly MAX_RECONNECT_DELAY: number;
 	private readonly INITIAL_RECONNECT_DELAY: number;
 	private readonly MAX_RECONNECT_ATTEMPTS: number;
-	
+
 	private readonly url: string;
 	private readonly onMessage: (data: TResponse) => void;
 	private readonly onStateChange: ((state: WebSocketState) => void) | undefined;
@@ -50,12 +50,15 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 		this.onMessage = options.onMessage;
 		this.onStateChange = options.onStateChange;
 		this.validateResponse = options.validateResponse;
-		
-		this.MAX_RECONNECT_DELAY = options.maxReconnectDelay ?? WEBSOCKET_RECONNECT.MAX_DELAY;
-		this.INITIAL_RECONNECT_DELAY = options.initialReconnectDelay ?? WEBSOCKET_RECONNECT.INITIAL_DELAY;
-		this.MAX_RECONNECT_ATTEMPTS = options.maxReconnectAttempts ?? WEBSOCKET_RECONNECT.MAX_ATTEMPTS;
+
+		this.MAX_RECONNECT_DELAY =
+			options.maxReconnectDelay ?? WEBSOCKET_RECONNECT.MAX_DELAY;
+		this.INITIAL_RECONNECT_DELAY =
+			options.initialReconnectDelay ?? WEBSOCKET_RECONNECT.INITIAL_DELAY;
+		this.MAX_RECONNECT_ATTEMPTS =
+			options.maxReconnectAttempts ?? WEBSOCKET_RECONNECT.MAX_ATTEMPTS;
 		this.reconnectDelay = this.INITIAL_RECONNECT_DELAY;
-		
+
 		// Set up network status monitoring
 		this.setupNetworkMonitoring();
 	}
@@ -68,8 +71,11 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 
 		this.isOnline = navigator.onLine;
 
-		globalThis.window.addEventListener('online', this.handleOnline.bind(this));
-		globalThis.window.addEventListener('offline', this.handleOffline.bind(this));
+		globalThis.window.addEventListener("online", this.handleOnline.bind(this));
+		globalThis.window.addEventListener(
+			"offline",
+			this.handleOffline.bind(this)
+		);
 	}
 
 	/**
@@ -77,40 +83,40 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	 * Useful for user-initiated reconnect button
 	 */
 	reconnect(): void {
-		console.info('Manual reconnect triggered');
-		
+		console.info("Manual reconnect triggered");
+
 		// Reset reconnect state
 		this.reconnectAttempts = 0;
 		this.reconnectDelay = this.INITIAL_RECONNECT_DELAY;
 		this.shouldReconnect = true;
-		
+
 		// Close existing connection if any
 		if (this.socket) {
 			this.socket.close();
 			this.socket = null;
 		}
-		
+
 		this.clearReconnectTimer();
-		
+
 		// Attempt to connect
 		this.connect();
 	}
 
 	private handleOnline(): void {
-		console.info('Network connection restored');
+		console.info("Network connection restored");
 		this.isOnline = true;
-		
+
 		// Automatically attempt to reconnect when network comes back
 		if (!this.isConnected() && this.shouldReconnect) {
-			console.info('Auto-reconnecting after network restoration');
+			console.info("Auto-reconnecting after network restoration");
 			this.reconnect();
 		}
 	}
 
 	private handleOffline(): void {
-		console.info('Network connection lost');
+		console.info("Network connection lost");
 		this.isOnline = false;
-		
+
 		// Clear any pending reconnect timers when offline
 		this.clearReconnectTimer();
 	}
@@ -120,7 +126,7 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	 */
 	connect(): void {
 		if (this.socket?.readyState === WebSocket.OPEN) {
-			console.warn('WebSocket already connected');
+			console.warn("WebSocket already connected");
 			return;
 		}
 
@@ -131,7 +137,7 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 			this.socket = new WebSocket(this.url);
 			this.attachEventListeners();
 		} catch (error) {
-			console.error('Failed to create WebSocket connection:', error);
+			console.error("Failed to create WebSocket connection:", error);
 			this.setState(WEBSOCKET_STATES.ERROR);
 			this.scheduleReconnect();
 		}
@@ -143,12 +149,12 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	disconnect(): void {
 		this.shouldReconnect = false;
 		this.clearReconnectTimer();
-		
+
 		if (this.socket) {
-			this.socket.close(WEBSOCKET_CLOSE_CODES.NORMAL, 'Client disconnecting');
+			this.socket.close(WEBSOCKET_CLOSE_CODES.NORMAL, "Client disconnecting");
 			this.socket = null;
 		}
-		
+
 		this.setState(WEBSOCKET_STATES.DISCONNECTED);
 	}
 
@@ -161,11 +167,11 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 			try {
 				this.socket.send(JSON.stringify(data));
 			} catch (error) {
-				console.error('Failed to send message:', error);
+				console.error("Failed to send message:", error);
 				this.messageQueue.push(data);
 			}
 		} else {
-			console.warn('WebSocket not connected, queuing message');
+			console.warn("WebSocket not connected, queuing message");
 			this.messageQueue.push(data);
 		}
 	}
@@ -181,7 +187,10 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	 * Check if WebSocket is connected
 	 */
 	isConnected(): boolean {
-		return this.state === WEBSOCKET_STATES.CONNECTED && this.socket?.readyState === WebSocket.OPEN;
+		return (
+			this.state === WEBSOCKET_STATES.CONNECTED &&
+			this.socket?.readyState === WebSocket.OPEN
+		);
 	}
 
 	/**
@@ -194,18 +203,18 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	private attachEventListeners(): void {
 		if (!this.socket) return;
 
-		this.socket.addEventListener('open', this.handleOpen.bind(this));
-		this.socket.addEventListener('message', this.handleMessage.bind(this));
-		this.socket.addEventListener('close', this.handleClose.bind(this));
-		this.socket.addEventListener('error', this.handleError.bind(this));
+		this.socket.addEventListener("open", this.handleOpen.bind(this));
+		this.socket.addEventListener("message", this.handleMessage.bind(this));
+		this.socket.addEventListener("close", this.handleClose.bind(this));
+		this.socket.addEventListener("error", this.handleError.bind(this));
 	}
 
 	private handleOpen(): void {
-		console.info('WebSocket connection opened');
+		console.info("WebSocket connection opened");
 		this.setState(WEBSOCKET_STATES.CONNECTED);
 		this.reconnectAttempts = 0;
 		this.reconnectDelay = this.INITIAL_RECONNECT_DELAY;
-		
+
 		// Send any queued messages
 		this.flushMessageQueue();
 	}
@@ -213,20 +222,20 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	private handleMessage(event: MessageEvent): void {
 		try {
 			const data = JSON.parse(event.data);
-			
+
 			if (this.validateResponse(data)) {
 				this.onMessage(data);
 			} else {
-				console.error('Received invalid message format:', data);
+				console.error("Received invalid message format:", data);
 			}
 		} catch (error) {
-			console.error('Failed to parse WebSocket message:', error);
+			console.error("Failed to parse WebSocket message:", error);
 		}
 	}
 
 	private handleClose(event: CloseEvent): void {
-		console.info('WebSocket connection closed:', event.code, event.reason);
-		
+		console.info("WebSocket connection closed:", event.code, event.reason);
+
 		// Don't reconnect if it was a clean close initiated by client
 		if (event.code === WEBSOCKET_CLOSE_CODES.NORMAL && !this.shouldReconnect) {
 			this.setState(WEBSOCKET_STATES.DISCONNECTED);
@@ -235,21 +244,24 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 
 		// Handle authentication errors (code 1008)
 		if (event.code === WEBSOCKET_CLOSE_CODES.POLICY_VIOLATION) {
-			console.error('WebSocket authentication failed:', event.reason);
+			console.error("WebSocket authentication failed:", event.reason);
 			this.setState(WEBSOCKET_STATES.ERROR);
 			// Don't attempt to reconnect on auth errors - user needs to re-login
 			this.shouldReconnect = false;
-			
+
 			// Clear any queued messages since they won't be sent
 			this.messageQueue = [];
 			return;
 		}
 
 		// Handle invalid game/room errors (also code 1008 with specific messages)
-		if (event.code === WEBSOCKET_CLOSE_CODES.POLICY_VIOLATION && event.reason && 
-		    (event.reason.includes('Game not found') || 
-		     event.reason.includes('Invalid game ID'))) {
-			console.error('WebSocket error:', event.reason);
+		if (
+			event.code === WEBSOCKET_CLOSE_CODES.POLICY_VIOLATION &&
+			event.reason &&
+			(event.reason.includes("Game not found") ||
+				event.reason.includes("Invalid game ID"))
+		) {
+			console.error("WebSocket error:", event.reason);
 			this.setState(WEBSOCKET_STATES.ERROR);
 			this.shouldReconnect = false;
 			this.messageQueue = [];
@@ -264,20 +276,20 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	}
 
 	private handleError(event: Event): void {
-		console.error('WebSocket error:', event);
+		console.error("WebSocket error:", event);
 		this.setState(WEBSOCKET_STATES.ERROR);
 	}
 
 	private scheduleReconnect(): void {
 		// Don't schedule reconnect if offline
 		if (!this.isOnline) {
-			console.info('Skipping reconnect - device is offline');
+			console.info("Skipping reconnect - device is offline");
 			this.setState(WEBSOCKET_STATES.DISCONNECTED);
 			return;
 		}
 
 		if (this.reconnectAttempts >= this.MAX_RECONNECT_ATTEMPTS) {
-			console.error('Max reconnect attempts reached');
+			console.error("Max reconnect attempts reached");
 			this.setState(WEBSOCKET_STATES.ERROR);
 			this.shouldReconnect = false;
 			return;
@@ -297,7 +309,8 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 
 		// Exponential backoff with jitter
 		this.reconnectDelay = Math.min(
-			this.reconnectDelay * 2 + Math.random() * WEBSOCKET_RECONNECT.JITTER_RANGE,
+			this.reconnectDelay * 2 +
+				Math.random() * WEBSOCKET_RECONNECT.JITTER_RANGE,
 			this.MAX_RECONNECT_DELAY
 		);
 	}
@@ -313,7 +326,7 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 		if (this.messageQueue.length === 0) return;
 
 		console.info(`Flushing ${this.messageQueue.length} queued messages`);
-		
+
 		while (this.messageQueue.length > 0) {
 			const message = this.messageQueue.shift();
 			if (message) {
@@ -335,11 +348,17 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 	destroy(): void {
 		this.disconnect();
 		this.messageQueue = [];
-		
+
 		// Remove network event listeners
 		if (globalThis.window !== undefined) {
-			globalThis.window.removeEventListener('online', this.handleOnline.bind(this));
-			globalThis.window.removeEventListener('offline', this.handleOffline.bind(this));
+			globalThis.window.removeEventListener(
+				"online",
+				this.handleOnline.bind(this)
+			);
+			globalThis.window.removeEventListener(
+				"offline",
+				this.handleOffline.bind(this)
+			);
 		}
 	}
 }

@@ -13,6 +13,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
 	import { apiUrls } from "@/config/api";
+	import { buildWebSocketUrl } from "@/config/websocket";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
@@ -21,7 +22,10 @@
 	import { authenticatedUserInfo } from "@/stores";
 	import { currentTime } from "@/stores/current-time";
 	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
-	import { WEBSOCKET_STATES, type WebSocketState } from "@/websocket/websocket-constants";
+	import {
+		WEBSOCKET_STATES,
+		type WebSocketState
+	} from "@/websocket/websocket-constants";
 	import dayjs from "dayjs";
 	import {
 		frontendUrls,
@@ -57,7 +61,7 @@
 	const gameIdParam = page.params.id;
 
 	if (!gameIdParam) {
-		throw new Error('Game ID is required');
+		throw new Error("Game ID is required");
 	}
 
 	const gameId: string = gameIdParam;
@@ -108,14 +112,18 @@
 					console.error(data.message);
 				}
 				break;
-			default:
-				data satisfies never;
 				break;
+			default: {
+				// Exhaustiveness check - all cases should be handled above
+				const _exhaustive: never = data as never;
+				console.error("Unhandled event type:", _exhaustive);
+				break;
+			}
 		}
 	}
 
 	const wsManager = new WebSocketManager<GameRequest, GameResponse>({
-		url: webSocketUrls.gameById(gameId),
+		url: buildWebSocketUrl(webSocketUrls.gameById(gameId)),
 		onMessage: handleGameMessage,
 		onStateChange: (state) => {
 			connectionState = state;
@@ -153,15 +161,16 @@
 				now
 			);
 
-		const playerHasSubmitted = game?.playerSubmissions.some((submission) => {
-			if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
-				return false;
+		const playerHasSubmitted = game?.playerSubmissions.some(
+			(submission: unknown) => {
+				if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
+					return false;
+				}
+
+				const playerId = getUserIdFromUser(submission.user);
+				return isAuthor(playerId, $authenticatedUserInfo?.userId);
 			}
-
-			const playerId = getUserIdFromUser(submission.user);
-			return isAuthor(playerId, $authenticatedUserInfo?.userId);
-		});
-
+		);
 		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
 	});
 
@@ -171,8 +180,9 @@
 		}
 
 		const playerSubmissions: SubmissionDto[] =
-			game.playerSubmissions?.filter((item) => isSubmissionDto(item)) ?? [];
-
+			game.playerSubmissions?.filter((item: unknown): item is SubmissionDto =>
+				isSubmissionDto(item)
+			) ?? [];
 		return playerSubmissions?.find(
 			(submission) => getUserIdFromUser(submission.user) === playerId
 		);

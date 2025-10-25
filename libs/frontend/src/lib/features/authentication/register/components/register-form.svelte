@@ -6,7 +6,7 @@
 		registerFormSchema,
 		type RegisterForm
 	} from "../config/register-form-schema";
-	import { zodClient } from "sveltekit-superforms/adapters";
+	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
 	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
@@ -22,7 +22,7 @@
 	let { data, message }: Props = $props();
 
 	const form = superForm(data.data, {
-		validators: zodClient(registerFormSchema)
+		validators: zod4Client(registerFormSchema)
 	});
 
 	const { enhance, form: formData, validateForm } = form;
