@@ -14,18 +14,21 @@
 	/>
 </svelte:head>
 
-<Container class="flex flex-col items-center justify-center min-h-[60vh] text-center gap-6">
+<Container
+	class="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center"
+>
 	<H1>Under Maintenance</H1>
-	
-	<P class="text-xl text-muted-foreground max-w-2xl">
-		We're currently performing some updates to improve your experience.
-		This usually only takes an instant (~10 seconds).
+
+	<P class="text-muted-foreground max-w-2xl text-xl">
+		We're currently performing some updates to improve your experience. This
+		usually only takes an instant (~10 seconds).
 	</P>
-	
-	<P class="text-lg text-muted-foreground">
-		The page will automatically refresh. If the issue persists, join our Discord for updates.
+
+	<P class="text-muted-foreground text-lg">
+		The page will automatically refresh. If the issue persists, join our Discord
+		for updates.
 	</P>
-	
+
 	<Button
 		href="https://discord.gg/n9Md43S8Yb"
 		target="_blank"
@@ -34,8 +37,8 @@
 	>
 		Join Discord
 	</Button>
-	
-	<div class="mt-8 text-sm text-muted-foreground animate-pulse">
+
+	<div class="text-muted-foreground mt-8 animate-pulse text-sm">
 		Checking server status...
 	</div>
 </Container>

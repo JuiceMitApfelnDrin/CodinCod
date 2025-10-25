@@ -48,7 +48,7 @@ server.register(websocket, {
 			// Allow WebSocket connections from the configured frontend URL
 			const origin = info.origin || info.req.headers.origin;
 			const allowedOrigin = process.env.FRONTEND_URL ?? "http://localhost:5173";
-			
+
 			if (origin === allowedOrigin) {
 				next(true);
 			} else {
