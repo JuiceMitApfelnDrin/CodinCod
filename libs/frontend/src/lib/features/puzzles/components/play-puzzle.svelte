@@ -132,7 +132,7 @@
 
 			const convertToPromises = puzzle.validators.map(
 				(validator: ValidatorEntity, index: number) => {
-					executeCode(index, validator.input, validator.output);
+					return executeCode(index, validator.input, validator.output);
 				}
 			);
 

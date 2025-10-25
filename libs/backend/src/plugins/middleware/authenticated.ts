@@ -7,7 +7,7 @@ export default async function authenticated(
 ) {
 	try {
 		const token = request.cookies.token;
-		
+
 		if (!token) {
 			return reply
 				.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)

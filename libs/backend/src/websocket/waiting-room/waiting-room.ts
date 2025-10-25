@@ -71,7 +71,9 @@ export class WaitingRoom {
 	joinRoom(user: AuthenticatedInfo, roomId: RoomId): boolean {
 		const room = this.getRoom(roomId);
 		if (!room) {
-			console.warn(`Room ${roomId} not found when user ${user.username} tried to join`);
+			console.warn(
+				`Room ${roomId} not found when user ${user.username} tried to join`
+			);
 			return false;
 		}
 
@@ -90,13 +92,17 @@ export class WaitingRoom {
 	leaveRoom(username: Username, roomId: RoomId): void {
 		const room = this.getRoom(roomId);
 		if (!room) {
-			console.warn(`Room ${roomId} not found when user ${username} tried to leave`);
+			console.warn(
+				`Room ${roomId} not found when user ${username} tried to leave`
+			);
 			return;
 		}
 
 		delete room[username];
 		delete this.roomsByUsername[username];
-		console.info(`User ${username} left room ${roomId}. Remaining players: ${Object.keys(room).length}`);
+		console.info(
+			`User ${username} left room ${roomId}. Remaining players: ${Object.keys(room).length}`
+		);
 
 		if (Object.keys(room).length <= 0) {
 			delete this.roomsByRoomId[roomId];
