@@ -33,7 +33,7 @@
 	const playUrl = frontendUrls.puzzleByIdPlay(puzzleId);
 
 	function onCommentAdded(newComment: CommentDto) {
-		puzzleComments = [...puzzle.comments, newComment] []; // unfortunately needed because recursive types are hard
+		puzzleComments = [...puzzle.comments, newComment] as any[]; // unfortunately needed because recursive types are hard
 	}
 </script>
 
