@@ -15,15 +15,12 @@ export const GET: RequestHandler = async ({ params, cookies }) => {
 	}
 
 	try {
-		const response = await fetch(
-            apiUrls.moderationUserByIdBanHistory(userId),
-			{
-				method: "GET",
-				headers: {
-					Cookie: `sessionToken=${sessionToken}`
-				}
+		const response = await fetch(apiUrls.moderationUserByIdBanHistory(userId), {
+			method: "GET",
+			headers: {
+				Cookie: `sessionToken=${sessionToken}`
 			}
-		);
+		});
 
 		if (!response.ok) {
 			const errorData = await response

@@ -31,7 +31,10 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 
 			const type = query.type || reviewItemTypeEnum.PENDING_PUZZLE;
 			const page = Number.parseInt(query.page || String(DEFAULT_PAGE), 10);
-			const limit = Number.parseInt(query.limit || String(DEFAULT_PAGE_SIZE), 10);
+			const limit = Number.parseInt(
+				query.limit || String(DEFAULT_PAGE_SIZE),
+				10
+			);
 			const skip = (page - 1) * limit;
 
 			try {

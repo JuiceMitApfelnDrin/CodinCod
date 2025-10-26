@@ -35,7 +35,9 @@
 	let selectedUserName = $state("");
 	let banReason = $state("");
 	let banDuration = $state(1);
-	let banType = $state<typeof banTypeEnum.TEMPORARY | typeof banTypeEnum.PERMANENT>(banTypeEnum.TEMPORARY);
+	let banType = $state<
+		typeof banTypeEnum.TEMPORARY | typeof banTypeEnum.PERMANENT
+	>(banTypeEnum.TEMPORARY);
 
 	let banHistoryDialogOpen = $state(false);
 	let banHistory = $state<any[]>([]);
@@ -100,8 +102,13 @@
 	}
 
 	async function submitRevision() {
-		if (!revisionReason || revisionReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH) {
-			toast.error(`Please provide a reason (at least ${BAN_CONFIG.reasonValidation.MIN_LENGTH} characters)`);
+		if (
+			!revisionReason ||
+			revisionReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH
+		) {
+			toast.error(
+				`Please provide a reason (at least ${BAN_CONFIG.reasonValidation.MIN_LENGTH} characters)`
+			);
 			return;
 		}
 
@@ -130,7 +137,10 @@
 		}
 	}
 
-	async function handleResolve(id: string, status: typeof reviewStatusEnum.RESOLVED | typeof reviewStatusEnum.REJECTED) {
+	async function handleResolve(
+		id: string,
+		status: typeof reviewStatusEnum.RESOLVED | typeof reviewStatusEnum.REJECTED
+	) {
 		try {
 			const response = await fetch(apiUrls.moderationReportByIdResolve(id), {
 				method: httpRequestMethod.POST,
@@ -162,8 +172,13 @@
 	}
 
 	async function submitBan() {
-		if (!banReason || banReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH) {
-			toast.error(`Please provide a reason (at least ${BAN_CONFIG.reasonValidation.MIN_LENGTH} characters)`);
+		if (
+			!banReason ||
+			banReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH
+		) {
+			toast.error(
+				`Please provide a reason (at least ${BAN_CONFIG.reasonValidation.MIN_LENGTH} characters)`
+			);
 			return;
 		}
 
@@ -176,8 +191,9 @@
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
-						duration: banType === banTypeEnum.TEMPORARY ? banDuration : undefined,
-						reason: banReason,
+						duration:
+							banType === banTypeEnum.TEMPORARY ? banDuration : undefined,
+						reason: banReason
 					})
 				}
 			);
@@ -186,7 +202,9 @@
 				throw new Error("Failed to ban user");
 			}
 
-			toast.success(`User ${banType === banTypeEnum.TEMPORARY ? `banned for ${banDuration} day(s)` : "permanently banned"}`);
+			toast.success(
+				`User ${banType === banTypeEnum.TEMPORARY ? `banned for ${banDuration} day(s)` : "permanently banned"}`
+			);
 			banDialogOpen = false;
 			await invalidateAll();
 		} catch (error) {
@@ -201,18 +219,15 @@
 		}
 
 		try {
-			const response = await fetch(
-				apiUrls.moderationUserByIdUnban(userId),
-				{
-					method: httpRequestMethod.POST,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						reason: "Unbanned by moderator"
-					})
-				}
-			);
+			const response = await fetch(apiUrls.moderationUserByIdUnban(userId), {
+				method: httpRequestMethod.POST,
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					reason: "Unbanned by moderator"
+				})
+			});
 
 			if (!response.ok) {
 				throw new Error("Failed to unban user");
@@ -408,7 +423,8 @@
 									<div class="flex flex-col gap-2">
 										<div class="flex gap-2">
 											<Button
-												onclick={() => handleResolve(item.id, reviewStatusEnum.RESOLVED)}
+												onclick={() =>
+													handleResolve(item.id, reviewStatusEnum.RESOLVED)}
 												variant="default"
 												size="sm"
 												class="bg-blue-600 hover:bg-blue-700"
@@ -417,7 +433,8 @@
 												Resolve
 											</Button>
 											<Button
-												onclick={() => handleResolve(item.id, reviewStatusEnum.REJECTED)}
+												onclick={() =>
+													handleResolve(item.id, reviewStatusEnum.REJECTED)}
 												variant="destructive"
 												size="sm"
 												data-testid={testIds.MODERATION_PAGE_BUTTON_REJECT_REPORT}
@@ -491,7 +508,8 @@
 					class="min-h-[100px]"
 				/>
 				<p class="text-muted-foreground text-sm">
-					{revisionReason.length}/{BAN_CONFIG.reasonValidation.MAX_LENGTH} characters (minimum {BAN_CONFIG.reasonValidation.MIN_LENGTH})
+					{revisionReason.length}/{BAN_CONFIG.reasonValidation.MAX_LENGTH} characters
+					(minimum {BAN_CONFIG.reasonValidation.MIN_LENGTH})
 				</p>
 			</div>
 		</div>
@@ -505,7 +523,9 @@
 			</Button>
 			<Button
 				onclick={submitRevision}
-				disabled={revisionReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH || revisionReason.length > BAN_CONFIG.reasonValidation.MAX_LENGTH}
+				disabled={revisionReason.length <
+					BAN_CONFIG.reasonValidation.MIN_LENGTH ||
+					revisionReason.length > BAN_CONFIG.reasonValidation.MAX_LENGTH}
 				data-testid={testIds.MODERATION_PAGE_BUTTON_SUBMIT_REVISION}
 			>
 				Submit Revision Request
@@ -571,13 +591,14 @@
 					class="min-h-[100px]"
 				/>
 				<p class="text-muted-foreground text-sm">
-					{banReason.length}/{BAN_CONFIG.reasonValidation.MAX_LENGTH} characters (minimum {BAN_CONFIG.reasonValidation.MIN_LENGTH})
+					{banReason.length}/{BAN_CONFIG.reasonValidation.MAX_LENGTH} characters
+					(minimum {BAN_CONFIG.reasonValidation.MIN_LENGTH})
 				</p>
 			</div>
 		</div>
 		<Dialog.Footer>
-			<Button 
-				variant="outline" 
+			<Button
+				variant="outline"
 				onclick={() => (banDialogOpen = false)}
 				data-testid={testIds.MODERATION_PAGE_BUTTON_CANCEL_BAN}
 			>
@@ -585,7 +606,8 @@
 			</Button>
 			<Button
 				onclick={submitBan}
-				disabled={banReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH || banReason.length > BAN_CONFIG.reasonValidation.MAX_LENGTH}
+				disabled={banReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH ||
+					banReason.length > BAN_CONFIG.reasonValidation.MAX_LENGTH}
 				class="bg-orange-600 hover:bg-orange-700"
 				data-testid={testIds.MODERATION_PAGE_BUTTON_SUBMIT_BAN}
 			>

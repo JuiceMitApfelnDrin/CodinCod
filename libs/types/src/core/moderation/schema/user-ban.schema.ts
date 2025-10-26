@@ -13,7 +13,10 @@ export const userBanEntitySchema = z.object({
 	userId: objectIdSchema,
 	bannedBy: objectIdSchema,
 	banType: z.enum(getValues(banTypeEnum)),
-	reason: z.string().min(BAN_CONFIG.reasonValidation.MIN_LENGTH).max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
+	reason: z
+		.string()
+		.min(BAN_CONFIG.reasonValidation.MIN_LENGTH)
+		.max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
 	startDate: acceptedDateSchema,
 	endDate: acceptedDateSchema.optional(), // Undefined for permanent bans
 	isActive: z.boolean().default(true),
@@ -32,7 +35,10 @@ export function isUserBanEntity(data: unknown): data is UserBanEntity {
  */
 export const createTemporaryBanSchema = z.object({
 	userId: objectIdSchema,
-	reason: z.string().min(BAN_CONFIG.reasonValidation.MIN_LENGTH).max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
+	reason: z
+		.string()
+		.min(BAN_CONFIG.reasonValidation.MIN_LENGTH)
+		.max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
 	durationMs: z.number().positive(),
 });
 
@@ -43,7 +49,10 @@ export type CreateTemporaryBan = z.infer<typeof createTemporaryBanSchema>;
  */
 export const createPermanentBanSchema = z.object({
 	userId: objectIdSchema,
-	reason: z.string().min(BAN_CONFIG.reasonValidation.MIN_LENGTH).max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
+	reason: z
+		.string()
+		.min(BAN_CONFIG.reasonValidation.MIN_LENGTH)
+		.max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
 });
 
 export type CreatePermanentBan = z.infer<typeof createPermanentBanSchema>;
@@ -53,7 +62,10 @@ export type CreatePermanentBan = z.infer<typeof createPermanentBanSchema>;
  */
 export const unbanUserSchema = z.object({
 	userId: objectIdSchema,
-	reason: z.string().min(BAN_CONFIG.reasonValidation.MIN_LENGTH).max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
+	reason: z
+		.string()
+		.min(BAN_CONFIG.reasonValidation.MIN_LENGTH)
+		.max(BAN_CONFIG.reasonValidation.MAX_LENGTH),
 });
 
 export type UnbanUser = z.infer<typeof unbanUserSchema>;

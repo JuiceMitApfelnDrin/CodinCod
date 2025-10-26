@@ -48,9 +48,12 @@ export const backendUrls = {
 	moderationReportResolve: (id: string) =>
 		`${baseRoute}/moderation/report/${id}/resolve`,
 	REPORT: `${baseRoute}/report`,
-	moderationUserByIdBanByType: (userId: string, banType: BanType) => `${baseRoute}/moderation/user/${userId}/ban/${banType}`,
-	moderationUserByIdBanHistory: (userId: string) => `${baseRoute}/moderation/user/${userId}/ban/history`,
-	moderationUserByIdUnban: (userId: string) => `${baseRoute}/moderation/user/${userId}/unban`,
+	moderationUserByIdBanByType: (userId: string, banType: BanType) =>
+		`${baseRoute}/moderation/user/${userId}/ban/${banType}`,
+	moderationUserByIdBanHistory: (userId: string) =>
+		`${baseRoute}/moderation/user/${userId}/ban/history`,
+	moderationUserByIdUnban: (userId: string) =>
+		`${baseRoute}/moderation/user/${userId}/unban`,
 } as const;
 
 export const backendParams = {

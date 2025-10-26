@@ -92,28 +92,30 @@ export default async function router(fastify: FastifyInstance) {
 		prefix: backendUrls.MODERATION_REVIEW
 	});
 	fastify.register(moderationPuzzleByIdApproveRoutes, {
-		prefix: backendUrls
-			.moderationPuzzleApprove(backendParams.ID)
+		prefix: backendUrls.moderationPuzzleApprove(backendParams.ID)
 	});
 	fastify.register(moderationPuzzleByIdReviseRoutes, {
-		prefix: backendUrls
-			.moderationPuzzleRevise(backendParams.ID)
+		prefix: backendUrls.moderationPuzzleRevise(backendParams.ID)
 	});
 	fastify.register(moderationReportByIdRoutes, {
-		prefix: backendUrls
-			.moderationReportResolve(backendParams.ID)
+		prefix: backendUrls.moderationReportResolve(backendParams.ID)
 	});
 	fastify.register(moderationUserByIdBanUnbanRoutes, {
-		prefix: backendUrls
-			.moderationUserByIdUnban(backendParams.ID)
+		prefix: backendUrls.moderationUserByIdUnban(backendParams.ID)
 	});
 	fastify.register(moderationUserByIdBanHistoryRoutes, {
 		prefix: backendUrls.moderationUserByIdBanHistory(backendParams.ID)
 	});
 	fastify.register(moderationUserByIdBanPermanentRoutes, {
-		prefix: backendUrls.moderationUserByIdBanByType(backendParams.ID, banTypeEnum.PERMANENT)
+		prefix: backendUrls.moderationUserByIdBanByType(
+			backendParams.ID,
+			banTypeEnum.PERMANENT
+		)
 	});
 	fastify.register(moderationUserByIdBanTemporaryRoutes, {
-		prefix:	 backendUrls.moderationUserByIdBanByType(backendParams.ID, banTypeEnum.TEMPORARY)
+		prefix: backendUrls.moderationUserByIdBanByType(
+			backendParams.ID,
+			banTypeEnum.TEMPORARY
+		)
 	});
 }

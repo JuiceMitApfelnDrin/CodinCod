@@ -52,5 +52,4 @@ export default async function moderationPuzzleByIdApproveRoutes(
 			}
 		}
 	);
-
 }
