@@ -5,10 +5,7 @@ import {
 	connectToDatabase,
 	disconnectFromDatabase
 } from "./utils/db-connection.js";
-import {
-	clearDatabase,
-	getCollectionCounts
-} from "./utils/clear-database.js";
+import { clearDatabase, getCollectionCounts } from "./utils/clear-database.js";
 import { SeedLogger, getEnvNumber } from "./utils/seed-helpers.js";
 import { getSeedCounts } from "./config/seed-presets.js";
 import { createUsers } from "./factories/user.factory.js";
@@ -28,7 +25,7 @@ import { Types } from "mongoose";
 
 async function seed() {
 	console.log("🌱 Starting database seeding...\n");
-	console.log("=" .repeat(50));
+	console.log("=".repeat(50));
 
 	try {
 		// Connect to database
@@ -66,7 +63,9 @@ async function seed() {
 
 		// Get moderator IDs for later use
 		const moderators = await User.find({ role: userRole.MODERATOR }).lean();
-		const moderatorIds = moderators.map((mod) => mod._id as unknown as Types.ObjectId);
+		const moderatorIds = moderators.map(
+			(mod) => mod._id as unknown as Types.ObjectId
+		);
 
 		// 3. Create User Bans
 		const banLogger = new SeedLogger("Creating user bans");
@@ -119,10 +118,10 @@ async function seed() {
 		// Build a map of game IDs to player IDs
 		const games = await Game.find({ _id: { $in: gameIds } }).lean();
 		const gamePlayerMap = new Map<string, Types.ObjectId[]>();
-		games.forEach(game => {
+		games.forEach((game) => {
 			gamePlayerMap.set(
 				game._id.toString(),
-				(game.players as unknown as Types.ObjectId[])
+				game.players as unknown as Types.ObjectId[]
 			);
 		});
 		const chatMessageIds = await createChatMessages(gameIds, gamePlayerMap);

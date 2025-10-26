@@ -5,7 +5,7 @@ import { banTypeEnum, UserBanEntity } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types } from "mongoose";
 
-type BanTypeValue = typeof banTypeEnum[keyof typeof banTypeEnum];
+type BanTypeValue = (typeof banTypeEnum)[keyof typeof banTypeEnum];
 
 export interface UserBanFactoryOptions {
 	userId: Types.ObjectId;
@@ -21,10 +21,10 @@ export async function createUserBan(
 	options: UserBanFactoryOptions
 ): Promise<Types.ObjectId> {
 	const banType =
-		options.banType ||
-		randomFromArray(Object.values(banTypeEnum));
+		options.banType || randomFromArray(Object.values(banTypeEnum));
 
-	const isActive = options.isActive ?? faker.datatype.boolean({ probability: 0.7 });
+	const isActive =
+		options.isActive ?? faker.datatype.boolean({ probability: 0.7 });
 
 	const startDate = faker.date.recent({ days: 60 });
 	const endDate =

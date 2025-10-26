@@ -5,7 +5,7 @@ import { commentTypeEnum, CommentEntity } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types } from "mongoose";
 
-type CommentTypeValue = typeof commentTypeEnum[keyof typeof commentTypeEnum];
+type CommentTypeValue = (typeof commentTypeEnum)[keyof typeof commentTypeEnum];
 
 export interface CommentFactoryOptions {
 	authorId: Types.ObjectId;
@@ -20,13 +20,16 @@ function generateCommentText(): string {
 	const commentTemplates = [
 		() => `Great puzzle! ${faker.lorem.sentence()}`,
 		() => `This was challenging. ${faker.lorem.sentences(2)}`,
-		() => `I think there's a bug in test case ${faker.number.int({ min: 1, max: 10 })}.`,
+		() =>
+			`I think there's a bug in test case ${faker.number.int({ min: 1, max: 10 })}.`,
 		() => `Here's my approach: ${faker.lorem.paragraph()}`,
 		() => `Can someone explain ${faker.lorem.words(3)}?`,
 		() => `Nice solution! ${faker.lorem.sentence()}`,
 		() => faker.lorem.sentences(faker.number.int({ min: 1, max: 3 })),
-		() => `I solved this using ${randomFromArray(["recursion", "dynamic programming", "greedy algorithm", "BFS", "DFS"])}`,
-		() => `The time complexity of my solution is O(${randomFromArray(["n", "n log n", "n²", "1"])})`
+		() =>
+			`I solved this using ${randomFromArray(["recursion", "dynamic programming", "greedy algorithm", "BFS", "DFS"])}`,
+		() =>
+			`The time complexity of my solution is O(${randomFromArray(["n", "n log n", "n²", "1"])})`
 	];
 
 	return randomFromArray(commentTemplates)();

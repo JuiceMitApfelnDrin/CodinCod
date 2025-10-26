@@ -1,10 +1,13 @@
 import { faker } from "@faker-js/faker";
-import Submission, { SubmissionDocument } from "../../models/submission/submission.js";
+import Submission, {
+	SubmissionDocument
+} from "../../models/submission/submission.js";
 import { PuzzleResultEnum } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types, ObjectId } from "mongoose";
 
-type PuzzleResultValue = typeof PuzzleResultEnum[keyof typeof PuzzleResultEnum];
+type PuzzleResultValue =
+	(typeof PuzzleResultEnum)[keyof typeof PuzzleResultEnum];
 
 export interface SubmissionFactoryOptions {
 	userId: Types.ObjectId;
@@ -18,22 +21,22 @@ export interface SubmissionFactoryOptions {
 function generateCode(language: string): string {
 	const codeTemplates: Record<string, string[]> = {
 		python: [
-			'def solution(n):\n    # TODO: implement solution\n    return n',
-			'def solve(arr):\n    result = []\n    for item in arr:\n        result.append(item * 2)\n    return result',
-			'def calculate(x, y):\n    return x + y'
+			"def solution(n):\n    # TODO: implement solution\n    return n",
+			"def solve(arr):\n    result = []\n    for item in arr:\n        result.append(item * 2)\n    return result",
+			"def calculate(x, y):\n    return x + y"
 		],
 		javascript: [
-			'function solution(n) {\n    // TODO: implement solution\n    return n;\n}',
-			'const solve = (arr) => {\n    return arr.map(x => x * 2);\n}',
-			'function calculate(x, y) {\n    return x + y;\n}'
+			"function solution(n) {\n    // TODO: implement solution\n    return n;\n}",
+			"const solve = (arr) => {\n    return arr.map(x => x * 2);\n}",
+			"function calculate(x, y) {\n    return x + y;\n}"
 		],
 		java: [
-			'public int solution(int n) {\n    // TODO: implement solution\n    return n;\n}',
-			'public int[] solve(int[] arr) {\n    return Arrays.stream(arr).map(x -> x * 2).toArray();\n}'
+			"public int solution(int n) {\n    // TODO: implement solution\n    return n;\n}",
+			"public int[] solve(int[] arr) {\n    return Arrays.stream(arr).map(x -> x * 2).toArray();\n}"
 		],
 		cpp: [
-			'int solution(int n) {\n    // TODO: implement solution\n    return n;\n}',
-			'vector<int> solve(vector<int> arr) {\n    for (auto& x : arr) x *= 2;\n    return arr;\n}'
+			"int solution(int n) {\n    // TODO: implement solution\n    return n;\n}",
+			"vector<int> solve(vector<int> arr) {\n    for (auto& x : arr) x *= 2;\n    return arr;\n}"
 		]
 	};
 
@@ -84,7 +87,7 @@ export async function createSubmission(
 		(faker.helpers.weightedArrayElement([
 			{ value: resultValues[1], weight: 60 }, // SUCCESS
 			{ value: resultValues[0], weight: 30 }, // ERROR
-			{ value: resultValues[2], weight: 10 }  // UNKNOWN
+			{ value: resultValues[2], weight: 10 } // UNKNOWN
 		]) as PuzzleResultValue);
 
 	const submissionData: Partial<SubmissionDocument> = {

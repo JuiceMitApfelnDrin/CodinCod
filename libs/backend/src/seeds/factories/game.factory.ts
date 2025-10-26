@@ -1,11 +1,15 @@
 import { faker } from "@faker-js/faker";
 import Game, { GameDocument } from "../../models/game/game.js";
 import { GameModeEnum, GameVisibilityEnum } from "types";
-import { randomFromArray, randomMultipleFromArray } from "../utils/seed-helpers.js";
+import {
+	randomFromArray,
+	randomMultipleFromArray
+} from "../utils/seed-helpers.js";
 import { Types } from "mongoose";
 
-type GameModeValue = typeof GameModeEnum[keyof typeof GameModeEnum];
-type GameVisibilityValue = typeof GameVisibilityEnum[keyof typeof GameVisibilityEnum];
+type GameModeValue = (typeof GameModeEnum)[keyof typeof GameModeEnum];
+type GameVisibilityValue =
+	(typeof GameVisibilityEnum)[keyof typeof GameVisibilityEnum];
 
 export interface GameFactoryOptions {
 	ownerId: Types.ObjectId;
@@ -40,22 +44,30 @@ export async function createGame(
 	options: GameFactoryOptions
 ): Promise<Types.ObjectId> {
 	const mode = options.mode || randomFromArray(Object.values(GameModeEnum));
-	const visibility = options.visibility || randomFromArray(Object.values(GameVisibilityEnum));
+	const visibility =
+		options.visibility || randomFromArray(Object.values(GameVisibilityEnum));
 
 	// Game duration varies: 5min to 60min
 	const durationInSeconds = faker.number.int({ min: 300, max: 3600 });
-	
+
 	// Start time can be in the past (completed) or future (scheduled)
 	const isPast = faker.datatype.boolean({ probability: 0.7 }); // 70% past games
 	const startTime = isPast
 		? faker.date.recent({ days: 30 })
 		: faker.date.soon({ days: 7 });
-	
+
 	const endTime = new Date(startTime.getTime() + durationInSeconds * 1000);
 
 	// Select 2-4 players from provided player IDs
-	const playerCount = Math.min(faker.number.int({ min: 2, max: 4 }), options.playerIds.length);
-	const players = randomMultipleFromArray(options.playerIds, playerCount, playerCount);
+	const playerCount = Math.min(
+		faker.number.int({ min: 2, max: 4 }),
+		options.playerIds.length
+	);
+	const players = randomMultipleFromArray(
+		options.playerIds,
+		playerCount,
+		playerCount
+	);
 
 	// Ensure owner is in the players list
 	if (!players.includes(options.ownerId)) {
@@ -65,7 +77,7 @@ export async function createGame(
 	const gameData: Partial<GameDocument> = {
 		owner: options.ownerId.toString(),
 		puzzle: options.puzzleId.toString(),
-		players: players.map(id => id.toString()),
+		players: players.map((id) => id.toString()),
 		startTime,
 		endTime,
 		options: {
@@ -108,8 +120,15 @@ export async function createGames(
 			: GameVisibilityEnum.PRIVATE;
 
 		// Get random players (ensure we have enough users)
-		const playerCount = Math.min(faker.number.int({ min: 2, max: 4 }), userIds.length);
-		const playerIds = randomMultipleFromArray(userIds, playerCount, playerCount);
+		const playerCount = Math.min(
+			faker.number.int({ min: 2, max: 4 }),
+			userIds.length
+		);
+		const playerIds = randomMultipleFromArray(
+			userIds,
+			playerCount,
+			playerCount
+		);
 
 		gameIds.push(
 			await createGame({

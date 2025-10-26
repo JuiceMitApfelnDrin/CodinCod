@@ -5,7 +5,7 @@ import { UserVoteEntity, voteTypeEnum } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types } from "mongoose";
 
-type VoteTypeValue = typeof voteTypeEnum[keyof typeof voteTypeEnum];
+type VoteTypeValue = (typeof voteTypeEnum)[keyof typeof voteTypeEnum];
 
 export interface UserVoteFactoryOptions {
 	authorId: Types.ObjectId;
@@ -19,7 +19,8 @@ export interface UserVoteFactoryOptions {
 export async function createUserVote(
 	options: UserVoteFactoryOptions
 ): Promise<Types.ObjectId> {
-	const voteType = options.voteType || randomFromArray(Object.values(voteTypeEnum));
+	const voteType =
+		options.voteType || randomFromArray(Object.values(voteTypeEnum));
 
 	const voteData: Partial<UserVoteEntity> = {
 		author: options.authorId.toString(),
@@ -33,8 +34,9 @@ export async function createUserVote(
 
 	// Update the voted-on entity's vote count
 	// This could be a Comment or other votable entity
-	const incrementField = voteType === voteTypeEnum.UPVOTE ? "upvote" : "downvote";
-	
+	const incrementField =
+		voteType === voteTypeEnum.UPVOTE ? "upvote" : "downvote";
+
 	// Try to update as comment first
 	await Comment.findByIdAndUpdate(options.votedOnId, {
 		$inc: { [incrementField]: 1 }
@@ -65,7 +67,7 @@ export async function createVotesForComments(
 
 		for (let i = 0; i < voteCount && uniqueVoters.size < userIds.length; i++) {
 			const voterId = voters;
-			
+
 			if (!uniqueVoters.has(voterId)) {
 				uniqueVoters.add(voterId);
 

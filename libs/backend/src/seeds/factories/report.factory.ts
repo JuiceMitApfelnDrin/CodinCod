@@ -5,8 +5,9 @@ import { ProblemTypeEnum, ReportEntity, reviewStatusEnum } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types } from "mongoose";
 
-type ProblemTypeValue = typeof ProblemTypeEnum[keyof typeof ProblemTypeEnum];
-type ReviewStatusValue = typeof reviewStatusEnum[keyof typeof reviewStatusEnum];
+type ProblemTypeValue = (typeof ProblemTypeEnum)[keyof typeof ProblemTypeEnum];
+type ReviewStatusValue =
+	(typeof reviewStatusEnum)[keyof typeof reviewStatusEnum];
 
 export interface ReportFactoryOptions {
 	reportedById: Types.ObjectId;
@@ -46,7 +47,9 @@ function generateReportExplanation(problemType: ProblemTypeValue): string {
 		]
 	};
 
-	return randomFromArray(explanations[problemType] || explanations[ProblemTypeEnum.COMMENT]);
+	return randomFromArray(
+		explanations[problemType] || explanations[ProblemTypeEnum.COMMENT]
+	);
 }
 
 /**
@@ -60,7 +63,7 @@ export async function createReport(
 	const status = faker.helpers.weightedArrayElement([
 		{ value: statusValues[0], weight: 60 }, // PENDING
 		{ value: statusValues[1], weight: 30 }, // RESOLVED
-		{ value: statusValues[2], weight: 10 }  // REJECTED
+		{ value: statusValues[2], weight: 10 } // REJECTED
 	]) as ReviewStatusValue;
 
 	const reportData: Partial<ReportEntity> = {
@@ -82,7 +85,10 @@ export async function createReport(
 	await report.save();
 
 	// Update user reportCount if resolved
-	if (status === reviewStatusEnum.RESOLVED && options.problemType === ProblemTypeEnum.USER) {
+	if (
+		status === reviewStatusEnum.RESOLVED &&
+		options.problemType === ProblemTypeEnum.USER
+	) {
 		await User.findByIdAndUpdate(options.problematicIdentifier, {
 			$inc: { reportCount: 1 }
 		});
@@ -110,12 +116,13 @@ export async function createReports(
 		const problemTypeValues = Object.values(ProblemTypeEnum);
 		const problemType = randomFromArray([
 			problemTypeValues[0], // PUZZLE
-			problemTypeValues[1], // USER  
-			problemTypeValues[2]  // COMMENT
+			problemTypeValues[1], // USER
+			problemTypeValues[2] // COMMENT
 		]) as ProblemTypeValue;
 
 		let problematicIdentifier: Types.ObjectId;
-		if (problemType === problemTypeValues[0]) { // PUZZLE
+		if (problemType === problemTypeValues[0]) {
+			// PUZZLE
 			problematicIdentifier = randomFromArray(puzzleIds);
 		} else {
 			problematicIdentifier = randomFromArray(userIds);

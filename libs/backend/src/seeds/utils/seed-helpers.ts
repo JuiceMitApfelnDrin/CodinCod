@@ -52,9 +52,7 @@ export class SeedLogger {
 
 	success(count: number, itemType: string): void {
 		const duration = Date.now() - this.startTime;
-		console.log(
-			`✅ Created ${count} ${itemType} (${duration}ms)`
-		);
+		console.log(`✅ Created ${count} ${itemType} (${duration}ms)`);
 	}
 
 	error(error: unknown): void {
