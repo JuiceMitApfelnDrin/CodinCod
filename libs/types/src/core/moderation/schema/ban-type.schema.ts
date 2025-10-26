@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 import { getValues } from "../../../utils/functions/get-values.js";
 import { banTypeEnum } from "../enum/ban-type-enum.js";
 

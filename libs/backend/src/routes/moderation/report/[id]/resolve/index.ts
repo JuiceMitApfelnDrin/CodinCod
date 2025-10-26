@@ -72,19 +72,16 @@ export default async function moderationReportByIdResolveRoutes(
 							// This could be a puzzle author, comment author, or chat message sender
 							// We'll query the specific model based on problem type
 							if (report.problemType === ProblemTypeEnum.PUZZLE) {
-								
 								const puzzle = await Puzzle.findById(
 									report.problematicIdentifier
 								);
 								reportedUserId = puzzle?.author;
 							} else if (report.problemType === ProblemTypeEnum.COMMENT) {
-								
 								const comment = await Comment.findById(
 									report.problematicIdentifier
 								);
 								reportedUserId = comment?.author;
 							} else if (report.problemType === ProblemTypeEnum.GAME_CHAT) {
-								
 								const message = await ChatMessage.findById(
 									report.problematicIdentifier
 								);

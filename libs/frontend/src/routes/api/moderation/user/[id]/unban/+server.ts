@@ -19,17 +19,14 @@ export const POST: RequestHandler = async ({ request, params, cookies }) => {
 	const { reason } = body;
 
 	try {
-		const response = await fetch(
-            apiUrls.moderationUserByIdUnban(userId),
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Cookie: `sessionToken=${sessionToken}`
-				},
-				body: JSON.stringify({ reason })
-			}
-		);
+		const response = await fetch(apiUrls.moderationUserByIdUnban(userId), {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Cookie: `sessionToken=${sessionToken}`
+			},
+			body: JSON.stringify({ reason })
+		});
 
 		if (!response.ok) {
 			const errorData = await response

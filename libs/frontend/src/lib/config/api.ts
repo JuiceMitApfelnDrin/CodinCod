@@ -22,9 +22,9 @@ export const apiUrls = {
 	moderationReportByIdResolve: (id: string) =>
 		`/api/moderation/report/${id}/resolve`,
 	REPORT: `/api/report`,
-	moderationUserByIdBanByType: (id: string, banType: BanType) => `/api/moderation/user/${id}/ban/${banType}`,
-	moderationUserByIdUnban: (id: string) =>
-		`/api/moderation/user/${id}/unban`,
+	moderationUserByIdBanByType: (id: string, banType: BanType) =>
+		`/api/moderation/user/${id}/ban/${banType}`,
+	moderationUserByIdUnban: (id: string) => `/api/moderation/user/${id}/unban`,
 	moderationUserByIdBanHistory: (id: string) =>
 		`/api/moderation/user/${id}/ban/history`
 } as const;

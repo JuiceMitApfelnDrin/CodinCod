@@ -6,7 +6,7 @@ import { backendUrls, httpRequestMethod, isBanType } from "types";
 export const POST: RequestHandler = async ({ request, params, cookies }) => {
 	const sessionToken = cookies.get("sessionToken");
 	const userId = params.id;
-    const type = params.type
+	const type = params.type;
 
 	if (!sessionToken) {
 		throw error(401, "Unauthorized");
@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ request, params, cookies }) => {
 		throw error(400, "User ID is required");
 	}
 
-	if(!isBanType(type)) {
+	if (!isBanType(type)) {
 		throw error(400, "Invalid ban type");
 	}
 
@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request, params, cookies }) => {
 
 	try {
 		const response = await fetch(
-            backendUrls.moderationUserByIdBanByType(userId, type), 
+			backendUrls.moderationUserByIdBanByType(userId, type),
 			{
 				method: httpRequestMethod.POST,
 				headers: {
