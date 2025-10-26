@@ -9,6 +9,7 @@ import {
 } from "types";
 import Report from "../../models/report/report.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
+import checkUserBan from "../../plugins/middleware/check-user-ban.js";
 import ChatMessage from "../../models/chat/chat-message.js";
 
 export default async function reportRoutes(fastify: FastifyInstance) {
@@ -16,7 +17,7 @@ export default async function reportRoutes(fastify: FastifyInstance) {
 	fastify.post(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const parseResult = createReportSchema.safeParse(request.body);

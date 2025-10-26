@@ -15,6 +15,7 @@ import {
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { ParamsId } from "@/types/types.js";
 import { checkAllValidators } from "@/utils/functions/check-all-validators.js";
 import User from "@/models/user/user.js";
@@ -51,7 +52,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.put<ParamsId>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const { id } = request.params;
@@ -159,7 +160,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.delete<{ Params: DeletePuzzle }>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const { id } = request.params;

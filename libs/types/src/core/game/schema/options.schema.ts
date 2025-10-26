@@ -14,7 +14,7 @@ export const gameOptionsSchema = z.object({
 		.array(
 			z.object({
 				language: puzzleLanguage,
-				languageVersion: puzzleLanguageVersion,
+				version: puzzleLanguageVersion,
 			}),
 		)
 		.prefault([]),

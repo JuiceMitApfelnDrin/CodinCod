@@ -2,9 +2,6 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { httpResponseCodes, isAuthenticatedInfo, isModerator } from "types";
 import User from "../../models/user/user.js";
 
-/**
- * Middleware to ensure the user is authenticated and has moderator role
- */
 export default async function moderatorOnly(
 	request: FastifyRequest,
 	reply: FastifyReply

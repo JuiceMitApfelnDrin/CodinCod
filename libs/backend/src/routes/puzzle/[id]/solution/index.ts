@@ -10,6 +10,7 @@ import {
 import { ParamsId } from "@/types/types.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import User from "@/models/user/user.js";
 
 export default async function puzzleByIdSolutionRoutes(
@@ -18,7 +19,7 @@ export default async function puzzleByIdSolutionRoutes(
 	fastify.get<ParamsId>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const { id } = request.params;

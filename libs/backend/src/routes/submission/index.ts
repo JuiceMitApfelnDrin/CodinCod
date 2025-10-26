@@ -14,13 +14,14 @@ import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: CodeSubmissionParams }>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const parseResult = codeSubmissionParamsSchema.safeParse(request.body);

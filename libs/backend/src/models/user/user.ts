@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { USER, USER_BAN } from "../../utils/constants/model.js";
 import { profileSchema } from "./user-profile.js";
 
-interface UserDocument extends Document, Omit<UserEntity, "currentBan"> {
+export interface UserDocument extends Document, Omit<UserEntity, "currentBan"> {
 	currentBan?: mongoose.Types.ObjectId | null;
 }
 

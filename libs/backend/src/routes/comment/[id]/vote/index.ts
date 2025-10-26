@@ -1,6 +1,7 @@
 import Comment from "@/models/comment/comment.js";
 import UserVote from "@/models/user/user-vote.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
 import {
@@ -14,7 +15,7 @@ export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
 	fastify.post<ParamsId>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			// Validate vote type input

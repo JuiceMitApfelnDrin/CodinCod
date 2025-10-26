@@ -1,6 +1,7 @@
 import Comment from "@/models/comment/comment.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
 import {
@@ -17,7 +18,7 @@ export default async function puzzleByIdCommentRoutes(
 	fastify.post<ParamsId>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const parseResult = createCommentSchema.safeParse(request.body);

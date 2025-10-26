@@ -11,6 +11,7 @@ import {
 } from "types";
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
 
 export const executionResponseErrors = {
@@ -35,7 +36,7 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: CodeExecutionParams }>(
 		"/",
 		{
-			onRequest: authenticated,
+			onRequest: [authenticated, checkUserBan],
 			config: {
 				rateLimit: {
 					max: 30,

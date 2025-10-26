@@ -2,11 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { httpResponseCodes, isAuthenticatedInfo, banTypeEnum } from "types";
 import { checkUserBanStatus } from "../../utils/moderation/escalation.js";
 
-/**
- * Middleware to check if user is currently banned
- * Blocks banned users from accessing protected routes
- */
-async function checkUserBan(
+export default async function checkUserBan(
 	request: FastifyRequest,
 	reply: FastifyReply
 ): Promise<void> {
@@ -35,4 +31,3 @@ async function checkUserBan(
 	}
 }
 
-export default checkUserBan;

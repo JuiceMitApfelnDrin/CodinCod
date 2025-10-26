@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import authenticated from "../../../plugins/middleware/authenticated.js";
+import checkUserBan from "../../../plugins/middleware/check-user-ban.js";
 import { AuthenticatedInfo, DEFAULT_USER_ROLE } from "types";
 import User from "../../../models/user/user.js";
 
@@ -7,7 +8,7 @@ export default async function userMeRoutes(fastify: FastifyInstance) {
 	fastify.get(
 		"/",
 		{
-			preHandler: authenticated
+			preHandler: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const user = request.user as AuthenticatedInfo | undefined;

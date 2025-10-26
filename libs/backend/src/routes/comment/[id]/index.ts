@@ -1,6 +1,7 @@
 import Comment from "@/models/comment/comment.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
 import { commentTypeEnum, httpResponseCodes, objectIdSchema } from "types";
@@ -43,7 +44,7 @@ export default async function commentByIdRoutes(fastify: FastifyInstance) {
 	fastify.delete<ParamsId>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			try {

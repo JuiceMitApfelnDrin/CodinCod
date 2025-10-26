@@ -29,7 +29,6 @@ export const puzzleEntitySchema = z.object({
 	author: objectIdSchema.or(userDtoSchema).prefault(""),
 	validators: z.array(validatorEntitySchema).optional(),
 	difficulty: difficultySchema.prefault(DifficultyEnum.INTERMEDIATE), // TODO: later not now !
-
 	visibility: puzzleVisibilitySchema.prefault(puzzleVisibilityEnum.DRAFT),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
