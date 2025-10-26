@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { goto, invalidateAll } from "$app/navigation";
-	import { httpRequestMethod, reviewItemTypeEnum } from "types";
+	import {
+		httpRequestMethod,
+		reviewItemTypeEnum,
+		banTypeEnum,
+		reviewStatusEnum,
+		BAN_CONFIG
+	} from "types";
 	import type { PageData } from "./$types";
 	import { toast } from "svelte-sonner";
 	import * as Table from "$lib/components/ui/table";
@@ -8,7 +14,7 @@
 	import * as Dialog from "$lib/components/ui/dialog";
 	import { Textarea } from "$lib/components/ui/textarea";
 	import { Label } from "$lib/components/ui/label";
-	import Pagination from "$lib/components/nav/pagination.svelte";
+	import { Input } from "$lib/components/ui/input";
 	import Container from "#/ui/container/container.svelte";
 	import H1 from "#/typography/h1.svelte";
 	import { Button } from "#/ui/button";
@@ -16,12 +22,24 @@
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import { testIds } from "@/config/test-ids";
 	import { apiUrls } from "@/config/api";
+	import Pagination from "#/nav/pagination.svelte";
 
 	let { data }: { data: PageData } = $props();
 
 	let reviseDialogOpen = $state(false);
 	let selectedPuzzleId = $state("");
 	let revisionReason = $state("");
+
+	let banDialogOpen = $state(false);
+	let selectedUserId = $state("");
+	let selectedUserName = $state("");
+	let banReason = $state("");
+	let banDuration = $state(1);
+	let banType = $state<typeof banTypeEnum.TEMPORARY | typeof banTypeEnum.PERMANENT>(banTypeEnum.TEMPORARY);
+
+	let banHistoryDialogOpen = $state(false);
+	let banHistory = $state<any[]>([]);
+	let loadingBanHistory = $state(false);
 
 	const reviewTypes = [
 		{
@@ -39,6 +57,10 @@
 		{
 			value: reviewItemTypeEnum.REPORTED_COMMENT,
 			label: "Reported comments"
+		},
+		{
+			value: reviewItemTypeEnum.REPORTED_GAME_CHAT,
+			label: "Reported game chat"
 		}
 	];
 
@@ -78,8 +100,8 @@
 	}
 
 	async function submitRevision() {
-		if (!revisionReason || revisionReason.length < 10) {
-			toast.error("Please provide a reason (at least 10 characters)");
+		if (!revisionReason || revisionReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH) {
+			toast.error(`Please provide a reason (at least ${BAN_CONFIG.reasonValidation.MIN_LENGTH} characters)`);
 			return;
 		}
 
@@ -108,7 +130,7 @@
 		}
 	}
 
-	async function handleResolve(id: string, status: "resolved" | "rejected") {
+	async function handleResolve(id: string, status: typeof reviewStatusEnum.RESOLVED | typeof reviewStatusEnum.REJECTED) {
 		try {
 			const response = await fetch(apiUrls.moderationReportByIdResolve(id), {
 				method: httpRequestMethod.POST,
@@ -127,6 +149,109 @@
 		} catch (error) {
 			console.error("Error resolving report:", error);
 			toast.error("Failed to resolve report");
+		}
+	}
+
+	function openBanDialog(userId: string, userName: string) {
+		selectedUserId = userId;
+		selectedUserName = userName;
+		banReason = "";
+		banDuration = 1;
+		banType = banTypeEnum.TEMPORARY;
+		banDialogOpen = true;
+	}
+
+	async function submitBan() {
+		if (!banReason || banReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH) {
+			toast.error(`Please provide a reason (at least ${BAN_CONFIG.reasonValidation.MIN_LENGTH} characters)`);
+			return;
+		}
+
+		try {
+			const response = await fetch(
+				apiUrls.moderationUserByIdBanByType(selectedUserId, banType),
+				{
+					method: httpRequestMethod.POST,
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						duration: banType === banTypeEnum.TEMPORARY ? banDuration : undefined,
+						reason: banReason,
+					})
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to ban user");
+			}
+
+			toast.success(`User ${banType === banTypeEnum.TEMPORARY ? `banned for ${banDuration} day(s)` : "permanently banned"}`);
+			banDialogOpen = false;
+			await invalidateAll();
+		} catch (error) {
+			console.error("Error banning user:", error);
+			toast.error("Failed to ban user");
+		}
+	}
+
+	async function handleUnban(userId: string, userName: string) {
+		if (!confirm(`Are you sure you want to unban ${userName}?`)) {
+			return;
+		}
+
+		try {
+			const response = await fetch(
+				apiUrls.moderationUserByIdUnban(userId),
+				{
+					method: httpRequestMethod.POST,
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						reason: "Unbanned by moderator"
+					})
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to unban user");
+			}
+
+			toast.success("User unbanned successfully");
+			await invalidateAll();
+		} catch (error) {
+			console.error("Error unbanning user:", error);
+			toast.error("Failed to unban user");
+		}
+	}
+
+	async function openBanHistoryDialog(userId: string, userName: string) {
+		selectedUserId = userId;
+		selectedUserName = userName;
+		loadingBanHistory = true;
+		banHistoryDialogOpen = true;
+
+		try {
+			const response = await fetch(
+				apiUrls.moderationUserByIdBanHistory(userId),
+				{
+					method: httpRequestMethod.GET
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to fetch ban history");
+			}
+
+			const data = await response.json();
+			banHistory = data.bans || [];
+		} catch (error) {
+			console.error("Error fetching ban history:", error);
+			toast.error("Failed to fetch ban history");
+			banHistory = [];
+		} finally {
+			loadingBanHistory = false;
 		}
 	}
 </script>
@@ -210,6 +335,46 @@
 										Report: {item.reportExplanation}
 									</div>
 								{/if}
+								{#if data.currentType === reviewItemTypeEnum.REPORTED_GAME_CHAT && item.contextMessages}
+									<div class="bg-muted/30 mt-3 rounded-lg border p-3">
+										<p class="text-muted-foreground mb-2 text-xs font-semibold">
+											Chat Context ({item.contextMessages.length} messages)
+										</p>
+										<div class="max-h-48 space-y-1 overflow-y-auto">
+											{#each item.contextMessages as contextMsg}
+												<div
+													class={`rounded p-2 text-sm ${
+														contextMsg._id === item.reportedMessageId
+															? "border border-red-300 bg-red-100 dark:border-red-700 dark:bg-red-900/30"
+															: "bg-background"
+													}`}
+												>
+													<div class="flex items-baseline gap-2">
+														<span class="text-xs font-medium">
+															{contextMsg.username}:
+														</span>
+														<span
+															class={contextMsg._id === item.reportedMessageId
+																? "font-semibold text-red-700 dark:text-red-300"
+																: ""}
+														>
+															{contextMsg.message}
+														</span>
+													</div>
+												</div>
+											{/each}
+										</div>
+										{#if item.gameId}
+											<a
+												href={`/game/${item.gameId}`}
+												target="_blank"
+												class="mt-2 inline-block text-xs text-blue-600 hover:underline dark:text-blue-400"
+											>
+												View Game →
+											</a>
+										{/if}
+									</div>
+								{/if}
 							</Table.Cell>
 							<Table.Cell class="text-muted-foreground">
 								{item.authorName || item.reportedBy || "Unknown"}
@@ -240,24 +405,55 @@
 										</Button>
 									</div>
 								{:else}
-									<div class="flex gap-2">
-										<Button
-											onclick={() => handleResolve(item.id, "resolved")}
-											variant="default"
-											size="sm"
-											class="bg-blue-600 hover:bg-blue-700"
-											data-testid={testIds.MODERATION_PAGE_BUTTON_RESOLVE_REPORT}
-										>
-											Resolve
-										</Button>
-										<Button
-											onclick={() => handleResolve(item.id, "rejected")}
-											variant="destructive"
-											size="sm"
-											data-testid={testIds.MODERATION_PAGE_BUTTON_REJECT_REPORT}
-										>
-											Reject
-										</Button>
+									<div class="flex flex-col gap-2">
+										<div class="flex gap-2">
+											<Button
+												onclick={() => handleResolve(item.id, reviewStatusEnum.RESOLVED)}
+												variant="default"
+												size="sm"
+												class="bg-blue-600 hover:bg-blue-700"
+												data-testid={testIds.MODERATION_PAGE_BUTTON_RESOLVE_REPORT}
+											>
+												Resolve
+											</Button>
+											<Button
+												onclick={() => handleResolve(item.id, reviewStatusEnum.REJECTED)}
+												variant="destructive"
+												size="sm"
+												data-testid={testIds.MODERATION_PAGE_BUTTON_REJECT_REPORT}
+											>
+												Reject
+											</Button>
+										</div>
+										{#if (data.currentType === reviewItemTypeEnum.REPORTED_USER || data.currentType === reviewItemTypeEnum.REPORTED_GAME_CHAT) && item.reportedUserId}
+											<div class="flex gap-2">
+												<Button
+													onclick={() =>
+														openBanDialog(
+															item.reportedUserId!,
+															item.reportedUserName || "User"
+														)}
+													variant="default"
+													size="sm"
+													class="bg-orange-600 hover:bg-orange-700"
+													data-testid={testIds.MODERATION_PAGE_BUTTON_BAN_USER}
+												>
+													Ban User
+												</Button>
+												<Button
+													onclick={() =>
+														openBanHistoryDialog(
+															item.reportedUserId!,
+															item.reportedUserName || "User"
+														)}
+													variant="outline"
+													size="sm"
+													data-testid={testIds.MODERATION_PAGE_BUTTON_BAN_HISTORY}
+												>
+													Ban History
+												</Button>
+											</div>
+										{/if}
 									</div>
 								{/if}
 							</Table.Cell>
@@ -268,7 +464,6 @@
 		</Table.Root>
 	</div>
 
-	<!-- Pagination -->
 	{#if data.reviewItems.pagination.totalPages > 1}
 		<Pagination
 			currentPage={data.reviewItems.pagination.page}
@@ -296,7 +491,7 @@
 					class="min-h-[100px]"
 				/>
 				<p class="text-muted-foreground text-sm">
-					{revisionReason.length}/500 characters (minimum 10)
+					{revisionReason.length}/{BAN_CONFIG.reasonValidation.MAX_LENGTH} characters (minimum {BAN_CONFIG.reasonValidation.MIN_LENGTH})
 				</p>
 			</div>
 		</div>
@@ -310,11 +505,174 @@
 			</Button>
 			<Button
 				onclick={submitRevision}
-				disabled={revisionReason.length < 10 || revisionReason.length > 500}
+				disabled={revisionReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH || revisionReason.length > BAN_CONFIG.reasonValidation.MAX_LENGTH}
 				data-testid={testIds.MODERATION_PAGE_BUTTON_SUBMIT_REVISION}
 			>
 				Submit Revision Request
 			</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={banDialogOpen}>
+	<Dialog.Content class="sm:max-w-[525px]">
+		<Dialog.Header>
+			<Dialog.Title>Ban User: {selectedUserName}</Dialog.Title>
+			<Dialog.Description>
+				Apply a ban to this user. The user will not be able to access games or
+				chat while banned.
+			</Dialog.Description>
+		</Dialog.Header>
+		<div class="grid gap-4 py-4">
+			<div class="grid gap-2">
+				<Label for="ban-type">Ban Type</Label>
+				<Select.Root
+					type="single"
+					value={banType}
+					onValueChange={(v) => {
+						if (v === banTypeEnum.TEMPORARY || v === banTypeEnum.PERMANENT) {
+							banType = v;
+						}
+					}}
+				>
+					<Select.Trigger id="ban-type">
+						{banType}
+					</Select.Trigger>
+					<Select.Content>
+						{#each Object.values(banTypeEnum) as banType}
+							<Select.Item value={banType}>{banType}</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</div>
+
+			{#if banType === banTypeEnum.TEMPORARY}
+				<div class="grid gap-2">
+					<Label for="ban-duration">Duration (days)</Label>
+					<Input
+						id="ban-duration"
+						type="number"
+						min="1"
+						max="365"
+						bind:value={banDuration}
+					/>
+					<p class="text-muted-foreground text-sm">
+						Common durations: 1, 3, 7, 30 days
+					</p>
+				</div>
+			{/if}
+
+			<div class="grid gap-2">
+				<Label for="ban-reason">Reason for ban</Label>
+				<Textarea
+					id="ban-reason"
+					bind:value={banReason}
+					placeholder="Explain why this user is being banned..."
+					class="min-h-[100px]"
+				/>
+				<p class="text-muted-foreground text-sm">
+					{banReason.length}/{BAN_CONFIG.reasonValidation.MAX_LENGTH} characters (minimum {BAN_CONFIG.reasonValidation.MIN_LENGTH})
+				</p>
+			</div>
+		</div>
+		<Dialog.Footer>
+			<Button 
+				variant="outline" 
+				onclick={() => (banDialogOpen = false)}
+				data-testid={testIds.MODERATION_PAGE_BUTTON_CANCEL_BAN}
+			>
+				Cancel
+			</Button>
+			<Button
+				onclick={submitBan}
+				disabled={banReason.length < BAN_CONFIG.reasonValidation.MIN_LENGTH || banReason.length > BAN_CONFIG.reasonValidation.MAX_LENGTH}
+				class="bg-orange-600 hover:bg-orange-700"
+				data-testid={testIds.MODERATION_PAGE_BUTTON_SUBMIT_BAN}
+			>
+				{banType === banTypeEnum.TEMPORARY
+					? `Ban for ${banDuration} day(s)`
+					: "Permanently Ban"}
+			</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={banHistoryDialogOpen}>
+	<Dialog.Content class="sm:max-w-[725px]">
+		<Dialog.Header>
+			<Dialog.Title>Ban History: {selectedUserName}</Dialog.Title>
+			<Dialog.Description>
+				View all bans and unbans for this user.
+			</Dialog.Description>
+		</Dialog.Header>
+		<div class="grid gap-4 py-4">
+			{#if loadingBanHistory}
+				<p class="text-muted-foreground text-center">Loading...</p>
+			{:else if banHistory.length === 0}
+				<p class="text-muted-foreground text-center">No ban history found</p>
+			{:else}
+				<div class="rounded-lg border">
+					<Table.Root>
+						<Table.Header>
+							<Table.Row>
+								<Table.Head>Type</Table.Head>
+								<Table.Head>Reason</Table.Head>
+								<Table.Head>Start Date</Table.Head>
+								<Table.Head>End Date</Table.Head>
+								<Table.Head>Status</Table.Head>
+							</Table.Row>
+						</Table.Header>
+						<Table.Body>
+							{#each banHistory as ban}
+								<Table.Row>
+									<Table.Cell class="font-medium">{ban.banType}</Table.Cell>
+									<Table.Cell>
+										<div class="max-w-xs truncate" title={ban.reason}>
+											{ban.reason}
+										</div>
+									</Table.Cell>
+									<Table.Cell class="text-muted-foreground">
+										{formattedDateYearMonthDay(ban.startDate)}
+									</Table.Cell>
+									<Table.Cell class="text-muted-foreground">
+										{ban.endDate
+											? formattedDateYearMonthDay(ban.endDate)
+											: "Never"}
+									</Table.Cell>
+									<Table.Cell>
+										{#if ban.isActive}
+											<span class="font-medium text-red-600">Active</span>
+										{:else}
+											<span class="text-muted-foreground">Inactive</span>
+										{/if}
+									</Table.Cell>
+								</Table.Row>
+							{/each}
+						</Table.Body>
+					</Table.Root>
+				</div>
+			{/if}
+		</div>
+		<Dialog.Footer>
+			<Button
+				variant="outline"
+				onclick={() => (banHistoryDialogOpen = false)}
+				data-testid={testIds.MODERATION_PAGE_BUTTON_CLOSE_HISTORY}
+			>
+				Close
+			</Button>
+			{#if banHistory.some((ban) => ban.isActive)}
+				<Button
+					onclick={() => {
+						banHistoryDialogOpen = false;
+						handleUnban(selectedUserId, selectedUserName);
+					}}
+					class="bg-green-600 hover:bg-green-700"
+					data-testid={testIds.MODERATION_PAGE_BUTTON_UNBAN_USER}
+				>
+					Unban User
+				</Button>
+			{/if}
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

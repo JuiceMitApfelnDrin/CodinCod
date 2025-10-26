@@ -1,3 +1,5 @@
+import type { BanType } from "types";
+
 export const apiUrls = {
 	ACCOUNT_PREFERENCES: `/api/account/preferences`,
 	EXECUTE_CODE: `/api/execute-code`,
@@ -18,5 +20,11 @@ export const apiUrls = {
 	moderationPuzzleByIdRevise: (id: string) =>
 		`/api/moderation/puzzle/${id}/revise`,
 	moderationReportByIdResolve: (id: string) =>
-		`/api/moderation/report/${id}/resolve`
+		`/api/moderation/report/${id}/resolve`,
+	REPORT: `/api/report`,
+	moderationUserByIdBanByType: (id: string, banType: BanType) => `/api/moderation/user/${id}/ban/${banType}`,
+	moderationUserByIdUnban: (id: string) =>
+		`/api/moderation/user/${id}/unban`,
+	moderationUserByIdBanHistory: (id: string) =>
+		`/api/moderation/user/${id}/ban/history`
 } as const;

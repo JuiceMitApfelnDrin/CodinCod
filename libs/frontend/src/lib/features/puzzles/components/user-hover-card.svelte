@@ -11,12 +11,13 @@
 	import { cn } from "@/utils/cn";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		class: className = undefined,
+		username
+	}: {
 		class?: ButtonPrimitive.RootProps["class"];
 		username: string;
-	}
-
-	let { class: className = undefined, username }: Props = $props();
+	} = $props();
 
 	const userInfoCache: Record<string, UserDto> = {};
 

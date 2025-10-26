@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { ProblemTypeEnum } from "../enum/problem-type-enum.js";
 import { REPORT_CONFIG } from "../config/report-config.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 import { reviewStatusEnum } from "../enum/review-status-enum.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { problemTypeSchema } from "./problem-types.schema.js";
 
 /**
  * @property {string} problematicIdentifier - The ID of the user, puzzle, or comment that is being reported. This field identifies which entity is problematic.
@@ -35,11 +35,7 @@ import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
  */
 export const reportEntitySchema = z.object({
 	problematicIdentifier: objectIdSchema,
-	problemType: z.enum([
-		ProblemTypeEnum.PUZZLE,
-		ProblemTypeEnum.USER,
-		ProblemTypeEnum.COMMENT,
-	]),
+	problemType: problemTypeSchema,
 	reportedBy: objectIdSchema,
 	explanation: z
 		.string()

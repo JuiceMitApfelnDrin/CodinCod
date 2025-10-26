@@ -5,12 +5,13 @@
 
 	type $$Props = HTMLInputAttributes;
 
-	interface Props {
+	let {
+		children,
+		class: className = undefined
+	}: {
 		class?: $$Props["class"];
 		children?: Snippet;
-	}
-
-	let { children, class: className = undefined }: Props = $props();
+	} = $props();
 </script>
 
 <div

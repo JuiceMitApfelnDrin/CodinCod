@@ -16,12 +16,13 @@
 	import { page } from "$app/stores";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		data,
+		message
+	}: {
 		data: SuperValidated<Login>;
 		message: string | undefined;
-	}
-
-	let { data, message }: Props = $props();
+	} = $props();
 
 	const form = superForm(data, {
 		validators: zod4Client(loginSchema)

@@ -20,6 +20,7 @@ export * from "./core/authentication/schema/token.schema.js";
 // chat
 export * from "./core/chat/config/chat-message-config.js";
 export * from "./core/chat/schema/chat-message.schema.js";
+export * from "./core/chat/schema/chat-message-entity.schema.js";
 
 // comment
 export * from "./core/comment/config/comment-config.js";
@@ -68,12 +69,16 @@ export * from "./core/game/schema/visibility.schema.js";
 
 // moderation
 export * from "./core/moderation/config/report-config.js";
+export * from "./core/moderation/config/ban-config.js";
 export * from "./core/moderation/enum/problem-type-enum.js";
 export * from "./core/moderation/enum/review-status-enum.js";
 export * from "./core/moderation/enum/review-item-type-enum.js";
+export * from "./core/moderation/enum/ban-type-enum.js";
 export * from "./core/moderation/schema/report.schema.js";
 export * from "./core/moderation/schema/review-item.schema.js";
 export * from "./core/moderation/schema/puzzle-moderation.schema.js";
+export * from "./core/moderation/schema/user-ban.schema.js";
+export * from "./core/moderation/schema/ban-type.schema.js";
 
 // piston
 export * from "./core/piston/config/execution-params.js";

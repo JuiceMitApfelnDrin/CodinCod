@@ -4,12 +4,17 @@
 	import { cn } from "@/utils/cn";
 	import dayjs from "dayjs";
 	import type { ChatMessage } from "types";
+	import { Button } from "@/components/ui/button";
+	import Flag from "@lucide/svelte/icons/flag";
+	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		chatMessage,
+		onReport
+	}: {
 		chatMessage: ChatMessage;
-	}
-
-	let { chatMessage }: Props = $props();
+		onReport?: (message: ChatMessage) => void;
+	} = $props();
 
 	let highlight = $state(false);
 	if ($authenticatedUserInfo) {
@@ -21,11 +26,23 @@
 	function scrollIntoView(element: HTMLElement) {
 		element.scrollIntoView({ block: "nearest" });
 	}
+
+	function handleReport() {
+		if (onReport && chatMessage._id) {
+			onReport(chatMessage);
+		}
+	}
+
+	let canReport = $derived(
+		$authenticatedUserInfo?.isAuthenticated &&
+			chatMessage._id &&
+			chatMessage.username !== $authenticatedUserInfo.username
+	);
 </script>
 
 <li
 	class={cn(
-		"chat-message w-full rounded-lg px-2 py-1",
+		"chat-message group relative w-full rounded-lg px-2 py-1",
 		highlight && "highlight"
 	)}
 	use:scrollIntoView
@@ -45,10 +62,20 @@
 		<dd class="inline">
 			{chatMessage.message}
 		</dd>
-		<!-- <EllipsisVertical
-class="inline"
-/> report player button -->
 	</dl>
+
+	{#if canReport}
+		<Button
+			variant="ghost"
+			size="icon"
+			class="absolute top-1 right-1 h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+			onclick={handleReport}
+			title="Report message"
+			data-testid={testIds.CHAT_MESSAGE_COMPONENT_BUTTON_REPORT}
+		>
+			<Flag class="h-3 w-3" />
+		</Button>
+	{/if}
 </li>
 
 <style lang="postcss">

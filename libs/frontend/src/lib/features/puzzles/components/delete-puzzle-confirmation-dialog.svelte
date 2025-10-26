@@ -8,11 +8,11 @@
 	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { deletePuzzleSchema, type DeletePuzzle } from "types";
 
-	interface Props {
+	let {
+		data
+	}: {
 		data: SuperValidated<DeletePuzzle>;
-	}
-
-	let { data }: Props = $props();
+	} = $props();
 
 	const form = superForm(data, {
 		validators: zod4Client(deletePuzzleSchema)

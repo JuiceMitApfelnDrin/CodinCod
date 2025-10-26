@@ -96,6 +96,22 @@ export const testIds = {
 		"moderation-page-button-cancel-revision",
 	MODERATION_PAGE_BUTTON_SUBMIT_REVISION:
 		"moderation-page-button-submit-revision",
+	MODERATION_PAGE_BUTTON_BAN_USER: "moderation-page-button-ban-user",
+	MODERATION_PAGE_BUTTON_BAN_HISTORY: "moderation-page-button-ban-history",
+	MODERATION_PAGE_BUTTON_CANCEL_BAN: "moderation-page-button-cancel-ban",
+	MODERATION_PAGE_BUTTON_SUBMIT_BAN: "moderation-page-button-submit-ban",
+	MODERATION_PAGE_BUTTON_CLOSE_HISTORY: "moderation-page-button-close-history",
+	MODERATION_PAGE_BUTTON_UNBAN_USER: "moderation-page-button-unban-user",
+
+	// chat message component
+	CHAT_MESSAGE_COMPONENT_BUTTON_REPORT: "chat-message-component-button-report",
+
+	// report chat dialog
+	REPORT_CHAT_DIALOG_BUTTON_CANCEL: "report-chat-dialog-button-cancel",
+	REPORT_CHAT_DIALOG_BUTTON_SUBMIT: "report-chat-dialog-button-submit",
+
+	// maintenance page
+	MAINTENANCE_PAGE_BUTTON_DISCORD: "maintenance-page-button-discord",
 
 	// pagination
 	PAGINATION_BUTTON_FIRST: "pagination-button-first",

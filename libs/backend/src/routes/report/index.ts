@@ -4,10 +4,12 @@ import {
 	httpResponseCodes,
 	isAuthenticatedInfo,
 	ReportEntity,
-	reviewStatusEnum
+	reviewStatusEnum,
+	ProblemTypeEnum
 } from "types";
 import Report from "../../models/report/report.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
+import ChatMessage from "../../models/chat/chat-message.js";
 
 export default async function reportRoutes(fastify: FastifyInstance) {
 	// Create a new report
@@ -32,6 +34,19 @@ export default async function reportRoutes(fastify: FastifyInstance) {
 			}
 
 			const userId = request.user.userId;
+
+			// Validate game chat reports
+			if (parseResult.data.problemType === ProblemTypeEnum.GAME_CHAT) {
+				const chatMessage = await ChatMessage.findById(
+					parseResult.data.problematicIdentifier
+				);
+
+				if (!chatMessage) {
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
+						.send({ error: "Chat message not found" });
+				}
+			}
 
 			const newReportData: Omit<ReportEntity, "createdAt" | "updatedAt"> = {
 				...parseResult.data,

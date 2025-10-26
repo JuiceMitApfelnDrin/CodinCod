@@ -7,12 +7,13 @@
 	import { frontendUrls } from "types";
 	import type { ActionData, PageData } from "./$types";
 
-	interface Props {
+	let {
+		data,
+		form
+	}: {
 		data: PageData;
 		form: ActionData;
-	}
-
-	let { data, form }: Props = $props();
+	} = $props();
 </script>
 
 <svelte:head>

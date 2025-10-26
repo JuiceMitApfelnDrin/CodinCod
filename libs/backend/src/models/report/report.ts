@@ -1,13 +1,13 @@
-import mongoose, { Document, ObjectId, Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import { ProblemTypeEnum, ReportEntity, reviewStatusEnum } from "types";
 import { REPORT, USER } from "../../utils/constants/model.js";
 
 export interface ReportDocument
 	extends Document,
 		Omit<ReportEntity, "reportedBy" | "resolvedBy" | "problematicIdentifier"> {
-	reportedBy: ObjectId;
-	resolvedBy?: ObjectId;
-	problematicIdentifier: ObjectId;
+	reportedBy: mongoose.Types.ObjectId;
+	resolvedBy?: mongoose.Types.ObjectId;
+	problematicIdentifier: mongoose.Types.ObjectId;
 }
 
 const reportSchema = new Schema<ReportDocument>({
@@ -22,7 +22,8 @@ const reportSchema = new Schema<ReportDocument>({
 		enum: [
 			ProblemTypeEnum.PUZZLE,
 			ProblemTypeEnum.USER,
-			ProblemTypeEnum.COMMENT
+			ProblemTypeEnum.COMMENT,
+			ProblemTypeEnum.GAME_CHAT
 		]
 	},
 	reportedBy: {

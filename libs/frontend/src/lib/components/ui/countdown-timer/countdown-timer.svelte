@@ -4,11 +4,11 @@
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
 
-	interface Props {
+	let {
+		endDate
+	}: {
 		endDate: Date | undefined;
-	}
-
-	let { endDate }: Props = $props();
+	} = $props();
 
 	const DEFAULT_TIME_REMAINING = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 

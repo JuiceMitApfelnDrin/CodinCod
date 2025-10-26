@@ -2,11 +2,11 @@
 	import { Badge, type BadgeVariant } from "@/components/ui/badge";
 	import { puzzleVisibilityEnum, type PuzzleVisibility } from "types";
 
-	interface Props {
+	let {
+		visibility = puzzleVisibilityEnum.DRAFT
+	}: {
 		visibility?: PuzzleVisibility;
-	}
-
-	let { visibility = puzzleVisibilityEnum.DRAFT }: Props = $props();
+	} = $props();
 
 	const variantMap: Record<PuzzleVisibility, BadgeVariant> = {
 		[puzzleVisibilityEnum.APPROVED]: "success",

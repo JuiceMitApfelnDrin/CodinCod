@@ -33,19 +33,17 @@
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
-		puzzle: PuzzleDto;
-		onPlayerSubmitCode?: (submissionId: string) => void;
-		onPlayerChangeLanguage?: (language: string) => void;
-		endDate: Date | undefined;
-	}
-
 	let {
 		endDate,
 		onPlayerChangeLanguage = () => {},
 		onPlayerSubmitCode = () => {},
 		puzzle
-	}: Props = $props();
+	}: {
+		puzzle: PuzzleDto;
+		onPlayerSubmitCode?: (submissionId: string) => void;
+		onPlayerChangeLanguage?: (language: string) => void;
+		endDate: Date | undefined;
+	} = $props();
 
 	let code: string = $state("");
 	let language: PuzzleLanguage = $state("");

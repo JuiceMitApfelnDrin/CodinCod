@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { CHAT_MESSAGE_CONFIG } from "../config/chat-message-config.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const chatMessageSchema = z.object({
+	_id: objectIdSchema.optional(),
 	username: z.string(),
 	message: z
 		.string()

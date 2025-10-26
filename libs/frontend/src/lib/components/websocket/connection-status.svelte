@@ -5,19 +5,17 @@
 		type WebSocketState
 	} from "@/websocket/websocket-constants";
 
-	interface Props {
-		wsManager: WebSocketManager<any, any>;
-		state: WebSocketState;
-		class?: string;
-		showLabel?: boolean;
-	}
-
 	let {
 		wsManager,
 		state,
 		class: className = "",
 		showLabel = false
-	}: Props = $props();
+	}: {
+		wsManager: WebSocketManager<any, any>;
+		state: WebSocketState;
+		class?: string;
+		showLabel?: boolean;
+	} = $props();
 
 	const statusConfig = $derived.by(() => {
 		const isOnline = wsManager.isNetworkOnline();

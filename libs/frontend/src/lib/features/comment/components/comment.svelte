@@ -29,12 +29,13 @@
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		comment = $bindable(),
+		onDeleted
+	}: {
 		comment: CommentDto;
 		onDeleted: (commentId: ObjectId) => void;
-	}
-
-	let { comment = $bindable(), onDeleted }: Props = $props();
+	} = $props();
 
 	let isReplying: boolean = $state(false);
 

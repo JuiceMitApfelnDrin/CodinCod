@@ -29,11 +29,11 @@
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
-	interface Props {
+	let {
+		game = $bindable()
+	}: {
 		game: GameDto;
-	}
-
-	let { game = $bindable() }: Props = $props();
+	} = $props();
 	let submissions: SubmissionDto[] = $derived(
 		game.playerSubmissions.filter((submission) =>
 			isSubmissionDto(submission)

@@ -4,6 +4,7 @@ import { PASSWORD_CONFIG } from "../../authentication/config/password-config.js"
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { userProfileSchema } from "./user-profile.schema.js";
 import { DEFAULT_USER_ROLE, userRoleSchema } from "../enum/user-role.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const userEntitySchema = z.object({
 	username: z
@@ -31,5 +32,9 @@ export const userEntitySchema = z.object({
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
 	role: userRoleSchema.prefault(DEFAULT_USER_ROLE),
+	// Ban tracking fields
+	reportCount: z.number().int().min(0).default(0),
+	banCount: z.number().int().min(0).default(0),
+	currentBan: objectIdSchema.optional(), // Reference to active UserBan
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;

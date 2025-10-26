@@ -3,12 +3,13 @@
 	import Toggle from "./toggle.svelte";
 	import { CheckIcon } from "@lucide/svelte";
 
-	interface Props {
+	let {
+		checked,
+		onChecked
+	}: {
 		checked: boolean;
 		onChecked: () => void;
-	}
-
-	let { checked, onChecked }: Props = $props();
+	} = $props();
 </script>
 
 <Toggle

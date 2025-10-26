@@ -106,12 +106,10 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 				return reply.status(201).send(submission);
 			} catch (error) {
-				fastify.log.error("Error saving submission:", String(error));
+				fastify.log.error(error, "Error saving submission");
 
 				if (isValidationError(error)) {
-					return reply
-						.status(400)
-						.send({ error: "Validation failed", details: error.issues });
+					return reply.status(400).send({ error: "Validation failed" });
 				}
 				return reply.status(500).send({ error: "Failed to create submission" });
 			}

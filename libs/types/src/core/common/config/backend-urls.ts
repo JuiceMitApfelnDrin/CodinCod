@@ -1,3 +1,5 @@
+import { BanType } from "../../moderation/schema/ban-type.schema.js";
+
 export const baseRoute = "/api/v1";
 
 export const backendUrls = {
@@ -46,9 +48,13 @@ export const backendUrls = {
 	moderationReportResolve: (id: string) =>
 		`${baseRoute}/moderation/report/${id}/resolve`,
 	REPORT: `${baseRoute}/report`,
+	moderationUserByIdBanByType: (userId: string, banType: BanType) => `${baseRoute}/moderation/user/${userId}/ban/${banType}`,
+	moderationUserByIdBanHistory: (userId: string) => `${baseRoute}/moderation/user/${userId}/ban/history`,
+	moderationUserByIdUnban: (userId: string) => `${baseRoute}/moderation/user/${userId}/unban`,
 } as const;
 
 export const backendParams = {
 	USERNAME: ":username",
 	ID: ":id",
+	TYPE: ":type",
 } as const;

@@ -6,17 +6,15 @@
 	import { preferences } from "@/stores/preferences";
 	import type { Extension } from "@codemirror/state";
 
-	interface Props {
-		readonly?: boolean;
-		value?: string;
-		language?: PuzzleLanguage;
-	}
-
 	let {
 		language = "",
 		readonly = false,
 		value = $bindable("")
-	}: Props = $props();
+	}: {
+		readonly?: boolean;
+		value?: string;
+		language?: PuzzleLanguage;
+	} = $props();
 
 	async function getEditorConfig(
 		language: string,

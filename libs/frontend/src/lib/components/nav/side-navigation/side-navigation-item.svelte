@@ -4,13 +4,15 @@
 	import type { Component } from "svelte";
 	import type { FrontendUrl } from "types";
 
-	interface Props {
+	let {
+		href,
+		icon = undefined,
+		text
+	}: {
 		href: FrontendUrl;
 		text: string;
 		icon?: Component;
-	}
-
-	let { href, icon = undefined, text }: Props = $props();
+	} = $props();
 </script>
 
 <a

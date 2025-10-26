@@ -2,11 +2,11 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import type { ValidatorEntity } from "types";
 
-	interface Props {
+	let {
+		validators
+	}: {
 		validators: ValidatorEntity[];
-	}
-
-	let { validators }: Props = $props();
+	} = $props();
 </script>
 
 <H1>Test results</H1>
