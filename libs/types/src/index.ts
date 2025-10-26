@@ -136,6 +136,7 @@ export * from "./core/user/schema/user-profile.schema.js";
 export * from "./utils/constants/http-methods.js";
 
 // utils - functions
+export * from "./utils/functions/get-cookie-options.js";
 export * from "./utils/functions/get-values.js";
 export * from "./utils/functions/get-user-id-from-user.js";
 export * from "./utils/functions/is-author.js";

@@ -99,6 +99,18 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "Not authorized to edit this puzzle" });
 				}
+
+				if (
+					parseResult.data.visibility === puzzleVisibilityEnum.APPROVED &&
+					!isModerator(user?.role)
+				) {
+					return reply.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN).send({
+						error: "Only moderators can approve puzzles",
+						message:
+							"You cannot set your own puzzle to approved status. Submit it for review instead."
+					});
+				}
+
 				Object.assign(puzzle, parseResult.data);
 				await puzzle.save();
 

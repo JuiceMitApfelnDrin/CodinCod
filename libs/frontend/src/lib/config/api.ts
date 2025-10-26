@@ -12,5 +12,11 @@ export const apiUrls = {
 	userByUsername: (username: string) => `/api/user/${username}`,
 	userByUsernamePuzzle: (username: string) => `/api/user/${username}/puzzle`,
 	usernameIsAvailable: (username: string) =>
-		`/api/username-is-available/${username}`
+		`/api/username-is-available/${username}`,
+	moderationPuzzleByIdApprove: (id: string) =>
+		`/api/moderation/puzzle/${id}/approve`,
+	moderationPuzzleByIdRevise: (id: string) =>
+		`/api/moderation/puzzle/${id}/revise`,
+	moderationReportByIdResolve: (id: string) =>
+		`/api/moderation/report/${id}/resolve`
 } as const;

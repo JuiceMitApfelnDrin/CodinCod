@@ -1,50 +1,62 @@
 <script lang="ts">
 	import { goto, invalidateAll } from "$app/navigation";
-	import { page } from "$app/stores";
-	import { reviewItemTypeEnum, reviewStatusEnum } from "types";
+	import { httpRequestMethod, reviewItemTypeEnum } from "types";
 	import type { PageData } from "./$types";
 	import { toast } from "svelte-sonner";
+	import * as Table from "$lib/components/ui/table";
+	import * as Select from "$lib/components/ui/select";
+	import * as Dialog from "$lib/components/ui/dialog";
+	import { Textarea } from "$lib/components/ui/textarea";
+	import { Label } from "$lib/components/ui/label";
+	import Pagination from "$lib/components/nav/pagination.svelte";
+	import Container from "#/ui/container/container.svelte";
+	import H1 from "#/typography/h1.svelte";
+	import { Button } from "#/ui/button";
+	import { page } from "$app/state";
+	import { formattedDateYearMonthDay } from "@/utils/date-functions";
+	import { testIds } from "@/config/test-ids";
+	import { apiUrls } from "@/config/api";
 
 	let { data }: { data: PageData } = $props();
+
+	let reviseDialogOpen = $state(false);
+	let selectedPuzzleId = $state("");
+	let revisionReason = $state("");
 
 	const reviewTypes = [
 		{
 			value: reviewItemTypeEnum.PENDING_PUZZLE,
-			label: "Pending Puzzles"
+			label: "Pending puzzles"
 		},
 		{
 			value: reviewItemTypeEnum.REPORTED_PUZZLE,
-			label: "Reported Puzzles"
+			label: "Reported puzzles"
 		},
 		{
 			value: reviewItemTypeEnum.REPORTED_USER,
-			label: "Reported Users"
+			label: "Reported users"
 		},
 		{
 			value: reviewItemTypeEnum.REPORTED_COMMENT,
-			label: "Reported Comments"
+			label: "Reported comments"
 		}
 	];
 
-	function changeType(newType: string) {
-		const url = new URL($page.url);
+	function changeType(newType: string | undefined) {
+		if (!newType) return;
+
+		const url = new URL(page.url);
+
 		url.searchParams.set("type", newType);
 		url.searchParams.set("page", "1"); // Reset to first page
-		goto(url.toString());
-	}
 
-	function formatDate(date: Date | string): string {
-		return new Date(date).toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "short",
-			day: "numeric"
-		});
+		goto(url.toString());
 	}
 
 	async function handleApprove(id: string) {
 		try {
-			const response = await fetch(`/api/moderation/puzzle/${id}/approve`, {
-				method: "POST"
+			const response = await fetch(apiUrls.moderationPuzzleByIdApprove(id), {
+				method: httpRequestMethod.POST
 			});
 
 			if (!response.ok) {
@@ -59,17 +71,36 @@
 		}
 	}
 
-	async function handleRevise(id: string) {
+	function openReviseDialog(id: string) {
+		selectedPuzzleId = id;
+		revisionReason = "";
+		reviseDialogOpen = true;
+	}
+
+	async function submitRevision() {
+		if (!revisionReason || revisionReason.length < 10) {
+			toast.error("Please provide a reason (at least 10 characters)");
+			return;
+		}
+
 		try {
-			const response = await fetch(`/api/moderation/puzzle/${id}/revise`, {
-				method: "POST"
-			});
+			const response = await fetch(
+				apiUrls.moderationPuzzleByIdRevise(selectedPuzzleId),
+				{
+					method: httpRequestMethod.POST,
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ reason: revisionReason })
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to request revisions");
 			}
 
 			toast.success("Puzzle sent back for revisions");
+			reviseDialogOpen = false;
 			await invalidateAll();
 		} catch (error) {
 			console.error("Error requesting revisions:", error);
@@ -79,8 +110,8 @@
 
 	async function handleResolve(id: string, status: "resolved" | "rejected") {
 		try {
-			const response = await fetch(`/api/moderation/report/${id}/resolve`, {
-				method: "POST",
+			const response = await fetch(apiUrls.moderationReportByIdResolve(id), {
+				method: httpRequestMethod.POST,
 				headers: {
 					"Content-Type": "application/json"
 				},
@@ -100,24 +131,29 @@
 	}
 </script>
 
-<div class="container mx-auto p-6">
-	<h1 class="mb-6 text-3xl font-bold">Moderation Dashboard</h1>
+<Container>
+	<H1>Moderation Dashboard</H1>
 
-	<!-- Type Selector -->
-	<div class="mb-6">
-		<label for="review-type" class="mb-2 block text-sm font-medium">
+	<div>
+		<Label for="review-type" class="mb-2 block text-sm font-medium">
 			Review Type
-		</label>
-		<select
-			id="review-type"
-			class="w-full max-w-md rounded-md border border-gray-300 bg-white px-4 py-2 dark:border-gray-600 dark:bg-gray-800"
+		</Label>
+
+		<Select.Root
+			type="single"
 			value={data.currentType}
-			onchange={(e) => changeType(e.currentTarget.value)}
+			onValueChange={(v: string | undefined) => changeType(v)}
 		>
-			{#each reviewTypes as type}
-				<option value={type.value}>{type.label}</option>
-			{/each}
-		</select>
+			<Select.Trigger class="w-full max-w-md">
+				{reviewTypes.find((t) => t.value === data.currentType)?.label ??
+					"Select review type"}
+			</Select.Trigger>
+			<Select.Content>
+				{#each reviewTypes as type}
+					<Select.Item value={type.value}>{type.label}</Select.Item>
+				{/each}
+			</Select.Content>
+		</Select.Root>
 	</div>
 
 	<!-- Error Message -->
@@ -130,59 +166,39 @@
 	{/if}
 
 	<!-- Review Items Table -->
-	<div
-		class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700"
-	>
-		<table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-			<thead class="bg-gray-50 dark:bg-gray-800">
-				<tr>
-					<th
-						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
-					>
-						Title
-					</th>
-					<th
-						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
-					>
+	<div class="rounded-lg border">
+		<Table.Root>
+			<Table.Header>
+				<Table.Row>
+					<Table.Head>Title</Table.Head>
+					<Table.Head>
 						{data.currentType === reviewItemTypeEnum.PENDING_PUZZLE
 							? "Author"
 							: "Reported By"}
-					</th>
-					<th
-						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
-					>
-						Date
-					</th>
-					<th
-						class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300"
-					>
-						Actions
-					</th>
-				</tr>
-			</thead>
-			<tbody
-				class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900"
-			>
+					</Table.Head>
+					<Table.Head>Date</Table.Head>
+					<Table.Head>Actions</Table.Head>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
 				{#if data.reviewItems.data.length === 0}
-					<tr>
-						<td
-							colspan="4"
-							class="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
+					<Table.Row>
+						<Table.Cell
+							colspan={4}
+							class="text-muted-foreground py-8 text-center"
 						>
 							No items to review
-						</td>
-					</tr>
+						</Table.Cell>
+					</Table.Row>
 				{:else}
 					{#each data.reviewItems.data as item}
-						<tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-							<td class="px-6 py-4">
-								<div
-									class="text-sm font-medium text-gray-900 dark:text-gray-100"
-								>
+						<Table.Row>
+							<Table.Cell>
+								<div class="font-medium">
 									{item.title}
 								</div>
 								{#if item.description}
-									<div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+									<div class="text-muted-foreground mt-1 text-sm">
 										{item.description.substring(0, 100)}
 										{item.description.length > 100 ? "..." : ""}
 									</div>
@@ -194,92 +210,111 @@
 										Report: {item.reportExplanation}
 									</div>
 								{/if}
-							</td>
-							<td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+							</Table.Cell>
+							<Table.Cell class="text-muted-foreground">
 								{item.authorName || item.reportedBy || "Unknown"}
-							</td>
-							<td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-								{formatDate(item.createdAt)}
-							</td>
-							<td class="px-6 py-4 text-sm">
+							</Table.Cell>
+							<Table.Cell class="text-muted-foreground">
+								{formattedDateYearMonthDay(item.createdAt)}
+							</Table.Cell>
+							<Table.Cell>
 								{#if data.currentType === reviewItemTypeEnum.PENDING_PUZZLE}
 									<div class="flex gap-2">
-										<button
+										<Button
 											onclick={() => handleApprove(item.id)}
-											class="rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700"
+											variant="default"
+											size="sm"
+											class="bg-green-600 hover:bg-green-700"
+											data-testid={testIds.MODERATION_PAGE_BUTTON_APPROVE_PUZZLE}
 										>
 											Approve
-										</button>
-										<button
-											onclick={() => handleRevise(item.id)}
-											class="rounded bg-yellow-600 px-3 py-1 text-white hover:bg-yellow-700"
+										</Button>
+										<Button
+											onclick={() => openReviseDialog(item.id)}
+											variant="default"
+											size="sm"
+											class="bg-yellow-600 hover:bg-yellow-700"
+											data-testid={testIds.MODERATION_PAGE_BUTTON_REVISE_PUZZLE}
 										>
 											Revise
-										</button>
+										</Button>
 									</div>
 								{:else}
 									<div class="flex gap-2">
-										<button
+										<Button
 											onclick={() => handleResolve(item.id, "resolved")}
-											class="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
+											variant="default"
+											size="sm"
+											class="bg-blue-600 hover:bg-blue-700"
+											data-testid={testIds.MODERATION_PAGE_BUTTON_RESOLVE_REPORT}
 										>
 											Resolve
-										</button>
-										<button
+										</Button>
+										<Button
 											onclick={() => handleResolve(item.id, "rejected")}
-											class="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+											variant="destructive"
+											size="sm"
+											data-testid={testIds.MODERATION_PAGE_BUTTON_REJECT_REPORT}
 										>
 											Reject
-										</button>
+										</Button>
 									</div>
 								{/if}
-							</td>
-						</tr>
+							</Table.Cell>
+						</Table.Row>
 					{/each}
 				{/if}
-			</tbody>
-		</table>
+			</Table.Body>
+		</Table.Root>
 	</div>
 
 	<!-- Pagination -->
 	{#if data.reviewItems.pagination.totalPages > 1}
-		<div class="mt-6 flex items-center justify-center gap-2">
-			{#if data.reviewItems.pagination.page > 1}
-				<button
-					onclick={() => {
-						const url = new URL($page.url);
-						url.searchParams.set(
-							"page",
-							String(data.reviewItems.pagination.page - 1)
-						);
-						goto(url.toString());
-					}}
-					class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
-				>
-					Previous
-				</button>
-			{/if}
-
-			<span class="px-4 py-2">
-				Page {data.reviewItems.pagination.page} of {data.reviewItems.pagination
-					.totalPages}
-			</span>
-
-			{#if data.reviewItems.pagination.page < data.reviewItems.pagination.totalPages}
-				<button
-					onclick={() => {
-						const url = new URL($page.url);
-						url.searchParams.set(
-							"page",
-							String(data.reviewItems.pagination.page + 1)
-						);
-						goto(url.toString());
-					}}
-					class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
-				>
-					Next
-				</button>
-			{/if}
-		</div>
+		<Pagination
+			currentPage={data.reviewItems.pagination.page}
+			totalPages={data.reviewItems.pagination.totalPages}
+		/>
 	{/if}
-</div>
+</Container>
+
+<Dialog.Root bind:open={reviseDialogOpen}>
+	<Dialog.Content class="sm:max-w-[525px]">
+		<Dialog.Header>
+			<Dialog.Title>Request Revisions</Dialog.Title>
+			<Dialog.Description>
+				Please provide a reason for requesting revisions. The puzzle author will
+				see this feedback.
+			</Dialog.Description>
+		</Dialog.Header>
+		<div class="grid gap-4 py-4">
+			<div class="grid gap-2">
+				<Label for="revision-reason">Reason for revision</Label>
+				<Textarea
+					id="revision-reason"
+					bind:value={revisionReason}
+					placeholder="Explain what needs to be improved..."
+					class="min-h-[100px]"
+				/>
+				<p class="text-muted-foreground text-sm">
+					{revisionReason.length}/500 characters (minimum 10)
+				</p>
+			</div>
+		</div>
+		<Dialog.Footer>
+			<Button
+				variant="outline"
+				onclick={() => (reviseDialogOpen = false)}
+				data-testid={testIds.MODERATION_PAGE_BUTTON_CANCEL_REVISION}
+			>
+				Cancel
+			</Button>
+			<Button
+				onclick={submitRevision}
+				disabled={revisionReason.length < 10 || revisionReason.length > 500}
+				data-testid={testIds.MODERATION_PAGE_BUTTON_SUBMIT_REVISION}
+			>
+				Submit Revision Request
+			</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

@@ -71,6 +71,8 @@ export default async function moderationPuzzleByIdRoutes(
 					.send({ error: parseResult.error.issues });
 			}
 
+			const { reason } = parseResult.data;
+
 			try {
 				const puzzle = await Puzzle.findById(id);
 
@@ -80,8 +82,8 @@ export default async function moderationPuzzleByIdRoutes(
 						.send({ error: "Puzzle not found" });
 				}
 
-				// Update puzzle to revise status
 				puzzle.visibility = puzzleVisibilityEnum.REVISE;
+				puzzle.moderationFeedback = reason;
 				puzzle.updatedAt = new Date();
 				await puzzle.save();
 

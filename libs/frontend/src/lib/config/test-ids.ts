@@ -85,6 +85,18 @@ export const testIds = {
 	NAVIGATION_MENU_ANCHOR_MODERATION: "navigation-menu-anchor-moderation",
 	NAVIGATION_TOGGLE_THEME: "navigation-toggle-theme",
 
+	// moderation page
+	MODERATION_PAGE_BUTTON_APPROVE_PUZZLE:
+		"moderation-page-button-approve-puzzle",
+	MODERATION_PAGE_BUTTON_REVISE_PUZZLE: "moderation-page-button-revise-puzzle",
+	MODERATION_PAGE_BUTTON_RESOLVE_REPORT:
+		"moderation-page-button-resolve-report",
+	MODERATION_PAGE_BUTTON_REJECT_REPORT: "moderation-page-button-reject-report",
+	MODERATION_PAGE_BUTTON_CANCEL_REVISION:
+		"moderation-page-button-cancel-revision",
+	MODERATION_PAGE_BUTTON_SUBMIT_REVISION:
+		"moderation-page-button-submit-revision",
+
 	// pagination
 	PAGINATION_BUTTON_FIRST: "pagination-button-first",
 	PAGINATION_BUTTON_LAST: "pagination-button-last",
