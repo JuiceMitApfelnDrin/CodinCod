@@ -183,9 +183,6 @@ importers:
       marked:
         specifier: ^16.2.1
         version: 16.4.1
-      svelte-codemirror-editor:
-        specifier: ^2.0.0
-        version: 2.1.0(codemirror@6.0.2)(svelte@5.41.4)
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -3058,12 +3055,6 @@ packages:
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
-
-  svelte-codemirror-editor@2.1.0:
-    resolution: {integrity: sha512-WGkSsIYNpVcOVxaQPkmdBQhaGyKLmg6pgaS/b+7guRb4eikrbXYtvNFuW2AzKJi8ZbLhSngrf3SRiZOuwuskrQ==}
-    peerDependencies:
-      codemirror: ^6.0.0
-      svelte: ^5.0.0
 
   svelte-eslint-parser@1.4.0:
     resolution: {integrity: sha512-fjPzOfipR5S7gQ/JvI9r2H8y9gMGXO3JtmrylHLLyahEMquXI0lrebcjT+9/hNgDej0H7abTyox5HpHmW1PSWA==}
@@ -6086,11 +6077,6 @@ snapshots:
       typescript: 5.9.3
     transitivePeerDependencies:
       - picomatch
-
-  svelte-codemirror-editor@2.1.0(codemirror@6.0.2)(svelte@5.41.4):
-    dependencies:
-      codemirror: 6.0.2
-      svelte: 5.41.4
 
   svelte-eslint-parser@1.4.0(svelte@5.41.4):
     dependencies:
