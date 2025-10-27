@@ -95,18 +95,18 @@
 					placeholder={`${PASSWORD_CONFIG.minPasswordLength}characters`}
 				/>
 				<Button
-						onclick={() => (showPassword = !showPassword)}
-						data-testid={testIds.REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
-					>
-						{#if showPassword}
-							<EyeClosed /> Hide password
-						{:else}
-							<Eye /> Show password
-						{/if}
-					</Button>
+					onclick={() => (showPassword = !showPassword)}
+					data-testid={testIds.REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
+				>
+					{#if showPassword}
+						<EyeClosed /> Hide password
+					{:else}
+						<Eye /> Show password
+					{/if}
+				</Button>
 			{/snippet}
 		</Form.Control>
-		
+
 		<Form.Description
 			>Password must be at least {PASSWORD_CONFIG.minPasswordLength} characters.
 			<span class="text-xs"

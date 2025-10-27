@@ -67,24 +67,24 @@
 			{#snippet children({ props })}
 				<Form.Label class="text-lg">Password</Form.Label>
 
-					<Input
-						type={showPassword ? "text" : "password"}
-						{...props}
-						data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
-						bind:value={$formData.password}
-						minlength={PASSWORD_CONFIG.minPasswordLength}
-						class="pr-10"
-					/>
-					<Button
-						onclick={() => (showPassword = !showPassword)}
-						data-testid={testIds.LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
-					>
-						{#if showPassword}
-							<EyeClosed /> Hide password
-						{:else}
-							<Eye /> Show password
-						{/if}
-					</Button>
+				<Input
+					type={showPassword ? "text" : "password"}
+					{...props}
+					data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
+					bind:value={$formData.password}
+					minlength={PASSWORD_CONFIG.minPasswordLength}
+					class="pr-10"
+				/>
+				<Button
+					onclick={() => (showPassword = !showPassword)}
+					data-testid={testIds.LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
+				>
+					{#if showPassword}
+						<EyeClosed /> Hide password
+					{:else}
+						<Eye /> Show password
+					{/if}
+				</Button>
 			{/snippet}
 		</Form.Control>
 		<Form.FieldErrors />

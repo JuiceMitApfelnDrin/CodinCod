@@ -57,7 +57,8 @@ export const testIds = {
 	LOGIN_FORM_BUTTON_LOGIN: "login-form-button-login",
 	LOGIN_FORM_INPUT_IDENTIFIER: "login-form-input-identifier",
 	LOGIN_FORM_INPUT_PASSWORD: "login-form-input-password",
-	LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD: "login-form-button-toggle-show-password",
+	LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD:
+		"login-form-button-toggle-show-password",
 
 	// multiplayer by id page
 	MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER:
