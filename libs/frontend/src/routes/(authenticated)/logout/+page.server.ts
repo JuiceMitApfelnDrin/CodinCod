@@ -23,7 +23,7 @@ export const actions = {
 				console.error("Backend logout failed:", errorText);
 			}
 
-						// Also clear it on the frontend side with the same options
+			// Also clear it on the frontend side with the same options
 			const isProduction = env.NODE_ENV === environment.PRODUCTION;
 			const cookieOptions = getCookieOptions({
 				isProduction,
