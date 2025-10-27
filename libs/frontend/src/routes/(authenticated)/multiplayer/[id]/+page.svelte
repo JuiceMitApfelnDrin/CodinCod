@@ -358,7 +358,7 @@
 					</ul>
 				{/if}
 
-				<Chat {chatMessages} {sendMessage} />
+				<Chat {chatMessages} {sendMessage} {gameId} />
 			</Resizable.Pane>
 		</Resizable.PaneGroup>
 	</Container>

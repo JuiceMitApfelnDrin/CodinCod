@@ -1,10 +1,12 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { DEFAULT_USER_ROLE, UserEntity } from "types";
 import bcrypt from "bcryptjs";
-import { USER } from "../../utils/constants/model.js";
+import { USER, USER_BAN } from "../../utils/constants/model.js";
 import { profileSchema } from "./user-profile.js";
 
-interface UserDocument extends Document, UserEntity {}
+export interface UserDocument extends Document, Omit<UserEntity, "currentBan"> {
+	currentBan?: mongoose.Types.ObjectId | null;
+}
 
 const userSchema = new Schema<UserDocument>({
 	createdAt: {
@@ -45,6 +47,22 @@ const userSchema = new Schema<UserDocument>({
 		trim: true,
 		required: false,
 		default: () => DEFAULT_USER_ROLE
+	},
+	reportCount: {
+		type: Number,
+		default: 0,
+		min: 0
+	},
+	banCount: {
+		type: Number,
+		default: 0,
+		min: 0
+	},
+	currentBan: {
+		type: Schema.Types.ObjectId,
+		ref: USER_BAN,
+		required: false,
+		default: null
 	}
 });
 

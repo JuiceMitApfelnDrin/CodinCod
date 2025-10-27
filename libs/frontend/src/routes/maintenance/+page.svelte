@@ -3,6 +3,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
+	import { testIds } from "@/config/test-ids";
 </script>
 
 <svelte:head>
@@ -34,6 +35,7 @@
 		target="_blank"
 		rel="noopener noreferrer"
 		size="lg"
+		data-testid={testIds.MAINTENANCE_PAGE_BUTTON_DISCORD}
 	>
 		Join Discord
 	</Button>

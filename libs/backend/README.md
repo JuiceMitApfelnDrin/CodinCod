@@ -1,55 +1,62 @@
 # Backend
 
-Written in [Node-js](https://nodejs.org/en), with [Fastify](https://fastify.dev/).
+A Node.js backend API built with [Fastify](https://fastify.dev/), MongoDB, and TypeScript. This backend provides REST endpoints for a coding challenge platform.
 
-## Getting started
+## Table of Contents
 
-### Environment variables
+- [Architecture Overview](#architecture-overview)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
 
-```bash
-PORT=8888
-MONGO_URI=mongodb://codincod-dev:hunter2@localhost:27017
-JWT_SECRET=your_jwt_secret_here
-JWT_EXPIRY=7d
-NODE_ENV=development
-PISTON_URI=http://localhost:2000
-# These are only used when running mongo with `docker compose`, they should match user and password in MONGO_URI
-CODINCOD_MONGODB_USERNAME=codincod-dev
-CODINCOD_MONGODB_PASSWORD=hunter2
-```
+## Architecture Overview
 
-#### What they mean and where to get them?
+### Key Technologies
 
-<!-- TODO: create a better title or something for this section -->
+- **Node.js 20+** - Runtime environment
+- **TypeScript** - Type-safe development
+- **Fastify** - Web framework
+- **Mongoose** - MongoDB ODM
+- **Zod** - Schema validation (shared via `types` package)
+- **Piston** - Code execution service
 
-- `PORT`: when you start the server, it will occupy a port, through which you can access the backend, don't choose the same port for your frontend
-- `JWT_SECRET`: a key that is used to encrypt authentication info between frontend and backend, make it a bit long and random, can be anything but should be a secret ;)
-- `JWT_EXPIRY`: the amount of time after which a JWT token will expire, and a user has to log-in again
+## Getting Started
 
-### Setup
+### Prerequisites
 
-1. Make sure you have set up the project following [the installation instructions for the parent project](../README.md)
+1. **Node.js 20+** and **pnpm** installed
+2. **MongoDB** running locally or accessible via connection string
+3. **Piston service** running (for code execution features and seeding the database)
 
-2. Install dependencies using [`pnpm`](https://github.com/pnpm/pnpm) (`npm` does NOT work because it does not support workspace dependencies which we use for the [`types`](https://github.com/JuiceMitApfelnDrin/CodinCodTypes) package)
+### Setup Steps
+
+1. **Install dependencies** using pnpm (workspace-aware):
 
    ```bash
    pnpm install
    ```
 
-3. Fill in the environment variables and make sure you have MongoDB running at `MONGO_URI`. While developing you may use `docker compose up` to start up mongo locally.
+2. **Set up environment variables** (see [Environment Variables](#environment-variables))
 
-4. Start a development server:
+3. **Run database migrations** (creates collections and populates initial data):
 
    ```bash
-   pnpm run dev
-
-   # or start the server and open the app in a new browser tab
-   pnpm run dev -- --open
+   pnpm migrate
    ```
 
-## Code compilation
+4. **Seed test data** (optional, for development):
 
-There are several ways to handle code compilation in a safe way, research:
+   ```bash
+   pnpm seed
+   ```
 
-- [kennel api](https://github.com/melpon/wandbox/blob/master/kennel/API.md)
-- [piston api](https://github.com/engineer-man/piston)
+5. **Start development server**:
+
+   ```bash
+   pnpm dev
+   ```
+
+   The API will be available at `http://localhost:<PORT>` (default: 8888)
+
+## Environment Variables
+
+Create a `.env` file in `libs/backend/` based on `.env.example`:

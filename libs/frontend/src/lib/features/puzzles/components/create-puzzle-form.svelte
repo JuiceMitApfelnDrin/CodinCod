@@ -9,11 +9,11 @@
 	import { page } from "$app/stores";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		data
+	}: {
 		data: SuperValidated<CreatePuzzle>;
-	}
-
-	let { data }: Props = $props();
+	} = $props();
 
 	const form = superForm(data, {
 		validators: zod4Client(createPuzzleSchema)

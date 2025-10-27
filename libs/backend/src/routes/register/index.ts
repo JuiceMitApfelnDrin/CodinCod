@@ -3,7 +3,12 @@ import { z } from "zod";
 import { Error } from "mongoose";
 import { MongoError } from "mongodb";
 import User from "../../models/user/user.js";
-import { cookieKeys, environment, registerSchema } from "types";
+import {
+	cookieKeys,
+	environment,
+	getCookieOptions,
+	registerSchema
+} from "types";
 import { generateToken } from "../../utils/functions/generate-token.js";
 
 export default async function registerRoutes(fastify: FastifyInstance) {
@@ -55,21 +60,15 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					isAuthenticated: true
 				};
 				const token = generateToken(fastify, authenticatedUserInfo);
-				const cookieOptions: any = {
-					path: "/",
-					httpOnly: true,
-					secure: process.env.NODE_ENV === environment.PRODUCTION,
-					sameSite:
-						process.env.NODE_ENV === environment.PRODUCTION ? "none" : "lax",
-					maxAge: 7 * 24 * 60 * 60 // 7 days
-				};
+				const isProduction = process.env.NODE_ENV === environment.PRODUCTION;
 
-				// Set domain for cross-subdomain cookies in production
-				// codincod.com (frontend) and backend.codincod.com (backend) need .codincod.com
-				if (process.env.NODE_ENV === environment.PRODUCTION) {
-					// Leading dot is critical for cross-subdomain cookies!
-					cookieOptions.domain = process.env.FRONTEND_HOST;
-				}
+				const cookieOptions = getCookieOptions({
+					isProduction,
+					...(process.env.FRONTEND_HOST && {
+						frontendHost: process.env.FRONTEND_HOST
+					}),
+					maxAge: 7 * 24 * 60 * 60
+				});
 
 				return reply
 					.status(200)

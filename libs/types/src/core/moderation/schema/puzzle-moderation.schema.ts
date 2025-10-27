@@ -1,18 +1,12 @@
 import { z } from "zod";
 
-/**
- * Request to approve a puzzle
- */
-export const approvePuzzleSchema = z.object({
-	// Can be extended later with feedback/notes
-});
+export const approvePuzzleSchema = z.object({});
 export type ApprovePuzzle = z.infer<typeof approvePuzzleSchema>;
 
-/**
- * Request to request revisions on a puzzle
- */
 export const revisePuzzleSchema = z.object({
-	// Can be extended later with feedback/notes
-	reason: z.string().optional(),
+	reason: z
+		.string()
+		.min(10, "Reason must be at least 10 characters")
+		.max(500, "Reason must be less than 500 characters"),
 });
 export type RevisePuzzle = z.infer<typeof revisePuzzleSchema>;

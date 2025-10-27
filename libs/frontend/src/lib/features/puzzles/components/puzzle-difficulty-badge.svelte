@@ -2,11 +2,11 @@
 	import { Badge, type BadgeVariant } from "@/components/ui/badge";
 	import { DifficultyEnum, type Difficulty } from "types";
 
-	interface Props {
+	let {
+		difficulty = DifficultyEnum.INTERMEDIATE
+	}: {
 		difficulty?: Difficulty;
-	}
-
-	let { difficulty = DifficultyEnum.INTERMEDIATE }: Props = $props();
+	} = $props();
 
 	const variantMap: Record<Difficulty, BadgeVariant> = {
 		[DifficultyEnum.BEGINNER]: "success",

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Component } from "svelte";
 
-	interface Props {
+	let {
+		data
+	}: {
 		data: { content: Component };
-	}
-
-	let { data }: Props = $props();
+	} = $props();
 	let Content = data.content;
 </script>
 

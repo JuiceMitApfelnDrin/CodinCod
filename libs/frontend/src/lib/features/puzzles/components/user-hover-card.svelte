@@ -3,7 +3,7 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import { frontendUrls, isUserDto, type UserDto } from "types";
-	import { Calendar } from "@lucide/svelte";
+	import Calendar from "@lucide/svelte/icons/calendar";
 	import { apiUrls } from "@/config/api";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { Button as ButtonPrimitive } from "bits-ui";
@@ -11,12 +11,13 @@
 	import { cn } from "@/utils/cn";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		class: className = undefined,
+		username
+	}: {
 		class?: ButtonPrimitive.RootProps["class"];
 		username: string;
-	}
-
-	let { class: className = undefined, username }: Props = $props();
+	} = $props();
 
 	const userInfoCache: Record<string, UserDto> = {};
 

@@ -1,3 +1,5 @@
+import { BanType } from "../../moderation/schema/ban-type.schema.js";
+
 export const baseRoute = "/api/v1";
 
 export const backendUrls = {
@@ -23,7 +25,12 @@ export const backendUrls = {
 	puzzleById: (id: string) => `${baseRoute}/puzzle/${id}`,
 	puzzleByIdComment: (id: string) => `${baseRoute}/puzzle/${id}/comment`,
 	puzzleByIdSolution: (id: string) => `${baseRoute}/puzzle/${id}/solution`,
-	PUZZLE_LANGUAGES: `${baseRoute}/puzzle/languages`,
+	PUZZLE_LANGUAGES: `${baseRoute}/puzzle/languages`, // deprecated, use PROGRAMMING_LANGUAGE instead
+
+	// programming language routes
+	PROGRAMMING_LANGUAGE: `${baseRoute}/programming-language`,
+	programmingLanguageById: (id: string) =>
+		`${baseRoute}/programming-language/${id}`,
 
 	// comment
 	COMMENT: `${baseRoute}/comment`,
@@ -46,9 +53,16 @@ export const backendUrls = {
 	moderationReportResolve: (id: string) =>
 		`${baseRoute}/moderation/report/${id}/resolve`,
 	REPORT: `${baseRoute}/report`,
+	moderationUserByIdBanByType: (userId: string, banType: BanType) =>
+		`${baseRoute}/moderation/user/${userId}/ban/${banType}`,
+	moderationUserByIdBanHistory: (userId: string) =>
+		`${baseRoute}/moderation/user/${userId}/ban/history`,
+	moderationUserByIdUnban: (userId: string) =>
+		`${baseRoute}/moderation/user/${userId}/unban`,
 } as const;
 
 export const backendParams = {
 	USERNAME: ":username",
 	ID: ":id",
+	TYPE: ":type",
 } as const;

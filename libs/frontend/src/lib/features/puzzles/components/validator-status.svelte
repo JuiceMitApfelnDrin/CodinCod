@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import { CheckCircle, CircleX, Circle } from "@lucide/svelte";
+	import CheckCircle from "@lucide/svelte/icons/check-circle";
+	import CircleX from "@lucide/svelte/icons/circle-x";
+	import Circle from "@lucide/svelte/icons/circle";
 	import type { HTMLInputAttributes } from "svelte/elements";
 	import { PuzzleResultEnum, type PuzzleResult } from "types";
 
-	interface Props {
+	let {
+		class: className = undefined,
+		puzzleResult
+	}: {
 		class?: HTMLInputAttributes["class"];
 		puzzleResult: PuzzleResult | undefined;
-	}
-
-	let { class: className = undefined, puzzleResult }: Props = $props();
+	} = $props();
 </script>
 
 {#if puzzleResult === PuzzleResultEnum.SUCCESS}

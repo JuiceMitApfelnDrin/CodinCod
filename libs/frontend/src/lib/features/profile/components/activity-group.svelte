@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { ChevronDown } from "@lucide/svelte";
+	import ChevronDown from "@lucide/svelte/icons/chevron-down";
 	import {
 		activityTypeEnum,
 		type AcceptedDate,
@@ -8,12 +8,13 @@
 		type ActivityType
 	} from "types";
 
-	interface Props {
+	let {
+		activities = [],
+		date
+	}: {
 		date: AcceptedDate;
 		activities?: Activity[];
-	}
-
-	let { activities = [], date }: Props = $props();
+	} = $props();
 
 	let activitiesByType = $derived.by(() => {
 		const activitiesByType = new Map<ActivityType, Activity[]>();

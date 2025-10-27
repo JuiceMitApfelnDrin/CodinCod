@@ -8,7 +8,8 @@ import {
 	isAuthenticatedInfo,
 	isGameDto,
 	isPuzzleDto,
-	ObjectId
+	ObjectId,
+	banTypeEnum
 } from "types";
 import { isValidObjectId } from "mongoose";
 import { parseRawDataGameRequest } from "@/utils/functions/parse-raw-data-message.js";
@@ -16,6 +17,8 @@ import Game, { GameDocument } from "@/models/game/game.js";
 import { UserWebSockets } from "./user-web-sockets.js";
 import { ParamsId } from "@/types/types.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
+import ChatMessageModel from "@/models/chat/chat-message.js";
+import { checkUserBanStatus } from "@/utils/moderation/escalation.js";
 
 const userWebSockets = new UserWebSockets();
 
@@ -33,7 +36,7 @@ function sendErrorAndClose(socket: WebSocket, message: string): void {
 	socket.close(1008, message);
 }
 
-export function gameSetup(
+export async function gameSetup(
 	socket: WebSocket,
 	req: FastifyRequest<ParamsId>,
 	fastify: FastifyInstance
@@ -42,6 +45,16 @@ export function gameSetup(
 
 	if (!isAuthenticatedInfo(req.user)) {
 		sendErrorAndClose(socket, "Authentication required");
+		return;
+	}
+
+	// Check if user is banned
+	const banStatus = await checkUserBanStatus(req.user.userId);
+	if (banStatus.isBanned && banStatus.ban) {
+		sendErrorAndClose(
+			socket,
+			`You are banned: ${banStatus.ban.reason}. ${banStatus.ban.banType === banTypeEnum.PERMANENT ? "This ban is permanent." : `Ban expires: ${banStatus.ban.endDate}`}`
+		);
 		return;
 	}
 
@@ -171,8 +184,34 @@ export function gameSetup(
 			}
 
 			case gameEventEnum.SEND_MESSAGE: {
+				// Check if user is banned before allowing chat
+				const banStatus = await checkUserBanStatus(req.user.userId);
+				if (banStatus.isBanned && banStatus.ban) {
+					userWebSockets.updateUser(req.user.username, {
+						event: gameEventEnum.ERROR,
+						message: `Cannot send message: You are banned. ${banStatus.ban.reason}`
+					});
+					break;
+				}
+
+				// Persist chat message to database
+				let chatMessageId;
+				try {
+					const chatMessage = new ChatMessageModel({
+						gameId: id,
+						userId: req.user.userId,
+						username: req.user.username,
+						message: parsedMessage.chatMessage.message
+					});
+					const savedMessage = await chatMessage.save();
+					chatMessageId = String(savedMessage._id);
+				} catch (error) {
+					fastify.log.error({ err: error }, "Failed to save chat message");
+				}
+
 				const updatedChatMessage: ChatMessage = {
 					...parsedMessage.chatMessage,
+					_id: chatMessageId,
 					createdAt: new Date().toISOString()
 				};
 

@@ -5,4 +5,5 @@ export const ProblemTypeEnum = {
 	PUZZLE: "puzzle",
 	USER: "user",
 	COMMENT: "comment",
+	GAME_CHAT: "game_chat",
 } as const;

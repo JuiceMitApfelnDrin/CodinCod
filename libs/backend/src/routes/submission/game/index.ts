@@ -12,20 +12,24 @@ import { isValidationError } from "../../../utils/functions/is-validation-error.
 import Game from "@/models/game/game.js";
 import Submission from "@/models/submission/submission.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 
 export default async function submissionGameRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: GameSubmissionParams }>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			// unpacking body
 			const { gameId, submissionId, userId } = request.body;
 
 			try {
-				const matchingSubmission =
-					await Submission.findById<SubmissionEntity>(submissionId).exec();
+				const matchingSubmission = await Submission.findById<SubmissionEntity>(
+					submissionId
+				)
+					.populate("programmingLanguage")
+					.exec();
 
 				if (
 					!matchingSubmission ||

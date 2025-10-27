@@ -1,13 +1,19 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
-import { PUZZLE, SUBMISSION, USER } from "../../utils/constants/model.js";
+import {
+	PROGRAMMING_LANGUAGE,
+	PUZZLE,
+	SUBMISSION,
+	USER
+} from "../../utils/constants/model.js";
 import { SubmissionEntity } from "types";
 import { resultInfoSchema } from "./result-info.js";
 
 export interface SubmissionDocument
 	extends Document,
-		Omit<SubmissionEntity, "puzzle" | "user"> {
+		Omit<SubmissionEntity, "puzzle" | "user" | "programmingLanguage"> {
 	puzzle: ObjectId;
 	user: ObjectId;
+	programmingLanguage: ObjectId;
 }
 
 const submissionSchema = new Schema<SubmissionDocument>({
@@ -34,12 +40,18 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
 	},
-	language: {
+	programmingLanguage: {
+		ref: PROGRAMMING_LANGUAGE,
 		required: true,
+		type: mongoose.Schema.Types.ObjectId
+	},
+	// Deprecated fields - keeping for backward compatibility during migration
+	language: {
+		required: false,
 		type: String
 	},
 	languageVersion: {
-		required: true,
+		required: false,
 		type: String
 	}
 });

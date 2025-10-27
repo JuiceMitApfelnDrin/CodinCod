@@ -23,3 +23,7 @@ export const objectIdSchema = z.preprocess(
 );
 
 export type ObjectId = z.infer<typeof objectIdSchema>;
+
+export function isObjectId(data: unknown): data is ObjectId {
+	return objectIdSchema.safeParse(data).success;
+}

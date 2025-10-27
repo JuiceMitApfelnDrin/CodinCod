@@ -7,13 +7,6 @@
 	import Button from "../ui/button/button.svelte";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
-		status?: number;
-		message?: string | null;
-		header?: string | null;
-		link?: FrontendLink;
-	}
-
 	let {
 		header = null,
 		link = {
@@ -22,7 +15,12 @@
 		},
 		message = null,
 		status = 500
-	}: Props = $props();
+	}: {
+		status?: number;
+		message?: string | null;
+		header?: string | null;
+		link?: FrontendLink;
+	} = $props();
 
 	type ErrorTypeDefaultInfo = { header: string; description: string };
 	const errorMap: Record<number, ErrorTypeDefaultInfo> = {

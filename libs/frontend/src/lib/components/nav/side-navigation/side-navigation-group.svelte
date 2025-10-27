@@ -2,13 +2,15 @@
 	import { cn } from "@/utils/cn";
 	import type { Snippet } from "svelte";
 
-	interface Props {
+	let {
+		children,
+		icon = undefined,
+		text
+	}: {
 		icon?: Snippet;
 		text: string;
 		children?: Snippet;
-	}
-
-	let { children, icon = undefined, text }: Props = $props();
+	} = $props();
 </script>
 
 <details class="group" open>

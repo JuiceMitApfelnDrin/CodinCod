@@ -11,11 +11,11 @@
 </script>
 
 <p class="font-bold">{title}</p>
-<div
-	class="max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
+<output
+	class="block max-h-[20vh] w-full overflow-scroll rounded-lg border p-4 lg:max-w-full"
 >
 	<pre><code>{@render children?.()}</code></pre>
-</div>
+</output>
 
 <style>
 	pre {

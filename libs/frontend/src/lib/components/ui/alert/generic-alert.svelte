@@ -1,16 +1,20 @@
 <script lang="ts">
-	import { CircleAlert, CircleCheck, Clock } from "@lucide/svelte";
+	import Clock from "@lucide/svelte/icons/clock";
+	import CircleAlert from "@lucide/svelte/icons/circle-alert";
+	import CircleCheck from "@lucide/svelte/icons/circle-check";
 	import * as Alert from "./index";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { httpResponseCodes } from "types";
 
-	interface Props {
+	let {
+		message,
+		status,
+		title
+	}: {
 		message: string;
 		title: string;
 		status: number;
-	}
-
-	let { message, status, title }: Props = $props();
+	} = $props();
 
 	const isRateLimited = $derived(
 		status === httpResponseCodes.CLIENT_ERROR.TOO_MANY_REQUESTS

@@ -8,13 +8,14 @@ import type { RequestEvent } from "./$types";
 
 export async function POST({ params, request }: RequestEvent) {
 	const { id } = params;
+	const body = await request.text();
 
 	return await fetchWithAuthenticationCookie(
 		buildBackendUrl(backendUrls.moderationPuzzleRevise(id)),
 		{
 			headers: getCookieHeader(request),
 			method: httpRequestMethod.POST,
-			body: JSON.stringify({})
+			body
 		}
 	);
 }

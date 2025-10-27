@@ -20,6 +20,7 @@ export * from "./core/authentication/schema/token.schema.js";
 // chat
 export * from "./core/chat/config/chat-message-config.js";
 export * from "./core/chat/schema/chat-message.schema.js";
+export * from "./core/chat/schema/chat-message-entity.schema.js";
 
 // comment
 export * from "./core/comment/config/comment-config.js";
@@ -63,17 +64,21 @@ export * from "./core/game/schema/waiting-room-response.schema.js";
 export * from "./core/game/schema/game-request.schema.js";
 export * from "./core/game/schema/game-response.schema.js";
 export * from "./core/game/schema/mode.schema.js";
-export * from "./core/game/schema/options.schema.js";
+export * from "./core/game/schema/game-options.schema.js";
 export * from "./core/game/schema/visibility.schema.js";
 
 // moderation
 export * from "./core/moderation/config/report-config.js";
+export * from "./core/moderation/config/ban-config.js";
 export * from "./core/moderation/enum/problem-type-enum.js";
 export * from "./core/moderation/enum/review-status-enum.js";
 export * from "./core/moderation/enum/review-item-type-enum.js";
+export * from "./core/moderation/enum/ban-type-enum.js";
 export * from "./core/moderation/schema/report.schema.js";
 export * from "./core/moderation/schema/review-item.schema.js";
 export * from "./core/moderation/schema/puzzle-moderation.schema.js";
+export * from "./core/moderation/schema/user-ban.schema.js";
+export * from "./core/moderation/schema/ban-type.schema.js";
 
 // piston
 export * from "./core/piston/config/execution-params.js";
@@ -96,6 +101,11 @@ export * from "./core/preferences/enum/theme-option.js";
 export * from "./core/preferences/schema/editor.schema.js";
 export * from "./core/preferences/schema/preferences-dto.schema.js";
 export * from "./core/preferences/schema/preferences-entity.schema.js";
+
+// programming-language
+export * from "./core/programming-language/schema/programming-language-entity.schema.js";
+export * from "./core/programming-language/schema/programming-language-dto.schema.js";
+export * from "./core/programming-language/schema/create-programming-language.schema.js";
 
 // profile
 export * from "./core/profile/schema/profile-dto.schema.js";
@@ -136,6 +146,7 @@ export * from "./core/user/schema/user-profile.schema.js";
 export * from "./utils/constants/http-methods.js";
 
 // utils - functions
+export * from "./utils/functions/get-cookie-options.js";
 export * from "./utils/functions/get-values.js";
 export * from "./utils/functions/get-user-id-from-user.js";
 export * from "./utils/functions/is-author.js";

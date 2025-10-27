@@ -4,11 +4,11 @@
 	import { frontendUrls, type GroupedActivitiesByDate } from "types";
 	import { cn } from "@/utils/cn";
 
-	interface Props {
+	let {
+		activitiesGroupedByDate
+	}: {
 		activitiesGroupedByDate: GroupedActivitiesByDate;
-	}
-
-	let { activitiesGroupedByDate }: Props = $props();
+	} = $props();
 	let minAmount = $state(0);
 	let maxAmount = $state(0);
 

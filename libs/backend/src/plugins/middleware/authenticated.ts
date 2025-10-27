@@ -1,12 +1,12 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { httpResponseCodes } from "types";
+import { httpResponseCodes, cookieKeys } from "types";
 
 export default async function authenticated(
 	request: FastifyRequest,
 	reply: FastifyReply
 ) {
 	try {
-		const token = request.cookies.token;
+		const token = request.cookies[cookieKeys.TOKEN];
 
 		if (!token) {
 			return reply

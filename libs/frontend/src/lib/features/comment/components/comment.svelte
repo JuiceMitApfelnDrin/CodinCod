@@ -15,26 +15,25 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import Comments from "./comments.svelte";
 	import AddCommentForm from "./add-comment-form.svelte";
-	import {
-		CircleArrowDown,
-		CircleArrowUp,
-		EllipsisVertical,
-		MessageCircle,
-		MessageCircleOff,
-		Trash
-	} from "@lucide/svelte";
+	import CircleArrowUp from "@lucide/svelte/icons/circle-arrow-up";
+	import CircleArrowDown from "@lucide/svelte/icons/circle-arrow-down";
+	import EllipsisVertical from "@lucide/svelte/icons/ellipsis-vertical";
+	import MessageCircle from "@lucide/svelte/icons/message-circle";
+	import MessageCircleOff from "@lucide/svelte/icons/message-circle-off";
+	import Trash from "@lucide/svelte/icons/trash";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { apiUrls } from "@/config/api";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		comment = $bindable(),
+		onDeleted
+	}: {
 		comment: CommentDto;
 		onDeleted: (commentId: ObjectId) => void;
-	}
-
-	let { comment = $bindable(), onDeleted }: Props = $props();
+	} = $props();
 
 	let isReplying: boolean = $state(false);
 

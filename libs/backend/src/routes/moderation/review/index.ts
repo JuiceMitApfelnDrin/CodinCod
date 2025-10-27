@@ -5,11 +5,15 @@ import {
 	reviewStatusEnum,
 	puzzleVisibilityEnum,
 	ReviewItem,
-	DEFAULT_PAGE
+	DEFAULT_PAGE,
+	DEFAULT_PAGE_SIZE,
+	BAN_CONFIG,
+	ProblemTypeEnum
 } from "types";
 import moderatorOnly from "../../../plugins/middleware/moderator-only.js";
 import Puzzle from "../../../models/puzzle/puzzle.js";
 import Report from "../../../models/report/report.js";
+import ChatMessage from "../../../models/chat/chat-message.js";
 
 export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 	// Get review items (pending puzzles or reports)
@@ -27,7 +31,10 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 
 			const type = query.type || reviewItemTypeEnum.PENDING_PUZZLE;
 			const page = Number.parseInt(query.page || String(DEFAULT_PAGE), 10);
-			const limit = Number.parseInt(query.limit || "20", 10);
+			const limit = Number.parseInt(
+				query.limit || String(DEFAULT_PAGE_SIZE),
+				10
+			);
 			const skip = (page - 1) * limit;
 
 			try {
@@ -66,11 +73,13 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 					const filter: any = { status: reviewStatusEnum.PENDING };
 
 					if (type === reviewItemTypeEnum.REPORTED_PUZZLE) {
-						filter.problemType = "puzzle";
+						filter.problemType = ProblemTypeEnum.PUZZLE;
 					} else if (type === reviewItemTypeEnum.REPORTED_USER) {
-						filter.problemType = "user";
+						filter.problemType = ProblemTypeEnum.USER;
 					} else if (type === reviewItemTypeEnum.REPORTED_COMMENT) {
-						filter.problemType = "comment";
+						filter.problemType = ProblemTypeEnum.COMMENT;
+					} else if (type === reviewItemTypeEnum.REPORTED_GAME_CHAT) {
+						filter.problemType = ProblemTypeEnum.GAME_CHAT;
 					}
 
 					const reports = await Report.find(filter)
@@ -86,24 +95,72 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 						reports.map(async (report: any) => {
 							let title = "Unknown";
 							let description = "";
+							let gameId;
+							let contextMessages;
 
 							// Get title based on problem type
-							if (report.problemType === "puzzle") {
-								const puzzle = report.problematicIdentifier as any;
+							if (report.problemType === ProblemTypeEnum.PUZZLE) {
+								const puzzle = report.problematicIdentifier;
 								title = puzzle?.title || "Deleted Puzzle";
 								description = puzzle?.statement || "";
-							} else if (report.problemType === "user") {
-								const user = report.problematicIdentifier as any;
+							} else if (report.problemType === ProblemTypeEnum.USER) {
+								const user = report.problematicIdentifier;
 								title = user?.username || "Deleted User";
-							} else if (report.problemType === "comment") {
-								const comment = report.problematicIdentifier as any;
+							} else if (report.problemType === ProblemTypeEnum.COMMENT) {
+								const comment = report.problematicIdentifier;
 								title = `Comment: ${comment?.text?.substring(0, 50) || "Deleted Comment"}`;
 								description = comment?.text || "";
+							} else if (report.problemType === ProblemTypeEnum.GAME_CHAT) {
+								const chatMessage = report.problematicIdentifier;
+								title = `Chat from ${chatMessage?.username || "Unknown"}`;
+								description = chatMessage?.message || "Deleted Message";
+								gameId = chatMessage?.gameId;
+
+								// Get context messages (5 before and 5 after)
+								if (chatMessage && chatMessage.gameId) {
+									const allMessages = await ChatMessage.find({
+										gameId: chatMessage.gameId
+									})
+										.sort({ createdAt: 1 })
+										.exec();
+
+									const reportedIndex = allMessages.findIndex(
+										(msg) =>
+											String(msg._id) ===
+											report.problematicIdentifier.toString()
+									);
+
+									if (reportedIndex !== -1) {
+										const startIndex = Math.max(
+											0,
+											reportedIndex -
+												BAN_CONFIG.chatRetention.CONTEXT_MESSAGES_BEFORE
+										);
+										const endIndex = Math.min(
+											allMessages.length,
+											reportedIndex +
+												BAN_CONFIG.chatRetention.CONTEXT_MESSAGES_AFTER +
+												1
+										);
+
+										contextMessages = allMessages
+											.slice(startIndex, endIndex)
+											.map((msg) => ({
+												_id: msg._id,
+												username: msg.username,
+												message: msg.message,
+												createdAt: msg.createdAt,
+												isReported:
+													String(msg._id) ===
+													report.problematicIdentifier.toString()
+											}));
+									}
+								}
 							}
 
 							return {
 								id: report._id.toString(),
-								type: type as any,
+								type: type as (typeof reviewItemTypeEnum)[keyof typeof reviewItemTypeEnum],
 								title,
 								description,
 								createdAt: report.createdAt || new Date(),
@@ -113,7 +170,9 @@ export default async function moderationReviewRoutes(fastify: FastifyInstance) {
 									report.reportedBy &&
 									"username" in report.reportedBy
 										? String(report.reportedBy.username)
-										: undefined
+										: undefined,
+								gameId,
+								contextMessages
 							};
 						})
 					);

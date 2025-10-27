@@ -1,9 +1,14 @@
 import { z } from "zod";
-import { puzzleLanguage, puzzleLanguageVersion } from "./puzzle-language.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
+import { programmingLanguageDtoSchema } from "../../programming-language/schema/programming-language-dto.schema.js";
 
 export const solutionSchema = z.object({
 	code: z.string().prefault(""),
-	language: puzzleLanguage,
-	languageVersion: puzzleLanguageVersion,
+	programmingLanguage: objectIdSchema
+		.or(programmingLanguageDtoSchema)
+		.optional(),
+	// Deprecated fields - keeping for backward compatibility during migration
+	language: z.string().optional(),
+	languageVersion: z.string().optional(),
 });
 export type Solution = z.infer<typeof solutionSchema>;

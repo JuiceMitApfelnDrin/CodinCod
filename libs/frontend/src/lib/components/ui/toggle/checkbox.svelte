@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
 	import Toggle from "./toggle.svelte";
-	import { CheckIcon } from "@lucide/svelte";
+	import CheckIcon from "@lucide/svelte/icons/check";
 
-	interface Props {
+	let {
+		checked,
+		onChecked
+	}: {
 		checked: boolean;
 		onChecked: () => void;
-	}
-
-	let { checked, onChecked }: Props = $props();
+	} = $props();
 </script>
 
 <Toggle

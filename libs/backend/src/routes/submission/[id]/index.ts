@@ -1,5 +1,6 @@
 import Submission from "@/models/submission/submission.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
 import { httpResponseCodes } from "types";
@@ -8,13 +9,15 @@ export default async function submissionByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const { id } = request.params;
 
 			try {
-				const submission = await Submission.findById(id).select("+code");
+				const submission = await Submission.findById(id)
+					.select("+code")
+					.populate("programmingLanguage");
 
 				if (!submission) {
 					return reply

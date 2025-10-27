@@ -10,12 +10,13 @@ import {
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
+import checkUserBan from "../../plugins/middleware/check-user-ban.js";
 
 export default async function puzzleRoutes(fastify: FastifyInstance) {
 	fastify.post(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const parseResult = createPuzzleSchema.safeParse(request.body);

@@ -24,11 +24,11 @@
 	import { languages } from "@/stores/languages";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		data
+	}: {
 		data: SuperValidated<EditPuzzle>;
-	}
-
-	let { data }: Props = $props();
+	} = $props();
 
 	const learnMarkdownUrl = frontendUrls.LEARN_MARKDOWN;
 

@@ -15,6 +15,7 @@ import {
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { ParamsId } from "@/types/types.js";
 import { checkAllValidators } from "@/utils/functions/check-all-validators.js";
 import User from "@/models/user/user.js";
@@ -51,7 +52,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.put<ParamsId>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const { id } = request.params;
@@ -99,6 +100,18 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
 						.send({ error: "Not authorized to edit this puzzle" });
 				}
+
+				if (
+					parseResult.data.visibility === puzzleVisibilityEnum.APPROVED &&
+					!isModerator(user?.role)
+				) {
+					return reply.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN).send({
+						error: "Only moderators can approve puzzles",
+						message:
+							"You cannot set your own puzzle to approved status. Submit it for review instead."
+					});
+				}
+
 				Object.assign(puzzle, parseResult.data);
 				await puzzle.save();
 
@@ -147,7 +160,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.delete<{ Params: DeletePuzzle }>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const { id } = request.params;

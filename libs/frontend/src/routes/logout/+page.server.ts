@@ -1,4 +1,10 @@
-import { backendUrls, cookieKeys, frontendUrls } from "types";
+import {
+	backendUrls,
+	cookieKeys,
+	environment,
+	frontendUrls,
+	getCookieOptions
+} from "types";
 import type { Actions } from "./$types";
 import { env } from "$env/dynamic/private";
 import { redirect } from "@sveltejs/kit";
@@ -23,8 +29,14 @@ export const actions = {
 				console.error("Backend logout failed:", errorText);
 			}
 
-			// Also clear it on the frontend side just to be safe
-			cookies.delete(cookieKeys.TOKEN, { path: "/" });
+			// Also clear it on the frontend side with the same options
+			const isProduction = env.NODE_ENV === environment.PRODUCTION;
+			const cookieOptions = getCookieOptions({
+				isProduction,
+				...(env.FRONTEND_HOST && { frontendHost: env.FRONTEND_HOST })
+			});
+
+			cookies.delete(cookieKeys.TOKEN, cookieOptions);
 		} catch (error) {
 			console.error("Error calling logout endpoint:", error);
 		}

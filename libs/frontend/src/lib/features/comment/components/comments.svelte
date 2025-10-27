@@ -2,11 +2,11 @@
 	import { isCommentDto, type CommentDto, type ObjectId } from "types";
 	import Comment from "./comment.svelte";
 
-	interface Props {
+	let {
+		comments = $bindable()
+	}: {
 		comments: (CommentDto | string)[];
-	}
-
-	let { comments = $bindable() }: Props = $props();
+	} = $props();
 
 	function onDeletedComment(commentId: ObjectId) {
 		comments = comments.filter((comment) => {

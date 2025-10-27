@@ -6,7 +6,9 @@
 	import { isAuthenticated, isDarkTheme, toggleDarkTheme } from "@/stores";
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import { authenticatedUserInfo } from "@/stores";
-	import { Menu, Moon, Sun } from "@lucide/svelte";
+	import Menu from "@lucide/svelte/icons/menu";
+	import Moon from "@lucide/svelte/icons/moon";
+	import Sun from "@lucide/svelte/icons/sun";
 	import { testIds } from "@/config/test-ids";
 
 	const version = import.meta.env.VITE_APP_VERSION;

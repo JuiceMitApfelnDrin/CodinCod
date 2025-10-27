@@ -4,12 +4,13 @@
 	import { Button } from "../ui/button";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		currentPage,
+		totalPages
+	}: {
 		currentPage: number;
 		totalPages: number;
-	}
-
-	let { currentPage, totalPages }: Props = $props();
+	} = $props();
 
 	function createPaginatedUrl(newPage: number) {
 		let params = new URLSearchParams($page.url.searchParams.toString());

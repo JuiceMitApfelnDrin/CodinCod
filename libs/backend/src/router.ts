@@ -7,7 +7,7 @@ import registerRoutes from "./routes/register/index.js";
 import loginRoutes from "./routes/login/index.js";
 import logoutRoutes from "./routes/logout/index.js";
 import userRoutes from "./routes/user/index.js";
-import { backendParams, backendUrls } from "types";
+import { backendParams, backendUrls, banTypeEnum } from "types";
 import puzzleByIdRoutes from "./routes/puzzle/[id]/index.js";
 import executeRoutes from "./routes/execute/index.js";
 import userByUsernameIsAvailableRoutes from "./routes/user/[username]/isAvailable/index.js";
@@ -25,9 +25,16 @@ import commentByIdCommentRoutes from "./routes/comment/[id]/comment/index.js";
 import userByUsernamePuzzleRoutes from "./routes/user/[username]/puzzle/index.js";
 import userMeRoutes from "./routes/user/me/index.js";
 import reportRoutes from "./routes/report/index.js";
-import moderationPuzzleByIdRoutes from "./routes/moderation/puzzle/[id]/index.js";
-import moderationReportByIdRoutes from "./routes/moderation/report/[id]/index.js";
+import moderationReportByIdRoutes from "./routes/moderation/report/[id]/resolve/index.js";
 import moderationReviewRoutes from "./routes/moderation/review/index.js";
+import moderationPuzzleByIdApproveRoutes from "./routes/moderation/puzzle/[id]/approve/index.js";
+import moderationPuzzleByIdReviseRoutes from "./routes/moderation/puzzle/[id]/revise/index.js";
+import moderationUserByIdBanUnbanRoutes from "./routes/moderation/user/[id]/unban/index.js";
+import moderationUserByIdBanHistoryRoutes from "./routes/moderation/user/[id]/ban/history/index.js";
+import moderationUserByIdBanPermanentRoutes from "./routes/moderation/user/[id]/ban/permanent/index.js";
+import moderationUserByIdBanTemporaryRoutes from "./routes/moderation/user/[id]/ban/temporary/index.js";
+import programmingLanguageRoutes from "./routes/programming-language/index.js";
+import programmingLanguageByIdRoutes from "./routes/programming-language/[id]/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
@@ -61,6 +68,12 @@ export default async function router(fastify: FastifyInstance) {
 	fastify.register(puzzleLanguagesRoutes, {
 		prefix: backendUrls.PUZZLE_LANGUAGES
 	});
+	fastify.register(programmingLanguageRoutes, {
+		prefix: backendUrls.PROGRAMMING_LANGUAGE
+	});
+	fastify.register(programmingLanguageByIdRoutes, {
+		prefix: backendUrls.programmingLanguageById(backendParams.ID)
+	});
 	fastify.register(puzzleByIdRoutes, {
 		prefix: backendUrls.puzzleById(backendParams.ID)
 	});
@@ -86,14 +99,31 @@ export default async function router(fastify: FastifyInstance) {
 	fastify.register(moderationReviewRoutes, {
 		prefix: backendUrls.MODERATION_REVIEW
 	});
-	fastify.register(moderationPuzzleByIdRoutes, {
-		prefix: backendUrls
-			.moderationPuzzleApprove(backendParams.ID)
-			.replace("/approve", "")
+	fastify.register(moderationPuzzleByIdApproveRoutes, {
+		prefix: backendUrls.moderationPuzzleApprove(backendParams.ID)
+	});
+	fastify.register(moderationPuzzleByIdReviseRoutes, {
+		prefix: backendUrls.moderationPuzzleRevise(backendParams.ID)
 	});
 	fastify.register(moderationReportByIdRoutes, {
-		prefix: backendUrls
-			.moderationReportResolve(backendParams.ID)
-			.replace("/resolve", "")
+		prefix: backendUrls.moderationReportResolve(backendParams.ID)
+	});
+	fastify.register(moderationUserByIdBanUnbanRoutes, {
+		prefix: backendUrls.moderationUserByIdUnban(backendParams.ID)
+	});
+	fastify.register(moderationUserByIdBanHistoryRoutes, {
+		prefix: backendUrls.moderationUserByIdBanHistory(backendParams.ID)
+	});
+	fastify.register(moderationUserByIdBanPermanentRoutes, {
+		prefix: backendUrls.moderationUserByIdBanByType(
+			backendParams.ID,
+			banTypeEnum.PERMANENT
+		)
+	});
+	fastify.register(moderationUserByIdBanTemporaryRoutes, {
+		prefix: backendUrls.moderationUserByIdBanByType(
+			backendParams.ID,
+			banTypeEnum.TEMPORARY
+		)
 	});
 }

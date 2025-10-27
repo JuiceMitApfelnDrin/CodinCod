@@ -75,7 +75,11 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 			ref: COMMENT,
 			type: Schema.Types.ObjectId
 		}
-	]
+	],
+	moderationFeedback: {
+		type: String,
+		required: false
+	}
 });
 
 puzzleSchema.pre(

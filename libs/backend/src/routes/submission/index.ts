@@ -14,13 +14,15 @@ import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
+import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
+import ProgrammingLanguage from "../../models/programming-language/language.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: CodeSubmissionParams }>(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const parseResult = codeSubmissionParamsSchema.safeParse(request.body);
@@ -91,14 +93,24 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			});
 
 			try {
+				const programmingLanguage = await ProgrammingLanguage.findOne({
+					language: runtimeInfo.language,
+					version: runtimeInfo.version
+				});
+
+				if (!programmingLanguage) {
+					return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+						error: `Programming language ${runtimeInfo.language} ${runtimeInfo.version} not found in database`
+					});
+				}
+
 				const submissionData: SubmissionEntity = {
 					code: code,
 					puzzle: puzzleId,
 					user: userId,
 					createdAt: new Date(),
-					languageVersion: runtimeInfo.version,
-					result: calculateResults(expectedOutputs, pistonExecutionResults),
-					language: runtimeInfo.language
+					programmingLanguage: programmingLanguage._id.toString(),
+					result: calculateResults(expectedOutputs, pistonExecutionResults)
 				};
 
 				const submission = new Submission(submissionData);
@@ -106,12 +118,10 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 				return reply.status(201).send(submission);
 			} catch (error) {
-				fastify.log.error("Error saving submission:", String(error));
+				fastify.log.error(error, "Error saving submission");
 
 				if (isValidationError(error)) {
-					return reply
-						.status(400)
-						.send({ error: "Validation failed", details: error.issues });
+					return reply.status(400).send({ error: "Validation failed" });
 				}
 				return reply.status(500).send({ error: "Failed to create submission" });
 			}

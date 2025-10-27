@@ -3,13 +3,13 @@
 	import P from "./p.svelte";
 	import DOMPurify from "dompurify";
 
-	interface Props {
+	let {
+		fallbackText = "no fallback provided",
+		markdown = undefined
+	}: {
 		markdown?: string | undefined;
 		fallbackText?: string;
-	}
-
-	let { fallbackText = "no fallback provided", markdown = undefined }: Props =
-		$props();
+	} = $props();
 
 	const parseMarkdown = async (markdown: string) => {
 		const dirtyMarkdown = await marked.parse(markdown);

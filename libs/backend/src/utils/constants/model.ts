@@ -7,3 +7,6 @@ export const PREFERENCES = "Preferences";
 export const COMMENT = "Comment";
 export const USER_VOTE = "UserVote";
 export const REPORT = "Report";
+export const CHAT_MESSAGE = "ChatMessage";
+export const USER_BAN = "UserBan";
+export const PROGRAMMING_LANGUAGE = "ProgrammingLanguage";

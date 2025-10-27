@@ -3,15 +3,12 @@
 	import SideNavigation from "@/components/nav/side-navigation/side-navigation.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
-
-	import {
-		Bell,
-		MessageCircle,
-		Paintbrush2,
-		Settings,
-		Settings2,
-		User
-	} from "@lucide/svelte";
+	import Bell from "@lucide/svelte/icons/bell";
+	import MessageCircle from "@lucide/svelte/icons/message-circle";
+	import Paintbrush2 from "@lucide/svelte/icons/paintbrush-2";
+	import Settings from "@lucide/svelte/icons/settings";
+	import Settings2 from "@lucide/svelte/icons/settings-2";
+	import User from "@lucide/svelte/icons/user";
 	import type { Snippet } from "svelte";
 	import { frontendUrls } from "types";
 

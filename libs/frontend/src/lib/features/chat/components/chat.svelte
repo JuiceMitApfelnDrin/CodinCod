@@ -10,13 +10,17 @@
 	import { CHAT_MESSAGE_CONFIG, type ChatMessage } from "types";
 	import Message from "./chat-message.svelte";
 	import { testIds } from "@/config/test-ids";
+	import ReportChatDialog from "./report-chat-dialog.svelte";
 
-	interface Props {
+	let {
+		chatMessages = [],
+		sendMessage,
+		gameId
+	}: {
 		chatMessages?: ChatMessage[];
 		sendMessage: (message: string) => void;
-	}
-
-	let { chatMessages = [], sendMessage }: Props = $props();
+		gameId: string;
+	} = $props();
 
 	function executeSend() {
 		sendMessage(composedMessage);
@@ -24,6 +28,20 @@
 	}
 
 	let composedMessage: string = $state("");
+
+	// Report dialog state
+	let reportDialogOpen = $state(false);
+	let selectedMessage: ChatMessage | null = $state(null);
+
+	function handleReportMessage(message: ChatMessage) {
+		selectedMessage = message;
+		reportDialogOpen = true;
+	}
+
+	function closeReportDialog() {
+		reportDialogOpen = false;
+		selectedMessage = null;
+	}
 </script>
 
 <LogicalUnit class="flex h-full flex-col gap-4">
@@ -33,7 +51,7 @@
 		{#if chatMessages.length > 0}
 			<ol class="flex h-full flex-col gap-1 rounded-lg">
 				{#each chatMessages as chatMessage}
-					<Message {chatMessage} />
+					<Message {chatMessage} onReport={handleReportMessage} />
 				{/each}
 			</ol>
 		{/if}
@@ -61,3 +79,11 @@
 		>
 	</form>
 </LogicalUnit>
+
+<ReportChatDialog
+	chatMessage={selectedMessage}
+	chatMessageId={selectedMessage?._id || null}
+	{gameId}
+	open={reportDialogOpen}
+	onClose={closeReportDialog}
+/>

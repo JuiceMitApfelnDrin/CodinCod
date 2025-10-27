@@ -57,6 +57,8 @@ export const testIds = {
 	LOGIN_FORM_BUTTON_LOGIN: "login-form-button-login",
 	LOGIN_FORM_INPUT_IDENTIFIER: "login-form-input-identifier",
 	LOGIN_FORM_INPUT_PASSWORD: "login-form-input-password",
+	LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD:
+		"login-form-button-toggle-show-password",
 
 	// multiplayer by id page
 	MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER:
@@ -84,6 +86,34 @@ export const testIds = {
 	NAVIGATION_MENU_BUTTON_OPEN: "navigation-menu-button-open",
 	NAVIGATION_MENU_ANCHOR_MODERATION: "navigation-menu-anchor-moderation",
 	NAVIGATION_TOGGLE_THEME: "navigation-toggle-theme",
+
+	// moderation page
+	MODERATION_PAGE_BUTTON_APPROVE_PUZZLE:
+		"moderation-page-button-approve-puzzle",
+	MODERATION_PAGE_BUTTON_REVISE_PUZZLE: "moderation-page-button-revise-puzzle",
+	MODERATION_PAGE_BUTTON_RESOLVE_REPORT:
+		"moderation-page-button-resolve-report",
+	MODERATION_PAGE_BUTTON_REJECT_REPORT: "moderation-page-button-reject-report",
+	MODERATION_PAGE_BUTTON_CANCEL_REVISION:
+		"moderation-page-button-cancel-revision",
+	MODERATION_PAGE_BUTTON_SUBMIT_REVISION:
+		"moderation-page-button-submit-revision",
+	MODERATION_PAGE_BUTTON_BAN_USER: "moderation-page-button-ban-user",
+	MODERATION_PAGE_BUTTON_BAN_HISTORY: "moderation-page-button-ban-history",
+	MODERATION_PAGE_BUTTON_CANCEL_BAN: "moderation-page-button-cancel-ban",
+	MODERATION_PAGE_BUTTON_SUBMIT_BAN: "moderation-page-button-submit-ban",
+	MODERATION_PAGE_BUTTON_CLOSE_HISTORY: "moderation-page-button-close-history",
+	MODERATION_PAGE_BUTTON_UNBAN_USER: "moderation-page-button-unban-user",
+
+	// chat message component
+	CHAT_MESSAGE_COMPONENT_BUTTON_REPORT: "chat-message-component-button-report",
+
+	// report chat dialog
+	REPORT_CHAT_DIALOG_BUTTON_CANCEL: "report-chat-dialog-button-cancel",
+	REPORT_CHAT_DIALOG_BUTTON_SUBMIT: "report-chat-dialog-button-submit",
+
+	// maintenance page
+	MAINTENANCE_PAGE_BUTTON_DISCORD: "maintenance-page-button-discord",
 
 	// pagination
 	PAGINATION_BUTTON_FIRST: "pagination-button-first",
@@ -113,6 +143,11 @@ export const testIds = {
 
 	// register form
 	REGISTER_FORM_BUTTON_REGISTER: "register-form-button-register",
+	REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD:
+		"register-form-button-toggle-show-password",
+	REGISTER_FORM_INPUT_USERNAME: "register-form-input-username",
+	REGISTER_FORM_INPUT_PASSWORD: "register-form-input-password",
+	REGISTER_FORM_INPUT_EMAIL: "register-form-input-email",
 
 	// standings table component
 	STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE:

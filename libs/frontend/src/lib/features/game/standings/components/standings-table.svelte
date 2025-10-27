@@ -14,14 +14,12 @@
 	import { apiUrls } from "@/config/api";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
-	import {
-		Code,
-		CodeXml,
-		FishIcon,
-		FishOffIcon,
-		Hash,
-		Hourglass
-	} from "@lucide/svelte";
+	import CodeXml from "@lucide/svelte/icons/code-xml";
+	import Code from "@lucide/svelte/icons/code";
+	import FishIcon from "@lucide/svelte/icons/fish";
+	import FishOffIcon from "@lucide/svelte/icons/fish-off";
+	import Hash from "@lucide/svelte/icons/hash";
+	import Hourglass from "@lucide/svelte/icons/hourglass";
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
@@ -29,11 +27,11 @@
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
-	interface Props {
+	let {
+		game = $bindable()
+	}: {
 		game: GameDto;
-	}
-
-	let { game = $bindable() }: Props = $props();
+	} = $props();
 	let submissions: SubmissionDto[] = $derived(
 		game.playerSubmissions.filter((submission) =>
 			isSubmissionDto(submission)

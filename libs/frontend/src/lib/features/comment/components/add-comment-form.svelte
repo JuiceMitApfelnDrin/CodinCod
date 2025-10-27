@@ -18,13 +18,15 @@
 	} from "types";
 	import { testIds } from "@/config/test-ids";
 
-	interface Props {
+	let {
+		commentType,
+		onCommentAdded,
+		replyOnId
+	}: {
 		commentType: CommentType;
 		replyOnId: ObjectId;
 		onCommentAdded: (addedComment: CommentDto) => void;
-	}
-
-	let { commentType, onCommentAdded, replyOnId }: Props = $props();
+	} = $props();
 
 	let commentText: string = $state("");
 

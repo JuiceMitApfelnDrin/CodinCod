@@ -3,7 +3,7 @@ import { PreferencesEntity } from "types";
 import { PREFERENCES, USER } from "../../utils/constants/model.js";
 import { preferencesEditor } from "./preferences-editor.js";
 
-interface PreferencesDocument
+export interface PreferencesDocument
 	extends Document,
 		Omit<PreferencesEntity, "owner" | "_id"> {
 	owner: ObjectId;

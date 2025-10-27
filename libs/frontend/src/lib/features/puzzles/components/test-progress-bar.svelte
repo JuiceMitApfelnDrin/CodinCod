@@ -4,17 +4,15 @@
 	import { type PuzzleResult } from "types";
 	import ValidatorStatus from "./validator-status.svelte";
 
-	interface Props {
-		class?: HTMLInputAttributes["class"];
-		puzzleResults: (PuzzleResult | undefined)[];
-		openTestsAccordion: () => void;
-	}
-
 	let {
 		class: className = undefined,
 		openTestsAccordion,
 		puzzleResults
-	}: Props = $props();
+	}: {
+		class?: HTMLInputAttributes["class"];
+		puzzleResults: (PuzzleResult | undefined)[];
+		openTestsAccordion: () => void;
+	} = $props();
 </script>
 
 {#if puzzleResults}

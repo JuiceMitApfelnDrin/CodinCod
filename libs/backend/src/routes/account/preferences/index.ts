@@ -6,12 +6,13 @@ import {
 } from "types";
 import Preferences from "../../../models/preferences/preferences.js";
 import authenticated from "../../../plugins/middleware/authenticated.js";
+import checkUserBan from "../../../plugins/middleware/check-user-ban.js";
 
 export default async function preferencesRoutes(fastify: FastifyInstance) {
 	fastify.get(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			if (!isAuthenticatedInfo(request.user)) {
@@ -44,7 +45,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 	fastify.put(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			if (!isAuthenticatedInfo(request.user)) {
@@ -83,7 +84,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 	fastify.delete(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			if (!isAuthenticatedInfo(request.user)) {
@@ -118,7 +119,7 @@ export default async function preferencesRoutes(fastify: FastifyInstance) {
 	fastify.patch(
 		"/",
 		{
-			onRequest: authenticated
+			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
 			const parseResult = preferencesDtoSchema

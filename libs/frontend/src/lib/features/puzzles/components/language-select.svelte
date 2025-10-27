@@ -5,7 +5,11 @@
 	import { preferences } from "@/stores/preferences";
 	import { DEFAULT_LANGUAGE } from "types";
 
-	interface Props {
+	let {
+		formAttributes = undefined,
+		language = $bindable(),
+		languages = []
+	}: {
 		language: string;
 		languages?: string[];
 		formAttributes?:
@@ -19,13 +23,7 @@
 					"data-fs-control": string;
 			  }
 			| undefined;
-	}
-
-	let {
-		formAttributes = undefined,
-		language = $bindable(),
-		languages = []
-	}: Props = $props();
+	} = $props();
 
 	if (!language) {
 		if (

@@ -3,11 +3,11 @@
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import { isUserDto, type CommentDto } from "types";
 
-	interface Props {
+	let {
+		comment
+	}: {
 		comment: CommentDto;
-	}
-
-	let { comment }: Props = $props();
+	} = $props();
 
 	const hasBeenUpdated = comment && comment.updatedAt !== comment.createdAt;
 </script>

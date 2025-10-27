@@ -2,7 +2,14 @@ import { FastifyInstance } from "fastify";
 import bcrypt from "bcryptjs";
 import User from "../../models/user/user.js";
 import { generateToken } from "../../utils/functions/generate-token.js";
-import { cookieKeys, environment, isEmail, loginSchema } from "types";
+import {
+	AuthenticatedInfo,
+	cookieKeys,
+	environment,
+	getCookieOptions,
+	isEmail,
+	loginSchema
+} from "types";
 
 export default async function loginRoutes(fastify: FastifyInstance) {
 	fastify.post(
@@ -44,7 +51,7 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 						.send({ message: "Invalid email/username or password" });
 				}
 
-				const authenticatedUserInfo = {
+				const authenticatedUserInfo: AuthenticatedInfo = {
 					userId: String(user._id),
 					username: user.username,
 					role: user.role,
@@ -54,25 +61,13 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				const maxAge = 7 * 24 * 60 * 60;
 				const isProduction = process.env.NODE_ENV === environment.PRODUCTION;
 
-				const cookieOptions: any = {
-					path: "/",
-					httpOnly: true,
-					secure: isProduction,
-					sameSite: isProduction ? "none" : "lax",
+				const cookieOptions = getCookieOptions({
+					isProduction,
+					...(process.env.FRONTEND_HOST && {
+						frontendHost: process.env.FRONTEND_HOST
+					}),
 					maxAge
-				};
-
-				// Set domain for cross-subdomain cookies in production
-				// codincod.com (frontend) and backend.codincod.com (backend) need .codincod.com
-				if (isProduction) {
-					// Leading dot is critical for cross-subdomain cookies!
-					cookieOptions.domain = process.env.FRONTEND_HOST;
-					console.log("Setting cookie with domain:", cookieOptions.domain);
-				} else {
-					console.log("Development mode - cookie domain not set");
-				}
-
-				console.log("Cookie options:", JSON.stringify(cookieOptions, null, 2));
+				});
 
 				return reply
 					.status(200)
