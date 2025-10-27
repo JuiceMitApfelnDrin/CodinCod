@@ -1,10 +1,16 @@
 <script lang="ts">
-	import CodeMirror from "svelte-codemirror-editor";
 	import { oneDark } from "@codemirror/theme-one-dark";
 	import { keymap, type PreferencesDto, type PuzzleLanguage } from "types";
 	import { StreamLanguage } from "@codemirror/language";
 	import { preferences } from "@/stores/preferences";
 	import type { Extension } from "@codemirror/state";
+	import type CodemirrorWrapperType from "#/external-wrapper/codemirror-wrapper.svelte";
+
+	const CodemirrorWrapper = import(
+		"#/external-wrapper/codemirror-wrapper.svelte"
+	) as Promise<{
+		default: typeof CodemirrorWrapperType;
+	}>;
 
 	let {
 		language = "",
@@ -207,10 +213,12 @@
 	}
 </script>
 
-{#await getEditorConfig(language, $preferences)}
-	<p>loading the editor...</p>
-{:then editorConfig}
-	<CodeMirror
+{#await Promise.all( [CodemirrorWrapper, getEditorConfig(language, $preferences)] )}
+	<div class="flex min-h-[300px] items-center justify-center">
+		<p>Loading editor...</p>
+	</div>
+{:then [{ default: Wrapper }, editorConfig]}
+	<Wrapper
 		bind:value
 		theme={oneDark}
 		{readonly}
@@ -228,4 +236,8 @@
 			}
 		}}
 	/>
+{:catch error}
+	<div class="min-h-[300px] p-4 text-red-700 dark:text-red-300">
+		Failed to load editor: {error.message}
+	</div>
 {/await}

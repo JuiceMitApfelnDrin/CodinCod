@@ -15,9 +15,5 @@ export async function GET({ fetch, request }: RequestEvent) {
 
 	const { languages } = await response.json();
 
-	const uniqueLanguages = Array.from(
-		new Set(languages.map((lang: { language: string }) => lang.language))
-	).sort();
-
-	return json({ languages: uniqueLanguages });
+	return json({ languages });
 }

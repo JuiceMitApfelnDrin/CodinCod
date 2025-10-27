@@ -7,6 +7,7 @@ import {
 	arePistonRuntimes,
 	httpRequestMethod,
 	isObjectId,
+	isString,
 	PistonRuntime,
 	pistonUrls
 } from "types";
@@ -251,7 +252,7 @@ export class AddProgrammingLanguageEntityMigration implements Migration {
 
 			// Check if first element is a string (ObjectId) or object
 			const firstLang = game.options.allowedLanguages[0];
-			if (typeof firstLang === "string") {
+			if (isString(firstLang)) {
 				// Already migrated
 				skipped++;
 				continue;

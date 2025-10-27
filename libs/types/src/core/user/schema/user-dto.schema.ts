@@ -15,5 +15,6 @@ export const userDtoSchema = baseUserDtoSchema.extend({
 export type UserDto = z.infer<typeof userDtoSchema>;
 
 export function isUserDto(data: unknown): data is UserDto {
+	console.log({ isUserDto: userDtoSchema.safeParse(data) });
 	return userDtoSchema.safeParse(data).success;
 }

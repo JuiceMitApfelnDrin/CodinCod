@@ -1,11 +1,12 @@
 import { FastifyInstance } from "fastify";
 import {
+	environment,
 	ErrorResponse,
+	getUserIdFromUser,
 	httpResponseCodes,
 	isAuthenticatedInfo,
 	isAuthor,
-	isModerator,
-	isUserDto
+	isModerator
 } from "types";
 import { ParamsId } from "@/types/types.js";
 import Puzzle from "@/models/puzzle/puzzle.js";
@@ -43,7 +44,8 @@ export default async function puzzleByIdSolutionRoutes(
 				const puzzle = await Puzzle.findById(id)
 					.select("+solution")
 					.populate("author")
-					.populate("solution.programmingLanguage");
+					.populate("solution.programmingLanguage")
+					.lean();
 
 				if (!puzzle) {
 					return reply
@@ -53,16 +55,19 @@ export default async function puzzleByIdSolutionRoutes(
 
 				const user = await User.findById(userId);
 
-				const hasRequiredPermissions =
-					isUserDto(puzzle.author) &&
-					!isAuthor(puzzle.author._id.toString(), userId) &&
-					!isModerator(user?.role);
+				const authorIdString = getUserIdFromUser(puzzle.author);
+				const isAuthorCheck =
+					authorIdString !== null && isAuthor(authorIdString, userId);
 
-				if (hasRequiredPermissions) {
+				const lacksRequiredPermissions =
+					!isAuthorCheck && !isModerator(user?.role);
+
+				if (lacksRequiredPermissions) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
-						.send({ error: "Not authorized to edit this puzzle" });
+						.send({ error: "Not authorized" });
 				}
+
 				return reply.send(puzzle);
 			} catch (error) {
 				return reply

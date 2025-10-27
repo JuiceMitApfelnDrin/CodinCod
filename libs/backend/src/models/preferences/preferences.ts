@@ -16,8 +16,7 @@ const preferencesSchema = new Schema<PreferencesDocument>(
 			required: true,
 			type: mongoose.Schema.Types.ObjectId,
 			index: true,
-			unique: true,
-			select: false
+			unique: true
 		},
 		blockedUsers: {
 			required: false,

@@ -3,7 +3,8 @@ import {
 	arePistonRuntimes,
 	isPistonExecutionResponseSuccess,
 	PistonExecutionRequest,
-	PuzzleDto
+	PuzzleDto,
+	isProgrammingLanguageDto
 } from "types";
 import { findRuntime } from "./findRuntimeInfo.js";
 import { calculateResults } from "./calculate-result.js";
@@ -23,7 +24,18 @@ export async function checkAllValidators(
 		return false;
 	}
 
-	const runtimeInfo = findRuntime(runtimes, puzzle.solution.language);
+	// Get the language name from the programming language (could be string ObjectId or populated object)
+	const languageName = isProgrammingLanguageDto(
+		puzzle.solution.programmingLanguage
+	)
+		? puzzle.solution.programmingLanguage.language
+		: undefined;
+
+	if (!languageName) {
+		return false;
+	}
+
+	const runtimeInfo = findRuntime(runtimes, languageName);
 
 	if (!runtimeInfo) {
 		return false;

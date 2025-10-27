@@ -12,7 +12,10 @@
 		puzzleEntitySchema,
 		puzzleVisibilityEnum,
 		type EditPuzzle,
-		type PuzzleVisibility
+		type PuzzleVisibility,
+		DEFAULT_LANGUAGE,
+		isProgrammingLanguageDto,
+		isObjectId
 	} from "types";
 	import { page } from "$app/state";
 	import * as Select from "$lib/components/ui/select";
@@ -71,21 +74,38 @@
 		});
 	}
 
+	let selectedLanguageName = $state("");
+
 	$effect(() => {
 		if (!$formData.solution) {
 			$formData.solution = {
-				code: "",
-				language: "",
-				languageVersion: ""
+				code: ""
 			};
 		}
 
-		if (!$formData.solution?.language) {
-			$formData.solution.language = "";
+		if ($formData.solution.programmingLanguage) {
+			if (isProgrammingLanguageDto($formData.solution.programmingLanguage)) {
+				selectedLanguageName = $formData.solution.programmingLanguage.language;
+			} else if (
+				isObjectId($formData.solution.programmingLanguage) &&
+				$languages
+			) {
+				const lang = $languages.find(
+					(l) => l._id === $formData.solution.programmingLanguage
+				);
+				selectedLanguageName = lang?.language || DEFAULT_LANGUAGE;
+			}
+		} else {
+			selectedLanguageName = DEFAULT_LANGUAGE;
 		}
+	});
 
-		if (!$formData.solution?.code) {
-			$formData.solution.code = "";
+	$effect(() => {
+		if (selectedLanguageName && $languages) {
+			const lang = $languages.find((l) => l.language === selectedLanguageName);
+			if (lang && lang._id) {
+				$formData.solution.programmingLanguage = lang._id;
+			}
 		}
 	});
 
@@ -221,22 +241,22 @@
 			the validators.</P
 		>
 
-		<Form.Field {form} name="solution.language">
+		<Form.Field {form} name="solution.programmingLanguage">
 			<Form.Control>
 				{#snippet children({ props })}
-					<Form.Label class="text-lg">Language</Form.Label>
-
-					<LanguageSelect
-						formAttributes={props}
-						bind:language={$formData.solution.language}
-						languages={$languages ?? []}
-					/>
+					<div class="flex flex-col gap-2">
+						<Form.Label class="text-lg">Language</Form.Label>
+						<LanguageSelect
+							{...props}
+							bind:language={selectedLanguageName}
+							languages={$languages ?? []}
+						/>
+						<Form.Description
+							>Programming language used for the solution.</Form.Description
+						>
+					</div>
 				{/snippet}
 			</Form.Control>
-			<Form.Description
-				>Programming language used for the solution.</Form.Description
-			>
-			<Form.FieldErrors />
 		</Form.Field>
 
 		<Form.Field {form} name="solution.code">
@@ -245,7 +265,7 @@
 					<Form.Label class="text-lg">Code</Form.Label>
 
 					<Codemirror
-						language={$formData.solution.language}
+						language={selectedLanguageName}
 						bind:value={$formData.solution.code}
 					/>
 					<Input
@@ -283,7 +303,7 @@
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
-							{#each visibilityStates as visibilityState}
+							{#each [puzzleVisibilityEnum.DRAFT, puzzleVisibilityEnum.REVIEW] as visibilityState}
 								<Select.Item value={visibilityState} label={visibilityState} />
 							{/each}
 						</Select.Group>

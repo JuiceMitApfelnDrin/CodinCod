@@ -44,15 +44,6 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		ref: PROGRAMMING_LANGUAGE,
 		required: true,
 		type: mongoose.Schema.Types.ObjectId
-	},
-	// Deprecated fields - keeping for backward compatibility during migration
-	language: {
-		required: false,
-		type: String
-	},
-	languageVersion: {
-		required: false,
-		type: String
 	}
 });
 

@@ -147,7 +147,6 @@ export class MigrationRunner {
 	 */
 	async list(): Promise<void> {
 		const applied = await MigrationTracker.find().sort({ appliedAt: 1 }).lean();
-		const appliedNames = new Set(applied.map((m) => m.name));
 
 		console.log("\n📋 Migration Status:\n");
 

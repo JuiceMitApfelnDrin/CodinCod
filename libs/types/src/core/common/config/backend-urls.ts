@@ -25,7 +25,6 @@ export const backendUrls = {
 	puzzleById: (id: string) => `${baseRoute}/puzzle/${id}`,
 	puzzleByIdComment: (id: string) => `${baseRoute}/puzzle/${id}/comment`,
 	puzzleByIdSolution: (id: string) => `${baseRoute}/puzzle/${id}/solution`,
-	PUZZLE_LANGUAGES: `${baseRoute}/puzzle/languages`, // deprecated, use PROGRAMMING_LANGUAGE instead
 
 	// programming language routes
 	PROGRAMMING_LANGUAGE: `${baseRoute}/programming-language`,

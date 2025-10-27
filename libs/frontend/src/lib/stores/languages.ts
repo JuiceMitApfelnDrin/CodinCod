@@ -1,17 +1,17 @@
 import { browser } from "$app/environment";
 import { apiUrls } from "@/config/api";
 import { writable } from "svelte/store";
-import { httpRequestMethod } from "types";
+import { httpRequestMethod, type ProgrammingLanguageDto } from "types";
 
 const createLanguagesStore = () => {
-	const { set, subscribe } = writable<string[] | null>(null);
+	const { set, subscribe } = writable<ProgrammingLanguageDto[] | null>(null);
 
 	return {
 		async loadLanguages() {
 			if (!browser) return;
 
 			try {
-				const response = await fetch(apiUrls.SUPPORTED_LANGUAGES, {
+				const response = await fetch(apiUrls.PROGRAMMING_LANGUAGES, {
 					method: httpRequestMethod.GET
 				});
 

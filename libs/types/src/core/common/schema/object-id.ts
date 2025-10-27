@@ -1,5 +1,6 @@
 import { ObjectId as BsonObjectId } from "bson";
 import { z } from "zod";
+import { isString } from "../../../utils/functions/is-string.js";
 
 export const objectIdSchema = z.preprocess(
 	(val: unknown) => {
@@ -7,7 +8,7 @@ export const objectIdSchema = z.preprocess(
 			return val;
 		}
 
-		if (typeof val === "string") {
+		if (isString(val)) {
 			return val;
 		}
 

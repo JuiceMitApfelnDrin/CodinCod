@@ -4,13 +4,13 @@
 		httpRequestMethod,
 		isSubmissionDto,
 		type PuzzleDto,
-		type PuzzleLanguage,
 		type CodeSubmissionParams,
 		type ValidatorEntity,
 		type CodeExecutionResponse,
 		isCodeExecutionSuccessResponse,
 		PuzzleResultEnum,
-		httpResponseCodes
+		httpResponseCodes,
+		DEFAULT_LANGUAGE
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -46,10 +46,17 @@
 	} = $props();
 
 	let code: string = $state("");
-	let language: PuzzleLanguage = $state("");
+	let language: string = $state(DEFAULT_LANGUAGE);
 	let isExecutingTests = $state(false);
 	let isSubmittingCode = $state(false);
 	let testResults: Record<number, CodeExecutionResponse> = $state({});
+
+	// Get programmingLanguage ObjectId from selected language name
+	const programmingLanguageId = $derived.by(() => {
+		if (!language || !$languages) return undefined;
+		const lang = $languages.find((l) => l.language === language);
+		return lang?._id;
+	});
 
 	async function executeCode(
 		itemInList: number,
@@ -171,7 +178,7 @@
 	}
 
 	async function endPuzzleGame() {
-		if (!isAuthenticated || !$authenticatedUserInfo) {
+		if (!isAuthenticated || !$authenticatedUserInfo || !programmingLanguageId) {
 			return;
 		}
 
@@ -179,7 +186,7 @@
 
 		const submissionParams: CodeSubmissionParams = {
 			code,
-			language,
+			programmingLanguage: programmingLanguageId,
 			puzzleId: puzzle._id,
 			userId: $authenticatedUserInfo.userId
 		};

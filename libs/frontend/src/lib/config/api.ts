@@ -3,6 +3,7 @@ import type { BanType } from "types";
 export const apiUrls = {
 	ACCOUNT_PREFERENCES: `/api/account/preferences`,
 	EXECUTE_CODE: `/api/execute-code`,
+	PROGRAMMING_LANGUAGES: `/api/programming-languages`,
 	SUBMIT_CODE: `/api/submit-code`,
 	SUBMIT_GAME: `/api/submit-game`,
 	SUPPORTED_LANGUAGES: `/api/supported-languages`,
