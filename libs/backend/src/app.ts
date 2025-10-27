@@ -17,7 +17,7 @@ import requestLogger from "./plugins/middleware/request-logger.js";
 import { httpResponseCodes } from "types";
 
 const server = Fastify({
-	logger:	true
+	logger: true
 });
 
 // register fastify ecosystem plugins

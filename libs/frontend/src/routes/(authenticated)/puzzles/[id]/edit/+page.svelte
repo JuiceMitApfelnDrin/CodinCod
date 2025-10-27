@@ -13,7 +13,7 @@
 	const { deletePuzzle: deletePuzzleFormData, form: formData } = data;
 	const puzzle = formData.data;
 
-	const puzzleAuthorId = getUserIdFromUser(puzzle.author)
+	const puzzleAuthorId = getUserIdFromUser(puzzle.author);
 
 	let isPuzzleAuthor = $derived(
 		$authenticatedUserInfo

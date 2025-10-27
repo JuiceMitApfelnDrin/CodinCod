@@ -1,6 +1,11 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
 import { PUZZLE, USER, METRICS, COMMENT } from "../../utils/constants/model.js";
-import { DifficultyEnum, PuzzleEntity, puzzleVisibilityEnum, Solution } from "types";
+import {
+	DifficultyEnum,
+	PuzzleEntity,
+	puzzleVisibilityEnum,
+	Solution
+} from "types";
 import solutionSchema from "./solution.js";
 import validatorSchema from "./validator.js";
 import Comment from "../comment/comment.js";

@@ -25,7 +25,9 @@ export async function checkAllValidators(
 	}
 
 	// Get the language name from the programming language (could be string ObjectId or populated object)
-	const languageName = isProgrammingLanguageDto(puzzle.solution.programmingLanguage)
+	const languageName = isProgrammingLanguageDto(
+		puzzle.solution.programmingLanguage
+	)
 		? puzzle.solution.programmingLanguage.language
 		: undefined;
 

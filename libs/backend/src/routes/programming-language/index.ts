@@ -14,7 +14,7 @@ export default async function programmingLanguageRoutes(
 		try {
 			// Get available runtimes from Piston
 			const runtimes = await fastify.runtimes();
-			
+
 			if (!arePistonRuntimes(runtimes)) {
 				fastify.log.error("Failed to fetch Piston runtimes");
 				return reply
@@ -24,7 +24,7 @@ export default async function programmingLanguageRoutes(
 
 			// Create a set of available language+version combinations
 			const availableLanguages = new Set(
-				runtimes.map(runtime => `${runtime.language}:${runtime.version}`)
+				runtimes.map((runtime) => `${runtime.language}:${runtime.version}`)
 			);
 
 			// Fetch all programming languages from database
@@ -34,7 +34,7 @@ export default async function programmingLanguageRoutes(
 				.lean();
 
 			// Filter to only include languages that are available in Piston
-			const installedLanguages = allLanguages.filter(lang => 
+			const installedLanguages = allLanguages.filter((lang) =>
 				availableLanguages.has(`${lang.language}:${lang.version}`)
 			);
 

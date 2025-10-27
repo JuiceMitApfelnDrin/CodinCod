@@ -79,31 +79,30 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					.send(errorResponse);
 			}
 
-		const userId = user.userId;
+			const userId = user.userId;
 
-		try {
-			const puzzle = await Puzzle.findById(id).lean();
+			try {
+				const puzzle = await Puzzle.findById(id).lean();
 
-			if (!puzzle) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-					.send({ error: "Puzzle not found" });
-			}
+				if (!puzzle) {
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
+						.send({ error: "Puzzle not found" });
+				}
 
-			const user = await User.findById(userId);
+				const user = await User.findById(userId);
 
-			// Convert author ObjectId to string for comparison
-			const authorIdString = puzzle.author ? String(puzzle.author) : null;
-			const isAuthorCheck = authorIdString !== null && isAuthor(authorIdString, userId);
+				// Convert author ObjectId to string for comparison
+				const authorIdString = puzzle.author ? String(puzzle.author) : null;
+				const isAuthorCheck =
+					authorIdString !== null && isAuthor(authorIdString, userId);
 
-			if (
-				!isAuthorCheck &&
-				!isModerator(user?.role)
-			) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
-					.send({ error: "Not authorized to edit this puzzle" });
-			}				if (
+				if (!isAuthorCheck && !isModerator(user?.role)) {
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.FORBIDDEN)
+						.send({ error: "Not authorized to edit this puzzle" });
+				}
+				if (
 					parseResult.data.visibility === puzzleVisibilityEnum.APPROVED &&
 					!isModerator(user?.role)
 				) {
@@ -114,43 +113,43 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					});
 				}
 
-			// Since puzzle is a lean object, we need to use findByIdAndUpdate
-			const updatedPuzzle = await Puzzle.findByIdAndUpdate(
-				id,
-				parseResult.data,
-				{ new: true }
-			);
+				// Since puzzle is a lean object, we need to use findByIdAndUpdate
+				const updatedPuzzle = await Puzzle.findByIdAndUpdate(
+					id,
+					parseResult.data,
+					{ new: true }
+				);
 
-			const checkWhenEdited: PuzzleVisibility[] = [
-				puzzleVisibilityEnum.DRAFT,
-				puzzleVisibilityEnum.READY,
-				puzzleVisibilityEnum.REVIEW
-			];
+				const checkWhenEdited: PuzzleVisibility[] = [
+					puzzleVisibilityEnum.DRAFT,
+					puzzleVisibilityEnum.READY,
+					puzzleVisibilityEnum.REVIEW
+				];
 
-			if (
-				updatedPuzzle &&
-				checkWhenEdited.includes(updatedPuzzle.visibility) &&
-				updatedPuzzle.validators &&
-				updatedPuzzle.validators.length >=
-					PUZZLE_CONFIG.requiredNumberOfValidators &&
-				isPuzzleDto(updatedPuzzle)
-			) {
-				try {
-					const allPassed = await checkAllValidators(updatedPuzzle, fastify);
+				if (
+					updatedPuzzle &&
+					checkWhenEdited.includes(updatedPuzzle.visibility) &&
+					updatedPuzzle.validators &&
+					updatedPuzzle.validators.length >=
+						PUZZLE_CONFIG.requiredNumberOfValidators &&
+					isPuzzleDto(updatedPuzzle)
+				) {
+					try {
+						const allPassed = await checkAllValidators(updatedPuzzle, fastify);
 
-					if (allPassed) {
-						updatedPuzzle.visibility = puzzleVisibilityEnum.READY;
-					} else {
-						updatedPuzzle.visibility = puzzleVisibilityEnum.DRAFT;
+						if (allPassed) {
+							updatedPuzzle.visibility = puzzleVisibilityEnum.READY;
+						} else {
+							updatedPuzzle.visibility = puzzleVisibilityEnum.DRAFT;
+						}
+
+						await updatedPuzzle.save();
+					} catch (error) {
+						request.log.error(error, "Failed to check validators");
 					}
-
-					await updatedPuzzle.save();
-				} catch (error) {
-					request.log.error(error, "Failed to check validators");
 				}
-			}
 
-			return reply.send(updatedPuzzle);
+				return reply.send(updatedPuzzle);
 			} catch (error) {
 				const errorResponse: ErrorResponse = {
 					error: "Failed to update puzzle",

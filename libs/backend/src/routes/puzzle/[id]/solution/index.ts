@@ -73,10 +73,13 @@ export default async function puzzleByIdSolutionRoutes(
 						puzzleId: id,
 						hasAuthor: !!puzzle?.author,
 						authorType: typeof puzzle?.author,
-						authorIsObject: puzzle?.author && typeof puzzle.author === 'object',
+						authorIsObject: puzzle?.author && typeof puzzle.author === "object",
 						hasSolution: !!puzzle?.solution,
 						authorData: puzzle?.author ? JSON.stringify(puzzle.author) : null,
-						authorKeys: puzzle?.author && typeof puzzle.author === 'object' ? Object.keys(puzzle.author) : null
+						authorKeys:
+							puzzle?.author && typeof puzzle.author === "object"
+								? Object.keys(puzzle.author)
+								: null
 					});
 				}
 
@@ -97,28 +100,38 @@ export default async function puzzleByIdSolutionRoutes(
 
 				if (process.env.NODE_ENV === environment.DEVELOPMENT) {
 					const isAuthorUserDto = isUserDto(puzzle.author);
-					
+
 					request.log.info({
 						route: "puzzleByIdSolution",
 						action: "detailed_author_check",
 						puzzleId: id,
 						authorDto: puzzle.author ? JSON.stringify(puzzle.author) : null,
-						authorDtoKeys: puzzle.author && typeof puzzle.author === 'object' ? Object.keys(puzzle.author) : null,
+						authorDtoKeys:
+							puzzle.author && typeof puzzle.author === "object"
+								? Object.keys(puzzle.author)
+								: null,
 						isUserDtoResult: isAuthorUserDto,
-						authorId: isAuthorUserDto && typeof puzzle.author === 'object' && '_id' in puzzle.author 
-							? String(puzzle.author._id)
-							: null,
-						authorIdType: isAuthorUserDto && typeof puzzle.author === 'object' && '_id' in puzzle.author 
-							? typeof puzzle.author._id
-							: null,
+						authorId:
+							isAuthorUserDto &&
+							typeof puzzle.author === "object" &&
+							"_id" in puzzle.author
+								? String(puzzle.author._id)
+								: null,
+						authorIdType:
+							isAuthorUserDto &&
+							typeof puzzle.author === "object" &&
+							"_id" in puzzle.author
+								? typeof puzzle.author._id
+								: null,
 						userId: userId,
 						userIdType: typeof userId
 					});
 				}
 
 				const authorIdString = getUserIdFromUser(puzzle.author);
-				const isAuthorCheck = authorIdString !== null && isAuthor(authorIdString, userId);
-				
+				const isAuthorCheck =
+					authorIdString !== null && isAuthor(authorIdString, userId);
+
 				if (process.env.NODE_ENV === environment.DEVELOPMENT) {
 					request.log.info({
 						route: "puzzleByIdSolution",
@@ -132,16 +145,24 @@ export default async function puzzleByIdSolutionRoutes(
 						isAuthorResult: isAuthorCheck,
 						areEqual: authorIdString === userId,
 						// Check character by character
-						charComparison: authorIdString && userId ? {
-							author: authorIdString.split('').map((c, i) => `${i}:${c}(${c.charCodeAt(0)})`).join(','),
-							user: userId.split('').map((c, i) => `${i}:${c}(${c.charCodeAt(0)})`).join(',')
-						} : null
+						charComparison:
+							authorIdString && userId
+								? {
+										author: authorIdString
+											.split("")
+											.map((c, i) => `${i}:${c}(${c.charCodeAt(0)})`)
+											.join(","),
+										user: userId
+											.split("")
+											.map((c, i) => `${i}:${c}(${c.charCodeAt(0)})`)
+											.join(",")
+									}
+								: null
 					});
 				}
 
 				const lacksRequiredPermissions =
-					!isAuthorCheck &&
-					!isModerator(user?.role);
+					!isAuthorCheck && !isModerator(user?.role);
 
 				if (process.env.NODE_ENV === environment.DEVELOPMENT) {
 					request.log.info({
