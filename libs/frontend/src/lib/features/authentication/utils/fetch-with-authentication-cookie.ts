@@ -16,16 +16,6 @@ export async function fetchWithAuthenticationCookie(
 		...options.headers
 	});
 
-	if (process.env.NODE_ENV === environment.DEVELOPMENT) {
-		const headers = options.headers as Headers;
-		console.log("[fetchWithAuthenticationCookie]", {
-			url: typeof url === "string" ? url : url.toString(),
-			hasCookieHeader: headers.has("Cookie"),
-			cookieHeader: headers.get("Cookie"),
-			allHeaders: Array.from(headers.entries())
-		});
-	}
-
 	return await fetch(url, {
 		...defaultFetchOptions,
 		...options

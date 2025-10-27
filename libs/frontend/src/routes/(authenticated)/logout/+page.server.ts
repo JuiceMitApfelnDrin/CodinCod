@@ -1,4 +1,10 @@
-import { backendUrls, cookieKeys, frontendUrls } from "types";
+import {
+	backendUrls,
+	cookieKeys,
+	environment,
+	frontendUrls,
+	getCookieOptions
+} from "types";
 import type { Actions } from "./$types";
 import { env } from "$env/dynamic/private";
 import { redirect } from "@sveltejs/kit";
