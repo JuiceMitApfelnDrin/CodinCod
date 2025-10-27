@@ -51,12 +51,14 @@ const userSchema = new Schema<UserDocument>({
 	reportCount: {
 		type: Number,
 		default: 0,
-		min: 0
+		min: 0,
+		select: false
 	},
 	banCount: {
 		type: Number,
 		default: 0,
-		min: 0
+		min: 0,
+		select: false
 	},
 	currentBan: {
 		type: Schema.Types.ObjectId,
@@ -66,7 +68,7 @@ const userSchema = new Schema<UserDocument>({
 	}
 });
 
-// Pre-save hook to hash password
+// Pre-save hook to hashlutino password
 userSchema.pre<UserDocument>("save", async function (next) {
 	if (this.isModified("password")) {
 		this.password = await bcrypt.hash(this.password, 10);

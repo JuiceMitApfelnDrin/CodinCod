@@ -345,11 +345,15 @@
 							<li>
 								{#if isUserDto(player)}
 									{@const playerSubmission = findPlayerSubmission(player._id)}
-									<UserHoverCard username={player.username} />{` - using ${
-										playerSubmission?.language ??
-										playerLanguages[player.username] ??
-										"???"
-									} - ${playerSubmission?.result.result ?? "still busy solving the puzzle"}!`}
+									{@const submissionLanguage =
+										playerSubmission?.programmingLanguage
+											? isString(playerSubmission.programmingLanguage)
+												? playerSubmission.programmingLanguage
+												: playerSubmission.programmingLanguage.language
+											: (playerLanguages[player.username] ?? "???")}
+									<UserHoverCard
+										username={player.username}
+									/>{` - using ${submissionLanguage} - ${playerSubmission?.result.result ?? "still busy solving the puzzle"}!`}
 								{:else if isString(player)}
 									{player}
 								{/if}

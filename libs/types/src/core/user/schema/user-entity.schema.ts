@@ -31,10 +31,9 @@ export const userEntitySchema = z.object({
 	profile: userProfileSchema.optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
-	role: userRoleSchema.prefault(DEFAULT_USER_ROLE),
-	// Ban tracking fields
-	reportCount: z.number().int().min(0).default(0),
-	banCount: z.number().int().min(0).default(0),
-	currentBan: objectIdSchema.optional(), // Reference to active UserBan
+	role: userRoleSchema.prefault(DEFAULT_USER_ROLE).optional(),
+	reportCount: z.number().int().min(0).default(0).optional(),
+	banCount: z.number().int().min(0).default(0).optional(),
+	currentBan: objectIdSchema.optional(),
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;

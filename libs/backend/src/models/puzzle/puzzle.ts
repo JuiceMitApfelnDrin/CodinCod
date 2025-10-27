@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
 import { PUZZLE, USER, METRICS, COMMENT } from "../../utils/constants/model.js";
-import { DifficultyEnum, PuzzleEntity, puzzleVisibilityEnum } from "types";
+import { DifficultyEnum, PuzzleEntity, puzzleVisibilityEnum, Solution } from "types";
 import solutionSchema from "./solution.js";
 import validatorSchema from "./validator.js";
 import Comment from "../comment/comment.js";
@@ -9,7 +9,7 @@ export interface PuzzleDocument
 	extends Document,
 		Omit<PuzzleEntity, "author" | "solution" | "_id"> {
 	author: ObjectId;
-	solution?: ObjectId;
+	solution?: Solution;
 }
 
 /**
@@ -58,7 +58,8 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 	},
 	solution: {
 		type: solutionSchema,
-		select: false
+		select: false,
+		default: () => ({ code: "", programmingLanguage: undefined })
 	},
 	puzzleMetrics: {
 		ref: METRICS,

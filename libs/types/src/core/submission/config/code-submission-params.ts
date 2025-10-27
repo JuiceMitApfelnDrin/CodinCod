@@ -5,7 +5,7 @@ import { objectIdSchema } from "../../common/schema/object-id.js";
 export const codeSubmissionParamsSchema = submissionEntitySchema
 	.pick({
 		code: true,
-		language: true,
+		programmingLanguage: true,
 	})
 	.extend({
 		userId: objectIdSchema,

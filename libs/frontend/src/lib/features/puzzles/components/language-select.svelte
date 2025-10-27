@@ -3,7 +3,7 @@
 	import { ScrollArea } from "@/components/ui/scroll-area";
 	import SelectGroupHeading from "@/components/ui/select/select-group-heading.svelte";
 	import { preferences } from "@/stores/preferences";
-	import { DEFAULT_LANGUAGE } from "types";
+	import { DEFAULT_LANGUAGE, type ProgrammingLanguageDto } from "types";
 
 	let {
 		formAttributes = undefined,
@@ -11,7 +11,7 @@
 		languages = []
 	}: {
 		language: string;
-		languages?: string[];
+		languages?: ProgrammingLanguageDto[];
 		formAttributes?:
 			| {
 					name: string;
@@ -25,18 +25,26 @@
 			| undefined;
 	} = $props();
 
-	if (!language) {
-		if (
-			$preferences?.preferredLanguage &&
-			languages.includes($preferences.preferredLanguage)
-		) {
-			language = $preferences.preferredLanguage;
-		} else if (languages.includes(DEFAULT_LANGUAGE)) {
-			language = DEFAULT_LANGUAGE;
-		} else {
-			language = languages[0];
+	// Extract unique language names
+	const languageNames = $derived(
+		Array.from(new Set(languages.map((l) => l.language))).sort()
+	);
+
+	// Initialize language if not set
+	$effect(() => {
+		if (!language) {
+			if (
+				$preferences?.preferredLanguage &&
+				languageNames.includes($preferences.preferredLanguage)
+			) {
+				language = $preferences.preferredLanguage;
+			} else if (languageNames.includes(DEFAULT_LANGUAGE)) {
+				language = DEFAULT_LANGUAGE;
+			} else if (languageNames.length > 0) {
+				language = languageNames[0];
+			}
 		}
-	}
+	});
 
 	const triggerContent = $derived(language ?? "Select a language");
 </script>
@@ -61,8 +69,8 @@ onValueChange={(v) => {
 				<SelectGroupHeading class="text-lg">Language</SelectGroupHeading>
 				<Select.Separator />
 
-				{#each languages as language}
-					<Select.Item value={language} label={language} />
+				{#each languageNames as languageName}
+					<Select.Item value={languageName} label={languageName} />
 				{/each}
 			</Select.Group>
 		</ScrollArea>

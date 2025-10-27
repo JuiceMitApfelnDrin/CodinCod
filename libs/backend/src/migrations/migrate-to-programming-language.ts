@@ -12,8 +12,8 @@ import Game from "../models/game/game.js";
 import {
 	arePistonRuntimes,
 	httpRequestMethod,
+	isString,
 	PistonRuntime,
-	PistonRuntimes,
 	pistonUrls
 } from "types";
 import { buildPistonUri } from "@/utils/functions/build-piston-uri.js";
@@ -250,7 +250,7 @@ async function migrate() {
 
 			// Check if already migrated (first element is a string ObjectId)
 			const firstLang = game.options.allowedLanguages[0];
-			if (typeof firstLang === "string") {
+			if (isString(firstLang)) {
 				// Already migrated, skip
 				console.log(`   ⏭️  Game ${game._id} already migrated, skipping`);
 				gamesSkipped++;
@@ -259,7 +259,7 @@ async function migrate() {
 
 			const allowedLanguageIds: string[] = [];
 			for (const allowedLang of game.options.allowedLanguages) {
-				if (typeof allowedLang === "string") {
+				if (isString(allowedLang)) {
 					// Already an ObjectId, keep it
 					allowedLanguageIds.push(allowedLang);
 					continue;

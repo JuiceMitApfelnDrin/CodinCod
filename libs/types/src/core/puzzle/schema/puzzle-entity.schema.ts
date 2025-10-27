@@ -26,7 +26,7 @@ export const puzzleEntitySchema = z.object({
 		.min(PUZZLE_CONFIG.minConstraintsLength)
 		.max(PUZZLE_CONFIG.maxConstraintsLength)
 		.optional(),
-	author: objectIdSchema.or(userDtoSchema).prefault(""),
+	author: objectIdSchema.or(userDtoSchema).default(""),
 	validators: z.array(validatorEntitySchema).optional(),
 	difficulty: difficultySchema.prefault(DifficultyEnum.INTERMEDIATE), // TODO: later not now !
 	visibility: puzzleVisibilitySchema.prefault(puzzleVisibilityEnum.DRAFT),
@@ -52,17 +52,24 @@ export const createPuzzleBackendSchema = puzzleEntitySchema.pick({
 });
 export type CreatePuzzleBackend = z.infer<typeof createPuzzleBackendSchema>;
 
-export const editPuzzleSchema = puzzleEntitySchema.pick({
-	title: true,
-	statement: true,
-	constraints: true,
-	validators: true,
-	solution: true,
-	visibility: true,
-	author: true,
-	createdAt: true,
-	updatedAt: true,
-});
+export const editPuzzleSchema = puzzleEntitySchema
+	.pick({
+		title: true,
+		statement: true,
+		constraints: true,
+		validators: true,
+		solution: true,
+		visibility: true,
+		createdAt: true,
+		updatedAt: true,
+		author: true,
+	})
+	.extend({
+		// Make solution optional with default for edit form
+		solution: solutionSchema
+			.optional()
+			.prefault({ code: "", programmingLanguage: undefined }),
+	});
 export type EditPuzzle = z.infer<typeof editPuzzleSchema>;
 
 export function isEditPuzzle(data: unknown): data is EditPuzzle {

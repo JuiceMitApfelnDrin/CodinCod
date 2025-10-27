@@ -14,10 +14,10 @@ import piston from "./plugins/decorators/piston.js";
 import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
 import requestLogger from "./plugins/middleware/request-logger.js";
-import { environment, httpResponseCodes } from "types";
+import { httpResponseCodes } from "types";
 
 const server = Fastify({
-	logger: Boolean(process.env.NODE_ENV !== environment.DEVELOPMENT)
+	logger:	true
 });
 
 // register fastify ecosystem plugins

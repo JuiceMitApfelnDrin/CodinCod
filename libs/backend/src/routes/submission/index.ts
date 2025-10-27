@@ -7,7 +7,9 @@ import {
 	codeSubmissionParamsSchema,
 	PistonExecutionRequest,
 	ErrorResponse,
-	arePistonRuntimes
+	arePistonRuntimes,
+	isProgrammingLanguageDto,
+	isObjectId
 } from "types";
 import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
@@ -32,7 +34,7 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			}
 
 			// unpacking body
-			const { language, puzzleId, code, userId } = request.body;
+			const { programmingLanguage, puzzleId, code, userId } = parseResult.data;
 
 			// retrieve test cases
 			const puzzle: PuzzleDocument | null = await Puzzle.findById(puzzleId);
@@ -54,7 +56,25 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 					.send(error);
 			}
 
-			const runtimeInfo = findRuntime(runtimes, language);
+			let languageName: string | undefined;
+
+			if (isProgrammingLanguageDto(programmingLanguage)) {
+				languageName = programmingLanguage.language;
+			} else if (isObjectId(programmingLanguage)) {
+				const langDoc = await ProgrammingLanguage.findById(programmingLanguage);
+
+				if (langDoc) {
+					languageName = langDoc.language;
+				}
+			}
+
+			if (!languageName) {
+				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+					error: "Invalid programming language"
+				});
+			}
+
+			const runtimeInfo = findRuntime(runtimes, languageName);
 
 			if (!runtimeInfo) {
 				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({

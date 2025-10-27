@@ -2,6 +2,8 @@
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
+		isObjectId,
+		isString,
 		isSubmissionDto,
 		isUserDto,
 		type AcceptedDate,
@@ -79,7 +81,13 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each submissions as { _id, createdAt, language, result, user }, index}
+			{#each submissions as { _id, createdAt, programmingLanguage, result, user }, index}
+				{@const language =
+					isString(programmingLanguage) && programmingLanguage
+						? programmingLanguage
+						: isObjectId(programmingLanguage)
+							? "Unknown"
+							: programmingLanguage.language}
 				{#if isUserDto(user)}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>

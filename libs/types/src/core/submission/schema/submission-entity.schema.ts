@@ -13,8 +13,5 @@ export const submissionEntitySchema = z.object({
 	puzzle: objectIdSchema.or(puzzleDtoSchema),
 	result: puzzleResultInformationSchema,
 	user: objectIdSchema.or(userDtoSchema),
-	// Deprecated fields - keeping for backward compatibility during migration
-	language: z.string().optional(),
-	languageVersion: z.string().optional(),
 });
 export type SubmissionEntity = z.infer<typeof submissionEntitySchema>;

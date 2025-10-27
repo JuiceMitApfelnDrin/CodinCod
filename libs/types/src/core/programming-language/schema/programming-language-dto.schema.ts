@@ -10,3 +10,9 @@ export const programmingLanguageDtoSchema =
 export type ProgrammingLanguageDto = z.infer<
 	typeof programmingLanguageDtoSchema
 >;
+
+export function isProgrammingLanguageDto(
+	data: unknown,
+): data is ProgrammingLanguageDto {
+	return programmingLanguageDtoSchema.safeParse(data).success;
+}
