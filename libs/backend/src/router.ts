@@ -33,6 +33,8 @@ import moderationUserByIdBanUnbanRoutes from "./routes/moderation/user/[id]/unba
 import moderationUserByIdBanHistoryRoutes from "./routes/moderation/user/[id]/ban/history/index.js";
 import moderationUserByIdBanPermanentRoutes from "./routes/moderation/user/[id]/ban/permanent/index.js";
 import moderationUserByIdBanTemporaryRoutes from "./routes/moderation/user/[id]/ban/temporary/index.js";
+import programmingLanguageRoutes from "./routes/programming-language/index.js";
+import programmingLanguageByIdRoutes from "./routes/programming-language/[id]/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
@@ -65,6 +67,12 @@ export default async function router(fastify: FastifyInstance) {
 	});
 	fastify.register(puzzleLanguagesRoutes, {
 		prefix: backendUrls.PUZZLE_LANGUAGES
+	});
+	fastify.register(programmingLanguageRoutes, {
+		prefix: backendUrls.PROGRAMMING_LANGUAGE
+	});
+	fastify.register(programmingLanguageByIdRoutes, {
+		prefix: backendUrls.programmingLanguageById(backendParams.ID)
 	});
 	fastify.register(puzzleByIdRoutes, {
 		prefix: backendUrls.puzzleById(backendParams.ID)

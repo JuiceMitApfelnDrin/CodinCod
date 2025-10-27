@@ -12,7 +12,7 @@ export async function connectToDatabase(): Promise<void> {
 			serverSelectionTimeoutMS: 5000,
 			socketTimeoutMS: 45000
 		});
-		
+
 		console.log(`✅ Connected to MongoDB: ${dbName}`);
 	} catch (error) {
 		console.error("❌ MongoDB connection error:", error);

@@ -12,8 +12,8 @@
 		value = $bindable("")
 	}: {
 		readonly?: boolean;
-		value?: string;
-		language?: PuzzleLanguage;
+		value?: string | undefined;
+		language?: PuzzleLanguage | undefined;
 	} = $props();
 
 	async function getEditorConfig(

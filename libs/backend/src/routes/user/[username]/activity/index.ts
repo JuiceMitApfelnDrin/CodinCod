@@ -42,7 +42,7 @@ export default async function userByUsernameActivityRoutes(
 					author: userId,
 					visibility: puzzleVisibilityEnum.APPROVED
 				}),
-				Submission.find({ user: userId })
+				Submission.find({ user: userId }).populate("programmingLanguage")
 			]);
 
 			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({

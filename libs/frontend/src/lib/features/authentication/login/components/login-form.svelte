@@ -13,8 +13,11 @@
 	} from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import { testIds } from "@/config/test-ids";
+	import EyeClosed from "@lucide/svelte/icons/eye-closed";
+	import Eye from "@lucide/svelte/icons/eye";
+	import Button from "#/ui/button/button.svelte";
 
 	let {
 		data,
@@ -33,6 +36,8 @@
 	const handleFormInput = debounce(async () => {
 		await validateForm({ update: false });
 	}, 500);
+
+	let showPassword = $state(false);
 </script>
 
 <form
@@ -61,13 +66,25 @@
 		<Form.Control>
 			{#snippet children({ props })}
 				<Form.Label class="text-lg">Password</Form.Label>
-				<Input
-					type="password"
-					{...props}
-					data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
-					bind:value={$formData.password}
-					minlength={PASSWORD_CONFIG.minPasswordLength}
-				/>
+
+					<Input
+						type={showPassword ? "text" : "password"}
+						{...props}
+						data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
+						bind:value={$formData.password}
+						minlength={PASSWORD_CONFIG.minPasswordLength}
+						class="pr-10"
+					/>
+					<Button
+						onclick={() => (showPassword = !showPassword)}
+						data-testid={testIds.LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
+					>
+						{#if showPassword}
+							<EyeClosed /> Hide password
+						{:else}
+							<Eye /> Show password
+						{/if}
+					</Button>
 			{/snippet}
 		</Form.Control>
 		<Form.FieldErrors />
@@ -75,10 +92,10 @@
 
 	{#if message}
 		<GenericAlert
-			title={isHttpErrorCode($page.status)
+			title={isHttpErrorCode(page.status)
 				? "Unable to log-in"
 				: "Login successful"}
-			status={$page.status}
+			status={page.status}
 			{message}
 		/>
 	{/if}

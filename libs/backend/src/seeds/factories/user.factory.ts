@@ -30,8 +30,12 @@ export async function createUser(
 		reportCount: options.reportCount ?? faker.number.int({ min: 0, max: 5 }),
 		banCount: options.banCount ?? faker.number.int({ min: 0, max: 2 }),
 		profile: {
-			bio: faker.helpers.maybe(() => faker.lorem.sentence(), { probability: 0.6 }),
-			picture: faker.helpers.maybe(() => faker.image.avatar(), { probability: 0.4 }),
+			bio: faker.helpers.maybe(() => faker.lorem.sentence(), {
+				probability: 0.6
+			}),
+			picture: faker.helpers.maybe(() => faker.image.avatar(), {
+				probability: 0.4
+			}),
 			location: faker.helpers.maybe(() => faker.location.city(), {
 				probability: 0.5
 			}),
@@ -49,7 +53,7 @@ export async function createUser(
 
 /**
  * Create multiple users with various roles
- * 
+ *
  * Always creates:
  * - 1 test user (username: "testuser", email: "test@codincod.com", password: "TestPassword123!")
  * - 2-3 moderators (username: "moderator1", etc.)

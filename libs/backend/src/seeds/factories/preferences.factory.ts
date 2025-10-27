@@ -1,5 +1,7 @@
 import { faker } from "@faker-js/faker";
-import Preferences, { PreferencesDocument } from "../../models/preferences/preferences.js";
+import Preferences, {
+	PreferencesDocument
+} from "../../models/preferences/preferences.js";
 import { themeOption } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types } from "mongoose";
@@ -19,9 +21,18 @@ export async function createPreferences(
 
 	const preferencesData: Partial<PreferencesDocument> = {
 		owner: options.ownerId as unknown as ObjectId,
-		...(faker.helpers.maybe(() => ({ theme: randomFromArray(themes) }), { probability: 0.7 }) || {}),
+		...(faker.helpers.maybe(() => ({ theme: randomFromArray(themes) }), {
+			probability: 0.7
+		}) || {}),
 		...(faker.helpers.maybe(
-			() => ({ preferredLanguage: randomFromArray(["python", "javascript", "java", "cpp"]) }),
+			() => ({
+				preferredLanguage: randomFromArray([
+					"python",
+					"javascript",
+					"java",
+					"cpp"
+				])
+			}),
 			{ probability: 0.6 }
 		) || {}),
 		blockedUsers: [] // Could add some blocked users if needed

@@ -17,7 +17,10 @@
 		"seed": "tsx src/seeds/index.ts",
 		"seed:force": "tsx src/seeds/index.ts --force",
 		"seed:clear": "tsx src/seeds/clear.ts",
-		"seed:clear:force": "tsx src/seeds/clear.ts --force"
+		"seed:clear:force": "tsx src/seeds/clear.ts --force",
+		"migrate": "tsx src/migrations/migrate.ts run",
+		"migrate:list": "tsx src/migrations/migrate.ts list",
+		"migrate:rollback": "tsx src/migrations/migrate.ts rollback"
 	},
 	"author": "",
 	"license": "ISC",

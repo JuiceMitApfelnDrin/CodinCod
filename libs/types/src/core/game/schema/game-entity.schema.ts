@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { gameOptionsSchema } from "./options.schema.js";
+import { gameOptionsSchema } from "./game-options.schema.js";
 import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 import { puzzleDtoSchema } from "../../puzzle/schema/puzzle-dto.schema.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";

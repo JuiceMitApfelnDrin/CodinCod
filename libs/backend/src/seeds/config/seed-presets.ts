@@ -22,7 +22,7 @@ export const SEED_PRESETS: Record<string, SeedPreset> = {
 			games: 2
 		}
 	},
-	
+
 	standard: {
 		name: "Standard",
 		counts: {
@@ -34,7 +34,7 @@ export const SEED_PRESETS: Record<string, SeedPreset> = {
 			games: 15
 		}
 	},
-	
+
 	comprehensive: {
 		name: "Comprehensive",
 		counts: {
@@ -46,7 +46,7 @@ export const SEED_PRESETS: Record<string, SeedPreset> = {
 			games: 75
 		}
 	},
-	
+
 	demo: {
 		name: "Demo",
 		counts: {
@@ -60,21 +60,28 @@ export const SEED_PRESETS: Record<string, SeedPreset> = {
 	}
 };
 
-
 export function getSeedPreset(presetName?: string): SeedPreset {
 	const name = presetName?.toLowerCase() || "standard";
 	return SEED_PRESETS[name] || SEED_PRESETS.standard;
 }
 
-export function getSeedCounts(getEnvNumber: (key: string, defaultValue: number) => number) {
+export function getSeedCounts(
+	getEnvNumber: (key: string, defaultValue: number) => number
+) {
 	const presetName = process.env.SEED_PRESET;
 	const preset = getSeedPreset(presetName);
 
 	return {
 		users: getEnvNumber("SEED_USERS", preset.counts.users),
 		puzzles: getEnvNumber("SEED_PUZZLES", preset.counts.puzzles),
-		submissionsPerPuzzle: getEnvNumber("SEED_SUBMISSIONS_PER_PUZZLE", preset.counts.submissionsPerPuzzle),
-		commentsPerPuzzle: getEnvNumber("SEED_COMMENTS_PER_PUZZLE", preset.counts.commentsPerPuzzle),
+		submissionsPerPuzzle: getEnvNumber(
+			"SEED_SUBMISSIONS_PER_PUZZLE",
+			preset.counts.submissionsPerPuzzle
+		),
+		commentsPerPuzzle: getEnvNumber(
+			"SEED_COMMENTS_PER_PUZZLE",
+			preset.counts.commentsPerPuzzle
+		),
 		reports: getEnvNumber("SEED_REPORTS", preset.counts.reports),
 		games: getEnvNumber("SEED_GAMES", preset.counts.games)
 	};

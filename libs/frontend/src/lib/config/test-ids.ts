@@ -57,6 +57,7 @@ export const testIds = {
 	LOGIN_FORM_BUTTON_LOGIN: "login-form-button-login",
 	LOGIN_FORM_INPUT_IDENTIFIER: "login-form-input-identifier",
 	LOGIN_FORM_INPUT_PASSWORD: "login-form-input-password",
+	LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD: "login-form-button-toggle-show-password",
 
 	// multiplayer by id page
 	MULTIPLAYER_BY_ID_PAGE_ANCHOR_MULTIPLAYER:
@@ -141,6 +142,11 @@ export const testIds = {
 
 	// register form
 	REGISTER_FORM_BUTTON_REGISTER: "register-form-button-register",
+	REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD:
+		"register-form-button-toggle-show-password",
+	REGISTER_FORM_INPUT_USERNAME: "register-form-input-username",
+	REGISTER_FORM_INPUT_PASSWORD: "register-form-input-password",
+	REGISTER_FORM_INPUT_EMAIL: "register-form-input-email",
 
 	// standings table component
 	STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE:

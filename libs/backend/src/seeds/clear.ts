@@ -5,10 +5,7 @@ import {
 	connectToDatabase,
 	disconnectFromDatabase
 } from "./utils/db-connection.js";
-import {
-	clearDatabase,
-	getCollectionCounts
-} from "./utils/clear-database.js";
+import { clearDatabase, getCollectionCounts } from "./utils/clear-database.js";
 
 config();
 

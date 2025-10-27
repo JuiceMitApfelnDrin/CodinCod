@@ -16,6 +16,7 @@ import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
+import ProgrammingLanguage from "../../models/programming-language/language.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: CodeSubmissionParams }>(
@@ -92,14 +93,24 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			});
 
 			try {
+				const programmingLanguage = await ProgrammingLanguage.findOne({
+					language: runtimeInfo.language,
+					version: runtimeInfo.version
+				});
+
+				if (!programmingLanguage) {
+					return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+						error: `Programming language ${runtimeInfo.language} ${runtimeInfo.version} not found in database`
+					});
+				}
+
 				const submissionData: SubmissionEntity = {
 					code: code,
 					puzzle: puzzleId,
 					user: userId,
 					createdAt: new Date(),
-					languageVersion: runtimeInfo.version,
-					result: calculateResults(expectedOutputs, pistonExecutionResults),
-					language: runtimeInfo.language
+					programmingLanguage: programmingLanguage._id.toString(),
+					result: calculateResults(expectedOutputs, pistonExecutionResults)
 				};
 
 				const submission = new Submission(submissionData);

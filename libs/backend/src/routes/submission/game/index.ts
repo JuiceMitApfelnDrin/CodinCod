@@ -25,8 +25,11 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 			const { gameId, submissionId, userId } = request.body;
 
 			try {
-				const matchingSubmission =
-					await Submission.findById<SubmissionEntity>(submissionId).exec();
+				const matchingSubmission = await Submission.findById<SubmissionEntity>(
+					submissionId
+				)
+					.populate("programmingLanguage")
+					.exec();
 
 				if (
 					!matchingSubmission ||

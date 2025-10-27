@@ -19,11 +19,14 @@ function generateChatMessage(): string {
 		() => "Good luck everyone!",
 		() => "GL HF!",
 		() => `Nice approach!`,
-		() => `${faker.helpers.arrayElement(["Interesting", "Cool", "Smart"])} solution`,
-		() => `Anyone using ${randomFromArray(["Python", "JavaScript", "Java", "C++"])}?`,
+		() =>
+			`${faker.helpers.arrayElement(["Interesting", "Cool", "Smart"])} solution`,
+		() =>
+			`Anyone using ${randomFromArray(["Python", "JavaScript", "Java", "C++"])}?`,
 		() => "GG",
 		() => "Well played!",
-		() => `This puzzle is ${faker.helpers.arrayElement(["tough", "tricky", "interesting", "fun"])}!`,
+		() =>
+			`This puzzle is ${faker.helpers.arrayElement(["tough", "tricky", "interesting", "fun"])}!`,
 		() => `${faker.number.int({ min: 1, max: 100 })}% done`,
 		() => "Almost there!",
 		() => "First time playing this mode",
@@ -83,8 +86,12 @@ export async function createChatMessagesForGame(
 	const chatMessageIds: Types.ObjectId[] = [];
 
 	// Fetch usernames once for all players
-	const users = await User.find({ _id: { $in: playerIds } }).select("_id username").lean();
-	const userMap = new Map(users.map(u => [(u._id as Types.ObjectId).toString(), u.username]));
+	const users = await User.find({ _id: { $in: playerIds } })
+		.select("_id username")
+		.lean();
+	const userMap = new Map(
+		users.map((u) => [(u._id as Types.ObjectId).toString(), u.username])
+	);
 
 	for (let i = 0; i < messageCount; i++) {
 		const userId = randomFromArray(playerIds);
@@ -119,7 +126,11 @@ export async function createChatMessages(
 
 		// Each game gets 5-20 messages
 		const messageCount = faker.number.int({ min: 5, max: 20 });
-		const messages = await createChatMessagesForGame(gameId, playerIds, messageCount);
+		const messages = await createChatMessagesForGame(
+			gameId,
+			playerIds,
+			messageCount
+		);
 		chatMessageIds.push(...messages);
 	}
 

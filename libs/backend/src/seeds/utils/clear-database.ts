@@ -12,7 +12,7 @@ import readline from "readline/promises";
 
 export async function clearDatabase(force = false): Promise<void> {
 	if (!force) {
-		const counts = await getCollectionCounts()
+		const counts = await getCollectionCounts();
 		console.log("Current collection counts:", counts);
 
 		const rl = readline.createInterface({
@@ -42,17 +42,11 @@ export async function clearDatabase(force = false): Promise<void> {
 			Game.deleteMany({})
 		]);
 
-		await Promise.all([
-			Comment.deleteMany({}),
-			Submission.deleteMany({})
-		]);
+		await Promise.all([Comment.deleteMany({}), Submission.deleteMany({})]);
 
 		await Puzzle.deleteMany({});
-		
-		await Promise.all([
-			UserBan.deleteMany({}),
-			Preferences.deleteMany({})
-		]);
+
+		await Promise.all([UserBan.deleteMany({}), Preferences.deleteMany({})]);
 
 		await User.deleteMany({});
 

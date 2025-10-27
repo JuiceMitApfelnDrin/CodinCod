@@ -42,7 +42,8 @@ export default async function puzzleByIdSolutionRoutes(
 			try {
 				const puzzle = await Puzzle.findById(id)
 					.select("+solution")
-					.populate("author");
+					.populate("author")
+					.populate("solution.programmingLanguage");
 
 				if (!puzzle) {
 					return reply

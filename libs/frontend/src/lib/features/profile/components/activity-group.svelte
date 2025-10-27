@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { ChevronDown } from "@lucide/svelte";
+	import ChevronDown from "@lucide/svelte/icons/chevron-down";
 	import {
 		activityTypeEnum,
 		type AcceptedDate,

@@ -11,8 +11,11 @@
 	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { page } from "$app/stores";
 	import { testIds } from "@/config/test-ids";
+	import { page } from "$app/state";
+	import Button from "#/ui/button/button.svelte";
+	import EyeClosed from "@lucide/svelte/icons/eye-closed";
+	import Eye from "@lucide/svelte/icons/eye";
 
 	let {
 		data,
@@ -31,6 +34,8 @@
 	const handleFormInput = debounce(async () => {
 		await validateForm({ update: false });
 	}, 500);
+
+	let showPassword = $state(false);
 </script>
 
 <form
@@ -46,6 +51,7 @@
 				<Input
 					{...props}
 					bind:value={$formData.username}
+					data-testid={testIds.REGISTER_FORM_INPUT_USERNAME}
 					placeholder="john_doe123"
 					minlength={USERNAME_CONFIG.minUsernameLength}
 					maxlength={USERNAME_CONFIG.maxUsernameLength}
@@ -66,6 +72,7 @@
 				<Form.Label class="text-lg">Email</Form.Label>
 				<Input
 					{...props}
+					data-testid={testIds.REGISTER_FORM_INPUT_EMAIL}
 					bind:value={$formData.email}
 					placeholder="john@example.com"
 					type="email"
@@ -83,11 +90,23 @@
 				<Input
 					type="password"
 					{...props}
+					data-testid={testIds.REGISTER_FORM_INPUT_PASSWORD}
 					bind:value={$formData.password}
 					placeholder={`${PASSWORD_CONFIG.minPasswordLength}characters`}
 				/>
+				<Button
+						onclick={() => (showPassword = !showPassword)}
+						data-testid={testIds.REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
+					>
+						{#if showPassword}
+							<EyeClosed /> Hide password
+						{:else}
+							<Eye /> Show password
+						{/if}
+					</Button>
 			{/snippet}
 		</Form.Control>
+		
 		<Form.Description
 			>Password must be at least {PASSWORD_CONFIG.minPasswordLength} characters.
 			<span class="text-xs"
@@ -104,10 +123,10 @@
 
 	{#if message}
 		<GenericAlert
-			title={isHttpErrorCode($page.status)
+			title={isHttpErrorCode(page.status)
 				? "Unable to register"
 				: "Registration successful"}
-			status={$page.status}
+			status={page.status}
 			{message}
 		/>
 	{/if}

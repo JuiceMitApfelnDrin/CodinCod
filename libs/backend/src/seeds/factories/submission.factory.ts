@@ -1,10 +1,14 @@
 import { faker } from "@faker-js/faker";
-import Submission, { SubmissionDocument } from "../../models/submission/submission.js";
+import Submission, {
+	SubmissionDocument
+} from "../../models/submission/submission.js";
 import { PuzzleResultEnum } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types, ObjectId } from "mongoose";
+import ProgrammingLanguage from "../../models/programming-language/language.js";
 
-type PuzzleResultValue = typeof PuzzleResultEnum[keyof typeof PuzzleResultEnum];
+type PuzzleResultValue =
+	(typeof PuzzleResultEnum)[keyof typeof PuzzleResultEnum];
 
 export interface SubmissionFactoryOptions {
 	userId: Types.ObjectId;
@@ -18,22 +22,22 @@ export interface SubmissionFactoryOptions {
 function generateCode(language: string): string {
 	const codeTemplates: Record<string, string[]> = {
 		python: [
-			'def solution(n):\n    # TODO: implement solution\n    return n',
-			'def solve(arr):\n    result = []\n    for item in arr:\n        result.append(item * 2)\n    return result',
-			'def calculate(x, y):\n    return x + y'
+			"def solution(n):\n    # TODO: implement solution\n    return n",
+			"def solve(arr):\n    result = []\n    for item in arr:\n        result.append(item * 2)\n    return result",
+			"def calculate(x, y):\n    return x + y"
 		],
 		javascript: [
-			'function solution(n) {\n    // TODO: implement solution\n    return n;\n}',
-			'const solve = (arr) => {\n    return arr.map(x => x * 2);\n}',
-			'function calculate(x, y) {\n    return x + y;\n}'
+			"function solution(n) {\n    // TODO: implement solution\n    return n;\n}",
+			"const solve = (arr) => {\n    return arr.map(x => x * 2);\n}",
+			"function calculate(x, y) {\n    return x + y;\n}"
 		],
 		java: [
-			'public int solution(int n) {\n    // TODO: implement solution\n    return n;\n}',
-			'public int[] solve(int[] arr) {\n    return Arrays.stream(arr).map(x -> x * 2).toArray();\n}'
+			"public int solution(int n) {\n    // TODO: implement solution\n    return n;\n}",
+			"public int[] solve(int[] arr) {\n    return Arrays.stream(arr).map(x -> x * 2).toArray();\n}"
 		],
 		cpp: [
-			'int solution(int n) {\n    // TODO: implement solution\n    return n;\n}',
-			'vector<int> solve(vector<int> arr) {\n    for (auto& x : arr) x *= 2;\n    return arr;\n}'
+			"int solution(int n) {\n    // TODO: implement solution\n    return n;\n}",
+			"vector<int> solve(vector<int> arr) {\n    for (auto& x : arr) x *= 2;\n    return arr;\n}"
 		]
 	};
 
@@ -68,14 +72,16 @@ async function generateResultInfo(
 export async function createSubmission(
 	options: SubmissionFactoryOptions
 ): Promise<Types.ObjectId> {
-	const language = randomFromArray(["python", "javascript", "java", "cpp"]);
-	const languageVersionMap: Record<string, string> = {
-		python: "3.10.0",
-		javascript: "18.15.0",
-		java: "15.0.2",
-		cpp: "10.2.0"
-	};
-	const languageVersion = languageVersionMap[language];
+	// Get a random programming language from database
+	const allLanguages = await ProgrammingLanguage.find().lean();
+	if (allLanguages.length === 0) {
+		throw new Error(
+			"No programming languages found in database. Run migrations first!"
+		);
+	}
+
+	const selectedLanguage = randomFromArray(allLanguages);
+	const languageName = selectedLanguage.language;
 
 	// Result distribution: 60% SUCCESS, 30% ERROR, 10% UNKNOWN
 	const resultValues = Object.values(PuzzleResultEnum);
@@ -84,15 +90,14 @@ export async function createSubmission(
 		(faker.helpers.weightedArrayElement([
 			{ value: resultValues[1], weight: 60 }, // SUCCESS
 			{ value: resultValues[0], weight: 30 }, // ERROR
-			{ value: resultValues[2], weight: 10 }  // UNKNOWN
+			{ value: resultValues[2], weight: 10 } // UNKNOWN
 		]) as PuzzleResultValue);
 
 	const submissionData: Partial<SubmissionDocument> = {
-		code: generateCode(language),
+		code: generateCode(languageName),
 		puzzle: options.puzzleId as unknown as ObjectId,
 		user: options.userId as unknown as ObjectId,
-		language,
-		languageVersion,
+		programmingLanguage: selectedLanguage._id as unknown as ObjectId,
 		result: await generateResultInfo(options.puzzleId, result)
 	};
 

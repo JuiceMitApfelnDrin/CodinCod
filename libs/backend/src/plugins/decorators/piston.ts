@@ -1,3 +1,4 @@
+import { buildPistonUri } from "@/utils/functions/build-piston-uri.js";
 import { FastifyInstance } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import {
@@ -14,13 +15,7 @@ async function piston(fastify: FastifyInstance) {
 	fastify.decorate(
 		"piston",
 		async (pistonExecutionRequestObject: PistonExecutionRequest) => {
-			const PISTON_API = process.env.PISTON_URI;
-
-			if (!PISTON_API) {
-				throw new Error("PISTON_API is not defined in environment variables");
-			}
-
-			const res = await fetch(`${PISTON_API}${pistonUrls.EXECUTE}`, {
+			const res = await fetch(buildPistonUri(pistonUrls.EXECUTE), {
 				method: POST,
 				headers: {
 					"Content-Type": "application/json"
@@ -44,13 +39,7 @@ async function piston(fastify: FastifyInstance) {
 	);
 
 	fastify.decorate("runtimes", async () => {
-		const PISTON_API = process.env.PISTON_URI;
-
-		if (!PISTON_API) {
-			throw new Error("PISTON_API is not defined in environment variables");
-		}
-
-		const response = await fetch(`${PISTON_API}${pistonUrls.RUNTIMES}`, {
+		const response = await fetch(buildPistonUri(pistonUrls.RUNTIMES), {
 			method: httpRequestMethod.GET,
 			headers: {
 				"Content-Type": "application/json"

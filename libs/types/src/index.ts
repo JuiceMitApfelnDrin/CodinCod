@@ -64,7 +64,7 @@ export * from "./core/game/schema/waiting-room-response.schema.js";
 export * from "./core/game/schema/game-request.schema.js";
 export * from "./core/game/schema/game-response.schema.js";
 export * from "./core/game/schema/mode.schema.js";
-export * from "./core/game/schema/options.schema.js";
+export * from "./core/game/schema/game-options.schema.js";
 export * from "./core/game/schema/visibility.schema.js";
 
 // moderation
@@ -101,6 +101,11 @@ export * from "./core/preferences/enum/theme-option.js";
 export * from "./core/preferences/schema/editor.schema.js";
 export * from "./core/preferences/schema/preferences-dto.schema.js";
 export * from "./core/preferences/schema/preferences-entity.schema.js";
+
+// programming-language
+export * from "./core/programming-language/schema/programming-language-entity.schema.js";
+export * from "./core/programming-language/schema/programming-language-dto.schema.js";
+export * from "./core/programming-language/schema/create-programming-language.schema.js";
 
 // profile
 export * from "./core/profile/schema/profile-dto.schema.js";

@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { CircleAlert, CircleCheck, Clock } from "@lucide/svelte";
+	import Clock from "@lucide/svelte/icons/clock";
+	import CircleAlert from "@lucide/svelte/icons/circle-alert";
+	import CircleCheck from "@lucide/svelte/icons/circle-check";
 	import * as Alert from "./index";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { httpResponseCodes } from "types";

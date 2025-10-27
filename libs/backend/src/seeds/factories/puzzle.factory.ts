@@ -6,11 +6,16 @@ import {
 	TagEnum,
 	PuzzleEntity
 } from "types";
-import { randomFromArray, randomMultipleFromArray } from "../utils/seed-helpers.js";
+import {
+	randomFromArray,
+	randomMultipleFromArray
+} from "../utils/seed-helpers.js";
 import { Types } from "mongoose";
+import ProgrammingLanguage from "../../models/programming-language/language.js";
 
-type DifficultyValue = typeof DifficultyEnum[keyof typeof DifficultyEnum];
-type VisibilityValue = typeof puzzleVisibilityEnum[keyof typeof puzzleVisibilityEnum];
+type DifficultyValue = (typeof DifficultyEnum)[keyof typeof DifficultyEnum];
+type VisibilityValue =
+	(typeof puzzleVisibilityEnum)[keyof typeof puzzleVisibilityEnum];
 
 export interface PuzzleFactoryOptions {
 	authorId: Types.ObjectId;
@@ -72,12 +77,10 @@ export async function createPuzzle(
 	options: PuzzleFactoryOptions
 ): Promise<Types.ObjectId> {
 	const difficulty =
-		options.difficulty ||
-		randomFromArray(Object.values(DifficultyEnum));
+		options.difficulty || randomFromArray(Object.values(DifficultyEnum));
 
 	const visibility =
-		options.visibility ||
-		randomFromArray(Object.values(puzzleVisibilityEnum));
+		options.visibility || randomFromArray(Object.values(puzzleVisibilityEnum));
 
 	// Select 1-4 tags
 	const tags = randomMultipleFromArray(Object.values(TagEnum), 1, 4);
@@ -104,21 +107,31 @@ export async function createPuzzle(
 		difficulty,
 		visibility,
 		tags,
-		...(faker.helpers.maybe(
-			() => ({
-				solution: {
-					code: faker.helpers.arrayElement([
-						'def solution(n):\n    return n * 2',
-						'function solution(arr) {\n    return arr.sort();\n}',
-						'public int solution(int x) {\n    return x + 1;\n}'
-					]),
-					language: randomFromArray(["python", "javascript", "java", "cpp"]),
-					languageVersion: randomFromArray(["3.10.0", "18.15.0", "15.0.2", "10.2.0"]),
-					explanation: faker.lorem.paragraph()
+		...(await (async () => {
+			if (
+				faker.helpers.maybe(() => true, {
+					probability: visibility === puzzleVisibilityEnum.APPROVED ? 0.9 : 0.3
+				})
+			) {
+				// Get a random programming language from database for the solution
+				const allLanguages = await ProgrammingLanguage.find().lean();
+				if (allLanguages.length > 0) {
+					const selectedLanguage = randomFromArray(allLanguages);
+					return {
+						solution: {
+							code: faker.helpers.arrayElement([
+								"def solution(n):\n    return n * 2",
+								"function solution(arr) {\n    return arr.sort();\n}",
+								"public int solution(int x) {\n    return x + 1;\n}"
+							]),
+							programmingLanguage: selectedLanguage._id.toString(),
+							explanation: faker.lorem.paragraph()
+						}
+					};
 				}
-			}),
-			{ probability: visibility === puzzleVisibilityEnum.APPROVED ? 0.9 : 0.3 }
-		) || {}),
+			}
+			return {};
+		})()),
 		...(faker.helpers.maybe(
 			() => ({ moderationFeedback: faker.lorem.sentence() }),
 			{ probability: visibility === puzzleVisibilityEnum.DRAFT ? 0.4 : 0.1 }
@@ -150,9 +163,9 @@ export async function createPuzzles(
 			{ value: visibilityValues[0], weight: 15 }, // DRAFT
 			{ value: visibilityValues[6], weight: 10 }, // ARCHIVED
 			{ value: visibilityValues[2], weight: 10 }, // REVIEW
-			{ value: visibilityValues[1], weight: 3 },  // READY
-			{ value: visibilityValues[3], weight: 1 },  // REVISE
-			{ value: visibilityValues[5], weight: 1 }   // INACTIVE
+			{ value: visibilityValues[1], weight: 3 }, // READY
+			{ value: visibilityValues[3], weight: 1 }, // REVISE
+			{ value: visibilityValues[5], weight: 1 } // INACTIVE
 		]) as VisibilityValue;
 
 		// Difficulty distribution
@@ -161,7 +174,7 @@ export async function createPuzzles(
 			{ value: difficultyValues[0], weight: 30 }, // BEGINNER
 			{ value: difficultyValues[1], weight: 40 }, // INTERMEDIATE
 			{ value: difficultyValues[2], weight: 20 }, // ADVANCED
-			{ value: difficultyValues[3], weight: 10 }  // EXPERT
+			{ value: difficultyValues[3], weight: 10 } // EXPERT
 		]) as DifficultyValue;
 
 		puzzleIds.push(

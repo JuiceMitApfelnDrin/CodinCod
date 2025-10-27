@@ -15,7 +15,9 @@ export default async function submissionByIdRoutes(fastify: FastifyInstance) {
 			const { id } = request.params;
 
 			try {
-				const submission = await Submission.findById(id).select("+code");
+				const submission = await Submission.findById(id)
+					.select("+code")
+					.populate("programmingLanguage");
 
 				if (!submission) {
 					return reply

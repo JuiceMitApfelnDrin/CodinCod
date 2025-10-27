@@ -1,60 +1,70 @@
 # Frontend
 
-Written in svelte.
+A modern web application built with [SvelteKit](https://kit.svelte.dev/).
 
-## Getting started
+## Table of Contents
 
-### Environment variables
+- [Architecture Overview](#architecture-overview)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
 
-```bash
-VITE_BACKEND_URL=http://localhost:3000
-```
+## Architecture Overview
 
-What they mean and where to get them?
+### Key Technologies
 
-<!-- TODO: create a better title or something for this section -->
+- **SvelteKit** - Framework for applications
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Styling framework
+- **Vite** - Build tool and dev server
+- **CodeMirror** - Code editor component
+- **Zod** - Runtime validation (shared via `types` package)
 
-- `VITE_BACKEND_URL`: the link to a codin-cod backend
-- `VITE_JWT_SECRET`: the same value as in the backend, used for decoding the json-web-token
+## Getting Started
 
-### Setup
+### Prerequisites
 
-1. In case you only want to run the frontend, clone it:
+1. **Node.js 20+** and **pnpm** installed
+2. **Backend API** running (see [backend README](../backend/README.md))
+3. Backend must be accessible at the URL you configure
 
-   ```bash
-   git clone https://github.com/JuiceMitApfelnDrin/CodinCodFrontend
-   ```
+### Quick Setup
 
-2. Fill in the environment variables
-3. Install dependencies, **only need to run one of these 3**
+1. **Install dependencies** using pnpm (workspace-aware):
 
    ```bash
    pnpm install
    ```
 
-4. Once you've created a project and installed dependencies with `pnpm install`, start a development server:
+2. **Set up environment variables**:
+
+   Create a `.env` file in `libs/frontend/`:
+
+3. **Start development server**:
 
    ```bash
    pnpm dev
    ```
 
-## Editor
+4. **Open in browser**:
 
-<!-- - https://github.com/microsoft/monaco-editor -->
+Navigate to `http://localhost:5173` and start exploring!
 
-- <https://github.com/codemirror/codemirror5>
-<!-- - https://github.com/ajaxorg/ace -->
+## Environment Variables
 
-## Building
+Create a `.env` file in `libs/frontend/` based on `.env.example`:
 
-To create a production version of CodinCod:
+### Why `VITE_` prefix?
 
-```bash
-pnpm build
-```
+Vite only exposes environment variables prefixed with `VITE_` to the client-side code. This prevents accidentally exposing sensitive server-side variables.
 
-You can preview the production build with `pnpm preview`.
+## Resources
 
-<!--
-    To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
--->
+- [Svelte Documentation](https://svelte.dev/)
+- [SvelteKit Documentation](https://kit.svelte.dev/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/)
+- [CodeMirror 5 Documentation](https://codemirror.net/5/)
+- [Vite Documentation](https://vitejs.dev/)
+
+---
+
+**Questions?** Check the main [project README](../../README.md) or ask in discussions.
