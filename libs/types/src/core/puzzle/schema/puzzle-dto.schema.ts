@@ -18,5 +18,6 @@ export const puzzleDtoSchema = basePuzzleDtoSchema.extend({
 export type PuzzleDto = z.infer<typeof puzzleDtoSchema>;
 
 export function isPuzzleDto(data: unknown): data is PuzzleDto {
+	console.log({result: puzzleDtoSchema.safeParse(data)})
 	return puzzleDtoSchema.safeParse(data).success;
 }

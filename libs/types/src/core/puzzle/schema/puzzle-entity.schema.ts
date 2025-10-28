@@ -35,7 +35,7 @@ export const puzzleEntitySchema = z.object({
 	solution: solutionSchema,
 	puzzleMetrics: objectIdSchema.optional(), // TODO: later not now !
 	tags: z.array(tagSchema).optional(), // TODO: later not now !
-	comments: z.array(objectIdSchema).prefault([]),
+	comments: z.array(objectIdSchema).default([]).optional(),
 	moderationFeedback: z.string().optional(),
 });
 

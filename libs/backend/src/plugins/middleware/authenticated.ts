@@ -2,8 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import {
 	httpResponseCodes,
 	cookieKeys,
-	environment,
-	AuthenticatedInfo
+	AuthenticatedInfo,
 } from "types";
 
 export default async function authenticated(
@@ -19,7 +18,7 @@ export default async function authenticated(
 				.send({ message: "No authentication token provided" });
 		}
 
-		await request.jwtVerify();
+		await request.jwtVerify<AuthenticatedInfo>();
 	} catch (err) {
 		if (err instanceof Error) {
 			return reply

@@ -88,6 +88,7 @@
 						: isObjectId(programmingLanguage)
 							? "Unknown"
 							: programmingLanguage.language}
+
 				{#if isUserDto(user)}
 					<Table.Row>
 						<Table.Cell class="text-center">{index + 1}.</Table.Cell>

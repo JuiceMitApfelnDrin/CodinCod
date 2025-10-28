@@ -8,10 +8,10 @@
  * - Type-safe message handling
  */
 
+import { websocketCloseCodes } from "types";
 import {
 	WEBSOCKET_STATES,
 	WEBSOCKET_RECONNECT,
-	WEBSOCKET_CLOSE_CODES,
 	type WebSocketState
 } from "./websocket-constants";
 
@@ -151,7 +151,7 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 		this.clearReconnectTimer();
 
 		if (this.socket) {
-			this.socket.close(WEBSOCKET_CLOSE_CODES.NORMAL, "Client disconnecting");
+			this.socket.close(websocketCloseCodes.NORMAL, "Client disconnecting");
 			this.socket = null;
 		}
 
@@ -237,13 +237,13 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 		console.info("WebSocket connection closed:", event.code, event.reason);
 
 		// Don't reconnect if it was a clean close initiated by client
-		if (event.code === WEBSOCKET_CLOSE_CODES.NORMAL && !this.shouldReconnect) {
+		if (event.code === websocketCloseCodes.NORMAL && !this.shouldReconnect) {
 			this.setState(WEBSOCKET_STATES.DISCONNECTED);
 			return;
 		}
 
 		// Handle authentication errors (code 1008)
-		if (event.code === WEBSOCKET_CLOSE_CODES.POLICY_VIOLATION) {
+		if (event.code === websocketCloseCodes.POLICY_VIOLATION) {
 			console.error("WebSocket authentication failed:", event.reason);
 			this.setState(WEBSOCKET_STATES.ERROR);
 			// Don't attempt to reconnect on auth errors - user needs to re-login
@@ -256,7 +256,7 @@ export class WebSocketManager<TRequest = any, TResponse = any> {
 
 		// Handle invalid game/room errors (also code 1008 with specific messages)
 		if (
-			event.code === WEBSOCKET_CLOSE_CODES.POLICY_VIOLATION &&
+			event.code === websocketCloseCodes.POLICY_VIOLATION &&
 			event.reason &&
 			(event.reason.includes("Game not found") ||
 				event.reason.includes("Invalid game ID"))

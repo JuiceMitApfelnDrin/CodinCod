@@ -189,6 +189,24 @@ export class WaitingRoom {
 		}
 	}
 
+	dissolveRoom(roomId: RoomId): void {
+		const room = this.getRoom(roomId);
+		if (!room) return;
+
+		const usernames = Object.keys(room);
+
+		usernames.forEach(username => {
+			delete this.roomsByUsername[username];
+		});
+		delete this.roomsByRoomId[roomId];
+
+		usernames.forEach(username => {
+			this.connectionManager.remove(username);
+		});
+
+		console.info(`Dissolved room ${roomId} with ${usernames.length} users`);
+	}
+
 	isUserConnected(username: Username): boolean {
 		return this.connectionManager.isConnected(username);
 	}

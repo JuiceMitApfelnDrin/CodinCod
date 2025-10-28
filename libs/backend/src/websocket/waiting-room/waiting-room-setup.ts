@@ -110,7 +110,7 @@ export function waitingRoomSetup(
 								roomId: parsedMessage.roomId,
 								availableRooms: waitingRoom.getAllRoomIds()
 							},
-							"Room not found"
+							"Room not fwaitingRoomound"
 						);
 						waitingRoom.updateUser(req.user.username, {
 							event: waitingRoomEventEnum.ERROR,
@@ -152,25 +152,16 @@ export function waitingRoomSetup(
 					const databaseGame = new Game(createGameEntity);
 					const newlyCreatedGame = await databaseGame.save();
 
-					const usernamesInRoom = Object.keys(room);
-					usernamesInRoom.forEach((username) => {
-						waitingRoom.updateUser(username, {
-							event: waitingRoomEventEnum.START_GAME,
-							gameUrl: frontendUrls.multiplayerById(newlyCreatedGame.id)
-						});
+					waitingRoom.updateUsersInRoom(parsedMessage.roomId, {
+						event: waitingRoomEventEnum.START_GAME,
+						gameUrl: frontendUrls.multiplayerById(newlyCreatedGame.id)
 					});
-
-					// Give the clients time to receive the START_GAME message before closing connections
-					setTimeout(() => {
-						usernamesInRoom.forEach((username) => {
-							waitingRoom.removeUserFromUsers(username);
-						});
-					}, 100);
 
 					fastify.log.info(
 						{ gameId: newlyCreatedGame.id, playerCount: players.length },
 						"Game started"
 					);
+					return;
 				} catch (error) {
 					fastify.log.error({ err: error }, "Error starting game");
 					waitingRoom.updateUser(req.user.username, {

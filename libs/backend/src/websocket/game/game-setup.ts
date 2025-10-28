@@ -9,7 +9,8 @@ import {
 	isGameDto,
 	isPuzzleDto,
 	ObjectId,
-	banTypeEnum
+	banTypeEnum,
+	websocketCloseCodes
 } from "types";
 import { isValidObjectId } from "mongoose";
 import { parseRawDataGameRequest } from "@/utils/functions/parse-raw-data-message.js";
@@ -33,7 +34,7 @@ function sendErrorAndClose(socket: WebSocket, message: string): void {
 			message
 		})
 	);
-	socket.close(1008, message);
+	socket.close(websocketCloseCodes.POLICY_VIOLATION, message);
 }
 
 export async function gameSetup(
@@ -124,6 +125,8 @@ export async function gameSetup(
 						});
 						return;
 					}
+
+					console.log({game})
 
 					const puzzle = await Puzzle.findById(game.puzzle).populate("author");
 
