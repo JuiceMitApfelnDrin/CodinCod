@@ -195,12 +195,12 @@ export class WaitingRoom {
 
 		const usernames = Object.keys(room);
 
-		usernames.forEach(username => {
+		usernames.forEach((username) => {
 			delete this.roomsByUsername[username];
 		});
 		delete this.roomsByRoomId[roomId];
 
-		usernames.forEach(username => {
+		usernames.forEach((username) => {
 			this.connectionManager.remove(username);
 		});
 

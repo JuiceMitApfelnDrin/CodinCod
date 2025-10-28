@@ -6,7 +6,7 @@ const websocketState = {
 	OPEN: 1,
 	CLOSING: 2,
 	CLOSED: 3
-} as const
+} as const;
 
 type Username = string;
 type ConnectionId = string;
@@ -190,7 +190,10 @@ export class ConnectionManager {
 			connection.socket.removeListener("pong", connection.pongHandler);
 
 			if (connection.socket.readyState === websocketState.OPEN) {
-				connection.socket.close(websocketCloseCodes.GOING_AWAY, "Server shutting down");
+				connection.socket.close(
+					websocketCloseCodes.GOING_AWAY,
+					"Server shutting down"
+				);
 			}
 		}
 

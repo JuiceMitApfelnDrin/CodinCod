@@ -71,7 +71,7 @@ export async function onConnection(
 
 		const puzzle = await Puzzle.findById(game.puzzle).populate("author");
 
-		console.log({puzzle, game, is: isPuzzleDto(puzzle)})
+		console.log({ puzzle, game, is: isPuzzleDto(puzzle) });
 
 		if (!isPuzzleDto(puzzle)) {
 			userWebSockets.updateUser(user.username, {

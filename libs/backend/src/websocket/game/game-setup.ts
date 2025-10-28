@@ -126,7 +126,7 @@ export async function gameSetup(
 						return;
 					}
 
-					console.log({game})
+					console.log({ game });
 
 					const puzzle = await Puzzle.findById(game.puzzle).populate("author");
 

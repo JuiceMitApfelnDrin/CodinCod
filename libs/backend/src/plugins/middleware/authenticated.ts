@@ -1,9 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import {
-	httpResponseCodes,
-	cookieKeys,
-	AuthenticatedInfo,
-} from "types";
+import { httpResponseCodes, cookieKeys, AuthenticatedInfo } from "types";
 
 export default async function authenticated(
 	request: FastifyRequest,
