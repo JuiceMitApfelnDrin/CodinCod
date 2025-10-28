@@ -13,6 +13,6 @@ export const gameOptionsSchema = z.object({
 		.prefault([]),
 	maxGameDurationInSeconds: z.number().prefault(DEFAULT_GAME_LENGTH_IN_SECONDS),
 	visibility: gameVisibilitySchema.prefault(GameVisibilityEnum.PUBLIC),
-	mode: gameModeSchema.prefault(GameModeEnum.RATED),
+	mode: gameModeSchema.prefault(GameModeEnum.FASTEST),
 });
 export type GameOptions = z.infer<typeof gameOptionsSchema>;

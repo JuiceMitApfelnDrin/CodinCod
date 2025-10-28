@@ -73,6 +73,21 @@ export const testIds = {
 	MULTIPLAYER_PAGE_BUTTON_JOIN_ROOM: "multiplayer-page-join-room",
 	MULTIPLAYER_PAGE_BUTTON_LEAVE_ROOM: "multiplayer-page-leave-room",
 	MULTIPLAYER_PAGE_BUTTON_START_ROOM: "multiplayer-page-start-room",
+	MULTIPLAYER_PAGE_BUTTON_CUSTOM_GAME: "multiplayer-page-button-custom-game",
+	MULTIPLAYER_PAGE_BUTTON_JOIN_BY_INVITE:
+		"multiplayer-page-button-join-by-invite",
+	MULTIPLAYER_PAGE_BUTTON_COPY_INVITE: "multiplayer-page-button-copy-invite",
+
+	// custom game dialog
+	CUSTOM_GAME_DIALOG_BUTTON_CANCEL: "custom-game-dialog-button-cancel",
+	CUSTOM_GAME_DIALOG_BUTTON_CREATE: "custom-game-dialog-button-create",
+
+	// join by invite dialog
+	JOIN_BY_INVITE_DIALOG_BUTTON_CANCEL: "join-by-invite-dialog-button-cancel",
+	JOIN_BY_INVITE_DIALOG_BUTTON_JOIN: "join-by-invite-dialog-button-join",
+
+	// waiting room chat
+	WAITING_ROOM_CHAT_BUTTON_SEND: "waiting-room-chat-button-send",
 
 	// main-navigation
 	NAVIGATION_ANCHOR_HOME: "navigation-anchor-home",

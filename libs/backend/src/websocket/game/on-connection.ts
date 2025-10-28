@@ -1,9 +1,6 @@
-import Game from "@/models/game/game.js";
-import Puzzle from "@/models/puzzle/puzzle.js";
 import {
 	AuthenticatedInfo,
 	gameEventEnum,
-	GameResponse,
 	getUserIdFromUser,
 	isGameDto,
 	isPuzzleDto,
@@ -11,6 +8,8 @@ import {
 } from "types";
 import { UserWebSockets } from "./user-web-sockets.js";
 import { WebSocket } from "@fastify/websocket";
+import { gameService } from "@/services/game.service.js";
+import { puzzleService } from "@/services/puzzle.service.js";
 
 export async function onConnection(
 	userWebSockets: UserWebSockets,
@@ -19,49 +18,38 @@ export async function onConnection(
 	socket: WebSocket
 ): Promise<void> {
 	try {
-		const game = await Game.findById(gameId)
-			.populate("owner")
-			.populate("players")
-			.populate({
-				path: "playerSubmissions",
-				populate: { path: "user" }
-			})
-			.exec();
+		const game = await gameService.findByIdPopulated(gameId);
 
 		if (!isGameDto(game)) {
-			const response: GameResponse = {
+			socket.send(JSON.stringify({
 				event: gameEventEnum.NONEXISTENT_GAME,
 				message: "Game not found"
-			};
-			socket.send(JSON.stringify(response));
+			}));
 			socket.close(1008, "Game not found");
 			return;
 		}
 
-		const currentPlayerIndex = game.players.findIndex((player) => {
-			return getUserIdFromUser(player) === user.userId;
-		});
+		const isPlayerInGame = game.players.some(player => 
+			getUserIdFromUser(player) === user.userId
+		);
 
-		if (currentPlayerIndex === -1) {
-			const gameOverviewResponse: GameResponse = {
+		if (!isPlayerInGame) {
+			socket.send(JSON.stringify({
 				event: gameEventEnum.OVERVIEW_GAME,
 				game
-			};
-			socket.send(JSON.stringify(gameOverviewResponse));
-
-			const errorResponse: GameResponse = {
+			}));
+			socket.send(JSON.stringify({
 				event: gameEventEnum.ERROR,
-				message: `User ${user.userId} hasn't joined this game`
-			};
-			socket.send(JSON.stringify(errorResponse));
+				message: `User not in this game`
+			}));
 			socket.close(1008, "User not in game");
 			return;
 		}
 
 		userWebSockets.add(user.username, socket, user);
 
-		const currentTime = new Date();
-		if (game.endTime < currentTime) {
+		const isGameFinished = game.endTime < new Date();
+		if (isGameFinished) {
 			userWebSockets.updateUser(user.username, {
 				event: gameEventEnum.FINISHED_GAME,
 				game
@@ -69,9 +57,8 @@ export async function onConnection(
 			return;
 		}
 
-		const puzzle = await Puzzle.findById(game.puzzle).populate("author");
-
-		console.log({ puzzle, game, is: isPuzzleDto(puzzle) });
+		const puzzleId = typeof game.puzzle === 'string' ? game.puzzle : game.puzzle._id.toString();
+		const puzzle = await puzzleService.findByIdPopulated(puzzleId);
 
 		if (!isPuzzleDto(puzzle)) {
 			userWebSockets.updateUser(user.username, {
@@ -87,7 +74,7 @@ export async function onConnection(
 			puzzle
 		});
 	} catch (error) {
-		console.error("Error in onConnection:", error);
+		console.error("Error in game websocket connection:", error);
 		socket.close(1011, "Internal server error");
 	}
 }

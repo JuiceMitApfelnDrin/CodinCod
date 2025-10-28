@@ -2,6 +2,7 @@
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
+		GameModeEnum,
 		isObjectId,
 		isString,
 		isSubmissionDto,
@@ -22,6 +23,7 @@
 	import FishOffIcon from "@lucide/svelte/icons/fish-off";
 	import Hash from "@lucide/svelte/icons/hash";
 	import Hourglass from "@lucide/svelte/icons/hourglass";
+	import FileCode from "@lucide/svelte/icons/file-code";
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
@@ -34,6 +36,9 @@
 	}: {
 		game: GameDto;
 	} = $props();
+
+	let isShortestMode = $derived(game.options.mode === GameModeEnum.SHORTEST);
+
 	let submissions: SubmissionDto[] = $derived(
 		game.playerSubmissions.filter((submission) =>
 			isSubmissionDto(submission)
@@ -76,12 +81,15 @@
 				<Table.Head>Language</Table.Head>
 				<Table.Head>Score</Table.Head>
 				<Table.Head>Time</Table.Head>
+				{#if isShortestMode}
+					<Table.Head>Length</Table.Head>
+				{/if}
 				<Table.Head class="w-0"><span class="sr-only">Actions</span></Table.Head
 				>
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each submissions as { _id, createdAt, programmingLanguage, result, user }, index}
+			{#each submissions as { _id, codeLength, createdAt, programmingLanguage, result, user }, index}
 				{@const language =
 					isString(programmingLanguage) && programmingLanguage
 						? programmingLanguage
@@ -117,11 +125,18 @@
 						</Table.Cell>
 						<Table.Cell>
 							<span class="flex items-center">
-								<!-- todo: make this more readable for screen readers somehow -->
 								<Hourglass aria-hidden="true" class="icon default mr-1" />
 								{formatDuration(createdAt)}
 							</span>
 						</Table.Cell>
+						{#if isShortestMode}
+							<Table.Cell>
+								<span class="flex items-center">
+									<FileCode aria-hidden="true" class="icon default mr-1" />
+									{codeLength ?? "N/A"}
+								</span>
+							</Table.Cell>
+						{/if}
 						<Table.Cell>
 							<Button
 								data-testid={testIds.STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE}

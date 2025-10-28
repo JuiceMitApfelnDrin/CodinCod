@@ -126,6 +126,7 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 				const submissionData: SubmissionEntity = {
 					code: code,
+					codeLength: code.length,
 					puzzle: puzzleId,
 					user: userId,
 					createdAt: new Date(),

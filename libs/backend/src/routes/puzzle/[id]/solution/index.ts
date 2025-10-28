@@ -1,6 +1,5 @@
 import { FastifyInstance } from "fastify";
 import {
-	environment,
 	ErrorResponse,
 	getUserIdFromUser,
 	httpResponseCodes,

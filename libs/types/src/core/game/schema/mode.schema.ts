@@ -4,5 +4,5 @@ import { GameModeEnum } from "../enum/game-mode-enum.js";
 
 export const gameModeSchema = z
 	.enum(getValues(GameModeEnum))
-	.prefault(GameModeEnum.RATED);
+	.prefault(GameModeEnum.FASTEST);
 export type GameMode = z.infer<typeof gameModeSchema>;

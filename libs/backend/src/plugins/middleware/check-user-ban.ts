@@ -2,8 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import {
 	httpResponseCodes,
 	isAuthenticatedInfo,
-	banTypeEnum,
-	environment
+	banTypeEnum
 } from "types";
 import { checkUserBanStatus } from "../../utils/moderation/escalation.js";
 

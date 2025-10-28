@@ -7,14 +7,13 @@ import {
 	GameModeEnum,
 	GameVisibilityEnum,
 	isAuthenticatedInfo,
-	puzzleVisibilityEnum,
 	waitingRoomEventEnum
 } from "types";
 import { WaitingRoom } from "./waiting-room.js";
 import { onConnection as onWaitingRoomConnection } from "./on-connection.js";
 import { parseRawDataWaitingRoomRequest } from "@/utils/functions/parse-raw-data-message.js";
-import Puzzle from "@/models/puzzle/puzzle.js";
-import Game from "@/models/game/game.js";
+import { puzzleService } from "@/services/puzzle.service.js";
+import { gameService } from "@/services/game.service.js";
 
 const waitingRoom = new WaitingRoom();
 
@@ -56,42 +55,81 @@ export function waitingRoomSetup(
 		const { event } = parsedMessage;
 
 		switch (event) {
-			case waitingRoomEventEnum.HOST_ROOM: {
-				const roomId = waitingRoom.hostRoom(req.user);
-				fastify.log.info(
-					{ username: req.user.username, roomId },
-					"User hosted room"
-				);
+		case waitingRoomEventEnum.HOST_ROOM: {
+			const roomId = waitingRoom.hostRoom(req.user, parsedMessage.options);
+			fastify.log.info({ username: req.user.username, roomId }, "User hosted room");
+			break;
+		}
+
+		case waitingRoomEventEnum.JOIN_ROOM: {
+			const success = waitingRoom.joinRoom(req.user, parsedMessage.roomId);
+			if (!success) {
+				waitingRoom.updateUser(req.user.username, {
+					event: waitingRoomEventEnum.ERROR,
+					message: `Room ${parsedMessage.roomId} not found`
+				});
+			}
+			break;
+		}
+
+		case waitingRoomEventEnum.JOIN_BY_INVITE_CODE: {
+			const roomId = waitingRoom.getRoomByInviteCode(parsedMessage.inviteCode);
+			if (!roomId) {
+				waitingRoom.updateUser(req.user.username, {
+					event: waitingRoomEventEnum.ERROR,
+					message: `Invalid invite code: ${parsedMessage.inviteCode}`
+				});
 				break;
 			}
 
-			case waitingRoomEventEnum.JOIN_ROOM: {
-				const success = waitingRoom.joinRoom(req.user, parsedMessage.roomId);
-				if (!success) {
-					waitingRoom.updateUser(req.user.username, {
-						event: waitingRoomEventEnum.ERROR,
-						message: `Room ${parsedMessage.roomId} not found`
-					});
-				}
+			const success = waitingRoom.joinRoom(req.user, roomId);
+			if (!success) {
+				waitingRoom.updateUser(req.user.username, {
+					event: waitingRoomEventEnum.ERROR,
+					message: "Failed to join room"
+				});
+			}
+			break;
+		}
+
+		case waitingRoomEventEnum.LEAVE_ROOM: {
+			waitingRoom.leaveRoom(req.user.username, parsedMessage.roomId);
+			break;
+		}
+
+		case waitingRoomEventEnum.CHAT_MESSAGE: {
+			const room = waitingRoom.getRoom(parsedMessage.roomId);
+
+			if (!room) {
+				waitingRoom.updateUser(req.user.username, {
+					event: waitingRoomEventEnum.ERROR,
+					message: `Room ${parsedMessage.roomId} not found`
+				});
 				break;
 			}
 
-			case waitingRoomEventEnum.LEAVE_ROOM: {
-				waitingRoom.leaveRoom(req.user.username, parsedMessage.roomId);
+			const userInRoom = req.user.username in room;
+
+			if (!userInRoom) {
+				waitingRoom.updateUser(req.user.username, {
+					event: waitingRoomEventEnum.ERROR,
+					message: "You must be in the room to send messages"
+				});
 				break;
 			}
 
-			case waitingRoomEventEnum.START_GAME: {
+			waitingRoom.updateUsersInRoom(parsedMessage.roomId, {
+				event: waitingRoomEventEnum.CHAT_MESSAGE,
+				username: req.user.username,
+				message: parsedMessage.message,
+				timestamp: new Date()
+			});
+			break;
+		}
+
+		case waitingRoomEventEnum.START_GAME: {
 				try {
-					fastify.log.info(
-						{ username: req.user.username, roomId: parsedMessage.roomId },
-						"START_GAME requested"
-					);
-
-					const randomPuzzles = await Puzzle.aggregate([
-						{ $match: { visibility: puzzleVisibilityEnum.APPROVED } },
-						{ $sample: { size: 1 } }
-					]).exec();
+					const randomPuzzles = await puzzleService.findRandomApproved(1);
 
 					if (randomPuzzles.length < 1) {
 						waitingRoom.updateUser(req.user.username, {
@@ -101,17 +139,10 @@ export function waitingRoomSetup(
 						return;
 					}
 
-					const randomPuzzle = randomPuzzles[0];
+					const randomPuzzle = randomPuzzles[0] as any;
 					const room = waitingRoom.getRoom(parsedMessage.roomId);
 
 					if (!room) {
-						fastify.log.error(
-							{
-								roomId: parsedMessage.roomId,
-								availableRooms: waitingRoom.getAllRoomIds()
-							},
-							"Room not fwaitingRoomound"
-						);
 						waitingRoom.updateUser(req.user.username, {
 							event: waitingRoomEventEnum.ERROR,
 							message: `Room ${parsedMessage.roomId} not found`
@@ -131,36 +162,45 @@ export function waitingRoomSetup(
 					}
 
 					const now = new Date();
+					const roomOptions = waitingRoom.getRoomOptions(parsedMessage.roomId);
+					const gameDuration = roomOptions?.maxGameDurationInSeconds ?? DEFAULT_GAME_LENGTH_IN_MILLISECONDS / 1000;
+					const gameDurationMs = gameDuration * 1000;
+
+					const countdownSeconds = 15;
+					const startTime = new Date(now.getTime() + countdownSeconds * 1000);
+					const endTime = new Date(startTime.getTime() + gameDurationMs);
+
 					const createGameEntity: GameEntity = {
 						players,
 						owner: waitingRoom.findRoomOwner(room).userId,
-						puzzle: randomPuzzle._id.toString(),
+						puzzle: (randomPuzzle._id as any).toString(),
 						createdAt: now,
-						startTime: now,
-						endTime: new Date(
-							now.getTime() + DEFAULT_GAME_LENGTH_IN_MILLISECONDS
-						),
+						startTime,
+						endTime,
 						options: {
-							allowedLanguages: [],
-							maxGameDurationInSeconds: DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
-							mode: GameModeEnum.RATED,
-							visibility: GameVisibilityEnum.PUBLIC
+							allowedLanguages: roomOptions?.allowedLanguages ?? [],
+							maxGameDurationInSeconds: gameDuration,
+							mode: roomOptions?.mode ?? GameModeEnum.FASTEST,
+							visibility: roomOptions?.visibility ?? GameVisibilityEnum.PUBLIC
 						},
 						playerSubmissions: []
 					};
 
-					const databaseGame = new Game(createGameEntity);
-					const newlyCreatedGame = await databaseGame.save();
+					const newlyCreatedGame = await gameService.create(createGameEntity);
+					const gameUrl = frontendUrls.multiplayerById(newlyCreatedGame.id);
 
 					waitingRoom.updateUsersInRoom(parsedMessage.roomId, {
 						event: waitingRoomEventEnum.START_GAME,
-						gameUrl: frontendUrls.multiplayerById(newlyCreatedGame.id)
+						gameUrl,
+						startTime
 					});
 
-					fastify.log.info(
-						{ gameId: newlyCreatedGame.id, playerCount: players.length },
-						"Game started"
-					);
+					fastify.log.info({ 
+						gameId: newlyCreatedGame.id, 
+						playerCount: players.length,
+						startTime,
+						countdownSeconds 
+					}, "Game created with countdown");
 					return;
 				} catch (error) {
 					fastify.log.error({ err: error }, "Error starting game");
