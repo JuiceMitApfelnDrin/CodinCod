@@ -18,11 +18,15 @@ export class UserService {
 		return await User.findOne({ email }).select("+email");
 	}
 
-	async findByUsernameWithPassword(username: string): Promise<UserDocument | null> {
+	async findByUsernameWithPassword(
+		username: string
+	): Promise<UserDocument | null> {
 		return await User.findOne({ username }).select("+password");
 	}
 
-	async create(data: Omit<UserEntity, "createdAt" | "updatedAt">): Promise<UserDocument> {
+	async create(
+		data: Omit<UserEntity, "createdAt" | "updatedAt">
+	): Promise<UserDocument> {
 		const user = new User(data);
 		return await user.save();
 	}
@@ -31,7 +35,11 @@ export class UserService {
 		id: string | ObjectId,
 		profile: Partial<UserEntity["profile"]>
 	): Promise<UserDocument | null> {
-		return await User.findByIdAndUpdate(id, { $set: { profile } }, { new: true });
+		return await User.findByIdAndUpdate(
+			id,
+			{ $set: { profile } },
+			{ new: true }
+		);
 	}
 
 	async usernameExists(username: string): Promise<boolean> {
@@ -44,7 +52,10 @@ export class UserService {
 		return count > 0;
 	}
 
-	async updateBan(userId: string | ObjectId, banId: ObjectId | null): Promise<void> {
+	async updateBan(
+		userId: string | ObjectId,
+		banId: ObjectId | null
+	): Promise<void> {
 		await User.findByIdAndUpdate(userId, { currentBan: banId });
 	}
 

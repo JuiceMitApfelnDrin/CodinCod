@@ -28,34 +28,40 @@
 
 	function executeSend() {
 		if (composedMessage.trim().length === 0) return;
-		
+
 		sendMessage(composedMessage.trim());
 		composedMessage = "";
 	}
 
 	function formatTime(timestamp: Date): string {
 		const date = new Date(timestamp);
-		return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 	}
 </script>
 
 <LogicalUnit class="flex h-full flex-col gap-4">
 	<H2>Chat</H2>
 
-	<ScrollArea.Root class="h-[33vh] rounded-lg border bg-muted/30 p-3">
+	<ScrollArea.Root class="bg-muted/30 h-[33vh] rounded-lg border p-3">
 		{#if chatMessages.length > 0}
 			<ol class="flex h-full flex-col gap-2">
 				{#each chatMessages as chatMessage}
 					<li
-						class="flex flex-col gap-1 rounded-md px-2 py-1.5 {chatMessage.username === currentUsername
+						class="flex flex-col gap-1 rounded-md px-2 py-1.5 {chatMessage.username ===
+						currentUsername
 							? 'bg-primary/10'
 							: 'bg-background/50'}"
 					>
 						<div class="flex items-baseline justify-between gap-2">
-							<span class="text-sm font-semibold {chatMessage.username === currentUsername ? 'text-primary' : ''}">
+							<span
+								class="text-sm font-semibold {chatMessage.username ===
+								currentUsername
+									? 'text-primary'
+									: ''}"
+							>
 								{chatMessage.username}
 							</span>
-							<span class="text-xs text-muted-foreground">
+							<span class="text-muted-foreground text-xs">
 								{formatTime(chatMessage.timestamp)}
 							</span>
 						</div>
@@ -65,7 +71,9 @@
 			</ol>
 		{:else}
 			<div class="flex h-full items-center justify-center">
-				<p class="text-sm text-muted-foreground">No messages yet. Start chatting!</p>
+				<p class="text-muted-foreground text-sm">
+					No messages yet. Start chatting!
+				</p>
 			</div>
 		{/if}
 	</ScrollArea.Root>

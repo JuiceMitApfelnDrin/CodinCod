@@ -50,9 +50,10 @@
 		if (allLanguagesSelected) {
 			selectedLanguageIds.clear();
 		} else {
-			const ids = $languages
-				?.map((l) => l._id)
-				.filter((id): id is string => id !== undefined) || [];
+			const ids =
+				$languages
+					?.map((l) => l._id)
+					.filter((id): id is string => id !== undefined) || [];
 			selectedLanguageIds = new Set(ids);
 		}
 	}
@@ -118,7 +119,7 @@
 						</Select.Group>
 					</Select.Content>
 				</Select.Root>
-				<p class="text-sm text-muted-foreground">
+				<p class="text-muted-foreground text-sm">
 					{#if selectedMode === GameModeEnum.FASTEST}
 						Win by submitting a correct solution first
 					{:else if selectedMode === GameModeEnum.SHORTEST}
@@ -150,7 +151,7 @@
 						</Select.Group>
 					</Select.Content>
 				</Select.Root>
-				<p class="text-sm text-muted-foreground">
+				<p class="text-muted-foreground text-sm">
 					{#if selectedVisibility === GameVisibilityEnum.PUBLIC}
 						Anyone can join this game
 					{:else}
@@ -173,7 +174,7 @@
 					bind:value={durationMinutes}
 					class="cursor-pointer"
 				/>
-				<div class="flex justify-between text-xs text-muted-foreground">
+				<div class="text-muted-foreground flex justify-between text-xs">
 					<span>5 min</span>
 					<span>60 min</span>
 				</div>
@@ -182,9 +183,7 @@
 			<!-- Languages -->
 			<div class="space-y-2">
 				<Label>Allowed Languages (optional)</Label>
-				<div
-					class="max-h-48 space-y-2 overflow-y-auto rounded-md border p-3"
-				>
+				<div class="max-h-48 space-y-2 overflow-y-auto rounded-md border p-3">
 					<div class="flex items-center space-x-2">
 						<Checkbox
 							id="all-languages"
@@ -192,10 +191,7 @@
 							indeterminate={someLanguagesSelected}
 							onCheckedChange={toggleAllLanguages}
 						/>
-						<Label
-							for="all-languages"
-							class="cursor-pointer font-semibold"
-						>
+						<Label for="all-languages" class="cursor-pointer font-semibold">
 							All Languages
 						</Label>
 					</div>
@@ -215,17 +211,18 @@
 											for={`lang-${langId}`}
 											class="cursor-pointer text-sm"
 										>
-											{language.language} {language.version}
+											{language.language}
+											{language.version}
 										</Label>
 									</div>
 								{/if}
 							{/each}
 						{:else}
-							<p class="text-sm text-muted-foreground">Loading languages...</p>
+							<p class="text-muted-foreground text-sm">Loading languages...</p>
 						{/if}
 					</div>
 				</div>
-				<p class="text-sm text-muted-foreground">
+				<p class="text-muted-foreground text-sm">
 					{selectedLanguageIds.size === 0
 						? "All languages allowed"
 						: `${selectedLanguageIds.size} language${selectedLanguageIds.size !== 1 ? "s" : ""} selected`}

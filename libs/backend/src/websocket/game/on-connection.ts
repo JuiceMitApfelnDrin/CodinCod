@@ -21,27 +21,33 @@ export async function onConnection(
 		const game = await gameService.findByIdPopulated(gameId);
 
 		if (!isGameDto(game)) {
-			socket.send(JSON.stringify({
-				event: gameEventEnum.NONEXISTENT_GAME,
-				message: "Game not found"
-			}));
+			socket.send(
+				JSON.stringify({
+					event: gameEventEnum.NONEXISTENT_GAME,
+					message: "Game not found"
+				})
+			);
 			socket.close(1008, "Game not found");
 			return;
 		}
 
-		const isPlayerInGame = game.players.some(player => 
-			getUserIdFromUser(player) === user.userId
+		const isPlayerInGame = game.players.some(
+			(player) => getUserIdFromUser(player) === user.userId
 		);
 
 		if (!isPlayerInGame) {
-			socket.send(JSON.stringify({
-				event: gameEventEnum.OVERVIEW_GAME,
-				game
-			}));
-			socket.send(JSON.stringify({
-				event: gameEventEnum.ERROR,
-				message: `User not in this game`
-			}));
+			socket.send(
+				JSON.stringify({
+					event: gameEventEnum.OVERVIEW_GAME,
+					game
+				})
+			);
+			socket.send(
+				JSON.stringify({
+					event: gameEventEnum.ERROR,
+					message: `User not in this game`
+				})
+			);
 			socket.close(1008, "User not in game");
 			return;
 		}
@@ -57,7 +63,10 @@ export async function onConnection(
 			return;
 		}
 
-		const puzzleId = typeof game.puzzle === 'string' ? game.puzzle : game.puzzle._id.toString();
+		const puzzleId =
+			typeof game.puzzle === "string"
+				? game.puzzle
+				: game.puzzle._id.toString();
 		const puzzle = await puzzleService.findByIdPopulated(puzzleId);
 
 		if (!isPuzzleDto(puzzle)) {

@@ -17,7 +17,9 @@ export class PuzzleService {
 	/**
 	 * Find a puzzle by ID with author populated
 	 */
-	async findByIdPopulated(id: string | ObjectId): Promise<PuzzleDocument | null> {
+	async findByIdPopulated(
+		id: string | ObjectId
+	): Promise<PuzzleDocument | null> {
 		return await Puzzle.findById(id).populate("author").exec();
 	}
 

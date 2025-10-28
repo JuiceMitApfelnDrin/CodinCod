@@ -1,4 +1,6 @@
-import Submission, { SubmissionDocument } from "../models/submission/submission.js";
+import Submission, {
+	SubmissionDocument
+} from "../models/submission/submission.js";
 import { ObjectId, SubmissionEntity } from "types";
 
 export class SubmissionService {
@@ -6,18 +8,24 @@ export class SubmissionService {
 		return await Submission.findById(id);
 	}
 
-	async findByIdWithCode(id: string | ObjectId): Promise<SubmissionDocument | null> {
+	async findByIdWithCode(
+		id: string | ObjectId
+	): Promise<SubmissionDocument | null> {
 		return await Submission.findById(id).select("+code");
 	}
 
-	async findByIdPopulated(id: string | ObjectId): Promise<SubmissionDocument | null> {
+	async findByIdPopulated(
+		id: string | ObjectId
+	): Promise<SubmissionDocument | null> {
 		return await Submission.findById(id)
 			.populate("user")
 			.populate("programmingLanguage")
 			.populate("puzzle");
 	}
 
-	async findByIdWithCodePopulated(id: string | ObjectId): Promise<SubmissionDocument | null> {
+	async findByIdWithCodePopulated(
+		id: string | ObjectId
+	): Promise<SubmissionDocument | null> {
 		return await Submission.findById(id)
 			.select("+code")
 			.populate("user")
@@ -25,7 +33,10 @@ export class SubmissionService {
 			.populate("puzzle");
 	}
 
-	async findByUser(userId: string | ObjectId, limit?: number): Promise<SubmissionDocument[]> {
+	async findByUser(
+		userId: string | ObjectId,
+		limit?: number
+	): Promise<SubmissionDocument[]> {
 		const query = Submission.find({ user: userId })
 			.sort({ createdAt: -1 })
 			.populate("puzzle")
@@ -38,7 +49,9 @@ export class SubmissionService {
 		return await query.exec();
 	}
 
-	async findByPuzzle(puzzleId: string | ObjectId): Promise<SubmissionDocument[]> {
+	async findByPuzzle(
+		puzzleId: string | ObjectId
+	): Promise<SubmissionDocument[]> {
 		return await Submission.find({ puzzle: puzzleId })
 			.populate("user")
 			.populate("programmingLanguage")
@@ -58,7 +71,9 @@ export class SubmissionService {
 		return await Submission.countDocuments({ puzzle: puzzleId });
 	}
 
-	async findSuccessfulByUser(userId: string | ObjectId): Promise<SubmissionDocument[]> {
+	async findSuccessfulByUser(
+		userId: string | ObjectId
+	): Promise<SubmissionDocument[]> {
 		return await Submission.find({
 			user: userId,
 			"result.successRate": 1

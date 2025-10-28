@@ -1,7 +1,11 @@
 import ProgrammingLanguage, {
 	ProgrammingLanguageDocument
 } from "../models/programming-language/language.js";
-import { ObjectId, ProgrammingLanguageDto, programmingLanguageDtoSchema } from "types";
+import {
+	ObjectId,
+	ProgrammingLanguageDto,
+	programmingLanguageDtoSchema
+} from "types";
 
 /**
  * Service for ProgrammingLanguage database operations
@@ -11,8 +15,12 @@ export class ProgrammingLanguageService {
 	/**
 	 * Find a programming language by ID
 	 */
-	async findById(id: string | ObjectId): Promise<ProgrammingLanguageDocument | null> {
-		return await ProgrammingLanguage.findById(id).lean() as ProgrammingLanguageDocument | null;
+	async findById(
+		id: string | ObjectId
+	): Promise<ProgrammingLanguageDocument | null> {
+		return (await ProgrammingLanguage.findById(
+			id
+		).lean()) as ProgrammingLanguageDocument | null;
 	}
 
 	/**
@@ -21,7 +29,7 @@ export class ProgrammingLanguageService {
 	async findAll(): Promise<ProgrammingLanguageDocument[]> {
 		return await ProgrammingLanguage.find()
 			.select("-createdAt -updatedAt -__v")
-			.sort({ language: 1, version: -1 })
+			.sort({ language: 1, version: -1 });
 	}
 
 	/**
@@ -31,7 +39,7 @@ export class ProgrammingLanguageService {
 		language: string,
 		version: string
 	): Promise<ProgrammingLanguageDocument | null> {
-		return await ProgrammingLanguage.findOne({ language, version })
+		return await ProgrammingLanguage.findOne({ language, version });
 	}
 
 	/**
@@ -86,7 +94,9 @@ export class ProgrammingLanguageService {
 			runtime?: string;
 		}>
 	): Promise<ProgrammingLanguageDocument[]> {
-		return await ProgrammingLanguage.insertMany(data) as ProgrammingLanguageDocument[];
+		return (await ProgrammingLanguage.insertMany(
+			data
+		)) as ProgrammingLanguageDocument[];
 	}
 
 	/**

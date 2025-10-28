@@ -15,13 +15,18 @@ type Room = Record<Username, GameUserInfo>;
 
 // Custom type for room options to work with exactOptionalPropertyTypes
 export type RoomGameOptions = {
-	allowedLanguages?: Array<string | {
-		language: string;
-		version: string;
-		aliases: string[];
-		_id?: string | undefined;
-		runtime?: string | undefined;
-	}> | undefined;
+	allowedLanguages?:
+		| Array<
+				| string
+				| {
+						language: string;
+						version: string;
+						aliases: string[];
+						_id?: string | undefined;
+						runtime?: string | undefined;
+				  }
+		  >
+		| undefined;
 	maxGameDurationInSeconds?: number | undefined;
 	visibility?: ("private" | "public") | undefined;
 	mode?: ("fastest" | "shortest" | "rated" | "casual") | undefined;
@@ -168,7 +173,10 @@ export class WaitingRoom {
 				return roomConfig.options?.visibility !== "private";
 			})
 			.map(([roomId, roomConfig]) => {
-				return { roomId, amountOfPlayersJoined: Object.keys(roomConfig.users).length };
+				return {
+					roomId,
+					amountOfPlayersJoined: Object.keys(roomConfig.users).length
+				};
 			});
 	}
 
@@ -239,7 +247,9 @@ export class WaitingRoom {
 
 	removeEmptyRooms(): void {
 		const emptyRoomIds = Object.entries(this.roomsByRoomId)
-			.filter(([_roomId, roomConfig]) => Object.keys(roomConfig.users).length === 0)
+			.filter(
+				([_roomId, roomConfig]) => Object.keys(roomConfig.users).length === 0
+			)
 			.map(([roomId]) => roomId);
 
 		emptyRoomIds.forEach((roomId) => {

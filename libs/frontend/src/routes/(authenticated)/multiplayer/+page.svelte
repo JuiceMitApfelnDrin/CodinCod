@@ -38,10 +38,13 @@
 	let rooms: RoomOverviewResponse[] = $state([]);
 	let errorMessage: string | undefined = $state();
 	let connectionState = $state<WebSocketState>(WEBSOCKET_STATES.DISCONNECTED);
-	let pendingGameStart: { gameUrl: string; startTime: Date } | undefined = $state();
+	let pendingGameStart: { gameUrl: string; startTime: Date } | undefined =
+		$state();
 	let customGameDialogOpen = $state(false);
 	let joinByInviteDialogOpen = $state(false);
-	let chatMessages = $state<Array<{ username: string; message: string; timestamp: Date }>>([]);
+	let chatMessages = $state<
+		Array<{ username: string; message: string; timestamp: Date }>
+	>([]);
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"
@@ -242,24 +245,25 @@
 
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 				{#if room && room.roomId}
-				<Button
-					data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_LEAVE_ROOM}
-					onclick={() => {
-						if (!room?.roomId) {
-							return;
-						}
+					<Button
+						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_LEAVE_ROOM}
+						onclick={() => {
+							if (!room?.roomId) {
+								return;
+							}
 
-						sendWaitingRoomMessage({
-							event: waitingRoomEventEnum.LEAVE_ROOM,
-							roomId: room.roomId
-						});
+							sendWaitingRoomMessage({
+								event: waitingRoomEventEnum.LEAVE_ROOM,
+								roomId: room.roomId
+							});
 
-						room = undefined;
-						chatMessages = [];
-					}}
-				>
-					Leave room
-				</Button>					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
+							room = undefined;
+							chatMessages = [];
+						}}
+					>
+						Leave room
+					</Button>
+					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
 							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_START_ROOM}
 							onclick={() => {
@@ -310,11 +314,13 @@
 		{:else if room}
 			<div class="space-y-4">
 				{#if room.inviteCode}
-					<div class="rounded-lg border bg-muted/50 p-4">
-						<p class="mb-2 text-sm font-medium">🔒 Private Game - Invite Code:</p>
+					<div class="bg-muted/50 rounded-lg border p-4">
+						<p class="mb-2 text-sm font-medium">
+							🔒 Private Game - Invite Code:
+						</p>
 						<div class="flex items-center gap-2">
 							<code
-								class="flex-1 rounded bg-background px-3 py-2 text-center text-2xl font-mono tracking-widest"
+								class="bg-background flex-1 rounded px-3 py-2 text-center font-mono text-2xl tracking-widest"
 							>
 								{room.inviteCode}
 							</code>
@@ -322,12 +328,13 @@
 								data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_COPY_INVITE}
 								variant="outline"
 								size="sm"
-								onclick={() => room?.inviteCode && copyInviteCode(room.inviteCode)}
+								onclick={() =>
+									room?.inviteCode && copyInviteCode(room.inviteCode)}
 							>
 								Copy
 							</Button>
 						</div>
-						<p class="mt-2 text-xs text-muted-foreground">
+						<p class="text-muted-foreground mt-2 text-xs">
 							Share this code with friends to let them join
 						</p>
 					</div>
@@ -344,7 +351,7 @@
 								</li>
 							{/each}
 						</ul>
-						<p class="text-sm text-muted-foreground">
+						<p class="text-muted-foreground text-sm">
 							Waiting for the host to start the game...
 						</p>
 					</div>
@@ -385,5 +392,11 @@
 	</Container>
 {/if}
 
-<CustomGameDialog bind:open={customGameDialogOpen} onHostRoom={handleHostRoom} />
-<JoinByInviteDialog bind:open={joinByInviteDialogOpen} onJoin={handleJoinByInvite} />
+<CustomGameDialog
+	bind:open={customGameDialogOpen}
+	onHostRoom={handleHostRoom}
+/>
+<JoinByInviteDialog
+	bind:open={joinByInviteDialogOpen}
+	onJoin={handleJoinByInvite}
+/>

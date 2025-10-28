@@ -55,79 +55,84 @@ export function waitingRoomSetup(
 		const { event } = parsedMessage;
 
 		switch (event) {
-		case waitingRoomEventEnum.HOST_ROOM: {
-			const roomId = waitingRoom.hostRoom(req.user, parsedMessage.options);
-			fastify.log.info({ username: req.user.username, roomId }, "User hosted room");
-			break;
-		}
-
-		case waitingRoomEventEnum.JOIN_ROOM: {
-			const success = waitingRoom.joinRoom(req.user, parsedMessage.roomId);
-			if (!success) {
-				waitingRoom.updateUser(req.user.username, {
-					event: waitingRoomEventEnum.ERROR,
-					message: `Room ${parsedMessage.roomId} not found`
-				});
+			case waitingRoomEventEnum.HOST_ROOM: {
+				const roomId = waitingRoom.hostRoom(req.user, parsedMessage.options);
+				fastify.log.info(
+					{ username: req.user.username, roomId },
+					"User hosted room"
+				);
+				break;
 			}
-			break;
-		}
 
-		case waitingRoomEventEnum.JOIN_BY_INVITE_CODE: {
-			const roomId = waitingRoom.getRoomByInviteCode(parsedMessage.inviteCode);
-			if (!roomId) {
-				waitingRoom.updateUser(req.user.username, {
-					event: waitingRoomEventEnum.ERROR,
-					message: `Invalid invite code: ${parsedMessage.inviteCode}`
+			case waitingRoomEventEnum.JOIN_ROOM: {
+				const success = waitingRoom.joinRoom(req.user, parsedMessage.roomId);
+				if (!success) {
+					waitingRoom.updateUser(req.user.username, {
+						event: waitingRoomEventEnum.ERROR,
+						message: `Room ${parsedMessage.roomId} not found`
+					});
+				}
+				break;
+			}
+
+			case waitingRoomEventEnum.JOIN_BY_INVITE_CODE: {
+				const roomId = waitingRoom.getRoomByInviteCode(
+					parsedMessage.inviteCode
+				);
+				if (!roomId) {
+					waitingRoom.updateUser(req.user.username, {
+						event: waitingRoomEventEnum.ERROR,
+						message: `Invalid invite code: ${parsedMessage.inviteCode}`
+					});
+					break;
+				}
+
+				const success = waitingRoom.joinRoom(req.user, roomId);
+				if (!success) {
+					waitingRoom.updateUser(req.user.username, {
+						event: waitingRoomEventEnum.ERROR,
+						message: "Failed to join room"
+					});
+				}
+				break;
+			}
+
+			case waitingRoomEventEnum.LEAVE_ROOM: {
+				waitingRoom.leaveRoom(req.user.username, parsedMessage.roomId);
+				break;
+			}
+
+			case waitingRoomEventEnum.CHAT_MESSAGE: {
+				const room = waitingRoom.getRoom(parsedMessage.roomId);
+
+				if (!room) {
+					waitingRoom.updateUser(req.user.username, {
+						event: waitingRoomEventEnum.ERROR,
+						message: `Room ${parsedMessage.roomId} not found`
+					});
+					break;
+				}
+
+				const userInRoom = req.user.username in room;
+
+				if (!userInRoom) {
+					waitingRoom.updateUser(req.user.username, {
+						event: waitingRoomEventEnum.ERROR,
+						message: "You must be in the room to send messages"
+					});
+					break;
+				}
+
+				waitingRoom.updateUsersInRoom(parsedMessage.roomId, {
+					event: waitingRoomEventEnum.CHAT_MESSAGE,
+					username: req.user.username,
+					message: parsedMessage.message,
+					timestamp: new Date()
 				});
 				break;
 			}
 
-			const success = waitingRoom.joinRoom(req.user, roomId);
-			if (!success) {
-				waitingRoom.updateUser(req.user.username, {
-					event: waitingRoomEventEnum.ERROR,
-					message: "Failed to join room"
-				});
-			}
-			break;
-		}
-
-		case waitingRoomEventEnum.LEAVE_ROOM: {
-			waitingRoom.leaveRoom(req.user.username, parsedMessage.roomId);
-			break;
-		}
-
-		case waitingRoomEventEnum.CHAT_MESSAGE: {
-			const room = waitingRoom.getRoom(parsedMessage.roomId);
-
-			if (!room) {
-				waitingRoom.updateUser(req.user.username, {
-					event: waitingRoomEventEnum.ERROR,
-					message: `Room ${parsedMessage.roomId} not found`
-				});
-				break;
-			}
-
-			const userInRoom = req.user.username in room;
-
-			if (!userInRoom) {
-				waitingRoom.updateUser(req.user.username, {
-					event: waitingRoomEventEnum.ERROR,
-					message: "You must be in the room to send messages"
-				});
-				break;
-			}
-
-			waitingRoom.updateUsersInRoom(parsedMessage.roomId, {
-				event: waitingRoomEventEnum.CHAT_MESSAGE,
-				username: req.user.username,
-				message: parsedMessage.message,
-				timestamp: new Date()
-			});
-			break;
-		}
-
-		case waitingRoomEventEnum.START_GAME: {
+			case waitingRoomEventEnum.START_GAME: {
 				try {
 					const randomPuzzles = await puzzleService.findRandomApproved(1);
 
@@ -163,7 +168,9 @@ export function waitingRoomSetup(
 
 					const now = new Date();
 					const roomOptions = waitingRoom.getRoomOptions(parsedMessage.roomId);
-					const gameDuration = roomOptions?.maxGameDurationInSeconds ?? DEFAULT_GAME_LENGTH_IN_MILLISECONDS / 1000;
+					const gameDuration =
+						roomOptions?.maxGameDurationInSeconds ??
+						DEFAULT_GAME_LENGTH_IN_MILLISECONDS / 1000;
 					const gameDurationMs = gameDuration * 1000;
 
 					const countdownSeconds = 15;
@@ -195,12 +202,15 @@ export function waitingRoomSetup(
 						startTime
 					});
 
-					fastify.log.info({ 
-						gameId: newlyCreatedGame.id, 
-						playerCount: players.length,
-						startTime,
-						countdownSeconds 
-					}, "Game created with countdown");
+					fastify.log.info(
+						{
+							gameId: newlyCreatedGame.id,
+							playerCount: players.length,
+							startTime,
+							countdownSeconds
+						},
+						"Game created with countdown"
+					);
 					return;
 				} catch (error) {
 					fastify.log.error({ err: error }, "Error starting game");

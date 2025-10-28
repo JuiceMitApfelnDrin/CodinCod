@@ -23,7 +23,7 @@ export const GameModeEnum = {
 	SHORTEST: "shortest",
 	RATED: "rated",
 	CASUAL: "casual",
-	YOUR_NEW_MODE: "your_new_mode", // Add your mode here
+	YOUR_NEW_MODE: "your_new_mode" // Add your mode here
 } as const;
 ```
 
@@ -33,9 +33,9 @@ In `libs/backend/src/utils/game-mode/game-mode-strategy.ts`, create a new strate
 
 ```typescript
 class YourNewModeStrategy implements GameModeStrategy {
-	calculateScore(submission: { 
-		successRate: number; 
-		timeSpent: number; 
+	calculateScore(submission: {
+		successRate: number;
+		timeSpent: number;
 		codeLength?: number;
 		// Add any custom metrics you need
 	}): number {
@@ -43,7 +43,7 @@ class YourNewModeStrategy implements GameModeStrategy {
 		// Higher is better
 		return 0;
 	}
-	
+
 	compareSubmissions(
 		a: { successRate: number; timeSpent: number; codeLength?: number },
 		b: { successRate: number; timeSpent: number; codeLength?: number }
@@ -52,7 +52,7 @@ class YourNewModeStrategy implements GameModeStrategy {
 		// This determines leaderboard order
 		return 0;
 	}
-	
+
 	getDisplayMetrics(): string[] {
 		// Return which metrics should be shown in the UI
 		return ["score", "yourMetric"];
@@ -67,7 +67,7 @@ Add your strategy to the `strategies` object:
 ```typescript
 const strategies: Record<GameMode, GameModeStrategy> = {
 	// ... existing strategies
-	[GameModeEnum.YOUR_NEW_MODE]: new YourNewModeStrategy(),
+	[GameModeEnum.YOUR_NEW_MODE]: new YourNewModeStrategy()
 };
 ```
 

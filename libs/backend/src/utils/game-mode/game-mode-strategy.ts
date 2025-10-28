@@ -6,21 +6,24 @@ export interface GameModeStrategy {
 		timeSpent: number;
 		codeLength?: number;
 	}): number;
-	
+
 	compareSubmissions(
 		a: { successRate: number; timeSpent: number; codeLength?: number },
 		b: { successRate: number; timeSpent: number; codeLength?: number }
 	): number;
-	
+
 	getDisplayMetrics(): string[];
 }
 
 class FastestModeStrategy implements GameModeStrategy {
-	calculateScore(submission: { successRate: number; timeSpent: number }): number {
+	calculateScore(submission: {
+		successRate: number;
+		timeSpent: number;
+	}): number {
 		if (submission.successRate < 1) return 0;
 		return 1000000 / submission.timeSpent;
 	}
-	
+
 	compareSubmissions(
 		a: { successRate: number; timeSpent: number },
 		b: { successRate: number; timeSpent: number }
@@ -30,18 +33,21 @@ class FastestModeStrategy implements GameModeStrategy {
 		}
 		return a.timeSpent - b.timeSpent;
 	}
-	
+
 	getDisplayMetrics(): string[] {
 		return ["score", "time"];
 	}
 }
 
 class ShortestModeStrategy implements GameModeStrategy {
-	calculateScore(submission: { successRate: number; codeLength?: number }): number {
+	calculateScore(submission: {
+		successRate: number;
+		codeLength?: number;
+	}): number {
 		if (submission.successRate < 1 || !submission.codeLength) return 0;
 		return 1000000 / submission.codeLength;
 	}
-	
+
 	compareSubmissions(
 		a: { successRate: number; timeSpent: number; codeLength?: number },
 		b: { successRate: number; timeSpent: number; codeLength?: number }
@@ -56,18 +62,21 @@ class ShortestModeStrategy implements GameModeStrategy {
 		}
 		return a.timeSpent - b.timeSpent;
 	}
-	
+
 	getDisplayMetrics(): string[] {
 		return ["score", "length", "time"];
 	}
 }
 
 class RatedModeStrategy implements GameModeStrategy {
-	calculateScore(submission: { successRate: number; timeSpent: number }): number {
+	calculateScore(submission: {
+		successRate: number;
+		timeSpent: number;
+	}): number {
 		if (submission.successRate < 1) return 0;
 		return 1000000 / submission.timeSpent;
 	}
-	
+
 	compareSubmissions(
 		a: { successRate: number; timeSpent: number },
 		b: { successRate: number; timeSpent: number }
@@ -77,7 +86,7 @@ class RatedModeStrategy implements GameModeStrategy {
 		}
 		return a.timeSpent - b.timeSpent;
 	}
-	
+
 	getDisplayMetrics(): string[] {
 		return ["score", "time"];
 	}
@@ -87,7 +96,7 @@ class CasualModeStrategy implements GameModeStrategy {
 	calculateScore(submission: { successRate: number }): number {
 		return submission.successRate;
 	}
-	
+
 	compareSubmissions(
 		a: { successRate: number; timeSpent: number },
 		b: { successRate: number; timeSpent: number }
@@ -97,7 +106,7 @@ class CasualModeStrategy implements GameModeStrategy {
 		}
 		return a.timeSpent - b.timeSpent;
 	}
-	
+
 	getDisplayMetrics(): string[] {
 		return ["score"];
 	}
@@ -107,29 +116,27 @@ const strategies: Record<GameMode, GameModeStrategy> = {
 	[GameModeEnum.FASTEST]: new FastestModeStrategy(),
 	[GameModeEnum.SHORTEST]: new ShortestModeStrategy(),
 	[GameModeEnum.RATED]: new RatedModeStrategy(),
-	[GameModeEnum.CASUAL]: new CasualModeStrategy(),
+	[GameModeEnum.CASUAL]: new CasualModeStrategy()
 };
 
 export function getGameModeStrategy(mode: GameMode): GameModeStrategy {
 	return strategies[mode];
 }
 
-export function sortSubmissionsByGameMode<T extends {
-	result: { successRate: number };
-	createdAt: Date | string;
-	codeLength?: number;
-}>(
-	submissions: T[],
-	mode: GameMode,
-	gameStartTime: Date | string
-): T[] {
+export function sortSubmissionsByGameMode<
+	T extends {
+		result: { successRate: number };
+		createdAt: Date | string;
+		codeLength?: number;
+	}
+>(submissions: T[], mode: GameMode, gameStartTime: Date | string): T[] {
 	const strategy = getGameModeStrategy(mode);
 	const startTime = new Date(gameStartTime).getTime();
-	
+
 	return [...submissions].sort((a, b) => {
 		const aTime = (new Date(a.createdAt).getTime() - startTime) / 1000;
 		const bTime = (new Date(b.createdAt).getTime() - startTime) / 1000;
-		
+
 		return strategy.compareSubmissions(
 			{
 				successRate: a.result.successRate,

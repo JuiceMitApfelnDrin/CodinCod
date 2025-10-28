@@ -51,9 +51,9 @@
 					value={inviteCode}
 					oninput={handleInputChange}
 					maxlength={6}
-					class="text-center text-2xl font-mono uppercase tracking-widest"
+					class="text-center font-mono text-2xl tracking-widest uppercase"
 				/>
-				<p class="text-sm text-muted-foreground">
+				<p class="text-muted-foreground text-sm">
 					Code must be exactly 6 characters
 				</p>
 			</div>

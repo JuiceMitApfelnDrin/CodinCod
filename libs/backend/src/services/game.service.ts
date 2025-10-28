@@ -15,10 +15,7 @@ export class GameService {
 			.populate("players")
 			.populate({
 				path: "playerSubmissions",
-				populate: [
-					{ path: "user" },
-					{ path: "programmingLanguage" }
-				]
+				populate: [{ path: "user" }, { path: "programmingLanguage" }]
 			})
 			.exec();
 	}
