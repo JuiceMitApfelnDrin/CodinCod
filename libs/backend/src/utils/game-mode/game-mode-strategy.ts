@@ -68,11 +68,10 @@ class ShortestModeStrategy implements GameModeStrategy {
 	}
 }
 
-
 const strategies: Record<GameMode, GameModeStrategy> = {
 	[gameModeEnum.FASTEST]: new FastestModeStrategy(),
-	[gameModeEnum.SHORTEST]: new ShortestModeStrategy(),	
-	[gameModeEnum.RANDOM]: null,
+	[gameModeEnum.SHORTEST]: new ShortestModeStrategy(),
+	[gameModeEnum.RANDOM]: null
 };
 
 export function getGameModeStrategy(mode: GameMode): GameModeStrategy {

@@ -30,9 +30,7 @@
 		type WaitingRoomRequest,
 		type WaitingRoomResponse,
 		type GameOptions,
-
 		type ChatMessage
-
 	} from "types";
 	import { testIds } from "@/config/test-ids";
 	import { currentTime } from "@/stores/current-time";
@@ -46,9 +44,7 @@
 		$state();
 	let customGameDialogOpen = $state(false);
 	let joinByInviteDialogOpen = $state(false);
-	let chatMessages = $state<
-		Array<ChatMessage>
-	>([]);
+	let chatMessages = $state<Array<ChatMessage>>([]);
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"

@@ -1,6 +1,11 @@
 import { faker } from "@faker-js/faker";
 import Game, { GameDocument } from "../../models/game/game.js";
-import { gameModeEnum, gameVisibilityEnum, GameMode, GameVisibility } from "types";
+import {
+	gameModeEnum,
+	gameVisibilityEnum,
+	GameMode,
+	GameVisibility
+} from "types";
 import {
 	randomFromArray,
 	randomMultipleFromArray
@@ -8,14 +13,13 @@ import {
 import { Types } from "mongoose";
 import ProgrammingLanguage from "../../models/programming-language/language.js";
 
-
 export interface GameFactoryOptions {
 	ownerId: Types.ObjectId;
 	puzzleId: Types.ObjectId;
 	playerIds: Types.ObjectId[];
 	mode?: GameMode;
 	visibility?: GameVisibility;
-	rated?: boolean
+	rated?: boolean;
 }
 
 /**
@@ -114,7 +118,7 @@ export async function createGames(
 		const ownerId = randomFromArray(userIds);
 		const puzzleId = randomFromArray(puzzleIds);
 
-		const mode = randomFromArray(Object.values(gameModeEnum))
+		const mode = randomFromArray(Object.values(gameModeEnum));
 
 		// Visibility distribution: 70% PUBLIC, 30% PRIVATE
 		const visibility = faker.datatype.boolean({ probability: 0.7 })
