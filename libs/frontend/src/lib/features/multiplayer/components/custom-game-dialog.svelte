@@ -158,7 +158,7 @@
 			<!-- Rated -->
 			<div class="space-y-2">
 				<Label for="visibility">Rated</Label>
-				<Select.Root bind:value={(rated)} type="single">
+				<Select.Root bind:value={rated} type="single">
 					<Select.Trigger id="game-mode" class="w-full">
 						{#if Boolean(rated)}
 							Rated
