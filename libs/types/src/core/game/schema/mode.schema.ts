@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { getValues } from "../../../utils/functions/get-values.js";
-import { GameModeEnum } from "../enum/game-mode-enum.js";
+import { gameModeEnum } from "../enum/game-mode-enum.js";
 
 export const gameModeSchema = z
-	.enum(getValues(GameModeEnum))
-	.prefault(GameModeEnum.RATED);
+	.enum(getValues(gameModeEnum))
+	.prefault(gameModeEnum.FASTEST);
 export type GameMode = z.infer<typeof gameModeSchema>;

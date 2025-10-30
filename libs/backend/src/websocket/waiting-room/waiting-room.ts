@@ -2,6 +2,7 @@ import { WebSocket } from "@fastify/websocket";
 import mongoose from "mongoose";
 import {
 	AuthenticatedInfo,
+	GameOptions,
 	GameUserInfo,
 	ObjectId,
 	waitingRoomEventEnum,
@@ -13,8 +14,14 @@ type Username = string;
 type RoomId = ObjectId;
 type Room = Record<Username, GameUserInfo>;
 
+interface RoomConfig {
+	users: Room;
+	options?: GameOptions | undefined;
+	inviteCode?: string | undefined;
+}
+
 export class WaitingRoom {
-	private roomsByRoomId: Record<RoomId, Room>;
+	private roomsByRoomId: Record<RoomId, RoomConfig>;
 	private roomsByUsername: Record<Username, RoomId>;
 	private connectionManager: ConnectionManager;
 
@@ -53,31 +60,51 @@ export class WaitingRoom {
 		this.connectionManager.remove(username);
 	}
 
-	hostRoom(user: AuthenticatedInfo): RoomId {
+	hostRoom(user: AuthenticatedInfo, options?: GameOptions): RoomId {
 		const randomId = new mongoose.Types.ObjectId().toString();
 
+		// Generate a 6-character invite code for private rooms
+		let inviteCode: string | undefined;
+		if (options?.visibility === "private") {
+			inviteCode = this.generateInviteCode();
+		}
+
 		this.roomsByRoomId[randomId] = {
-			[user.username]: {
-				joinedAt: new Date(),
-				userId: user.userId,
-				username: user.username
-			}
+			users: {
+				[user.username]: {
+					joinedAt: new Date(),
+					userId: user.userId,
+					username: user.username
+				}
+			},
+			options,
+			inviteCode
 		};
 
 		this.joinRoom(user, randomId);
 		return randomId;
 	}
 
+	private generateInviteCode(): string {
+		// Generate a random 6-character code using uppercase letters and numbers
+		const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		let code = "";
+		for (let i = 0; i < 6; i++) {
+			code += chars.charAt(Math.floor(Math.random() * chars.length));
+		}
+		return code;
+	}
+
 	joinRoom(user: AuthenticatedInfo, roomId: RoomId): boolean {
-		const room = this.getRoom(roomId);
-		if (!room) {
+		const roomConfig = this.roomsByRoomId[roomId];
+		if (!roomConfig) {
 			console.warn(
 				`Room ${roomId} not found when user ${user.username} tried to join`
 			);
 			return false;
 		}
 
-		room[user.username] = {
+		roomConfig.users[user.username] = {
 			joinedAt: new Date(),
 			userId: user.userId,
 			username: user.username
@@ -90,21 +117,21 @@ export class WaitingRoom {
 	}
 
 	leaveRoom(username: Username, roomId: RoomId): void {
-		const room = this.getRoom(roomId);
-		if (!room) {
+		const roomConfig = this.roomsByRoomId[roomId];
+		if (!roomConfig) {
 			console.warn(
 				`Room ${roomId} not found when user ${username} tried to leave`
 			);
 			return;
 		}
 
-		delete room[username];
+		delete roomConfig.users[username];
 		delete this.roomsByUsername[username];
 		console.info(
-			`User ${username} left room ${roomId}. Remaining players: ${Object.keys(room).length}`
+			`User ${username} left room ${roomId}. Remaining players: ${Object.keys(roomConfig.users).length}`
 		);
 
-		if (Object.keys(room).length <= 0) {
+		if (Object.keys(roomConfig.users).length <= 0) {
 			delete this.roomsByRoomId[roomId];
 			console.info(`Room ${roomId} is now empty and removed`);
 		} else {
@@ -113,13 +140,37 @@ export class WaitingRoom {
 	}
 
 	getRoom(roomId: RoomId): Room | undefined {
-		return this.roomsByRoomId[roomId];
+		const roomConfig = this.roomsByRoomId[roomId];
+		return roomConfig?.users;
+	}
+
+	getRoomOptions(roomId: RoomId): GameOptions | undefined {
+		return this.roomsByRoomId[roomId]?.options;
 	}
 
 	getRooms(): Array<{ roomId: RoomId; amountOfPlayersJoined: number }> {
-		return Object.entries(this.roomsByRoomId).map(([roomId, room]) => {
-			return { roomId, amountOfPlayersJoined: Object.keys(room).length };
-		});
+		// Only return public rooms
+		return Object.entries(this.roomsByRoomId)
+			.filter(([_roomId, roomConfig]) => {
+				return roomConfig.options?.visibility !== "private";
+			})
+			.map(([roomId, roomConfig]) => {
+				return {
+					roomId,
+					amountOfPlayersJoined: Object.keys(roomConfig.users).length
+				};
+			});
+	}
+
+	getRoomByInviteCode(inviteCode: string): RoomId | undefined {
+		const entry = Object.entries(this.roomsByRoomId).find(
+			([_roomId, roomConfig]) => roomConfig.inviteCode === inviteCode
+		);
+		return entry?.[0];
+	}
+
+	getInviteCode(roomId: RoomId): string | undefined {
+		return this.roomsByRoomId[roomId]?.inviteCode;
 	}
 
 	getAllRoomIds(): RoomId[] {
@@ -128,6 +179,7 @@ export class WaitingRoom {
 
 	updateUsersOnRoomState(roomId: RoomId): void {
 		const room = this.getRoom(roomId);
+		const inviteCode = this.getInviteCode(roomId);
 		if (!room) {
 			return;
 		}
@@ -138,7 +190,8 @@ export class WaitingRoom {
 			room: {
 				users: usersInRoom,
 				owner: this.findRoomOwner(room),
-				roomId
+				roomId,
+				...(inviteCode && { inviteCode })
 			}
 		});
 	}
@@ -176,7 +229,9 @@ export class WaitingRoom {
 
 	removeEmptyRooms(): void {
 		const emptyRoomIds = Object.entries(this.roomsByRoomId)
-			.filter(([_roomId, room]) => Object.keys(room).length === 0)
+			.filter(
+				([_roomId, roomConfig]) => Object.keys(roomConfig.users).length === 0
+			)
 			.map(([roomId]) => roomId);
 
 		emptyRoomIds.forEach((roomId) => {
@@ -187,6 +242,24 @@ export class WaitingRoom {
 		if (emptyRoomIds.length > 0) {
 			console.info(`Removed ${emptyRoomIds.length} empty rooms`);
 		}
+	}
+
+	dissolveRoom(roomId: RoomId): void {
+		const room = this.getRoom(roomId);
+		if (!room) return;
+
+		const usernames = Object.keys(room);
+
+		usernames.forEach((username) => {
+			delete this.roomsByUsername[username];
+		});
+		delete this.roomsByRoomId[roomId];
+
+		usernames.forEach((username) => {
+			this.connectionManager.remove(username);
+		});
+
+		console.info(`Dissolved room ${roomId} with ${usernames.length} users`);
 	}
 
 	isUserConnected(username: Username): boolean {

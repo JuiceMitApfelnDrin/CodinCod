@@ -8,6 +8,10 @@
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
+	import CountdownTimer from "@/components/ui/countdown-timer/countdown-timer.svelte";
+	import CustomGameDialog from "@/features/multiplayer/components/custom-game-dialog.svelte";
+	import JoinByInviteDialog from "@/features/multiplayer/components/join-by-invite-dialog.svelte";
+	import WaitingRoomChat from "@/features/multiplayer/components/waiting-room-chat.svelte";
 	import { buildWebSocketUrl } from "@/config/websocket";
 	import { authenticatedUserInfo } from "@/stores";
 	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
@@ -24,14 +28,23 @@
 		type RoomOverviewResponse,
 		type RoomStateResponse,
 		type WaitingRoomRequest,
-		type WaitingRoomResponse
+		type WaitingRoomResponse,
+		type GameOptions
 	} from "types";
 	import { testIds } from "@/config/test-ids";
+	import { currentTime } from "@/stores/current-time";
 
 	let room: RoomStateResponse | undefined = $state();
 	let rooms: RoomOverviewResponse[] = $state([]);
 	let errorMessage: string | undefined = $state();
 	let connectionState = $state<WebSocketState>(WEBSOCKET_STATES.DISCONNECTED);
+	let pendingGameStart: { gameUrl: string; startTime: Date } | undefined =
+		$state();
+	let customGameDialogOpen = $state(false);
+	let joinByInviteDialogOpen = $state(false);
+	let chatMessages = $state<
+		Array<{ username: string; message: string; timestamp: Date }>
+	>([]);
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"
@@ -76,9 +89,22 @@
 					room = data.room;
 				}
 				break;
+			case waitingRoomEventEnum.CHAT_MESSAGE:
+				{
+					chatMessages.push({
+						username: data.username,
+						message: data.message,
+						timestamp: new Date(data.timestamp)
+					});
+					chatMessages = chatMessages; // Trigger reactivity
+				}
+				break;
 			case waitingRoomEventEnum.START_GAME:
 				{
-					goto(data.gameUrl);
+					pendingGameStart = {
+						gameUrl: data.gameUrl,
+						startTime: new Date(data.startTime)
+					};
 				}
 				break;
 			case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
@@ -134,6 +160,18 @@
 		if (room?.roomId) updateRoomIdInUrl();
 	});
 
+	// Auto-redirect when countdown reaches zero
+	$effect(() => {
+		if (!pendingGameStart) return;
+
+		const now = $currentTime.getTime();
+		const startTime = new Date(pendingGameStart.startTime).getTime();
+
+		if (now >= startTime) {
+			goto(pendingGameStart.gameUrl);
+		}
+	});
+
 	$effect(() => {
 		return () => {
 			wsManager.destroy();
@@ -144,6 +182,38 @@
 
 	function sendWaitingRoomMessage(data: WaitingRoomRequest) {
 		wsManager.send(data);
+	}
+
+	function handleHostRoom(options?: GameOptions) {
+		sendWaitingRoomMessage({
+			event: waitingRoomEventEnum.HOST_ROOM,
+			...(options && { options })
+		});
+	}
+
+	function handleJoinByInvite(inviteCode: string) {
+		sendWaitingRoomMessage({
+			event: waitingRoomEventEnum.JOIN_BY_INVITE_CODE,
+			inviteCode
+		});
+	}
+
+	async function copyInviteCode(code: string) {
+		try {
+			await navigator.clipboard.writeText(code);
+		} catch (err) {
+			console.error("Failed to copy invite code:", err);
+		}
+	}
+
+	function sendChatMessage(message: string) {
+		if (!room?.roomId) return;
+
+		sendWaitingRoomMessage({
+			event: waitingRoomEventEnum.CHAT_MESSAGE,
+			roomId: room.roomId,
+			message
+		});
 	}
 </script>
 
@@ -188,11 +258,12 @@
 							});
 
 							room = undefined;
+							chatMessages = [];
 						}}
+						disabled={Boolean(pendingGameStart)}
 					>
-						Leave room
+						Leave waiting room
 					</Button>
-
 					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
 							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_START_ROOM}
@@ -206,37 +277,96 @@
 									roomId: room.roomId
 								});
 							}}
+							disabled={Boolean(pendingGameStart)}
 						>
-							Start room
+							Start game
 						</Button>
 					{/if}
 				{:else}
 					<Button
 						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_HOST_ROOM}
-						onclick={() => {
-							sendWaitingRoomMessage({
-								event: waitingRoomEventEnum.HOST_ROOM
-							});
-						}}
+						onclick={() => handleHostRoom()}
 					>
-						Host room
+						Quick Host
 					</Button>
-					<!-- TODO: give ability to host a custom room -->
+					<Button
+						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_CUSTOM_GAME}
+						variant="outline"
+						onclick={() => (customGameDialogOpen = true)}
+					>
+						Custom Game
+					</Button>
+					<Button
+						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_JOIN_BY_INVITE}
+						variant="secondary"
+						onclick={() => (joinByInviteDialogOpen = true)}
+					>
+						Join by Code
+					</Button>
 				{/if}
 			</div>
 		</LogicalUnit>
 
-		{#if room}
-			<p>waiting for the room to start</p>
+		{#if pendingGameStart}
+			<div class="flex flex-col items-center gap-4">
+				<h2 class="text-xl font-semibold">Game Starting Soon!</h2>
+				<p>Get ready! The game will begin in:</p>
+				<CountdownTimer endDate={pendingGameStart.startTime} />
+			</div>
+		{:else if room}
+			<div class="space-y-4">
+				{#if room.inviteCode}
+					<div class="bg-muted/50 rounded-lg border p-4">
+						<p class="mb-2 text-sm font-medium">
+							🔒 Private Game - Invite Code:
+						</p>
+						<div class="flex items-center gap-2">
+							<code
+								class="bg-background flex-1 rounded px-3 py-2 text-center font-mono text-2xl tracking-widest"
+							>
+								{room.inviteCode}
+							</code>
+							<Button
+								data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_COPY_INVITE}
+								variant="outline"
+								size="sm"
+								onclick={() =>
+									room?.inviteCode && copyInviteCode(room.inviteCode)}
+							>
+								Copy
+							</Button>
+						</div>
+						<p class="text-muted-foreground mt-2 text-xs">
+							Share this code with friends to let them join
+						</p>
+					</div>
+				{/if}
 
-			<ul>
-				{#each room.users as user}
-					<li class="list-inside list-disc">
-						{user.username}{#if isAuthor(room.owner.userId, user.userId)}
-							{` - Host!`}{/if}
-					</li>
-				{/each}
-			</ul>
+				<div class="grid gap-4 md:grid-cols-2">
+					<div class="space-y-2">
+						<h3 class="text-lg font-semibold">Players in Room</h3>
+						<ul class="space-y-1">
+							{#each room.users as user}
+								<li class="list-inside list-disc">
+									{user.username}{#if isAuthor(room.owner.userId, user.userId)}
+										{` - Host!`}{/if}
+								</li>
+							{/each}
+						</ul>
+						<p class="text-muted-foreground text-sm">
+							Waiting for the host to start the game...
+						</p>
+					</div>
+
+					{#if $authenticatedUserInfo?.username}
+						<WaitingRoomChat
+							{chatMessages}
+							sendMessage={sendChatMessage}
+							currentUsername={$authenticatedUserInfo.username}
+						/>
+					{/if}
+				</div>
+			</div>
 		{:else if rooms && rooms.length > 0}
 			<ul>
 				{#each rooms as joinableRoom}
@@ -263,3 +393,12 @@
 		{/if}
 	</Container>
 {/if}
+
+<CustomGameDialog
+	bind:open={customGameDialogOpen}
+	onHostRoom={handleHostRoom}
+/>
+<JoinByInviteDialog
+	bind:open={joinByInviteDialogOpen}
+	onJoin={handleJoinByInvite}
+/>

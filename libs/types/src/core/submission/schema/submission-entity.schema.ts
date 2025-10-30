@@ -8,6 +8,7 @@ import { puzzleResultInformationSchema } from "../../piston/schema/puzzle-result
 
 export const submissionEntitySchema = z.object({
 	code: z.string().optional(),
+	codeLength: z.number().optional(),
 	programmingLanguage: objectIdSchema.or(programmingLanguageDtoSchema),
 	createdAt: acceptedDateSchema.prefault(() => new Date()),
 	puzzle: objectIdSchema.or(puzzleDtoSchema),

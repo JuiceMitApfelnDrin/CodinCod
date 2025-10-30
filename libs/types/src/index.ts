@@ -38,6 +38,7 @@ export * from "./core/common/config/environment.js";
 export * from "./core/common/config/default-values-query-params.js";
 export * from "./core/common/config/frontend-urls.js";
 export * from "./core/common/config/web-socket-urls.js";
+export * from "./core/common/enum/websocket-close-codes.js";
 export * from "./core/common/enum/http-response-codes.js";
 export * from "./core/common/enum/vote-type-enum.js";
 export * from "./core/common/schema/accepted-date.js";

@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import Game, { GameDocument } from "../../models/game/game.js";
-import { GameModeEnum, GameVisibilityEnum } from "types";
+import { gameModeEnum, gameVisibilityEnum } from "types";
 import {
 	randomFromArray,
 	randomMultipleFromArray
@@ -8,9 +8,9 @@ import {
 import { Types } from "mongoose";
 import ProgrammingLanguage from "../../models/programming-language/language.js";
 
-type GameModeValue = (typeof GameModeEnum)[keyof typeof GameModeEnum];
+type GameModeValue = (typeof gameModeEnum)[keyof typeof gameModeEnum];
 type GameVisibilityValue =
-	(typeof GameVisibilityEnum)[keyof typeof GameVisibilityEnum];
+	(typeof gameVisibilityEnum)[keyof typeof gameVisibilityEnum];
 
 export interface GameFactoryOptions {
 	ownerId: Types.ObjectId;
@@ -49,9 +49,9 @@ async function generateAllowedLanguages(): Promise<string[]> {
 export async function createGame(
 	options: GameFactoryOptions
 ): Promise<Types.ObjectId> {
-	const mode = options.mode || randomFromArray(Object.values(GameModeEnum));
+	const mode = options.mode || randomFromArray(Object.values(gameModeEnum));
 	const visibility =
-		options.visibility || randomFromArray(Object.values(GameVisibilityEnum));
+		options.visibility || randomFromArray(Object.values(gameVisibilityEnum));
 
 	// Game duration varies: 5min to 60min
 	const durationInSeconds = faker.number.int({ min: 300, max: 3600 });
@@ -117,13 +117,13 @@ export async function createGames(
 
 		// Mode distribution: 60% RATED, 40% CASUAL
 		const mode = faker.datatype.boolean({ probability: 0.6 })
-			? GameModeEnum.RATED
-			: GameModeEnum.CASUAL;
+			? gameModeEnum.RATED
+			: gameModeEnum.CASUAL;
 
 		// Visibility distribution: 70% PUBLIC, 30% PRIVATE
 		const visibility = faker.datatype.boolean({ probability: 0.7 })
-			? GameVisibilityEnum.PUBLIC
-			: GameVisibilityEnum.PRIVATE;
+			? gameVisibilityEnum.PUBLIC
+			: gameVisibilityEnum.PRIVATE;
 
 		// Get random players (ensure we have enough users)
 		const playerCount = Math.min(

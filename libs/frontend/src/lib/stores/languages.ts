@@ -4,7 +4,7 @@ import { writable } from "svelte/store";
 import { httpRequestMethod, type ProgrammingLanguageDto } from "types";
 
 const createLanguagesStore = () => {
-	const { set, subscribe } = writable<ProgrammingLanguageDto[] | null>(null);
+	const { set, subscribe } = writable<ProgrammingLanguageDto[]>([]);
 
 	return {
 		async loadLanguages() {

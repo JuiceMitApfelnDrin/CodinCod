@@ -1,10 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import {
-	httpResponseCodes,
-	isAuthenticatedInfo,
-	banTypeEnum,
-	environment
-} from "types";
+import { httpResponseCodes, isAuthenticatedInfo, banTypeEnum } from "types";
 import { checkUserBanStatus } from "../../utils/moderation/escalation.js";
 
 export default async function checkUserBan(

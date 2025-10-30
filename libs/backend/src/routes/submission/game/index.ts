@@ -9,10 +9,10 @@ import {
 	SubmissionEntity
 } from "types";
 import { isValidationError } from "../../../utils/functions/is-validation-error.js";
-import Game from "@/models/game/game.js";
 import Submission from "@/models/submission/submission.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import checkUserBan from "@/plugins/middleware/check-user-ban.js";
+import { gameService } from "@/services/game.service.js";
 
 export default async function submissionGameRoutes(fastify: FastifyInstance) {
 	fastify.post<{ Body: GameSubmissionParams }>(
@@ -40,9 +40,7 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					});
 				}
 
-				const matchingGame = await Game.findById(gameId)
-					.populate("playerSubmissions")
-					.exec();
+				const matchingGame = await gameService.findByIdPopulated(gameId);
 
 				if (!matchingGame) {
 					return reply

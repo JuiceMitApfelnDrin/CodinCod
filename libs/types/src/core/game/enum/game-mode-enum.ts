@@ -1,4 +1,5 @@
-export const GameModeEnum = {
-	RATED: "rated",
-	CASUAL: "casual",
+export const gameModeEnum = {
+	FASTEST: "fastest",
+	SHORTEST: "shortest",
+	RANDOM: "random",
 } as const;
