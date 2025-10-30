@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import Game, { GameDocument } from "../../models/game/game.js";
-import { gameModeEnum, gameVisibilityEnum } from "types";
+import { gameModeEnum, gameVisibilityEnum, GameMode, GameVisibility } from "types";
 import {
 	randomFromArray,
 	randomMultipleFromArray
@@ -8,16 +8,14 @@ import {
 import { Types } from "mongoose";
 import ProgrammingLanguage from "../../models/programming-language/language.js";
 
-type GameModeValue = (typeof gameModeEnum)[keyof typeof gameModeEnum];
-type GameVisibilityValue =
-	(typeof gameVisibilityEnum)[keyof typeof gameVisibilityEnum];
 
 export interface GameFactoryOptions {
 	ownerId: Types.ObjectId;
 	puzzleId: Types.ObjectId;
 	playerIds: Types.ObjectId[];
-	mode?: GameModeValue;
-	visibility?: GameVisibilityValue;
+	mode?: GameMode;
+	visibility?: GameVisibility;
+	rated?: boolean
 }
 
 /**
@@ -90,7 +88,8 @@ export async function createGame(
 			mode,
 			visibility,
 			maxGameDurationInSeconds: durationInSeconds,
-			allowedLanguages: await generateAllowedLanguages()
+			allowedLanguages: await generateAllowedLanguages(),
+			rated: faker.datatype.boolean({ probability: 0.6 })
 		},
 		playerSubmissions: []
 	};
@@ -115,10 +114,7 @@ export async function createGames(
 		const ownerId = randomFromArray(userIds);
 		const puzzleId = randomFromArray(puzzleIds);
 
-		// Mode distribution: 60% RATED, 40% CASUAL
-		const mode = faker.datatype.boolean({ probability: 0.6 })
-			? gameModeEnum.RATED
-			: gameModeEnum.CASUAL;
+		const mode = randomFromArray(Object.values(gameModeEnum))
 
 		// Visibility distribution: 70% PUBLIC, 30% PRIVATE
 		const visibility = faker.datatype.boolean({ probability: 0.7 })
@@ -142,7 +138,8 @@ export async function createGames(
 				puzzleId,
 				playerIds,
 				mode,
-				visibility
+				visibility,
+				rated: faker.datatype.boolean()
 			})
 		);
 	}

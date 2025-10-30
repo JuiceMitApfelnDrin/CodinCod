@@ -127,7 +127,7 @@ export function waitingRoomSetup(
 					event: waitingRoomEventEnum.CHAT_MESSAGE,
 					username: req.user.username,
 					message: parsedMessage.message,
-					timestamp: new Date()
+					createdAt: new Date()
 				});
 				break;
 			}

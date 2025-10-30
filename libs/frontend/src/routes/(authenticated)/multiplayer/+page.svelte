@@ -29,10 +29,14 @@
 		type RoomStateResponse,
 		type WaitingRoomRequest,
 		type WaitingRoomResponse,
-		type GameOptions
+		type GameOptions,
+
+		type ChatMessage
+
 	} from "types";
 	import { testIds } from "@/config/test-ids";
 	import { currentTime } from "@/stores/current-time";
+	import Chat from "@/features/chat/components/chat.svelte";
 
 	let room: RoomStateResponse | undefined = $state();
 	let rooms: RoomOverviewResponse[] = $state([]);
@@ -43,7 +47,7 @@
 	let customGameDialogOpen = $state(false);
 	let joinByInviteDialogOpen = $state(false);
 	let chatMessages = $state<
-		Array<{ username: string; message: string; timestamp: Date }>
+		Array<ChatMessage>
 	>([]);
 
 	const queryParamKeys = {
@@ -94,8 +98,9 @@
 					chatMessages.push({
 						username: data.username,
 						message: data.message,
-						timestamp: new Date(data.timestamp)
+						createdAt: new Date(data.createdAt)
 					});
+
 					chatMessages = chatMessages; // Trigger reactivity
 				}
 				break;
@@ -160,7 +165,6 @@
 		if (room?.roomId) updateRoomIdInUrl();
 	});
 
-	// Auto-redirect when countdown reaches zero
 	$effect(() => {
 		if (!pendingGameStart) return;
 
@@ -359,10 +363,10 @@
 					</div>
 
 					{#if $authenticatedUserInfo?.username}
-						<WaitingRoomChat
+						<Chat
 							{chatMessages}
 							sendMessage={sendChatMessage}
-							currentUsername={$authenticatedUserInfo.username}
+							gameId={room.roomId}
 						/>
 					{/if}
 				</div>
