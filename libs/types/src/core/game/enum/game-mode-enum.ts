@@ -3,4 +3,3 @@ export const gameModeEnum = {
 	SHORTEST: "shortest",
 	RANDOM: "random",
 } as const;
-
