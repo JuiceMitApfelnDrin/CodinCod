@@ -67,7 +67,7 @@ export class MigrateUserRolesToRoleMigration implements Migration {
 		let rolledBack = 0;
 
 		for (const user of users) {
-			const currentRole = (user as any).role;
+			const currentRole = (user).role;
 
 			if (!currentRole) {
 				continue;

@@ -4,8 +4,8 @@ import {
 	DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
 	frontendUrls,
 	GameEntity,
-	GameModeEnum,
-	GameVisibilityEnum,
+	gameModeEnum,
+	gameVisibilityEnum,
 	isAuthenticatedInfo,
 	waitingRoomEventEnum
 } from "types";
@@ -144,7 +144,7 @@ export function waitingRoomSetup(
 						return;
 					}
 
-					const randomPuzzle = randomPuzzles[0] as any;
+					const randomPuzzle = randomPuzzles[0];
 					const room = waitingRoom.getRoom(parsedMessage.roomId);
 
 					if (!room) {
@@ -185,10 +185,12 @@ export function waitingRoomSetup(
 						startTime,
 						endTime,
 						options: {
-							allowedLanguages: roomOptions?.allowedLanguages ?? [],
+							allowedLanguages: [],
 							maxGameDurationInSeconds: gameDuration,
-							mode: roomOptions?.mode ?? GameModeEnum.FASTEST,
-							visibility: roomOptions?.visibility ?? GameVisibilityEnum.PUBLIC
+							mode: gameModeEnum.FASTEST,
+							visibility: gameVisibilityEnum.PUBLIC,
+							rated: true,
+							...roomOptions
 						},
 						playerSubmissions: []
 					};

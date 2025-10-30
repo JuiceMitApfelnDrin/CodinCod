@@ -25,7 +25,7 @@ const leaveRoomSchema = baseMessageSchema.extend({
 
 const hostRoomSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.HOST_ROOM),
-	options: gameOptionsSchema.partial().optional(),
+	options: gameOptionsSchema.optional(),
 });
 
 const startGameSchema = baseMessageSchema.extend({

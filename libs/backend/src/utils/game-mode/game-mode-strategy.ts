@@ -1,4 +1,4 @@
-import { GameModeEnum, type GameMode } from "types";
+import { gameModeEnum, type GameMode } from "types";
 
 export interface GameModeStrategy {
 	calculateScore(submission: {
@@ -113,10 +113,10 @@ class CasualModeStrategy implements GameModeStrategy {
 }
 
 const strategies: Record<GameMode, GameModeStrategy> = {
-	[GameModeEnum.FASTEST]: new FastestModeStrategy(),
-	[GameModeEnum.SHORTEST]: new ShortestModeStrategy(),
-	[GameModeEnum.RATED]: new RatedModeStrategy(),
-	[GameModeEnum.CASUAL]: new CasualModeStrategy()
+	[gameModeEnum.FASTEST]: new FastestModeStrategy(),
+	[gameModeEnum.SHORTEST]: new ShortestModeStrategy(),
+	[gameModeEnum.RATED]: new RatedModeStrategy(),
+	[gameModeEnum.CASUAL]: new CasualModeStrategy()
 };
 
 export function getGameModeStrategy(mode: GameMode): GameModeStrategy {

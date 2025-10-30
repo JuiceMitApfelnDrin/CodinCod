@@ -2,7 +2,7 @@
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
-		GameModeEnum,
+		gameModeEnum,
 		isObjectId,
 		isString,
 		isSubmissionDto,
@@ -37,7 +37,7 @@
 		game: GameDto;
 	} = $props();
 
-	let isShortestMode = $derived(game.options.mode === GameModeEnum.SHORTEST);
+	let isShortestMode = $derived(game.options.mode === gameModeEnum.SHORTEST);
 
 	let submissions: SubmissionDto[] = $derived(
 		game.playerSubmissions.filter((submission) =>

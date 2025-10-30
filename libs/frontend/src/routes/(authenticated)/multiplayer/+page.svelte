@@ -184,7 +184,7 @@
 		wsManager.send(data);
 	}
 
-	function handleHostRoom(options?: Partial<GameOptions>) {
+	function handleHostRoom(options?: GameOptions) {
 		sendWaitingRoomMessage({
 			event: waitingRoomEventEnum.HOST_ROOM,
 			...(options && { options })
@@ -260,8 +260,9 @@
 							room = undefined;
 							chatMessages = [];
 						}}
+						disabled={Boolean(pendingGameStart)}
 					>
-						Leave room
+						Leave waiting room
 					</Button>
 					{#if $authenticatedUserInfo?.userId && isAuthor(room?.owner.userId, $authenticatedUserInfo?.userId)}
 						<Button
@@ -276,8 +277,9 @@
 									roomId: room.roomId
 								});
 							}}
+							disabled={Boolean(pendingGameStart)}
 						>
-							Start room
+							Start game
 						</Button>
 					{/if}
 				{:else}

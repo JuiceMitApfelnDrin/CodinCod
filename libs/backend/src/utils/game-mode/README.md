@@ -18,7 +18,7 @@ CodinCod uses a **strategy pattern** to handle different game modes. This makes 
 Update `libs/types/src/core/game/enum/game-mode-enum.ts`:
 
 ```typescript
-export const GameModeEnum = {
+export const gameModeEnum = {
 	FASTEST: "fastest",
 	SHORTEST: "shortest",
 	RATED: "rated",
@@ -67,7 +67,7 @@ Add your strategy to the `strategies` object:
 ```typescript
 const strategies: Record<GameMode, GameModeStrategy> = {
 	// ... existing strategies
-	[GameModeEnum.YOUR_NEW_MODE]: new YourNewModeStrategy()
+	[gameModeEnum.YOUR_NEW_MODE]: new YourNewModeStrategy()
 };
 ```
 
@@ -84,7 +84,7 @@ If your mode needs new submission data (like `codeLength` for SHORTEST mode):
 Update `libs/frontend/src/lib/features/game/standings/components/standings-table.svelte`:
 
 ```svelte
-{#if game.options.mode === GameModeEnum.YOUR_NEW_MODE}
+{#if game.options.mode === gameModeEnum.YOUR_NEW_MODE}
 	<Table.Head>Your Metric</Table.Head>
 {/if}
 ```
@@ -98,7 +98,7 @@ Update `libs/frontend/src/lib/features/game/standings/components/standings-table
 
 ## Example: Adding a "Memory Efficient" Mode
 
-1. Add `MEMORY_EFFICIENT: "memory_efficient"` to GameModeEnum
+1. Add `MEMORY_EFFICIENT: "memory_efficient"` to gameModeEnum
 2. Create `MemoryEfficientModeStrategy` that:
    - Tracks peak memory usage during execution
    - Scores based on lowest memory usage + success rate

@@ -4,7 +4,9 @@ import {
 	getUserIdFromUser,
 	isGameDto,
 	isPuzzleDto,
-	ObjectId
+	isString,
+	ObjectId,
+	websocketCloseCodes
 } from "types";
 import { UserWebSockets } from "./user-web-sockets.js";
 import { WebSocket } from "@fastify/websocket";
@@ -27,7 +29,7 @@ export async function onConnection(
 					message: "Game not found"
 				})
 			);
-			socket.close(1008, "Game not found");
+			socket.close(websocketCloseCodes.POLICY_VIOLATION, "Game not found");
 			return;
 		}
 
@@ -63,10 +65,9 @@ export async function onConnection(
 			return;
 		}
 
-		const puzzleId =
-			typeof game.puzzle === "string"
-				? game.puzzle
-				: game.puzzle._id.toString();
+		const puzzleId = isString(game.puzzle)
+			? game.puzzle
+			: game.puzzle._id.toString();
 		const puzzle = await puzzleService.findByIdPopulated(puzzleId);
 
 		if (!isPuzzleDto(puzzle)) {
@@ -84,6 +85,6 @@ export async function onConnection(
 		});
 	} catch (error) {
 		console.error("Error in game websocket connection:", error);
-		socket.close(1011, "Internal server error");
+		socket.close(websocketCloseCodes.INTERNAL_ERROR, "Internal server error");
 	}
 }

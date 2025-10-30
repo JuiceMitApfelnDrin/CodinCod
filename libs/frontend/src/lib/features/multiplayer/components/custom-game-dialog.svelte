@@ -7,11 +7,14 @@
 	import { Checkbox } from "@/components/ui/checkbox";
 	import { testIds } from "@/config/test-ids";
 	import {
-		GameModeEnum,
-		GameVisibilityEnum,
 		DEFAULT_GAME_LENGTH_IN_SECONDS,
-		type ProgrammingLanguageDto,
-		type GameOptions
+		type GameOptions,
+		isString,
+		DEFAULT_GAME_LENGTH_IN_MINUTES,
+		type GameMode,
+		type GameVisibility,
+		gameModeEnum,
+		gameVisibilityEnum
 	} from "types";
 	import { languages } from "@/stores/languages";
 
@@ -20,14 +23,21 @@
 		onHostRoom
 	}: {
 		open?: boolean;
-		onHostRoom: (options: Partial<GameOptions>) => void;
+		onHostRoom: (options: GameOptions) => void;
 	} = $props();
 
 	// Game options state
-	let selectedMode = $state<string>(GameModeEnum.FASTEST);
-	let selectedVisibility = $state<string>(GameVisibilityEnum.PUBLIC);
-	let durationMinutes = $state<number>(DEFAULT_GAME_LENGTH_IN_SECONDS / 60);
-	let selectedLanguageIds = $state<Set<string>>(new Set());
+	let selectedMode = $state<GameMode>(gameModeEnum.FASTEST);
+	let selectedVisibility = $state<GameVisibility>(gameVisibilityEnum.PUBLIC);
+	let durationMinutes = $state<number>(DEFAULT_GAME_LENGTH_IN_MINUTES);
+	let rated = $state<string>(String(true));
+	let selectedLanguageIds = $state<Set<string>>(
+		new Set(
+			$languages
+				.map((language) => language._id)
+				.filter((languageId) => isString(languageId))
+		)
+	);
 
 	// Derived states
 	let allLanguagesSelected = $derived(
@@ -59,10 +69,12 @@
 	}
 
 	function handleCreateRoom() {
-		const options: Partial<GameOptions> = {
-			mode: selectedMode as any,
-			visibility: selectedVisibility as any,
-			maxGameDurationInSeconds: durationMinutes * 60
+		const options: GameOptions = {
+			mode: selectedMode,
+			visibility: selectedVisibility,
+			maxGameDurationInSeconds: durationMinutes * 60,
+			rated: Boolean(rated),
+			allowedLanguages: []
 		};
 
 		// Only include allowedLanguages if specific languages are selected
@@ -74,8 +86,8 @@
 		open = false;
 
 		// Reset form
-		selectedMode = GameModeEnum.FASTEST;
-		selectedVisibility = GameVisibilityEnum.PUBLIC;
+		selectedMode = gameModeEnum.FASTEST;
+		selectedVisibility = gameVisibilityEnum.PUBLIC;
 		durationMinutes = DEFAULT_GAME_LENGTH_IN_SECONDS / 60;
 		selectedLanguageIds.clear();
 	}
@@ -84,11 +96,8 @@
 <Dialog.Root bind:open>
 	<Dialog.Content class="max-h-[90vh] overflow-y-auto sm:max-w-[500px]">
 		<Dialog.Header>
-			<Dialog.Title>Create Custom Game</Dialog.Title>
-			<Dialog.Description>
-				Configure your game settings. Leave languages empty to allow all
-				languages.
-			</Dialog.Description>
+			<Dialog.Title>Create a custom game</Dialog.Title>
+			<Dialog.Description>Configure your game settings.</Dialog.Description>
 		</Dialog.Header>
 
 		<div class="space-y-6 py-4">
@@ -97,37 +106,25 @@
 				<Label for="game-mode">Game Mode</Label>
 				<Select.Root bind:value={selectedMode} type="single">
 					<Select.Trigger id="game-mode" class="w-full">
-						{selectedMode === GameModeEnum.FASTEST && "🏃 Fastest"}
-						{selectedMode === GameModeEnum.SHORTEST && "📏 Shortest"}
-						{selectedMode === GameModeEnum.RATED && "⭐ Rated"}
-						{selectedMode === GameModeEnum.CASUAL && "🎮 Casual"}
+						{selectedMode}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
-							<Select.Item value={GameModeEnum.FASTEST} label="Fastest">
-								Fastest
-							</Select.Item>
-							<Select.Item value={GameModeEnum.SHORTEST} label="Shortest">
-								Shortest
-							</Select.Item>
-							<Select.Item value={GameModeEnum.RATED} label="Rated">
-								Rated
-							</Select.Item>
-							<Select.Item value={GameModeEnum.CASUAL} label="Casual">
-								Casual
-							</Select.Item>
+							{#each Object.values(gameModeEnum) as gameMode}
+								<Select.Item value={gameMode}>
+									{gameMode}
+								</Select.Item>
+							{/each}
 						</Select.Group>
 					</Select.Content>
 				</Select.Root>
 				<p class="text-muted-foreground text-sm">
-					{#if selectedMode === GameModeEnum.FASTEST}
+					{#if selectedMode === gameModeEnum.FASTEST}
 						Win by submitting a correct solution first
-					{:else if selectedMode === GameModeEnum.SHORTEST}
+					{:else if selectedMode === gameModeEnum.SHORTEST}
 						Win by writing the shortest correct code
-					{:else if selectedMode === GameModeEnum.RATED}
-						Ranked matchmaking with ELO rating
-					{:else}
-						Casual play without ratings
+					{:else if selectedMode === gameModeEnum.RANDOM}
+						A random game mode will be select for you
 					{/if}
 				</p>
 			</div>
@@ -137,25 +134,50 @@
 				<Label for="visibility">Visibility</Label>
 				<Select.Root bind:value={selectedVisibility} type="single">
 					<Select.Trigger id="visibility" class="w-full">
-						{selectedVisibility === GameVisibilityEnum.PUBLIC && "🌐 Public"}
-						{selectedVisibility === GameVisibilityEnum.PRIVATE && "🔒 Private"}
+						{selectedVisibility}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Group>
-							<Select.Item value={GameVisibilityEnum.PUBLIC} label="Public">
-								🌐 Public
-							</Select.Item>
-							<Select.Item value={GameVisibilityEnum.PRIVATE} label="Private">
-								🔒 Private
-							</Select.Item>
+							{#each Object.values(gameVisibilityEnum) as gameVisibility}
+								<Select.Item value={gameVisibility}
+									>{gameVisibility}</Select.Item
+								>
+							{/each}
 						</Select.Group>
 					</Select.Content>
 				</Select.Root>
 				<p class="text-muted-foreground text-sm">
-					{#if selectedVisibility === GameVisibilityEnum.PUBLIC}
+					{#if selectedVisibility === gameVisibilityEnum.PUBLIC}
 						Anyone can join this game
+					{:else if selectedVisibility === gameVisibilityEnum.PRIVATE}
+						Only players with an invite link can join
+					{/if}
+				</p>
+			</div>
+
+			<!-- Rated -->
+			<div class="space-y-2">
+				<Label for="visibility">Rated</Label>
+				<Select.Root bind:value={(rated)} type="single">
+					<Select.Trigger id="game-mode" class="w-full">
+						{#if Boolean(rated)}
+							Rated
+						{:else}
+							Casual
+						{/if}
+					</Select.Trigger>
+					<Select.Content>
+						<Select.Group>
+							<Select.Item value={String(true)}>Rated</Select.Item>
+							<Select.Item value={String(false)}>Casual</Select.Item>
+						</Select.Group>
+					</Select.Content>
+				</Select.Root>
+				<p class="text-muted-foreground text-sm">
+					{#if rated}
+						This game will affect your rating and appear on leaderboards
 					{:else}
-						Only players with invite link can join
+						Play for fun, this game won't affect your rating
 					{/if}
 				</p>
 			</div>

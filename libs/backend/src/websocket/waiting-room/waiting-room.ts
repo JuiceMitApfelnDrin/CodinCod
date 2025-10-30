@@ -2,6 +2,7 @@ import { WebSocket } from "@fastify/websocket";
 import mongoose from "mongoose";
 import {
 	AuthenticatedInfo,
+	GameOptions,
 	GameUserInfo,
 	ObjectId,
 	waitingRoomEventEnum,
@@ -13,28 +14,9 @@ type Username = string;
 type RoomId = ObjectId;
 type Room = Record<Username, GameUserInfo>;
 
-// Custom type for room options to work with exactOptionalPropertyTypes
-export type RoomGameOptions = {
-	allowedLanguages?:
-		| Array<
-				| string
-				| {
-						language: string;
-						version: string;
-						aliases: string[];
-						_id?: string | undefined;
-						runtime?: string | undefined;
-				  }
-		  >
-		| undefined;
-	maxGameDurationInSeconds?: number | undefined;
-	visibility?: ("private" | "public") | undefined;
-	mode?: ("fastest" | "shortest" | "rated" | "casual") | undefined;
-};
-
 interface RoomConfig {
 	users: Room;
-	options?: RoomGameOptions | undefined;
+	options?: GameOptions | undefined;
 	inviteCode?: string | undefined;
 }
 
@@ -78,7 +60,7 @@ export class WaitingRoom {
 		this.connectionManager.remove(username);
 	}
 
-	hostRoom(user: AuthenticatedInfo, options?: RoomGameOptions): RoomId {
+	hostRoom(user: AuthenticatedInfo, options?: GameOptions): RoomId {
 		const randomId = new mongoose.Types.ObjectId().toString();
 
 		// Generate a 6-character invite code for private rooms
@@ -162,7 +144,7 @@ export class WaitingRoom {
 		return roomConfig?.users;
 	}
 
-	getRoomOptions(roomId: RoomId): RoomGameOptions | undefined {
+	getRoomOptions(roomId: RoomId): GameOptions | undefined {
 		return this.roomsByRoomId[roomId]?.options;
 	}
 
