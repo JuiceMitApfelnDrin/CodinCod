@@ -14,7 +14,7 @@
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/state";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import EyeClosed from "@lucide/svelte/icons/eye-closed";
 	import Eye from "@lucide/svelte/icons/eye";
 	import Button from "#/ui/button/button.svelte";
@@ -76,6 +76,7 @@
 					class="pr-10"
 				/>
 				<Button
+					variant="outline"
 					onclick={() => (showPassword = !showPassword)}
 					data-testid={testIds.LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
 				>

@@ -1,5 +1,5 @@
 import Puzzle, { PuzzleDocument } from "../models/puzzle/puzzle.js";
-import { ObjectId, PuzzleEntity, puzzleVisibilityEnum } from "types";
+import { ObjectId, PuzzleDto, PuzzleEntity, puzzleVisibilityEnum } from "types";
 import { PipelineStage } from "mongoose";
 
 /**
@@ -15,22 +15,29 @@ export class PuzzleService {
 	}
 
 	/**
-	 * Find a puzzle by ID with author populated
+	 * Find a puzzle by ID with author and comments populated
 	 */
 	async findByIdPopulated(
 		id: string | ObjectId
 	): Promise<PuzzleDocument | null> {
-		return await Puzzle.findById(id).populate("author").exec();
+		return await Puzzle.findById(id)
+			.populate("author")
+			.populate({
+				path: "comments",
+				populate: { path: "author" }
+			})
+			.exec();
 	}
 
 	/**
 	 * Find random approved puzzles
 	 */
-	async findRandomApproved(count: number = 1): Promise<PuzzleDocument[]> {
+	async findRandomApproved(count: number = 1): Promise<PuzzleDto[]> {
 		const pipeline: PipelineStage[] = [
 			{ $match: { visibility: puzzleVisibilityEnum.APPROVED } },
 			{ $sample: { size: count } }
 		];
+
 		return await Puzzle.aggregate(pipeline).exec();
 	}
 

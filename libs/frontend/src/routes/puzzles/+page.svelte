@@ -12,7 +12,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 
 	let { data }: { data: PaginatedQueryResponse | undefined } = $props();

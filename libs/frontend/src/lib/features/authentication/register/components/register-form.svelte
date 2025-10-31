@@ -11,7 +11,7 @@
 	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import { page } from "$app/state";
 	import Button from "#/ui/button/button.svelte";
 	import EyeClosed from "@lucide/svelte/icons/eye-closed";
@@ -95,6 +95,7 @@
 					placeholder={`${PASSWORD_CONFIG.minPasswordLength}characters`}
 				/>
 				<Button
+					variant="outline"
 					onclick={() => (showPassword = !showPassword)}
 					data-testid={testIds.REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
 				>

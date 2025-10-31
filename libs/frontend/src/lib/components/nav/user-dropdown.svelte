@@ -2,7 +2,7 @@
 	import * as DropdownMenu from "#/ui/dropdown-menu";
 	import * as Avatar from "#/ui/avatar";
 	import { frontendUrls } from "types";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import { authenticatedUserInfo } from "@/stores";
 	import { Button } from "#/ui/button";
 </script>

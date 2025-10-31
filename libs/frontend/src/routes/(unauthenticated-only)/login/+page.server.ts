@@ -2,10 +2,18 @@ import { superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
 import type { RequestEvent } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
-import { frontendUrls, httpResponseCodes, loginSchema } from "types";
+import {
+	backendUrls,
+	ERROR_MESSAGES,
+	frontendUrls,
+	httpRequestMethod,
+	httpResponseCodes,
+	loginSchema
+} from "types";
 import { setCookie } from "@/features/authentication/utils/set-cookie";
-import { login } from "../../api/login";
 import { searchParamKeys } from "@/config/search-params";
+import { buildBackendUrl } from "@/config/backend";
+import type { LoginRequest } from "types/dist/core/api/schema/auth/login.schema";
 
 export async function load() {
 	const form = await superValidate(zod4(loginSchema));
@@ -20,11 +28,20 @@ export const actions = {
 		if (!form.valid) {
 			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
 				form,
-				message: "Form errors"
+				message: ERROR_MESSAGES.FORM.VALIDATION_ERRORS
 			});
 		}
 
-		const result = await login(form.data.identifier, form.data.password);
+		const payload: LoginRequest = {
+			identifier: form.data.identifier,
+			password: form.data.password
+		};
+
+		const result = await fetch(buildBackendUrl(backendUrls.LOGIN), {
+			method: httpRequestMethod.POST,
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload)
+		});
 		const data = await result.json();
 
 		if (!result.ok) {

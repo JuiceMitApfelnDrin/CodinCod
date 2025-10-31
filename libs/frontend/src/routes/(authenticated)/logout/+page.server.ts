@@ -3,7 +3,8 @@ import {
 	cookieKeys,
 	environment,
 	frontendUrls,
-	getCookieOptions
+	getCookieOptions,
+	httpRequestMethod
 } from "types";
 import type { Actions } from "./$types";
 import { env } from "$env/dynamic/private";
@@ -18,7 +19,7 @@ export const actions = {
 
 			// Call the backend logout endpoint to clear the httpOnly cookie
 			const response = await fetch(backendUrl, {
-				method: "POST",
+				method: httpRequestMethod.POST,
 				headers: {
 					Cookie: `${cookieKeys.TOKEN}=${token ?? ""}`
 				}

@@ -49,7 +49,9 @@ export async function createUserBan(
 		reason: randomFromArray(banReasons),
 		startDate,
 		endDate,
-		isActive
+		isActive,
+		createdAt: startDate,
+		updatedAt: isActive ? startDate : faker.date.recent({ days: 30 })
 	};
 
 	const userBan = new UserBan(banData);

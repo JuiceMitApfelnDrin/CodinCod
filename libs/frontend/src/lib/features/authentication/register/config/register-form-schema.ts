@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { registerSchema } from "types";
 // import { fetchWithAuthenticationCookie } from "../../utils/fetch-with-authentication-cookie";
-// import { apiUrls } from "@/config/api";
+// import { buildBackendUrl } from "@/config/backend";
+import { backendUrls } from "types";
 
 export const registerFormSchema = registerSchema;
 // TODO: fix this, doesn't go to backend right now, it does, but doesn't update the form
@@ -15,7 +16,7 @@ export const registerFormSchema = registerSchema;
 // 	}
 
 // 	const isAvailable = await fetchWithAuthenticationCookie(
-// 		apiUrls.usernameIsAvailable(username)
+// 		buildBackendUrl(backendUrls.userByUsernameIsAvailable(username))
 // 	);
 
 // 	if (!isAvailable) {

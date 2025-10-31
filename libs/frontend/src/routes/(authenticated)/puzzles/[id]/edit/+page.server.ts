@@ -4,17 +4,19 @@ import { buildBackendUrl } from "@/config/backend";
 import {
 	backendUrls,
 	cookieKeys,
+	DELETE,
 	deletePuzzleSchema,
 	editPuzzleSchema,
+	ERROR_MESSAGES,
 	environment,
+	frontendUrls,
 	httpResponseCodes,
 	PUT,
 	type EditPuzzle
 } from "types";
-import { error, fail } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie.js";
 import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
-import { handleDeletePuzzleForm } from "../../../../api/handle-delete-puzzle-form.js";
 
 export async function load({ fetch, params, cookies }: PageServerLoadEvent) {
 	const id = params.id;
@@ -47,7 +49,38 @@ export async function load({ fetch, params, cookies }: PageServerLoadEvent) {
 }
 
 export const actions = {
-	deletePuzzle: handleDeletePuzzleForm,
+	deletePuzzle: async ({ params, request }: RequestEvent) => {
+		const deletePuzzleForm = await superValidate(
+			request,
+			zod4(deletePuzzleSchema)
+		);
+
+		if (!deletePuzzleForm.valid) {
+			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
+				deletePuzzleForm
+			});
+		}
+
+		const id = deletePuzzleForm.data.id;
+		const deletePuzzleUrl = buildBackendUrl(backendUrls.puzzleById(id));
+
+		const response = await fetchWithAuthenticationCookie(deletePuzzleUrl, {
+			headers: {
+				"Content-Type": "application/json",
+				Cookie: request.headers.get("cookie") || ""
+			},
+			method: DELETE
+		});
+
+		if (!response.ok) {
+			return fail(response.status, {
+				deletePuzzleForm,
+				error: ERROR_MESSAGES.PUZZLE.FAILED_TO_DELETE
+			});
+		}
+
+		redirect(httpResponseCodes.REDIRECTION.SEE_OTHER, frontendUrls.PUZZLES);
+	},
 	editPuzzle: async ({ params, request }: RequestEvent) => {
 		const form = await superValidate(request, zod4(editPuzzleSchema));
 
@@ -72,7 +105,7 @@ export const actions = {
 
 		if (!response.ok) {
 			return fail(response.status, {
-				error: "Failed to update the puzzle.",
+				error: ERROR_MESSAGES.PUZZLE.FAILED_TO_UPDATE,
 				form
 			});
 		}

@@ -127,7 +127,7 @@ export function waitingRoomSetup(
 					event: waitingRoomEventEnum.CHAT_MESSAGE,
 					username: req.user.username,
 					message: parsedMessage.message,
-					timestamp: new Date()
+					createdAt: new Date()
 				});
 				break;
 			}
@@ -180,7 +180,7 @@ export function waitingRoomSetup(
 					const createGameEntity: GameEntity = {
 						players,
 						owner: waitingRoom.findRoomOwner(room).userId,
-						puzzle: (randomPuzzle._id as any).toString(),
+						puzzle: randomPuzzle._id.toString(),
 						createdAt: now,
 						startTime,
 						endTime,
@@ -194,9 +194,15 @@ export function waitingRoomSetup(
 						},
 						playerSubmissions: []
 					};
-
 					const newlyCreatedGame = await gameService.create(createGameEntity);
 					const gameUrl = frontendUrls.multiplayerById(newlyCreatedGame.id);
+
+					// Store the pending game start state in the room
+					waitingRoom.setPendingGameStart(
+						parsedMessage.roomId,
+						gameUrl,
+						startTime
+					);
 
 					waitingRoom.updateUsersInRoom(parsedMessage.roomId, {
 						event: waitingRoomEventEnum.START_GAME,

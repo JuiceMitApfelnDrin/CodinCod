@@ -1,18 +1,19 @@
 import { FastifyInstance } from "fastify";
 import {
 	arePistonRuntimes,
-	CodeExecutionParams,
 	ErrorResponse,
 	httpResponseCodes,
 	isFetchError,
 	isPistonExecutionResponseSuccess,
 	PistonExecutionRequest,
-	PistonExecutionResponse
+	PistonExecutionResponse,
+	ExecuteAPI
 } from "types";
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
+import { validateBody } from "@/plugins/middleware/validate-body.js";
 
 export const executionResponseErrors = {
 	UNSUPPORTED_LANGUAGE: {
@@ -33,10 +34,15 @@ export const executionResponseErrors = {
 } as const;
 
 export default async function executeRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: CodeExecutionParams }>(
+	/**
+	 * POST /execute - Execute code without creating a submission
+	 * Uses specific ExecuteAPI types
+	 */
+	fastify.post<{ Body: ExecuteAPI.ExecuteCodeRequest }>(
 		"/",
 		{
 			onRequest: [authenticated, checkUserBan],
+			preHandler: validateBody(ExecuteAPI.executeCodeRequestSchema),
 			config: {
 				rateLimit: {
 					max: 30,
@@ -112,12 +118,9 @@ export default async function executeRoutes(fastify: FastifyInstance) {
 					.send(error);
 			}
 
-			let run = executionRes.run;
-			let compile = executionRes.compile;
-
-			const codeExecutionResponse = {
-				run,
-				compile,
+			const codeExecutionResponse: ExecuteAPI.ExecuteCodeResponse = {
+				run: executionRes.run,
+				compile: executionRes.compile,
 				puzzleResultInformation: calculateResults([testOutput], [executionRes])
 			};
 

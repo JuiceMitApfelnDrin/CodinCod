@@ -8,11 +8,13 @@ import { puzzleResultInformationSchema } from "../../piston/schema/puzzle-result
 
 export const submissionEntitySchema = z.object({
 	code: z.string().optional(),
-	codeLength: z.number().optional(),
+	// codelenght shouldn't be added here, since it should be derived from the code itself
+	// codelength should also be returned by a more specific dto/schema instead of this one, this one is too generic
 	programmingLanguage: objectIdSchema.or(programmingLanguageDtoSchema),
 	createdAt: acceptedDateSchema.prefault(() => new Date()),
 	puzzle: objectIdSchema.or(puzzleDtoSchema),
 	result: puzzleResultInformationSchema,
 	user: objectIdSchema.or(userDtoSchema),
 });
+
 export type SubmissionEntity = z.infer<typeof submissionEntitySchema>;

@@ -55,6 +55,31 @@ export class GameService {
 	}
 
 	/**
+	 * Add a player to a game with optimistic locking (prevents race conditions)
+	 * @throws Error if version mismatch occurs (game was modified by another request)
+	 */
+	async addPlayer(
+		gameId: string | ObjectId,
+		playerId: string | ObjectId,
+		expectedVersion: number
+	): Promise<GameDocument | null> {
+		const result = await Game.findOneAndUpdate(
+			{
+				_id: gameId,
+				version: expectedVersion,
+				players: { $ne: playerId }
+			},
+			{
+				$push: { players: playerId },
+				$inc: { version: 1 }
+			},
+			{ new: true }
+		).exec();
+
+		return result;
+	}
+
+	/**
 	 * Find games by player ID
 	 */
 	async findByPlayerId(

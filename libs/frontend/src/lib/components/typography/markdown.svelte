@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { marked } from "marked";
 	import P from "./p.svelte";
 	import DOMPurify from "dompurify";
 
@@ -12,6 +11,7 @@
 	} = $props();
 
 	const parseMarkdown = async (markdown: string) => {
+		const { marked } = await import("marked");
 		const dirtyMarkdown = await marked.parse(markdown);
 		return DOMPurify.sanitize(dirtyMarkdown);
 	};

@@ -5,7 +5,8 @@
 	import Label from "@/components/ui/label/label.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
-	import { apiUrls } from "@/config/api";
+	import { buildBackendUrl } from "@/config/backend";
+	import { backendUrls } from "types";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import {
 		COMMENT_CONFIG,
@@ -16,7 +17,7 @@
 		type CreateComment,
 		type ObjectId
 	} from "types";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		commentType,
@@ -41,7 +42,7 @@
 		switch (commentType) {
 			case commentTypeEnum.PUZZLE:
 				response = await fetchWithAuthenticationCookie(
-					apiUrls.puzzleByIdComment(replyOnId),
+					buildBackendUrl(backendUrls.puzzleByIdComment(replyOnId)),
 					{
 						body: JSON.stringify(createComment),
 						method: httpRequestMethod.POST
@@ -50,7 +51,7 @@
 				break;
 			case commentTypeEnum.COMMENT:
 				response = await fetchWithAuthenticationCookie(
-					apiUrls.puzzleByIdComment(replyOnId),
+					buildBackendUrl(backendUrls.puzzleByIdComment(replyOnId)),
 					{
 						body: JSON.stringify(createComment),
 						method: httpRequestMethod.POST

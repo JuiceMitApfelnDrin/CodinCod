@@ -9,7 +9,7 @@
 	import * as ScrollArea from "@/components/ui/scroll-area";
 	import { CHAT_MESSAGE_CONFIG, type ChatMessage } from "types";
 	import Message from "./chat-message.svelte";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import ReportChatDialog from "./report-chat-dialog.svelte";
 
 	let {

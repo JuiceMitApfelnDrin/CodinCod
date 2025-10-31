@@ -1,7 +1,5 @@
 import { faker } from "@faker-js/faker";
-import Submission, {
-	SubmissionDocument
-} from "../../models/submission/submission.js";
+import Submission from "../../models/submission/submission.js";
 import { PuzzleResultEnum } from "types";
 import { randomFromArray } from "../utils/seed-helpers.js";
 import { Types, ObjectId } from "mongoose";
@@ -93,15 +91,15 @@ export async function createSubmission(
 			{ value: resultValues[2], weight: 10 } // UNKNOWN
 		]) as PuzzleResultValue);
 
-	const submissionData: Partial<SubmissionDocument> = {
-		code: generateCode(languageName),
+	const code = generateCode(languageName);
+	const submission = new Submission({
+		code,
+		codeLength: code.length,
 		puzzle: options.puzzleId as unknown as ObjectId,
 		user: options.userId as unknown as ObjectId,
 		programmingLanguage: selectedLanguage._id as unknown as ObjectId,
 		result: await generateResultInfo(options.puzzleId, result)
-	};
-
-	const submission = new Submission(submissionData);
+	});
 	await submission.save();
 
 	return submission._id as Types.ObjectId;

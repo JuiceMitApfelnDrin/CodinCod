@@ -6,7 +6,7 @@
 	import type { ChatMessage } from "types";
 	import { Button } from "@/components/ui/button";
 	import Flag from "@lucide/svelte/icons/flag";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		chatMessage,

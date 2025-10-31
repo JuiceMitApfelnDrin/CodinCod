@@ -20,8 +20,9 @@
 	import { Button } from "#/ui/button";
 	import { page } from "$app/state";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { testIds } from "@/config/test-ids";
-	import { apiUrls } from "@/config/api";
+	import { testIds } from "types";
+	import { buildBackendUrl } from "@/config/backend";
+	import { backendUrls } from "types";
 	import Pagination from "#/nav/pagination.svelte";
 
 	let { data }: { data: PageData } = $props();
@@ -79,9 +80,12 @@
 
 	async function handleApprove(id: string) {
 		try {
-			const response = await fetch(apiUrls.moderationPuzzleByIdApprove(id), {
-				method: httpRequestMethod.POST
-			});
+			const response = await fetch(
+				buildBackendUrl(backendUrls.moderationPuzzleApprove(id)),
+				{
+					method: httpRequestMethod.POST
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to approve puzzle");
@@ -114,7 +118,7 @@
 
 		try {
 			const response = await fetch(
-				apiUrls.moderationPuzzleByIdRevise(selectedPuzzleId),
+				buildBackendUrl(backendUrls.moderationPuzzleRevise(selectedPuzzleId)),
 				{
 					method: httpRequestMethod.POST,
 					headers: {
@@ -142,13 +146,16 @@
 		status: typeof reviewStatusEnum.RESOLVED | typeof reviewStatusEnum.REJECTED
 	) {
 		try {
-			const response = await fetch(apiUrls.moderationReportByIdResolve(id), {
-				method: httpRequestMethod.POST,
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({ status })
-			});
+			const response = await fetch(
+				buildBackendUrl(backendUrls.moderationReportResolve(id)),
+				{
+					method: httpRequestMethod.POST,
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ status })
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to resolve report");
@@ -184,7 +191,9 @@
 
 		try {
 			const response = await fetch(
-				apiUrls.moderationUserByIdBanByType(selectedUserId, banType),
+				buildBackendUrl(
+					backendUrls.moderationUserByIdBanByType(selectedUserId, banType)
+				),
 				{
 					method: httpRequestMethod.POST,
 					headers: {
@@ -219,15 +228,18 @@
 		}
 
 		try {
-			const response = await fetch(apiUrls.moderationUserByIdUnban(userId), {
-				method: httpRequestMethod.POST,
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					reason: "Unbanned by moderator"
-				})
-			});
+			const response = await fetch(
+				buildBackendUrl(backendUrls.moderationUserByIdUnban(userId)),
+				{
+					method: httpRequestMethod.POST,
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						reason: "Unbanned by moderator"
+					})
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to unban user");
@@ -249,7 +261,7 @@
 
 		try {
 			const response = await fetch(
-				apiUrls.moderationUserByIdBanHistory(userId),
+				buildBackendUrl(backendUrls.moderationUserByIdBanHistory(userId)),
 				{
 					method: httpRequestMethod.GET
 				}

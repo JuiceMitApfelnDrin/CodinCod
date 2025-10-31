@@ -1,6 +1,13 @@
 import { superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
-import { backendUrls, createPuzzleSchema, frontendUrls, POST } from "types";
+import {
+	backendUrls,
+	createPuzzleSchema,
+	ERROR_MESSAGES,
+	frontendUrls,
+	httpResponseCodes,
+	POST
+} from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
 import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
@@ -17,7 +24,10 @@ export const actions = {
 		const form = await superValidate(request, zod4(createPuzzleSchema));
 
 		if (!form.valid) {
-			fail(400, { form });
+			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
+				form,
+				message: ERROR_MESSAGES.FORM.VALIDATION_ERRORS
+			});
 		}
 
 		const cookie = request.headers.get("cookie") || "";
@@ -37,11 +47,14 @@ export const actions = {
 		const data = await result.json();
 
 		if (!result.ok) {
-			fail(400, { form, message: data.message });
+			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
+				form,
+				message: data.message || ERROR_MESSAGES.PUZZLE.FAILED_TO_CREATE
+			});
 		}
 
 		const editPuzzleUrl = frontendUrls.puzzleByIdEdit(data._id);
 
-		throw redirect(302, editPuzzleUrl);
+		throw redirect(httpResponseCodes.REDIRECTION.FOUND, editPuzzleUrl);
 	}
 };

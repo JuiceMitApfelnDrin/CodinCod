@@ -9,7 +9,7 @@ export function getUserIdFromUser(user: unknown): string | null {
 	}
 
 	if (typeof user === "object" && user !== null && "_id" in user) {
-		const id = (user as any)._id;
+		const id = user._id;
 
 		return id ? String(id) : null;
 	}

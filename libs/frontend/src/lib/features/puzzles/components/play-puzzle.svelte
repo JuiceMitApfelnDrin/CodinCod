@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
 	import {
+		backendUrls,
 		httpRequestMethod,
 		isSubmissionDto,
 		type PuzzleDto,
@@ -10,7 +11,8 @@
 		isCodeExecutionSuccessResponse,
 		PuzzleResultEnum,
 		httpResponseCodes,
-		DEFAULT_LANGUAGE
+		DEFAULT_LANGUAGE,
+		testIds
 	} from "types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -24,14 +26,13 @@
 	import { currentTime } from "@/stores/current-time";
 	import dayjs from "dayjs";
 	import Markdown from "@/components/typography/markdown.svelte";
-	import { apiUrls } from "@/config/api";
+	import { buildBackendUrl } from "@/config/backend";
 	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import { languages } from "@/stores/languages";
 	import { toast } from "svelte-sonner";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
-	import { testIds } from "@/config/test-ids";
 
 	let {
 		endDate,
@@ -63,7 +64,7 @@
 		testInput: string,
 		testOutput: string
 	) {
-		const response = await fetch(apiUrls.EXECUTE_CODE, {
+		const response = await fetch(buildBackendUrl(backendUrls.EXECUTE), {
 			body: JSON.stringify({
 				code,
 				language,
@@ -191,7 +192,7 @@
 			userId: $authenticatedUserInfo.userId
 		};
 
-		const response = await fetch(apiUrls.SUBMIT_CODE, {
+		const response = await fetch(buildBackendUrl(backendUrls.SUBMISSION), {
 			body: JSON.stringify(submissionParams),
 			method: httpRequestMethod.POST
 		});

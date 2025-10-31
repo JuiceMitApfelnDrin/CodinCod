@@ -2,19 +2,20 @@
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
+		backendUrls,
 		gameModeEnum,
 		isObjectId,
 		isString,
-		isSubmissionDto,
 		isUserDto,
+		testIds,
 		type AcceptedDate,
 		type GameDto,
-		type SubmissionDto
+		type GameSubmission
 	} from "types";
 	import duration from "dayjs/plugin/duration";
 	import minMax from "dayjs/plugin/minMax";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
-	import { apiUrls } from "@/config/api";
+	import { buildBackendUrl } from "@/config/backend";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import CodeXml from "@lucide/svelte/icons/code-xml";
@@ -27,7 +28,6 @@
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
-	import { testIds } from "@/config/test-ids";
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 
@@ -39,10 +39,10 @@
 
 	let isShortestMode = $derived(game.options.mode === gameModeEnum.SHORTEST);
 
-	let submissions: SubmissionDto[] = $derived(
-		game.playerSubmissions.filter((submission) =>
-			isSubmissionDto(submission)
-		) ?? []
+	let submissions: GameSubmission[] = $derived(
+		(game.playerSubmissions.filter(
+			(submission) => !isString(submission) && !isObjectId(submission)
+		) ?? []) as GameSubmission[]
 	);
 
 	// used to check whether a solution is being viewed
@@ -52,7 +52,7 @@
 	let hasBeenOpened: Record<string, boolean> = $state({});
 
 	async function fetchCode(id: string) {
-		const url = apiUrls.submissionById(id);
+		const url = buildBackendUrl(backendUrls.submissionById(id));
 
 		return await fetchWithAuthenticationCookie(url).then((res) => res.json());
 	}

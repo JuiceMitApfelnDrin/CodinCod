@@ -20,7 +20,7 @@
 		} else {
 			const now = $currentTime.getTime();
 			const end = dayjs(endDate);
-			const diff = Math.max(end.diff(now), 0); // Ensure no negative values
+			const diff = Math.max(end.diff(now), 0);
 
 			const seconds = Math.floor((diff / 1000) % 60);
 			const minutes = Math.floor((diff / (1000 * 60)) % 60);

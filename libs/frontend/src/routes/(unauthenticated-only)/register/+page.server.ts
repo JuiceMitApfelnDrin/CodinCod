@@ -4,6 +4,7 @@ import { fail, redirect } from "@sveltejs/kit";
 import { buildBackendUrl } from "@/config/backend";
 import {
 	backendUrls,
+	ERROR_MESSAGES,
 	frontendUrls,
 	httpResponseCodes,
 	POST,
@@ -25,7 +26,7 @@ export const actions = {
 		if (!form.valid) {
 			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
 				form,
-				message: "Form errors"
+				message: ERROR_MESSAGES.FORM.VALIDATION_ERRORS
 			});
 		}
 

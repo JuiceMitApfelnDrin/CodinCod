@@ -2,7 +2,7 @@
 	import { cn } from "@/utils/cn";
 	import type { FrontendUrl } from "types";
 	import type { Button as ButtonPrimitive } from "bits-ui";
-	import { type DataTestIdProp } from "@/config/test-ids";
+	import { type DataTestIdProp } from "types";
 
 	type $$Props = ButtonPrimitive.RootProps & {
 		class?: string;

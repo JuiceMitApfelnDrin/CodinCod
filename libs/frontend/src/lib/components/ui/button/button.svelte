@@ -45,7 +45,7 @@
 
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import type { DataTestIdProp } from "@/config/test-ids";
+	import type { DataTestIdProp } from "types";
 
 	let {
 		children,

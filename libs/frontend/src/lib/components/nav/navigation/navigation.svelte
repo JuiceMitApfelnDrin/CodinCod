@@ -9,7 +9,7 @@
 	import Menu from "@lucide/svelte/icons/menu";
 	import Moon from "@lucide/svelte/icons/moon";
 	import Sun from "@lucide/svelte/icons/sun";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	const version = import.meta.env.VITE_APP_VERSION;
 </script>

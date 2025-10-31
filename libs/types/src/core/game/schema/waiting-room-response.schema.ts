@@ -52,7 +52,7 @@ const chatMessageResponseSchema = z.object({
 	event: z.literal(waitingRoomEventEnum.CHAT_MESSAGE),
 	username: z.string(),
 	message: z.string(),
-	timestamp: acceptedDateSchema,
+	createdAt: acceptedDateSchema,
 });
 
 export const waitingRoomResponseSchema = z.discriminatedUnion("event", [
