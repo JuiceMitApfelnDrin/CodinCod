@@ -15,7 +15,7 @@ function compareOutputWithExpectedOutput(
 export function calculateResults(
 	expectedOutput: string[],
 	executionResponses: PistonExecutionResponse[]
-): PuzzleResultInformation {
+): PuzzleResultInformation & { passed: number; failed: number; total: number } {
 	const successfulTests = executionResponses.reduce(
 		(previous, executionResponse, index) => {
 			if (isPistonExecutionResponseSuccess(executionResponse)) {
@@ -43,12 +43,16 @@ export function calculateResults(
 
 	const totalTests = executionResponses.length;
 	const successRate = successfulTests / totalTests;
+	const failedTests = totalTests - successfulTests;
 
 	return {
 		result:
 			successfulTests === totalTests
 				? PuzzleResultEnum.SUCCESS
 				: PuzzleResultEnum.ERROR,
-		successRate
+		successRate,
+		passed: successfulTests,
+		failed: failedTests,
+		total: totalTests
 	};
 }

@@ -5,7 +5,7 @@
 	import { Label } from "@/components/ui/label";
 	import { Input } from "@/components/ui/input";
 	import { Checkbox } from "@/components/ui/checkbox";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import {
 		DEFAULT_GAME_LENGTH_IN_SECONDS,
 		type GameOptions,

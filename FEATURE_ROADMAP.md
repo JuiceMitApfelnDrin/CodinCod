@@ -1,32 +1,5 @@
 # Feature Implementation Roadmap
 
-## Priority Levels
-
-- **🔥 HIGH**: Core functionality, user safety, or significant user value
-- **🟡 MEDIUM**: Quality of life improvements, engagement features
-- **🔵 LOW**: Nice-to-have, future expansion
-
----
-
-## 🔥 HIGH PRIORITY
-
-### 1. Custom Game UI (Frontend)
-**Status**: Backend ready, needs frontend
-**Effort**: Small
-**Impact**: High
-**Description**: Allow hosts to configure games with custom settings (languages, duration, mode)
-**Tasks**:
-- Create game options form component
-- Add mode selector (FASTEST/SHORTEST/RATED/CASUAL)
-- Add language multi-select
-- Add duration slider
-- Wire up to existing backend API
-
-**Files to modify**:
-- `libs/frontend/src/routes/(authenticated)/multiplayer/+page.svelte`
-
----
-
 ### 2. Private Games
 **Status**: Not started
 **Effort**: Small-Medium
@@ -41,10 +14,7 @@
 **Implementation**:
 ```typescript
 // Backend
-interface GameOptions {
-  visibility: "public" | "private";
-  inviteCode?: string; // Auto-generated for private games
-}
+should be generated in the waiting room and returned to the frontend to invite people
 
 // Frontend
 <Button onclick={copyInviteLink}>Share Invite Link</Button>
@@ -80,18 +50,6 @@ interface Report {
 }
 ```
 
----
-
-### 4. User Blocking
-**Status**: Not started
-**Effort**: Small
-**Impact**: Medium (user experience)
-**Description**: Allow users to block others
-**Tasks**:
-- Add `blockedUsers` array to User model
-- Create block/unblock endpoints
-- Filter blocked users from matchmaking
-- Hide blocked users' comments/content
 
 ---
 
@@ -108,8 +66,9 @@ interface Report {
 - Create matchmaking queue system
 - Match players by skill level
 - Update ratings after games
+- keep the puzzle difficulty in mind in the calculation, can't give beginners an almost impossible puzzle for them...
 
-**Recommended**: Use existing library like `glicko2` npm package
+**Recommended**: check out how lichess does their matchmaking
 
 ---
 
@@ -121,14 +80,25 @@ interface Report {
 **Tasks**:
 - Already have puzzle creation & approval system
 - Add challenge categories/tags
-- Implement challenge series/folders
-- Add difficulty ratings
-- Community curation features
+- Add automatic difficulty ratings, based on completion rates and puzzle metrics
 
 **Leverage existing**:
 - Puzzle approval system
 - User voting on puzzles
 - Comment system
+
+---
+
+### 4. User Blocking
+**Status**: Not started
+**Effort**: Small
+**Impact**: Medium (user experience)
+**Description**: Allow users to block others
+**Tasks**:
+- Add `blockedUsers` array to User model
+- Create block/unblock endpoints
+- block blocked users from joining a game created by the creator who blocked them
+- Hide blocked users' comments/content
 
 ---
 

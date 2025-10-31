@@ -7,7 +7,7 @@
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		data

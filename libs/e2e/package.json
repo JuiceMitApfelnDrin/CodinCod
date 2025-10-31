@@ -1,0 +1,25 @@
+{
+	"name": "@codincod/e2e",
+	"version": "0.0.1",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"test": "playwright test",
+		"test:ui": "playwright test --ui",
+		"test:headed": "playwright test --headed",
+		"test:debug": "playwright test --debug",
+		"test:codegen": "playwright codegen",
+		"test:report": "playwright show-report",
+		"test:api": "playwright test --grep @api",
+		"test:e2e": "playwright test --grep @e2e",
+		"test:multiplayer": "playwright test --grep @multiplayer"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.48.2",
+		"@types/node": "^22.10.2",
+		"typescript": "^5.7.2"
+	},
+	"dependencies": {
+		"types": "workspace:*"
+	}
+}

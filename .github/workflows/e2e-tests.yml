@@ -1,0 +1,138 @@
+name: E2E Tests
+
+# Run on pull requests and pushes to main
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+# Limit permissions to read-only for security
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}-e2e
+  cancel-in-progress: true
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: password
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      piston:
+        image: ghcr.io/engineer-man/piston:latest
+        ports:
+          - 2000:2000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build types
+        run: pnpm --filter types build
+
+      - name: Build backend
+        run: pnpm --filter backend build
+
+      - name: Build frontend
+        run: pnpm --filter frontend build
+        env:
+          VITE_BACKEND_URL: http://localhost:3000
+          VITE_BACKEND_WEBSOCKET_MULTIPLAYER: ws://localhost:3000
+
+      - name: Install Playwright browsers
+        run: pnpm --filter e2e exec playwright install --with-deps chromium
+
+      - name: Start backend server
+        run: |
+          cd libs/backend
+          pnpm start &
+          echo $! > backend.pid
+        env:
+          NODE_ENV: test
+          PORT: 3000
+          FRONTEND_URL: http://localhost:5173
+          MONGODB_URI: mongodb://admin:password@localhost:27017/codincod_test?authSource=admin
+          PISTON_URL: http://localhost:2000
+          JWT_SECRET: test-jwt-secret-for-ci
+          COOKIE_SECRET: test-cookie-secret-for-ci
+
+      - name: Wait for backend to be ready
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:3000/health; do sleep 2; done'
+
+      - name: Start frontend server
+        run: |
+          cd libs/frontend
+          pnpm preview --host 0.0.0.0 --port 5173 &
+          echo $! > frontend.pid
+        env:
+          VITE_BACKEND_URL: http://localhost:3000
+          VITE_BACKEND_WEBSOCKET_MULTIPLAYER: ws://localhost:3000
+
+      - name: Wait for frontend to be ready
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:5173; do sleep 2; done'
+
+      - name: Run E2E tests
+        run: pnpm --filter e2e test
+        env:
+          BASE_URL: http://localhost:5173
+          CI: true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: libs/e2e/playwright-report/
+          retention-days: 7
+
+      - name: Upload test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: libs/e2e/test-results/
+          retention-days: 7
+
+      - name: Stop servers
+        if: always()
+        run: |
+          if [ -f libs/backend/backend.pid ]; then
+            kill $(cat libs/backend/backend.pid) || true
+          fi
+          if [ -f libs/frontend/frontend.pid ]; then
+            kill $(cat libs/frontend/frontend.pid) || true
+          fi

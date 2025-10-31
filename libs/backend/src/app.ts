@@ -15,6 +15,7 @@ import { setupWebSockets } from "./plugins/config/setup-web-sockets.js";
 import fastifyRateLimit from "@fastify/rate-limit";
 import requestLogger from "./plugins/middleware/request-logger.js";
 import { httpResponseCodes } from "types";
+import { initializeLeaderboardCron } from "./config/cron.js";
 
 const server = Fastify({
 	logger: true
@@ -72,5 +73,10 @@ server.register(setupWebSockets);
 
 // routes
 server.register(router);
+
+// Initialize cron jobs after all plugins are registered
+server.ready(() => {
+	initializeLeaderboardCron(server);
+});
 
 export default server;

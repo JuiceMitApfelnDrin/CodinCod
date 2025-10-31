@@ -2,9 +2,11 @@ import Comment from "@/models/comment/comment.js";
 import UserVote from "@/models/user/user-vote.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import checkUserBan from "@/plugins/middleware/check-user-ban.js";
+import { validateBody } from "@/plugins/middleware/validate-body.js";
 import { ParamsId } from "@/types/types.js";
 import { FastifyInstance } from "fastify";
 import {
+	CommentVoteRequest,
 	commentVoteRequestSchema,
 	httpResponseCodes,
 	isAuthenticatedInfo,
@@ -12,21 +14,20 @@ import {
 } from "types";
 
 export default async function commentByIdVoteRoutes(fastify: FastifyInstance) {
-	fastify.post<ParamsId>(
+	fastify.post<ParamsId & { Body: CommentVoteRequest }>(
 		"/",
 		{
-			onRequest: [authenticated, checkUserBan]
+			onRequest: [authenticated, checkUserBan],
+			preHandler: validateBody(commentVoteRequestSchema),
+			config: {
+				rateLimit: {
+					max: 20,
+					timeWindow: "1 minute"
+				}
+			}
 		},
 		async (request, reply) => {
-			// Validate vote type input
-			const parsed = commentVoteRequestSchema.safeParse(request.body);
-
-			if (!parsed.success) {
-				return reply
-					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-					.send({ error: parsed.error.issues });
-			}
-			const { type } = parsed.data;
+			const { type } = request.body;
 
 			// Ensure user is authenticated
 			if (!isAuthenticatedInfo(request.user)) {

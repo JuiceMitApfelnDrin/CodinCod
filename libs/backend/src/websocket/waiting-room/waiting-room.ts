@@ -18,6 +18,7 @@ interface RoomConfig {
 	users: Room;
 	options?: GameOptions | undefined;
 	inviteCode?: string | undefined;
+	pendingGameStart?: { gameUrl: string; startTime: Date } | undefined;
 }
 
 export class WaitingRoom {
@@ -113,6 +114,16 @@ export class WaitingRoom {
 		this.roomsByUsername[user.username] = roomId;
 		console.info(`User ${user.username} joined room ${roomId}`);
 		this.updateUsersOnRoomState(roomId);
+
+		// If there's a pending game start, notify the newly joined user
+		if (roomConfig.pendingGameStart) {
+			this.updateUser(user.username, {
+				event: waitingRoomEventEnum.START_GAME,
+				gameUrl: roomConfig.pendingGameStart.gameUrl,
+				startTime: roomConfig.pendingGameStart.startTime
+			});
+		}
+
 		return true;
 	}
 
@@ -175,6 +186,13 @@ export class WaitingRoom {
 
 	getAllRoomIds(): RoomId[] {
 		return Object.keys(this.roomsByRoomId);
+	}
+
+	setPendingGameStart(roomId: RoomId, gameUrl: string, startTime: Date): void {
+		const roomConfig = this.roomsByRoomId[roomId];
+		if (roomConfig) {
+			roomConfig.pendingGameStart = { gameUrl, startTime };
+		}
 	}
 
 	updateUsersOnRoomState(roomId: RoomId): void {

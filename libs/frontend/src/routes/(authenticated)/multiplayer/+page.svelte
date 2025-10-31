@@ -11,7 +11,6 @@
 	import CountdownTimer from "@/components/ui/countdown-timer/countdown-timer.svelte";
 	import CustomGameDialog from "@/features/multiplayer/components/custom-game-dialog.svelte";
 	import JoinByInviteDialog from "@/features/multiplayer/components/join-by-invite-dialog.svelte";
-	import WaitingRoomChat from "@/features/multiplayer/components/waiting-room-chat.svelte";
 	import { buildWebSocketUrl } from "@/config/websocket";
 	import { authenticatedUserInfo } from "@/stores";
 	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
@@ -32,9 +31,10 @@
 		type GameOptions,
 		type ChatMessage
 	} from "types";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import { currentTime } from "@/stores/current-time";
 	import Chat from "@/features/chat/components/chat.svelte";
+	import { Input } from "#/ui/input";
 
 	let room: RoomStateResponse | undefined = $state();
 	let rooms: RoomOverviewResponse[] = $state([]);
@@ -45,6 +45,7 @@
 	let customGameDialogOpen = $state(false);
 	let joinByInviteDialogOpen = $state(false);
 	let chatMessages = $state<Array<ChatMessage>>([]);
+	let showInviteCode = $state(false);
 
 	const queryParamKeys = {
 		ROOM_ID: "roomId"
@@ -317,15 +318,24 @@
 			<div class="space-y-4">
 				{#if room.inviteCode}
 					<div class="bg-muted/50 rounded-lg border p-4">
-						<p class="mb-2 text-sm font-medium">
-							🔒 Private Game - Invite Code:
-						</p>
+						<p class="mb-2 text-sm font-medium">Invite Code</p>
 						<div class="flex items-center gap-2">
-							<code
+							<Input
+								type={showInviteCode ? "text" : "password"}
+								value={room.inviteCode}
+								readonly
 								class="bg-background flex-1 rounded px-3 py-2 text-center font-mono text-2xl tracking-widest"
+							/>
+							<Button
+								data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_TOGGLE_INVITE_CODE}
+								variant="outline"
+								size="sm"
+								onclick={() => {
+									showInviteCode = !showInviteCode;
+								}}
 							>
-								{room.inviteCode}
-							</code>
+								{showInviteCode ? "Hide code" : "Show code"}
+							</Button>
 							<Button
 								data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_COPY_INVITE}
 								variant="outline"

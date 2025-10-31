@@ -12,7 +12,8 @@
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
-	import { apiUrls } from "@/config/api";
+	import { buildBackendUrl } from "@/config/backend";
+	import { backendUrls } from "types";
 	import { buildWebSocketUrl } from "@/config/websocket";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import Chat from "@/features/chat/components/chat.svelte";
@@ -49,7 +50,7 @@
 		type GameRequest,
 		type GameResponse
 	} from "types";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	function isUserIdInUserList(
 		userId: string,
@@ -196,10 +197,13 @@
 				userId: $authenticatedUserInfo.userId
 			};
 
-			await fetchWithAuthenticationCookie(apiUrls.SUBMIT_GAME, {
-				body: JSON.stringify(gameSubmissionParams),
-				method: httpRequestMethod.POST
-			});
+			await fetchWithAuthenticationCookie(
+				buildBackendUrl(backendUrls.SUBMISSION_GAME),
+				{
+					body: JSON.stringify(gameSubmissionParams),
+					method: httpRequestMethod.POST
+				}
+			);
 
 			sendGameMessage({
 				event: gameEventEnum.SUBMITTED_PLAYER

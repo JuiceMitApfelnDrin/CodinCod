@@ -5,7 +5,7 @@
 	import H1 from "../typography/h1.svelte";
 	import P from "../typography/p.svelte";
 	import Button from "../ui/button/button.svelte";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		header = null,

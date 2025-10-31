@@ -37,6 +37,7 @@ export * from "./core/common/config/cookie.js";
 export * from "./core/common/config/environment.js";
 export * from "./core/common/config/default-values-query-params.js";
 export * from "./core/common/config/frontend-urls.js";
+export * from "./core/common/config/test-ids.js";
 export * from "./core/common/config/web-socket-urls.js";
 export * from "./core/common/enum/websocket-close-codes.js";
 export * from "./core/common/enum/http-response-codes.js";
@@ -60,6 +61,7 @@ export * from "./core/game/enum/game-visibility-enum.js";
 export * from "./core/game/schema/game-dto.schema.js";
 export * from "./core/game/schema/game-entity.schema.js";
 export * from "./core/game/schema/game-user-info.schema.js";
+export * from "./core/game/schema/game-submission.schema.js";
 export * from "./core/game/schema/waiting-room-request.schema.js";
 export * from "./core/game/schema/waiting-room-response.schema.js";
 export * from "./core/game/schema/game-request.schema.js";
@@ -67,6 +69,10 @@ export * from "./core/game/schema/game-response.schema.js";
 export * from "./core/game/schema/mode.schema.js";
 export * from "./core/game/schema/game-options.schema.js";
 export * from "./core/game/schema/visibility.schema.js";
+
+// leaderboard
+export * from "./core/leaderboard/schema/user-metrics.schema.js";
+export * from "./core/leaderboard/schema/leaderboard-entry.schema.js";
 
 // moderation
 export * from "./core/moderation/config/report-config.js";
@@ -142,6 +148,29 @@ export * from "./core/user/schema/user-dto.schema.js";
 export * from "./core/user/schema/user-entity.schema.js";
 export * from "./core/user/schema/user-vote-entity.schema.js";
 export * from "./core/user/schema/user-profile.schema.js";
+
+// api - request/response types for all endpoints
+export * from "./core/api/schema/execute-code.schema.js";
+export * from "./core/api/schema/submit-code.schema.js";
+export * from "./core/api/schema/programming-language.schema.js";
+export * from "./core/api/schema/user.schema.js";
+export * from "./core/api/schema/comment.schema.js";
+export * from "./core/api/schema/submission.schema.js";
+export * from "./core/api/schema/puzzle.schema.js";
+export * from "./core/api/schema/account.schema.js";
+export * from "./core/api/schema/moderation.schema.js";
+
+// New specific API endpoint types (v2 - more specific, less generic)
+export * as AuthAPI from "./core/api/schema/auth/login.schema.js";
+export * as RegisterAPI from "./core/api/schema/auth/register.schema.js";
+export * as LogoutAPI from "./core/api/schema/auth/logout.schema.js";
+export * as PuzzleAPI from "./core/api/schema/puzzle/puzzle-api.schema.js";
+export * as UserAPI from "./core/api/schema/user/user-api.schema.js";
+export * as ProgrammingLanguageAPI from "./core/api/schema/programming-language/programming-language-api.schema.js";
+export * as SubmissionAPI from "./core/api/schema/submission/submission-api.schema.js";
+export * as ExecuteAPI from "./core/api/schema/execute/execute-api.schema.js";
+export * as GameAPI from "./core/api/schema/game/game-api.schema.js";
+export * as LeaderboardAPI from "./core/api/schema/leaderboard/leaderboard-api.schema.js";
 
 // utils - constants
 export * from "./utils/constants/http-methods.js";

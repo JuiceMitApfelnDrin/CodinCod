@@ -36,6 +36,7 @@ export async function createPreferences(
 			{ probability: 0.6 }
 		) || {}),
 		blockedUsers: [] // Could add some blocked users if needed
+		// Editor preferences will use schema defaults
 	};
 
 	const preferences = new Preferences(preferencesData);

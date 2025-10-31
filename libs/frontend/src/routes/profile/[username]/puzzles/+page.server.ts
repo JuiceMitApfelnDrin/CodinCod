@@ -1,6 +1,7 @@
 import type { PageServerLoadEvent } from "./$types";
 import { httpRequestMethod, type PaginatedQueryResponse } from "types";
-import { apiUrls } from "@/config/api";
+import { buildBackendUrl } from "@/config/backend";
+import { backendUrls } from "types";
 
 export async function load({
 	fetch,
@@ -10,7 +11,7 @@ export async function load({
 }: PageServerLoadEvent) {
 	const username = params.username;
 
-	const apiUrl = apiUrls.userByUsernamePuzzle(username);
+	const apiUrl = buildBackendUrl(backendUrls.userByUsernamePuzzle(username));
 
 	const apiUrlWithQueryParams = new URL(apiUrl, request.url);
 	apiUrlWithQueryParams.search = url.search;

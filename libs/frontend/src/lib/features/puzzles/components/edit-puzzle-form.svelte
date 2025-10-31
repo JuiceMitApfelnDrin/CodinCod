@@ -25,7 +25,7 @@
 	import LanguageSelect from "./language-select.svelte";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		data

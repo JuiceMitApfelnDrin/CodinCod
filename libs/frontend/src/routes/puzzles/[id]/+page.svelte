@@ -20,7 +20,7 @@
 	import H2 from "@/components/typography/h2.svelte";
 	import Comments from "@/features/comment/components/comments.svelte";
 	import AddCommentForm from "@/features/comment/components/add-comment-form.svelte";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import { page } from "$app/state";
 
 	let { data } = $props();

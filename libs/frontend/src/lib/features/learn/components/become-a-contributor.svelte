@@ -2,7 +2,7 @@
 	import H2 from "@/components/typography/h2.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 	import { githubRepo } from "types";
 </script>
 

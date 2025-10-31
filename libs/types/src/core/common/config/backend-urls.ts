@@ -43,6 +43,13 @@ export const backendUrls = {
 	submissionById: (id: string) => `${baseRoute}/submission/${id}`,
 	SUBMISSION_GAME: `${baseRoute}/submission/game`,
 
+	// leaderboard routes
+	LEADERBOARD: `${baseRoute}/leaderboard`,
+	leaderboardByGameMode: (gameMode: string) =>
+		`${baseRoute}/leaderboard/${gameMode}`,
+	leaderboardUserStats: (userId: string) =>
+		`${baseRoute}/leaderboard/user/${userId}`,
+
 	// moderation routes
 	MODERATION_REVIEW: `${baseRoute}/moderation/review`,
 	moderationPuzzleApprove: (id: string) =>

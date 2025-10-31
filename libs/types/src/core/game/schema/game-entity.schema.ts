@@ -3,7 +3,7 @@ import { gameOptionsSchema } from "./game-options.schema.js";
 import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 import { puzzleDtoSchema } from "../../puzzle/schema/puzzle-dto.schema.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
-import { submissionDtoSchema } from "../../submission/schema/submission-dto.schema.js";
+import { gameSubmissionSchema } from "./game-submission.schema.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const gameEntitySchema = z.object({
@@ -15,7 +15,7 @@ export const gameEntitySchema = z.object({
 	options: gameOptionsSchema,
 	createdAt: acceptedDateSchema,
 	playerSubmissions: z
-		.array(objectIdSchema.or(submissionDtoSchema))
+		.array(objectIdSchema.or(gameSubmissionSchema))
 		.prefault([]),
 });
 export type GameEntity = z.infer<typeof gameEntitySchema>;

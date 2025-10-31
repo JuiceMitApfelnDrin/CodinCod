@@ -5,8 +5,9 @@
 	import { Button } from "$lib/components/ui/button";
 	import { toast } from "svelte-sonner";
 	import { httpRequestMethod, REPORT_CONFIG, ProblemTypeEnum } from "types";
-	import { apiUrls } from "@/config/api";
-	import { testIds } from "@/config/test-ids";
+	import { buildBackendUrl } from "@/config/backend";
+	import { backendUrls } from "types";
+	import { testIds } from "types";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { ChatMessage } from "types";
 
@@ -53,17 +54,20 @@
 		isSubmitting = true;
 
 		try {
-			const response = await fetchWithAuthenticationCookie(apiUrls.REPORT, {
-				method: httpRequestMethod.POST,
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					problematicIdentifier: chatMessageId,
-					problemType: ProblemTypeEnum.GAME_CHAT,
-					explanation: reportReason
-				})
-			});
+			const response = await fetchWithAuthenticationCookie(
+				buildBackendUrl(backendUrls.REPORT),
+				{
+					method: httpRequestMethod.POST,
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						problematicIdentifier: chatMessageId,
+						problemType: ProblemTypeEnum.GAME_CHAT,
+						explanation: reportReason
+					})
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to submit report");

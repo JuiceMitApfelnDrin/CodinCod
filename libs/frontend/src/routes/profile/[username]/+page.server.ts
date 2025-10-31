@@ -1,11 +1,19 @@
-import { getUserActivityByUsername } from "../../api/get-user-activity-by-username.js";
-import { activityTypeEnum, type PuzzleDto, type SubmissionDto } from "types";
+import {
+	activityTypeEnum,
+	backendUrls,
+	type PuzzleDto,
+	type SubmissionDto
+} from "types";
 import type { PageServerLoadEvent } from "./$types";
+import { buildBackendUrl } from "@/config/backend";
+import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 
 export async function load({ params }: PageServerLoadEvent) {
 	const username = params.username;
 
-	const response = await getUserActivityByUsername(username);
+	const response = await fetchWithAuthenticationCookie(
+		buildBackendUrl(backendUrls.userByUsernameActivity(username))
+	);
 	if (!response.ok) {
 		console.error(response);
 	}

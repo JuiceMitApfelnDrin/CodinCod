@@ -2,95 +2,88 @@ import { FastifyInstance } from "fastify";
 import {
 	httpResponseCodes,
 	PistonExecutionResponse,
-	SubmissionEntity,
-	CodeSubmissionParams,
-	codeSubmissionParamsSchema,
 	PistonExecutionRequest,
 	ErrorResponse,
 	arePistonRuntimes,
-	isProgrammingLanguageDto,
-	isObjectId
+	SubmissionAPI
 } from "types";
+import mongoose from "mongoose";
 import Submission from "../../models/submission/submission.js";
 import Puzzle, { PuzzleDocument } from "../../models/puzzle/puzzle.js";
 import { isValidationError } from "../../utils/functions/is-validation-error.js";
 import { findRuntime } from "@/utils/functions/findRuntimeInfo.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import checkUserBan from "@/plugins/middleware/check-user-ban.js";
+import { validateBody } from "@/plugins/middleware/validate-body.js";
 import { calculateResults } from "@/utils/functions/calculate-result.js";
 import ProgrammingLanguage from "../../models/programming-language/language.js";
 
 export default async function submissionRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: CodeSubmissionParams }>(
+	/**
+	 * POST /submission - Create a new code submission
+	 * Uses specific SubmissionAPI types instead of generic DTOs
+	 */
+	fastify.post<{ Body: SubmissionAPI.SubmitCodeRequest }>(
 		"/",
 		{
-			onRequest: [authenticated, checkUserBan]
+			onRequest: [authenticated, checkUserBan],
+			preHandler: validateBody(SubmissionAPI.submitCodeRequestSchema),
+			config: {
+				rateLimit: {
+					max: 10,
+					timeWindow: "1 minute"
+				}
+			}
 		},
 		async (request, reply) => {
-			const parseResult = codeSubmissionParamsSchema.safeParse(request.body);
+			const { programmingLanguageId, puzzleId, code, userId } = request.body;
 
-			if (!parseResult.success) {
-				return reply.status(400).send({ error: parseResult.error.issues });
-			}
-
-			// unpacking body
-			const { programmingLanguage, puzzleId, code, userId } = parseResult.data;
-
-			// retrieve test cases
+			// Retrieve puzzle and test cases
 			const puzzle: PuzzleDocument | null = await Puzzle.findById(puzzleId);
 
 			if (!puzzle) {
-				return reply.send({
+				return reply.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND).send({
 					error: `Puzzle with id (${puzzleId}) couldn't be found.`
 				});
 			}
 
-			// prepare the execution of tests
-			const runtimes = await fastify.runtimes();
-
-			if (!arePistonRuntimes(runtimes)) {
-				const error: ErrorResponse = runtimes;
-
-				return reply
-					.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
-					.send(error);
-			}
-
-			let languageName: string | undefined;
-
-			if (isProgrammingLanguageDto(programmingLanguage)) {
-				languageName = programmingLanguage.language;
-			} else if (isObjectId(programmingLanguage)) {
-				const langDoc = await ProgrammingLanguage.findById(programmingLanguage);
-
-				if (langDoc) {
-					languageName = langDoc.language;
-				}
-			}
-
-			if (!languageName) {
+			if (!puzzle.validators || puzzle.validators.length === 0) {
 				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
-					error: "Invalid programming language"
-				});
-			}
-
-			const runtimeInfo = findRuntime(runtimes, languageName);
-
-			if (!runtimeInfo) {
-				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
-					error: "Unsupported language"
-				});
-			}
-
-			// foreach test case, execute the code and see the result, compare to test-case expected output
-			if (!puzzle.validators) {
-				return reply.send({
-					// TODO: improve this text
 					error:
 						"This puzzle isn't finished, it should have test cases / validators"
 				});
 			}
 
+			// Get piston runtimes
+			const runtimes = await fastify.runtimes();
+
+			if (!arePistonRuntimes(runtimes)) {
+				const error: ErrorResponse = runtimes;
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.SERVICE_UNAVAILABLE)
+					.send(error);
+			}
+
+			// Find programming language
+			const language = await ProgrammingLanguage.findById(
+				programmingLanguageId
+			);
+
+			if (!language) {
+				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+					error: "Invalid programming language"
+				});
+			}
+
+			const runtimeInfo = findRuntime(runtimes, language.language);
+
+			if (!runtimeInfo) {
+				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+					error: `Unsupported language: ${language.language}`
+				});
+			}
+
+			// Execute code against all test cases
 			const pistonExecutionResults: PistonExecutionResponse[] = [];
 			const expectedOutputs: string[] = [];
 
@@ -113,38 +106,56 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 			});
 
 			try {
-				const programmingLanguage = await ProgrammingLanguage.findOne({
-					language: runtimeInfo.language,
-					version: runtimeInfo.version
-				});
+				const result = calculateResults(
+					expectedOutputs,
+					pistonExecutionResults
+				);
 
-				if (!programmingLanguage) {
-					return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
-						error: `Programming language ${runtimeInfo.language} ${runtimeInfo.version} not found in database`
-					});
-				}
-
-				const submissionData: SubmissionEntity = {
+				const submission = new Submission({
 					code: code,
-					codeLength: code.length,
 					puzzle: puzzleId,
 					user: userId,
 					createdAt: new Date(),
-					programmingLanguage: programmingLanguage._id.toString(),
-					result: calculateResults(expectedOutputs, pistonExecutionResults)
-				};
+					programmingLanguage: programmingLanguageId,
+					result: {
+						result: result.result,
+						successRate: result.successRate
+					}
+				});
 
-				const submission = new Submission(submissionData);
 				await submission.save();
 
-				return reply.status(201).send(submission);
+				// Return response with specific type - cast to satisfy type checking
+				const response = {
+					submissionId: (submission._id as mongoose.Types.ObjectId).toString(),
+					code: submission.code ?? code,
+					puzzleId: submission.puzzle.toString(),
+					programmingLanguageId: submission.programmingLanguage.toString(),
+					userId: submission.user.toString(),
+					result: {
+						successRate: result.successRate,
+						passed: result.passed,
+						failed: result.failed,
+						total: result.total
+					},
+					createdAt: new Date(submission.createdAt).toISOString(),
+					codeLength: code.length
+				} as SubmissionAPI.SubmitCodeResponse;
+
+				return reply
+					.status(httpResponseCodes.SUCCESSFUL.CREATED)
+					.send(response);
 			} catch (error) {
 				fastify.log.error(error, "Error saving submission");
 
 				if (isValidationError(error)) {
-					return reply.status(400).send({ error: "Validation failed" });
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+						.send({ error: "Validation failed" });
 				}
-				return reply.status(500).send({ error: "Failed to create submission" });
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send({ error: "Failed to create submission" });
 			}
 		}
 	);

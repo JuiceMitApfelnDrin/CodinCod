@@ -22,10 +22,11 @@
 	import MessageCircleOff from "@lucide/svelte/icons/message-circle-off";
 	import Trash from "@lucide/svelte/icons/trash";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
-	import { apiUrls } from "@/config/api";
+	import { buildBackendUrl } from "@/config/backend";
+	import { backendUrls } from "types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		comment = $bindable(),
@@ -39,7 +40,7 @@
 
 	async function handleVote(commentVoteRequest: CommentVoteRequest) {
 		const response = await fetchWithAuthenticationCookie(
-			apiUrls.commentByIdVote(comment._id),
+			buildBackendUrl(backendUrls.commentByIdVote(comment._id)),
 			{
 				body: JSON.stringify(commentVoteRequest),
 				method: httpRequestMethod.POST
@@ -58,7 +59,7 @@
 	}
 
 	function onCommentAdded(newComment: CommentDto) {
-		const newComments = [...comment.comments, newComment] as any[]; // unfortunately needed because recursive types are hard
+		const newComments = [...(comment.comments ?? []), newComment] as any[]; // unfortunately needed because recursive types are hard
 		comment = {
 			...comment,
 			comments: newComments
@@ -69,7 +70,7 @@
 
 	async function fetchReplies() {
 		const response = await fetchWithAuthenticationCookie(
-			apiUrls.commentById(comment._id),
+			buildBackendUrl(backendUrls.commentById(comment._id)),
 			{
 				method: httpRequestMethod.GET
 			}
@@ -80,7 +81,7 @@
 		if (isCommentDto(updatedCommentInfoWithSubComments)) {
 			comment = {
 				...comment,
-				comments: [...updatedCommentInfoWithSubComments.comments],
+				comments: [...(updatedCommentInfoWithSubComments.comments ?? [])],
 				downvote: updatedCommentInfoWithSubComments.downvote,
 				text: updatedCommentInfoWithSubComments.text,
 				updatedAt: updatedCommentInfoWithSubComments.updatedAt,
@@ -90,9 +91,12 @@
 	}
 
 	async function deleteComment() {
-		await fetchWithAuthenticationCookie(apiUrls.commentById(comment._id), {
-			method: httpRequestMethod.DELETE
-		});
+		await fetchWithAuthenticationCookie(
+			buildBackendUrl(backendUrls.commentById(comment._id)),
+			{
+				method: httpRequestMethod.DELETE
+			}
+		);
 
 		onDeleted(comment._id);
 	}

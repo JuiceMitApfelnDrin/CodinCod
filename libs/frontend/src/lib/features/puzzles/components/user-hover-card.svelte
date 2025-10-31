@@ -4,12 +4,13 @@
 	import * as Avatar from "$lib/components/ui/avatar";
 	import { frontendUrls, isUserDto, type UserDto } from "types";
 	import Calendar from "@lucide/svelte/icons/calendar";
-	import { apiUrls } from "@/config/api";
+	import { buildBackendUrl } from "@/config/backend";
+	import { backendUrls } from "types";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		class: className = undefined,
@@ -28,7 +29,7 @@
 			return userInfoCache[username];
 		}
 
-		let url = apiUrls.userByUsername(username);
+		let url = buildBackendUrl(backendUrls.userByUsername(username));
 
 		const response = await fetchWithAuthenticationCookie(url).then((res) =>
 			res.json()

@@ -22,10 +22,6 @@ const submissionSchema = new Schema<SubmissionDocument>({
 		type: String,
 		select: false
 	},
-	codeLength: {
-		required: false,
-		type: Number
-	},
 	createdAt: {
 		default: Date.now,
 		type: Date

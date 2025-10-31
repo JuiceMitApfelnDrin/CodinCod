@@ -34,6 +34,7 @@ import moderationUserByIdBanPermanentRoutes from "./routes/moderation/user/[id]/
 import moderationUserByIdBanTemporaryRoutes from "./routes/moderation/user/[id]/ban/temporary/index.js";
 import programmingLanguageRoutes from "./routes/programming-language/index.js";
 import programmingLanguageByIdRoutes from "./routes/programming-language/[id]/index.js";
+import leaderboardRoutes from "./routes/leaderboard/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
@@ -121,5 +122,8 @@ export default async function router(fastify: FastifyInstance) {
 			backendParams.ID,
 			banTypeEnum.TEMPORARY
 		)
+	});
+	fastify.register(leaderboardRoutes, {
+		prefix: backendUrls.LEADERBOARD
 	});
 }

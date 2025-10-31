@@ -2,7 +2,7 @@
 	import { page } from "$app/stores";
 	import { DEFAULT_PAGE } from "types";
 	import { Button } from "../ui/button";
-	import { testIds } from "@/config/test-ids";
+	import { testIds } from "types";
 
 	let {
 		currentPage,
