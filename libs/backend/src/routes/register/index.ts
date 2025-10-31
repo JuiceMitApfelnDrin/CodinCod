@@ -6,7 +6,9 @@ import User from "../../models/user/user.js";
 import {
 	cookieKeys,
 	environment,
+	ERROR_MESSAGES,
 	getCookieOptions,
+	httpResponseCodes,
 	registerSchema
 } from "types";
 import { generateToken } from "../../utils/functions/generate-token.js";
@@ -28,10 +30,14 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				parsedBody = registerSchema.parse(request.body);
 			} catch (error) {
 				if (error instanceof z.ZodError) {
-					return reply.status(400).send({ message: error.issues });
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+						.send({ message: error.issues });
 				}
 
-				return reply.status(500).send({ message: "Internal Server Error" });
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send({ message: ERROR_MESSAGES.SERVER.INTERNAL_ERROR });
 			}
 
 			const { email, password, username } = parsedBody;
@@ -40,13 +46,17 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				// Check if username already exists
 				const existingUserByUsername = await User.findOne({ username });
 				if (existingUserByUsername) {
-					return reply.status(400).send({ message: "Username already exists" });
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+						.send({ message: "Username already exists" });
 				}
 
 				// Check if email already exists
 				const existingUserByEmail = await User.findOne({ email });
 				if (existingUserByEmail) {
-					return reply.status(400).send({ message: "Email already exists" });
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+						.send({ message: "Email already exists" });
 				}
 
 				// Create a new user
@@ -71,7 +81,7 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 				});
 
 				return reply
-					.status(200)
+					.status(httpResponseCodes.SUCCESSFUL.OK)
 					.setCookie(cookieKeys.TOKEN, token, cookieOptions)
 					.send({ message: "User registered successfully" });
 			} catch (error) {
@@ -79,19 +89,21 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					const messages = Object.values(error.errors).map(
 						(err) => err.message
 					);
-					return reply.status(400).send({
-						message: "Could not create user due to some invalid fields!",
-						error: messages
-					});
+					return reply
+						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+						.send({
+							message: ERROR_MESSAGES.FORM.VALIDATION_ERRORS,
+							error: messages
+						});
 				} else if (error instanceof MongoError && error.code === 11000) {
 					return reply
-						.status(400)
+						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
 						.send({ message: `Duplicate key, unique value already exists` });
 				}
 
 				return reply
-					.status(500)
-					.send({ message: "Internal server error", error });
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send({ message: ERROR_MESSAGES.SERVER.INTERNAL_ERROR, error });
 			}
 		}
 	);

@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import {
+	ERROR_MESSAGES,
 	httpResponseCodes,
 	PistonExecutionResponse,
 	PistonExecutionRequest,
@@ -43,14 +44,13 @@ export default async function submissionRoutes(fastify: FastifyInstance) {
 
 			if (!puzzle) {
 				return reply.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND).send({
-					error: `Puzzle with id (${puzzleId}) couldn't be found.`
+					error: ERROR_MESSAGES.PUZZLE.NOT_FOUND
 				});
 			}
 
 			if (!puzzle.validators || puzzle.validators.length === 0) {
 				return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
-					error:
-						"This puzzle isn't finished, it should have test cases / validators"
+					error: ERROR_MESSAGES.PUZZLE.FAILED_TO_UPDATE
 				});
 			}
 

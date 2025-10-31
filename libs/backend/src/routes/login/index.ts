@@ -6,7 +6,9 @@ import {
 	AuthenticatedInfo,
 	cookieKeys,
 	environment,
+	ERROR_MESSAGES,
 	getCookieOptions,
+	httpResponseCodes,
 	isEmail,
 	loginSchema
 } from "types";
@@ -26,7 +28,9 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 			const parseResult = loginSchema.safeParse(request.body);
 
 			if (!parseResult.success) {
-				return reply.status(400).send({ message: "Invalid request data" });
+				return reply
+					.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+					.send({ message: ERROR_MESSAGES.FORM.VALIDATION_ERRORS });
 			}
 
 			const { identifier, password } = parseResult.data;
@@ -40,15 +44,15 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 
 				if (!user) {
 					return reply
-						.status(400)
-						.send({ message: "Invalid email/username or password" });
+						.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
+						.send({ message: ERROR_MESSAGES.AUTHENTICATION.INVALID_CREDENTIALS });
 				}
 				const isMatch = await bcrypt.compare(password, user.password);
 
 				if (!isMatch) {
 					return reply
-						.status(400)
-						.send({ message: "Invalid email/username or password" });
+						.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
+						.send({ message: ERROR_MESSAGES.AUTHENTICATION.INVALID_CREDENTIALS });
 				}
 
 				const authenticatedUserInfo: AuthenticatedInfo = {
@@ -70,11 +74,13 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				});
 
 				return reply
-					.status(200)
+					.status(httpResponseCodes.SUCCESSFUL.OK)
 					.setCookie(cookieKeys.TOKEN, token, cookieOptions)
 					.send({ message: "Login successful" });
 			} catch (error) {
-				return reply.status(500).send({ message: error });
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send({ message: error });
 			}
 		}
 	);

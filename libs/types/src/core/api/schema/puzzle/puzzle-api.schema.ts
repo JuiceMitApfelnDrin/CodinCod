@@ -4,6 +4,7 @@ import { paginatedQueryResponseSchema } from "../../../common/schema/paginated-q
 import { puzzleEntitySchema } from "../../../puzzle/schema/puzzle-entity.schema.js";
 import { objectIdSchema } from "../../../common/schema/object-id.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
+import { PUZZLE_CONFIG } from "../../../puzzle/config/puzzle-config.js";
 
 /**
  * GET /puzzle - List puzzles with pagination
@@ -34,8 +35,8 @@ export type GetPuzzleByIdResponse = z.infer<typeof getPuzzleByIdResponseSchema>;
  * POST /puzzle - Create new puzzle
  */
 export const createPuzzleRequestSchema = z.object({
-	title: z.string().min(1).max(200),
-	description: z.string().min(1),
+	title: z.string().min(PUZZLE_CONFIG.minTitleLength).max(PUZZLE_CONFIG.maxTitleLength),
+	description: z.string().min(PUZZLE_CONFIG.minStatementLength),
 	difficulty: z.enum(["easy", "medium", "hard"]),
 	validators: z
 		.array(

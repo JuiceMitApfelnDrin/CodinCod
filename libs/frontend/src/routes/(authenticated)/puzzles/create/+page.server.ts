@@ -5,8 +5,8 @@ import {
 	createPuzzleSchema,
 	ERROR_MESSAGES,
 	frontendUrls,
-	httpResponseCodes,
-	POST
+	httpRequestMethod,
+	httpResponseCodes
 } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { fail, redirect } from "@sveltejs/kit";
@@ -40,7 +40,7 @@ export const actions = {
 					"Content-Type": "application/json",
 					Cookie: cookie
 				},
-				method: POST
+				method: httpRequestMethod.POST
 			}
 		);
 

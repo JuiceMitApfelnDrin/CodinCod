@@ -1,3 +1,5 @@
+import { ERROR_MESSAGES } from "types";
+
 /**
  * Builds a backend url,
  * with the path added to it,
@@ -12,7 +14,7 @@ export function buildBackendUrl(url: string) {
 	const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 	if (!backendUrl) {
-		throw new Error("Bruh, you forgot to add VITE_BACKEND_URL to your .env");
+		throw new Error(`${ERROR_MESSAGES.SERVER.INTERNAL_ERROR}: VITE_BACKEND_URL environment variable is not set`);
 	}
 
 	return `${backendUrl}${url}`;
