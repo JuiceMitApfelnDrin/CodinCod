@@ -1,9 +1,20 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+	timeout: 120_000,
 	testDir: './tests',
 	
 	/* Run tests in files in parallel */
@@ -38,34 +49,30 @@ export default defineConfig({
 		
 		/* Video on failure */
 		video: 'retain-on-failure',
+
+		/* Use test IDs */
+		testIdAttribute: 'data-testid',
+		
+		headless: process.env.CI ? true : false,
 	},
 
 	/* Configure projects for major browsers */
 	projects: [
+		// Setup project to authenticate
+		{ name: 'setup', testMatch: /.*\.setup\.ts/, teardown: 'teardown' },
+		
+		// Main test project with authentication
 		{
 			name: 'chromium',
-			use: { ...devices['Desktop Chrome'] },
+			use: { 
+				...devices['Desktop Chrome'],
+				storageState: 'playwright/.auth/user.json'
+			},
+			dependencies: ['setup']
 		},
-
-		{
-			name: 'firefox',
-			use: { ...devices['Desktop Firefox'] },
-		},
-
-		{
-			name: 'webkit',
-			use: { ...devices['Desktop Safari'] },
-		},
-
-		/* Test against mobile viewports. */
-		// {
-		//   name: 'Mobile Chrome',
-		//   use: { ...devices['Pixel 5'] },
-		// },
-		// {
-		//   name: 'Mobile Safari',
-		//   use: { ...devices['iPhone 12'] },
-		// },
+		
+		// Teardown project
+		{ name: 'teardown', testMatch: /global\.teardown\.ts/ }
 	],
 
 	/* Run your local dev server before starting the tests */

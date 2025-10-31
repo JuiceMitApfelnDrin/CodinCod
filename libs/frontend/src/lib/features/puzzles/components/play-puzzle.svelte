@@ -33,6 +33,7 @@
 	import { languages } from "@/stores/languages";
 	import { toast } from "svelte-sonner";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
+	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 
 	let {
 		endDate,
@@ -64,15 +65,18 @@
 		testInput: string,
 		testOutput: string
 	) {
-		const response = await fetch(buildBackendUrl(backendUrls.EXECUTE), {
-			body: JSON.stringify({
-				code,
-				language,
-				testInput,
-				testOutput
-			}),
-			method: httpRequestMethod.POST
-		});
+		const response = await fetchWithAuthenticationCookie(
+			buildBackendUrl(backendUrls.EXECUTE),
+			{
+				body: JSON.stringify({
+					code,
+					language,
+					testInput,
+					testOutput
+				}),
+				method: httpRequestMethod.POST
+			}
+		);
 
 		// Handle rate limiting
 		if (response.status === httpResponseCodes.CLIENT_ERROR.TOO_MANY_REQUESTS) {
@@ -192,10 +196,13 @@
 			userId: $authenticatedUserInfo.userId
 		};
 
-		const response = await fetch(buildBackendUrl(backendUrls.SUBMISSION), {
-			body: JSON.stringify(submissionParams),
-			method: httpRequestMethod.POST
-		});
+		const response = await fetchWithAuthenticationCookie(
+			buildBackendUrl(backendUrls.SUBMISSION),
+			{
+				body: JSON.stringify(submissionParams),
+				method: httpRequestMethod.POST
+			}
+		);
 
 		const submission = await response.json();
 
@@ -292,7 +299,7 @@
 </LogicalUnit>
 
 {#if puzzle.validators}
-	<LogicalUnit>
+	<LogicalUnit data-testid={testIds.PLAY_PUZZLE_COMPONENT_TEST_RESULTS}>
 		<TestProgressBar
 			{openTestsAccordion}
 			puzzleResults={puzzle.validators.map((_, index) => {
@@ -343,7 +350,10 @@
 								</div>
 
 								{#if isCodeExecutionSuccessResponse(testResults[index])}
-									<div class="flex flex-col gap-4 lg:gap-6">
+									<div 
+										class="flex flex-col gap-4 lg:gap-6"
+										data-testid={testIds.PLAY_PUZZLE_COMPONENT_CONSOLE_OUTPUT}
+									>
 										<h3 class="text-xl font-semibold">Actual output</h3>
 
 										<LogicalUnit class="w-full space-y-2">

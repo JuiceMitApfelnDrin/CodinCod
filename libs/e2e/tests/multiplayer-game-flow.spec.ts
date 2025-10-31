@@ -143,7 +143,7 @@ test.describe('Multiplayer - Complete Game Flow', () => {
 			for (const page of pages) {
 				const game = new GamePage(page);
 				// The standings/rankings component should be visible
-				const standingsVisible = await page.locator('[data-testid*="ranking"], .rankings, [data-testid*="standings"]').isVisible().catch(() => false);
+				const standingsVisible = await page.getByTestId(testIds.GAME_COMPONENT_PLAYER_RANKINGS).isVisible().catch(() => false);
 				// Just verify the game page loaded properly
 				expect(page.url()).toContain('multiplayer');
 			}

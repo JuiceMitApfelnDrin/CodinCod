@@ -51,8 +51,11 @@ test.describe('Multiplayer - Chat System', () => {
 			await page2.waitForTimeout(1000);
 
 			// Both should see the message
-			const chat1Content = await page1.locator('[data-testid*="chat"], .chat-messages').first().textContent();
-			const chat2Content = await page2.locator('[data-testid*="chat"], .chat-messages').first().textContent();
+			const chat1 = page1.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER);
+			const chat2 = page2.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER);
+			
+			const chat1Content = await chat1.textContent();
+			const chat2Content = await chat2.textContent();
 
 			expect(chat1Content).toContain(testMessage);
 			expect(chat2Content).toContain(testMessage);
@@ -105,8 +108,11 @@ test.describe('Multiplayer - Chat System', () => {
 			await page2.waitForTimeout(1000);
 
 			// Both should see both messages
-			const chat1Content = await page1.locator('[data-testid*="chat"], .chat-messages').first().textContent();
-			const chat2Content = await page2.locator('[data-testid*="chat"], .chat-messages').first().textContent();
+			const chat1 = page1.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER);
+			const chat2 = page2.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER);
+			
+			const chat1Content = await chat1.textContent();
+			const chat2Content = await chat2.textContent();
 
 			expect(chat1Content).toContain(hostMessage);
 			expect(chat1Content).toContain(playerMessage);
@@ -174,9 +180,9 @@ test.describe('Multiplayer - Chat System', () => {
 			await page3.waitForTimeout(1000);
 
 			// All players should see all messages
-			const chat1 = await page1.locator('[data-testid*="chat"], .chat-messages').first().textContent();
-			const chat2 = await page2.locator('[data-testid*="chat"], .chat-messages').first().textContent();
-			const chat3 = await page3.locator('[data-testid*="chat"], .chat-messages').first().textContent();
+			const chat1 = await page1.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER).textContent();
+			const chat2 = await page2.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER).textContent();
+			const chat3 = await page3.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER).textContent();
 
 			for (const chatContent of [chat1, chat2, chat3]) {
 				expect(chatContent).toContain(msg1);

@@ -7,7 +7,7 @@ export async function getAuthenticatedUserInfo(
 	eventFetch = fetch
 ) {
 	try {
-		const url = buildBackendUrl(backendUrls.USER_ME);
+		const url = buildBackendUrl(backendUrls.ACCOUNT);
 
 		// Get the token cookie to forward to the backend
 		const token = cookies.get(cookieKeys.TOKEN);

@@ -34,12 +34,21 @@ if (browser) {
 	const currentThemeOption = isThemeOption(storedTheme)
 		? storedTheme
 		: preferredTheme;
+
+	// Initialize the store without triggering subscription
+	// The inline script in app.html already set the class
 	theme.set(currentThemeOption);
 
 	theme.subscribe((newTheme) => {
-		if (newTheme === themeOption.DARK) {
+		// Only update DOM if the class doesn't match the desired state
+		const isDarkClass = document.documentElement.classList.contains(
+			themeOption.DARK
+		);
+		const shouldBeDark = newTheme === themeOption.DARK;
+
+		if (shouldBeDark && !isDarkClass) {
 			document.documentElement.classList.add(themeOption.DARK);
-		} else {
+		} else if (!shouldBeDark && isDarkClass) {
 			document.documentElement.classList.remove(themeOption.DARK);
 		}
 

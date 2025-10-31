@@ -120,6 +120,7 @@ export * from "./core/programming-language/schema/create-programming-language.sc
 // profile
 export * from "./core/profile/schema/profile-dto.schema.js";
 export * from "./core/profile/schema/profile-entity.schema.js";
+export * from "./core/profile/schema/update-profile.schema.js";
 
 // puzzle
 export * from "./core/puzzle/config/puzzle-config.js";

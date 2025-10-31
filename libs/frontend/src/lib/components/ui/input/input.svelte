@@ -5,11 +5,13 @@
 	} from "svelte/elements";
 	import type { WithElementRef } from "bits-ui";
 	import { cn } from "@/utils/cn";
+	import type { DataTestIdProp } from "types";
 
 	type InputType = Exclude<HTMLInputTypeAttribute, "file">;
 
 	type Props = WithElementRef<
-		Omit<HTMLInputAttributes, "type"> &
+		Omit<HTMLInputAttributes, "type" | "data-testid"> &
+			DataTestIdProp &
 			(
 				| { type: "file"; files?: FileList }
 				| { type?: InputType; files?: undefined }
@@ -18,6 +20,7 @@
 
 	let {
 		class: className,
+		"data-testid": testId,
 		files = $bindable(),
 		ref = $bindable(null),
 		type,
@@ -34,6 +37,7 @@
 			className
 		)}
 		type="file"
+		data-testid={testId}
 		bind:files
 		bind:value
 		{...restProps}
@@ -46,6 +50,7 @@
 			className
 		)}
 		{type}
+		data-testid={testId}
 		bind:value
 		{...restProps}
 	/>

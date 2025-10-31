@@ -67,7 +67,11 @@
 	}
 </script>
 
-<div id="standings" class="rounded-lg border">
+<div 
+	id="standings" 
+	class="rounded-lg border"
+	data-testid={testIds.GAME_COMPONENT_STANDINGS_TABLE}
+>
 	<Table.Root>
 		<Table.Caption class="sr-only">Game submissions leaderboard</Table.Caption>
 
