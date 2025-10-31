@@ -34,7 +34,9 @@ import moderationUserByIdBanPermanentRoutes from "./routes/moderation/user/[id]/
 import moderationUserByIdBanTemporaryRoutes from "./routes/moderation/user/[id]/ban/temporary/index.js";
 import programmingLanguageRoutes from "./routes/programming-language/index.js";
 import programmingLanguageByIdRoutes from "./routes/programming-language/[id]/index.js";
-import leaderboardRoutes from "./routes/leaderboard/index.js";
+import leaderboardByGameModeRoutes from "./routes/leaderboard/[gameMode]/index.js";
+import leaderboardRecalculateRoutes from "./routes/leaderboard/recalculate/index.js";
+import leaderboardUserByIdRoutes from "./routes/leaderboard/user/[id]/index.js";
 
 export default async function router(fastify: FastifyInstance) {
 	fastify.register(indexRoutes, { prefix: backendUrls.ROOT });
@@ -123,7 +125,13 @@ export default async function router(fastify: FastifyInstance) {
 			banTypeEnum.TEMPORARY
 		)
 	});
-	fastify.register(leaderboardRoutes, {
-		prefix: backendUrls.LEADERBOARD
+	fastify.register(leaderboardByGameModeRoutes, {
+		prefix: backendUrls.leaderboardByGameMode(backendParams.GAME_MODE)
+	});
+	fastify.register(leaderboardRecalculateRoutes, {
+		prefix: backendUrls.LEADERBOARD_RECALCULATE
+	});
+	fastify.register(leaderboardUserByIdRoutes, {
+		prefix: backendUrls.leaderboardUserById(backendParams.ID)
 	});
 }

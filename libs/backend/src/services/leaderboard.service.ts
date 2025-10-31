@@ -13,6 +13,19 @@ import {
 } from "../utils/rating/glicko.js";
 
 /**
+ * Helper to ensure glicko rating has Date objects instead of strings
+ */
+function normalizeGlickoRating(rating: any): GlickoRating {
+	return {
+		...rating,
+		lastUpdated:
+			rating.lastUpdated instanceof Date
+				? rating.lastUpdated
+				: new Date(rating.lastUpdated)
+	};
+}
+
+/**
  * Service for calculating and managing leaderboards
  * Processes games incrementally to update player ratings and rankings
  */
@@ -47,7 +60,7 @@ export class LeaderboardService {
 			const modeMetrics = metric[mode as keyof UserMetricsDocument];
 			if (!modeMetrics || typeof modeMetrics !== "object") return earliest;
 
-			const lastGameDate = (modeMetrics as any).lastGameDate;
+			const lastGameDate = modeMetrics.lastGameDate;
 			if (!lastGameDate) return earliest;
 
 			return lastGameDate < earliest ? lastGameDate : earliest;
@@ -100,10 +113,7 @@ export class LeaderboardService {
 		}
 
 		// Get leaderboard to determine winner and rankings
-		const leaderboard = gameModeService.getGameLeaderboard(
-			game,
-			submissions as any
-		);
+		const leaderboard = gameModeService.getGameLeaderboard(game, submissions);
 
 		if (leaderboard.length === 0) return;
 
@@ -120,7 +130,7 @@ export class LeaderboardService {
 
 			// Initialize game mode metrics if not exists
 			if (!metrics[mode]) {
-				(metrics as any)[mode] = {
+				metrics[mode] = {
 					gamesPlayed: 0,
 					gamesWon: 0,
 					bestScore: 0,
@@ -130,7 +140,7 @@ export class LeaderboardService {
 				};
 			}
 
-			const modeMetrics = (metrics as any)[mode];
+			const modeMetrics = metrics[mode];
 			const isWinner = entry.userId === winner.userId;
 
 			// Update game count and scores
@@ -148,13 +158,16 @@ export class LeaderboardService {
 			}
 
 			// Update Glicko rating based on outcomes against all opponents
-			const currentRating: GlickoRating = modeMetrics.glickoRating;
+			const currentRating: GlickoRating = normalizeGlickoRating(
+				modeMetrics.glickoRating
+			);
 			const games = leaderboard
 				.filter((opp) => opp.userId !== userId)
 				.map((opponent) => {
-					const opponentMetrics = (metrics as any)[mode];
-					const opponentRating: GlickoRating =
-						opponentMetrics?.glickoRating || getDefaultRating();
+					const opponentMetrics = metrics[mode];
+					const opponentRating: GlickoRating = opponentMetrics?.glickoRating
+						? normalizeGlickoRating(opponentMetrics.glickoRating)
+						: getDefaultRating();
 
 					// Determine if player beat this opponent
 					const playerWon = entry.rank < opponent.rank;
@@ -206,7 +219,7 @@ export class LeaderboardService {
 		// Update ranks
 		for (let i = 0; i < sortedMetrics.length; i++) {
 			const metrics = sortedMetrics[i];
-			const modeMetrics = (metrics as any)[mode];
+			const modeMetrics = metrics[mode];
 
 			if (modeMetrics) {
 				modeMetrics.rank = i + 1;
@@ -276,15 +289,19 @@ export class LeaderboardService {
 
 		const entries = await Promise.all(
 			metrics.map(async (metric) => {
-				const modeMetrics = (metric as any)[mode];
+				const modeMetrics = metric[mode];
 				const user = await User.findById(metric.userId);
+
+				if (!modeMetrics) {
+					throw new Error("Mode metrics not found for user");
+				}
 
 				return {
 					rank: modeMetrics.rank || 0,
 					userId: metric.userId.toString(),
 					username: user?.username || "Unknown",
 					rating: modeMetrics.glickoRating.rating,
-					glicko: modeMetrics.glickoRating,
+					glicko: normalizeGlickoRating(modeMetrics.glickoRating),
 					gamesPlayed: modeMetrics.gamesPlayed,
 					gamesWon: modeMetrics.gamesWon,
 					winRate:
@@ -332,7 +349,7 @@ export class LeaderboardService {
 		const rankings: any = {};
 
 		for (const mode of modes) {
-			const modeMetrics = (metrics as any)[mode];
+			const modeMetrics = metrics[mode];
 
 			if (modeMetrics) {
 				rankings[mode] = {

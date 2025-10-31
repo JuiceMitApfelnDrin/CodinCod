@@ -10,7 +10,8 @@ import {
 	isPuzzleDto,
 	ObjectId,
 	banTypeEnum,
-	websocketCloseCodes
+	websocketCloseCodes,
+	ERROR_MESSAGES
 } from "types";
 import { isValidObjectId } from "mongoose";
 import { parseRawDataGameRequest } from "@/utils/functions/parse-raw-data-message.js";
@@ -45,7 +46,10 @@ export async function gameSetup(
 	const { id } = req.params;
 
 	if (!isAuthenticatedInfo(req.user)) {
-		sendErrorAndClose(socket, "Authentication required");
+		sendErrorAndClose(
+			socket,
+			ERROR_MESSAGES.AUTHENTICATION.AUTHENTICATION_REQUIRED
+		);
 		return;
 	}
 
@@ -60,7 +64,7 @@ export async function gameSetup(
 	}
 
 	if (!isValidObjectId(id)) {
-		sendErrorAndClose(socket, "Invalid game ID");
+		sendErrorAndClose(socket, ERROR_MESSAGES.GAME.NOT_FOUND);
 		return;
 	}
 
@@ -99,7 +103,7 @@ export async function gameSetup(
 					if (!isGameDto(gameToUpdate)) {
 						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.NONEXISTENT_GAME,
-							message: "Game not found"
+							message: ERROR_MESSAGES.GAME.NOT_FOUND
 						});
 						return;
 					}
@@ -121,7 +125,7 @@ export async function gameSetup(
 					if (!isGameDto(game)) {
 						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.NONEXISTENT_GAME,
-							message: "Game not found"
+							message: ERROR_MESSAGES.GAME.NOT_FOUND
 						});
 						return;
 					}
@@ -133,7 +137,7 @@ export async function gameSetup(
 					if (!isPuzzleDto(puzzle)) {
 						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.ERROR,
-							message: "Puzzle not found"
+							message: ERROR_MESSAGES.PUZZLE.NOT_FOUND
 						});
 						return;
 					}
@@ -167,7 +171,7 @@ export async function gameSetup(
 					if (!isGameDto(game)) {
 						userWebSockets.updateUser(req.user.username, {
 							event: gameEventEnum.NONEXISTENT_GAME,
-							message: "Game not found"
+							message: ERROR_MESSAGES.GAME.NOT_FOUND
 						});
 						return;
 					}

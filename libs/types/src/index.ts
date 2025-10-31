@@ -36,7 +36,9 @@ export * from "./core/common/config/backend-urls.js";
 export * from "./core/common/config/cookie.js";
 export * from "./core/common/config/environment.js";
 export * from "./core/common/config/default-values-query-params.js";
+export * from "./core/common/config/error-messages.js";
 export * from "./core/common/config/frontend-urls.js";
+export * from "./core/common/config/pagination.js";
 export * from "./core/common/config/test-ids.js";
 export * from "./core/common/config/web-socket-urls.js";
 export * from "./core/common/enum/websocket-close-codes.js";
@@ -71,6 +73,7 @@ export * from "./core/game/schema/game-options.schema.js";
 export * from "./core/game/schema/visibility.schema.js";
 
 // leaderboard
+export * from "./core/leaderboard/config/leaderboard-config.js";
 export * from "./core/leaderboard/schema/user-metrics.schema.js";
 export * from "./core/leaderboard/schema/leaderboard-entry.schema.js";
 

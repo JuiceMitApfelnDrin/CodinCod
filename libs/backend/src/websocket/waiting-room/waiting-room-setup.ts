@@ -180,7 +180,7 @@ export function waitingRoomSetup(
 					const createGameEntity: GameEntity = {
 						players,
 						owner: waitingRoom.findRoomOwner(room).userId,
-						puzzle: (randomPuzzle._id as any).toString(),
+						puzzle: randomPuzzle._id.toString(),
 						createdAt: now,
 						startTime,
 						endTime,

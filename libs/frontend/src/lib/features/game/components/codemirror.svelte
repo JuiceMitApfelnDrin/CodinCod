@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { oneDark } from "@codemirror/theme-one-dark";
 	import { keymap, type PreferencesDto, type PuzzleLanguage } from "types";
-	import { StreamLanguage } from "@codemirror/language";
 	import { preferences } from "@/stores/preferences";
-	import type { Extension } from "@codemirror/state";
 	import type CodemirrorWrapperType from "#/external-wrapper/codemirror-wrapper.svelte";
 
 	const CodemirrorWrapper = import(
@@ -21,6 +18,11 @@
 		value?: string | undefined;
 		language?: PuzzleLanguage | undefined;
 	} = $props();
+
+	async function getEditorTheme() {
+		const { oneDark } = await import("@codemirror/theme-one-dark");
+		return oneDark;
+	}
 
 	async function getEditorConfig(
 		language: string,
@@ -74,7 +76,7 @@
 
 	async function getLanguageExtensions(
 		language: PuzzleLanguage
-	): Promise<Extension[]> {
+	): Promise<any[]> {
 		switch (language) {
 			case "javascript": {
 				return [(await import("@codemirror/lang-javascript")).javascript()];
@@ -110,6 +112,7 @@
 
 			case "ruby": {
 				const { ruby } = await import("@codemirror/legacy-modes/mode/ruby");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(ruby)];
 			}
 
@@ -117,16 +120,19 @@
 				const { brainfuck } = await import(
 					"@codemirror/legacy-modes/mode/brainfuck"
 				);
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(brainfuck)];
 			}
 
 			case "dart": {
 				const { dart } = await import("@codemirror/legacy-modes/mode/clike");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(dart)];
 			}
 
 			case "c": {
 				const { c } = await import("@codemirror/legacy-modes/mode/clike");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(c)];
 			}
 
@@ -134,26 +140,31 @@
 				const { crystal } = await import(
 					"@codemirror/legacy-modes/mode/crystal"
 				);
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(crystal)];
 			}
 
 			case "lua": {
 				const { lua } = await import("@codemirror/legacy-modes/mode/lua");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(lua)];
 			}
 
 			case "go": {
 				const { go } = await import("@codemirror/legacy-modes/mode/go");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(go)];
 			}
 
 			case "cobol": {
 				const { cobol } = await import("@codemirror/legacy-modes/mode/cobol");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(cobol)];
 			}
 
 			case "d": {
 				const { d } = await import("@codemirror/legacy-modes/mode/d");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(d)];
 			}
 
@@ -161,6 +172,7 @@
 				const { fortran } = await import(
 					"@codemirror/legacy-modes/mode/fortran"
 				);
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(fortran)];
 			}
 
@@ -168,11 +180,13 @@
 				const { haskell } = await import(
 					"@codemirror/legacy-modes/mode/haskell"
 				);
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(haskell)];
 			}
 
 			case "julia": {
 				const { julia } = await import("@codemirror/legacy-modes/mode/julia");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(julia)];
 			}
 
@@ -180,11 +194,13 @@
 				const { commonLisp } = await import(
 					"@codemirror/legacy-modes/mode/commonlisp"
 				);
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(commonLisp)];
 			}
 
 			case "perl": {
 				const { perl } = await import("@codemirror/legacy-modes/mode/perl");
+				const { StreamLanguage } = await import("@codemirror/language");
 				return [StreamLanguage.define(perl)];
 			}
 			default:
@@ -213,14 +229,14 @@
 	}
 </script>
 
-{#await Promise.all( [CodemirrorWrapper, getEditorConfig(language, $preferences)] )}
+{#await Promise.all( [CodemirrorWrapper, getEditorTheme(), getEditorConfig(language, $preferences)] )}
 	<div class="flex min-h-[300px] items-center justify-center">
 		<p>Loading editor...</p>
 	</div>
-{:then [{ default: Wrapper }, editorConfig]}
+{:then [{ default: Wrapper }, theme, editorConfig]}
 	<Wrapper
 		bind:value
-		theme={oneDark}
+		{theme}
 		{readonly}
 		{...editorConfig}
 		styles={{

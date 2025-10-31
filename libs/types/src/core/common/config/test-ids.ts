@@ -89,6 +89,26 @@ export const testIds = {
 	JOIN_BY_INVITE_DIALOG_BUTTON_CANCEL: "join-by-invite-dialog-button-cancel",
 	JOIN_BY_INVITE_DIALOG_BUTTON_JOIN: "join-by-invite-dialog-button-join",
 
+	// leaderboard page
+	LEADERBOARD_PAGE_BUTTON_MODE_FASTEST: "leaderboard-page-button-mode-fastest",
+	LEADERBOARD_PAGE_BUTTON_MODE_SHORTEST:
+		"leaderboard-page-button-mode-shortest",
+	LEADERBOARD_PAGE_BUTTON_MODE_BACKWARDS:
+		"leaderboard-page-button-mode-backwards",
+	LEADERBOARD_PAGE_BUTTON_MODE_HARDCORE:
+		"leaderboard-page-button-mode-hardcore",
+	LEADERBOARD_PAGE_BUTTON_MODE_DEBUG: "leaderboard-page-button-mode-debug",
+	LEADERBOARD_PAGE_BUTTON_MODE_TYPERACER:
+		"leaderboard-page-button-mode-typeracer",
+	LEADERBOARD_PAGE_BUTTON_MODE_EFFICIENCY:
+		"leaderboard-page-button-mode-efficiency",
+	LEADERBOARD_PAGE_BUTTON_MODE_INCREMENTAL:
+		"leaderboard-page-button-mode-incremental",
+	LEADERBOARD_PAGE_BUTTON_MODE_RANDOM: "leaderboard-page-button-mode-random",
+	LEADERBOARD_PAGE_BUTTON_PREVIOUS_PAGE:
+		"leaderboard-page-button-previous-page",
+	LEADERBOARD_PAGE_BUTTON_NEXT_PAGE: "leaderboard-page-button-next-page",
+
 	// waiting room chat
 	WAITING_ROOM_CHAT_BUTTON_SEND: "waiting-room-chat-button-send",
 

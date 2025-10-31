@@ -1,5 +1,6 @@
 import {
 	AuthenticatedInfo,
+	ERROR_MESSAGES,
 	gameEventEnum,
 	getUserIdFromUser,
 	isGameDto,
@@ -26,10 +27,13 @@ export async function onConnection(
 			socket.send(
 				JSON.stringify({
 					event: gameEventEnum.NONEXISTENT_GAME,
-					message: "Game not found"
+					message: ERROR_MESSAGES.GAME.NOT_FOUND
 				})
 			);
-			socket.close(websocketCloseCodes.POLICY_VIOLATION, "Game not found");
+			socket.close(
+				websocketCloseCodes.POLICY_VIOLATION,
+				ERROR_MESSAGES.GAME.NOT_FOUND
+			);
 			return;
 		}
 
@@ -47,10 +51,13 @@ export async function onConnection(
 			socket.send(
 				JSON.stringify({
 					event: gameEventEnum.ERROR,
-					message: `User not in this game`
+					message: ERROR_MESSAGES.GAME.USER_NOT_IN_GAME
 				})
 			);
-			socket.close(1008, "User not in game");
+			socket.close(
+				websocketCloseCodes.POLICY_VIOLATION,
+				ERROR_MESSAGES.GAME.USER_NOT_IN_GAME
+			);
 			return;
 		}
 
@@ -73,7 +80,7 @@ export async function onConnection(
 		if (!isPuzzleDto(puzzle)) {
 			userWebSockets.updateUser(user.username, {
 				event: gameEventEnum.ERROR,
-				message: "Puzzle not found"
+				message: ERROR_MESSAGES.PUZZLE.NOT_FOUND
 			});
 			return;
 		}
@@ -85,6 +92,9 @@ export async function onConnection(
 		});
 	} catch (error) {
 		console.error("Error in game websocket connection:", error);
-		socket.close(websocketCloseCodes.INTERNAL_ERROR, "Internal server error");
+		socket.close(
+			websocketCloseCodes.INTERNAL_ERROR,
+			ERROR_MESSAGES.SERVER.INTERNAL_ERROR
+		);
 	}
 }

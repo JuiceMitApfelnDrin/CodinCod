@@ -76,6 +76,7 @@
 					class="pr-10"
 				/>
 				<Button
+					variant="outline"
 					onclick={() => (showPassword = !showPassword)}
 					data-testid={testIds.LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
 				>

@@ -40,7 +40,7 @@ export default async function gameLeaderboardRoutes(fastify: FastifyInstance) {
 				// Build leaderboard using game mode service
 				const leaderboard = gameModeService.getGameLeaderboard(
 					game,
-					submissions as any
+					submissions
 				);
 
 				return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({

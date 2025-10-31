@@ -7,6 +7,7 @@ import {
 	DELETE,
 	deletePuzzleSchema,
 	editPuzzleSchema,
+	ERROR_MESSAGES,
 	environment,
 	frontendUrls,
 	httpResponseCodes,
@@ -74,7 +75,7 @@ export const actions = {
 		if (!response.ok) {
 			return fail(response.status, {
 				deletePuzzleForm,
-				error: "Failed to delete the puzzle."
+				error: ERROR_MESSAGES.PUZZLE.FAILED_TO_DELETE
 			});
 		}
 
@@ -104,7 +105,7 @@ export const actions = {
 
 		if (!response.ok) {
 			return fail(response.status, {
-				error: "Failed to update the puzzle.",
+				error: ERROR_MESSAGES.PUZZLE.FAILED_TO_UPDATE,
 				form
 			});
 		}

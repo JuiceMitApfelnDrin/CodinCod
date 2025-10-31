@@ -95,6 +95,7 @@
 					placeholder={`${PASSWORD_CONFIG.minPasswordLength}characters`}
 				/>
 				<Button
+					variant="outline"
 					onclick={() => (showPassword = !showPassword)}
 					data-testid={testIds.REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
 				>

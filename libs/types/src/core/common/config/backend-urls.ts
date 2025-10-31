@@ -44,11 +44,10 @@ export const backendUrls = {
 	SUBMISSION_GAME: `${baseRoute}/submission/game`,
 
 	// leaderboard routes
-	LEADERBOARD: `${baseRoute}/leaderboard`,
+	LEADERBOARD_RECALCULATE: `${baseRoute}/leaderboard/recalculate`,
 	leaderboardByGameMode: (gameMode: string) =>
 		`${baseRoute}/leaderboard/${gameMode}`,
-	leaderboardUserStats: (userId: string) =>
-		`${baseRoute}/leaderboard/user/${userId}`,
+	leaderboardUserById: (id: string) => `${baseRoute}/leaderboard/user/${id}`,
 
 	// moderation routes
 	MODERATION_REVIEW: `${baseRoute}/moderation/review`,
@@ -71,4 +70,5 @@ export const backendParams = {
 	USERNAME: ":username",
 	ID: ":id",
 	TYPE: ":type",
+	GAME_MODE: ":gameMode",
 } as const;

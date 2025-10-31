@@ -5,7 +5,9 @@ import {
 } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 import {
 	backendUrls,
+	ERROR_MESSAGES,
 	httpRequestMethod,
+	PAGINATION_CONFIG,
 	reviewItemTypeEnum,
 	type ReviewItem
 } from "types";
@@ -25,8 +27,10 @@ export async function load({ request, url }: PageServerLoadEvent) {
 	// Get query parameters
 	const type =
 		url.searchParams.get("type") || reviewItemTypeEnum.PENDING_PUZZLE;
-	const page = url.searchParams.get("page") || "1";
-	const limit = url.searchParams.get("limit") || "20";
+	const page =
+		url.searchParams.get("page") || String(PAGINATION_CONFIG.DEFAULT_PAGE);
+	const limit =
+		url.searchParams.get("limit") || String(PAGINATION_CONFIG.DEFAULT_LIMIT);
 
 	// Fetch review items from backend
 	const reviewUrl = `${buildBackendUrl(backendUrls.MODERATION_REVIEW)}?type=${type}&page=${page}&limit=${limit}`;
@@ -41,10 +45,15 @@ export async function load({ request, url }: PageServerLoadEvent) {
 			return {
 				reviewItems: {
 					data: [],
-					pagination: { page: 1, limit: 20, total: 0, totalPages: 0 }
+					pagination: {
+						page: PAGINATION_CONFIG.DEFAULT_PAGE,
+						limit: PAGINATION_CONFIG.DEFAULT_LIMIT,
+						total: 0,
+						totalPages: 0
+					}
 				} as PaginatedResponse,
 				currentType: type,
-				error: "Failed to fetch review items"
+				error: ERROR_MESSAGES.MODERATION.FAILED_TO_FETCH_REVIEW_ITEMS
 			};
 		}
 
@@ -59,10 +68,15 @@ export async function load({ request, url }: PageServerLoadEvent) {
 		return {
 			reviewItems: {
 				data: [],
-				pagination: { page: 1, limit: 20, total: 0, totalPages: 0 }
+				pagination: {
+					page: PAGINATION_CONFIG.DEFAULT_PAGE,
+					limit: PAGINATION_CONFIG.DEFAULT_LIMIT,
+					total: 0,
+					totalPages: 0
+				}
 			} as PaginatedResponse,
 			currentType: type,
-			error: "Failed to fetch review items"
+			error: ERROR_MESSAGES.MODERATION.FAILED_TO_FETCH_REVIEW_ITEMS
 		};
 	}
 }
