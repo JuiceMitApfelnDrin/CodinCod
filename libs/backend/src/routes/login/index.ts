@@ -45,14 +45,18 @@ export default async function loginRoutes(fastify: FastifyInstance) {
 				if (!user) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-						.send({ message: ERROR_MESSAGES.AUTHENTICATION.INVALID_CREDENTIALS });
+						.send({
+							message: ERROR_MESSAGES.AUTHENTICATION.INVALID_CREDENTIALS
+						});
 				}
 				const isMatch = await bcrypt.compare(password, user.password);
 
 				if (!isMatch) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED)
-						.send({ message: ERROR_MESSAGES.AUTHENTICATION.INVALID_CREDENTIALS });
+						.send({
+							message: ERROR_MESSAGES.AUTHENTICATION.INVALID_CREDENTIALS
+						});
 				}
 
 				const authenticatedUserInfo: AuthenticatedInfo = {

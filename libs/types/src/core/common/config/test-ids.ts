@@ -170,7 +170,7 @@ export const testIds = {
 		"play-puzzle-component-button-submit-code",
 	PLAY_PUZZLE_COMPONENT_TEST_RESULTS: "play-puzzle-component-test-results",
 	PLAY_PUZZLE_COMPONENT_CONSOLE_OUTPUT: "play-puzzle-component-console-output",
-	
+
 	// game/multiplayer components
 	GAME_COMPONENT_PLAYER_RANKINGS: "game-component-player-rankings",
 	GAME_COMPONENT_STANDINGS_TABLE: "game-component-standings-table",

@@ -1,17 +1,16 @@
 <script lang="ts">
 	import type { Snippet } from "svelte";
-	import type { HTMLInputAttributes } from "svelte/elements";
+	import type { HTMLAttributes } from "svelte/elements";
 
 	let {
 		children,
-		class: className = undefined
-	}: {
-		class?: HTMLInputAttributes["class"];
+		class: className = undefined,
+		...restProps
+	}: HTMLAttributes<HTMLDivElement> & {
 		children?: Snippet;
 	} = $props();
 </script>
 
-<!-- important: should never have any classes defined by itself! -->
-<div class={className}>
+<div class={className} {...restProps}>
 	{@render children?.()}
 </div>

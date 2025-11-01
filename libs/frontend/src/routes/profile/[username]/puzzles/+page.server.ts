@@ -1,5 +1,5 @@
 import type { PageServerLoadEvent } from "./$types";
-import { httpRequestMethod, type PaginatedQueryResponse } from "types";
+import { httpRequestMethod, type PuzzleAPI } from "types";
 import { buildBackendUrl } from "@/config/backend";
 import { backendUrls } from "types";
 
@@ -20,7 +20,7 @@ export async function load({
 		method: httpRequestMethod.GET
 	});
 
-	const paginatedPuzzles: PaginatedQueryResponse = await res.json();
+	const paginatedPuzzles: PuzzleAPI.GetPuzzlesResponse = await res.json();
 
 	return { ...paginatedPuzzles };
 }

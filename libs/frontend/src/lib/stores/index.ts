@@ -9,10 +9,6 @@ import {
 } from "types";
 import { preferences } from "./preferences";
 
-/**
- * start dark-theme store
- */
-
 const theme = writable<ThemeOption>();
 export const isDarkTheme = derived(
 	theme,
@@ -35,12 +31,9 @@ if (browser) {
 		? storedTheme
 		: preferredTheme;
 
-	// Initialize the store without triggering subscription
-	// The inline script in app.html already set the class
 	theme.set(currentThemeOption);
 
 	theme.subscribe((newTheme) => {
-		// Only update DOM if the class doesn't match the desired state
 		const isDarkClass = document.documentElement.classList.contains(
 			themeOption.DARK
 		);
@@ -55,14 +48,6 @@ if (browser) {
 		localStorage.setItem(localStorageKeys.THEME, newTheme);
 	});
 }
-
-/**
- * end dark-theme store
- */
-
-/**
- * start user-info store
- */
 
 export const authenticatedUserInfo = writable<AuthenticatedInfo | null>(null);
 

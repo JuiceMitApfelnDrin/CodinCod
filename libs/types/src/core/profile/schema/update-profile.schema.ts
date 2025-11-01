@@ -19,9 +19,7 @@ export const updateProfileSchema = z.object({
 		.optional()
 		.or(z.literal("")),
 	socials: z
-		.array(
-			z.string().trim().url("Social link must be a valid URL")
-		)
+		.array(z.string().trim().url("Social link must be a valid URL"))
 		.max(5, "Maximum of 5 social links allowed")
 		.optional(),
 });

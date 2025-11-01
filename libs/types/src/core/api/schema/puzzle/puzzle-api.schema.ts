@@ -35,7 +35,10 @@ export type GetPuzzleByIdResponse = z.infer<typeof getPuzzleByIdResponseSchema>;
  * POST /puzzle - Create new puzzle
  */
 export const createPuzzleRequestSchema = z.object({
-	title: z.string().min(PUZZLE_CONFIG.minTitleLength).max(PUZZLE_CONFIG.maxTitleLength),
+	title: z
+		.string()
+		.min(PUZZLE_CONFIG.minTitleLength)
+		.max(PUZZLE_CONFIG.maxTitleLength),
 	description: z.string().min(PUZZLE_CONFIG.minStatementLength),
 	difficulty: z.enum(["easy", "medium", "hard"]),
 	validators: z
@@ -54,3 +57,28 @@ export const createPuzzleResponseSchema =
 
 export type CreatePuzzleRequest = z.infer<typeof createPuzzleRequestSchema>;
 export type CreatePuzzleResponse = z.infer<typeof createPuzzleResponseSchema>;
+
+/**
+ * PUT /puzzle/:id - Update existing puzzle
+ */
+export const updatePuzzleRequestSchema = puzzleEntitySchema.partial().extend({
+	id: objectIdSchema,
+});
+
+export const updatePuzzleResponseSchema =
+	puzzleEntitySchema.or(errorResponseSchema);
+
+export type UpdatePuzzleRequest = z.infer<typeof updatePuzzleRequestSchema>;
+export type UpdatePuzzleResponse = z.infer<typeof updatePuzzleResponseSchema>;
+
+/**
+ * DELETE /puzzle/:id - Delete puzzle
+ */
+export const deletePuzzleRequestSchema = z.object({
+	id: objectIdSchema,
+});
+
+export const deletePuzzleResponseSchema = z.void().or(errorResponseSchema);
+
+export type DeletePuzzleRequest = z.infer<typeof deletePuzzleRequestSchema>;
+export type DeletePuzzleResponse = z.infer<typeof deletePuzzleResponseSchema>;

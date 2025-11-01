@@ -14,7 +14,9 @@ export function buildBackendUrl(url: string) {
 	const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 	if (!backendUrl) {
-		throw new Error(`${ERROR_MESSAGES.SERVER.INTERNAL_ERROR}: VITE_BACKEND_URL environment variable is not set`);
+		throw new Error(
+			`${ERROR_MESSAGES.SERVER.INTERNAL_ERROR}: VITE_BACKEND_URL environment variable is not set`
+		);
 	}
 
 	return `${backendUrl}${url}`;

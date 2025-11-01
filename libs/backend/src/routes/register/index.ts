@@ -43,7 +43,6 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 			const { email, password, username } = parsedBody;
 
 			try {
-				// Check if username already exists
 				const existingUserByUsername = await User.findOne({ username });
 				if (existingUserByUsername) {
 					return reply
@@ -51,7 +50,6 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 						.send({ message: "Username already exists" });
 				}
 
-				// Check if email already exists
 				const existingUserByEmail = await User.findOne({ email });
 				if (existingUserByEmail) {
 					return reply
@@ -59,7 +57,6 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 						.send({ message: "Email already exists" });
 				}
 
-				// Create a new user
 				const user = new User({ email, password, username });
 				await user.save();
 
@@ -89,12 +86,10 @@ export default async function registerRoutes(fastify: FastifyInstance) {
 					const messages = Object.values(error.errors).map(
 						(err) => err.message
 					);
-					return reply
-						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
-						.send({
-							message: ERROR_MESSAGES.FORM.VALIDATION_ERRORS,
-							error: messages
-						});
+					return reply.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST).send({
+						message: ERROR_MESSAGES.FORM.VALIDATION_ERRORS,
+						error: messages
+					});
 				} else if (error instanceof MongoError && error.code === 11000) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)

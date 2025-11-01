@@ -10,7 +10,12 @@ import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
 export const getLeaderboardRequestSchema = z.object({
 	gameMode: gameModeSchema,
 	page: z.number().int().positive().default(PAGINATION_CONFIG.DEFAULT_PAGE),
-	pageSize: z.number().int().positive().max(PAGINATION_CONFIG.MAX_LIMIT).default(PAGINATION_CONFIG.DEFAULT_LIMIT_LEADERBOARD),
+	pageSize: z
+		.number()
+		.int()
+		.positive()
+		.max(PAGINATION_CONFIG.MAX_LIMIT)
+		.default(PAGINATION_CONFIG.DEFAULT_LIMIT_LEADERBOARD),
 });
 
 export const getLeaderboardResponseSchema = z

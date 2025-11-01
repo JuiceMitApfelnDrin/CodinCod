@@ -1,12 +1,10 @@
 import { FastifyInstance } from "fastify";
 import {
 	DEFAULT_PAGE,
-	PaginatedQueryResponse,
-	paginatedQuerySchema,
-	isAuthenticatedInfo,
-	createPuzzleSchema,
 	httpResponseCodes,
-	CreatePuzzleBackend
+	isAuthenticatedInfo,
+	PuzzleAPI,
+	type CreatePuzzleBackend
 } from "types";
 import Puzzle from "../../models/puzzle/puzzle.js";
 import authenticated from "../../plugins/middleware/authenticated.js";
@@ -19,7 +17,9 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 			onRequest: [authenticated, checkUserBan]
 		},
 		async (request, reply) => {
-			const parseResult = createPuzzleSchema.safeParse(request.body);
+			const parseResult = PuzzleAPI.createPuzzleRequestSchema.safeParse(
+				request.body
+			);
 
 			if (!parseResult.success) {
 				return reply.status(400).send({ error: parseResult.error.issues });
@@ -49,7 +49,9 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 	);
 
 	fastify.get("/", async (request, reply) => {
-		const parseResult = paginatedQuerySchema.safeParse(request.query);
+		const parseResult = PuzzleAPI.getPuzzlesRequestSchema.safeParse(
+			request.query
+		);
 
 		if (!parseResult.success) {
 			return reply
@@ -61,28 +63,26 @@ export default async function puzzleRoutes(fastify: FastifyInstance) {
 		const { page, pageSize } = query;
 
 		try {
-			// Calculate pagination offsets
 			const offsetSkip = (page - DEFAULT_PAGE) * pageSize;
 
-			// Fetch puzzles from the database with pagination
 			const [puzzles, total] = await Promise.all([
 				Puzzle.find()
 					.populate("author")
 					.skip(offsetSkip)
 					.limit(pageSize)
+					.lean()
 					.exec(),
 				Puzzle.countDocuments()
 			]);
 
-			// Calculate total pages
 			const totalPages = Math.ceil(total / pageSize);
 
-			const paginatedResponse: PaginatedQueryResponse = {
+			const paginatedResponse = {
+				items: puzzles,
 				page,
 				pageSize,
-				totalPages,
 				totalItems: total,
-				items: puzzles
+				totalPages
 			};
 
 			return reply.send(paginatedResponse);

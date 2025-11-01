@@ -61,7 +61,12 @@ export const listSubmissionsRequestSchema = z.object({
 	userId: objectIdSchema.optional(),
 	puzzleId: objectIdSchema.optional(),
 	page: z.number().int().positive().default(PAGINATION_CONFIG.DEFAULT_PAGE),
-	pageSize: z.number().int().positive().max(PAGINATION_CONFIG.MAX_LIMIT).default(PAGINATION_CONFIG.DEFAULT_LIMIT),
+	pageSize: z
+		.number()
+		.int()
+		.positive()
+		.max(PAGINATION_CONFIG.MAX_LIMIT)
+		.default(PAGINATION_CONFIG.DEFAULT_LIMIT),
 });
 
 export const listSubmissionsResponseSchema = z

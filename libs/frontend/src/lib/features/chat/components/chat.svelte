@@ -47,7 +47,10 @@
 <LogicalUnit class="flex h-full flex-col gap-4">
 	<H2>Chat</H2>
 
-	<ScrollArea.Root class="h-[33vh]" data-testid={testIds.CHAT_COMPONENT_MESSAGES_CONTAINER}>
+	<ScrollArea.Root
+		class="h-[33vh]"
+		data-testid={testIds.CHAT_COMPONENT_MESSAGES_CONTAINER}
+	>
 		{#if chatMessages.length > 0}
 			<ol class="flex h-full flex-col gap-1 rounded-lg">
 				{#each chatMessages as chatMessage}

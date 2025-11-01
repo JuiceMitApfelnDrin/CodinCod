@@ -37,7 +37,10 @@ const startGameSchema = baseMessageSchema.extend({
 const chatMessageSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.CHAT_MESSAGE),
 	roomId: objectIdSchema,
-	message: z.string().min(CHAT_MESSAGE_CONFIG.minChatMessageLength).max(CHAT_MESSAGE_CONFIG.maxChatMessageLength),
+	message: z
+		.string()
+		.min(CHAT_MESSAGE_CONFIG.minChatMessageLength)
+		.max(CHAT_MESSAGE_CONFIG.maxChatMessageLength),
 });
 
 export const waitingRoomRequestSchema = z.discriminatedUnion("event", [

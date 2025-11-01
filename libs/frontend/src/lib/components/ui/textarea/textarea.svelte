@@ -10,7 +10,9 @@
 		ref = $bindable(null),
 		value = $bindable(),
 		...restProps
-	}: WithoutChildren<WithElementRef<Omit<HTMLTextareaAttributes, "data-testid"> & DataTestIdProp>> = $props();
+	}: WithoutChildren<
+		WithElementRef<Omit<HTMLTextareaAttributes, "data-testid"> & DataTestIdProp>
+	> = $props();
 </script>
 
 <textarea

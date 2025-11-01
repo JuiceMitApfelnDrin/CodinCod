@@ -67,8 +67,8 @@
 	}
 </script>
 
-<div 
-	id="standings" 
+<div
+	id="standings"
 	class="rounded-lg border"
 	data-testid={testIds.GAME_COMPONENT_STANDINGS_TABLE}
 >

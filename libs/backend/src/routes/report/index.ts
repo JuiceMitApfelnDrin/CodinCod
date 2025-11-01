@@ -13,7 +13,6 @@ import checkUserBan from "../../plugins/middleware/check-user-ban.js";
 import ChatMessage from "../../models/chat/chat-message.js";
 
 export default async function reportRoutes(fastify: FastifyInstance) {
-	// Create a new report
 	fastify.post(
 		"/",
 		{
@@ -36,7 +35,6 @@ export default async function reportRoutes(fastify: FastifyInstance) {
 
 			const userId = request.user.userId;
 
-			// Validate game chat reports
 			if (parseResult.data.problemType === ProblemTypeEnum.GAME_CHAT) {
 				const chatMessage = await ChatMessage.findById(
 					parseResult.data.problematicIdentifier

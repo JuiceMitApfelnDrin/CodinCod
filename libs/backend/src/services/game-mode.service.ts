@@ -6,7 +6,15 @@ import {
 } from "../utils/game-mode/game-mode-strategy.js";
 import { GameDocument } from "../models/game/game.js";
 import { SubmissionDocument } from "../models/submission/submission.js";
-import mongoose from "mongoose";
+import type { ObjectId } from "mongoose";
+
+type PopulatedSubmission = Omit<SubmissionDocument, "user"> & {
+	user: ObjectId | { _id: ObjectId; username: string };
+};
+
+function isPopulatedUser(user: ObjectId | { _id: ObjectId; username: string }): user is { _id: ObjectId; username: string } {
+	return typeof user === "object" && user !== null && "_id" in user && "username" in user;
+}
 
 /**
  * Service for game mode logic
@@ -46,7 +54,7 @@ export class GameModeService {
 	 */
 	getGameLeaderboard(
 		game: GameDocument,
-		submissions: Array<SubmissionDocument & { attempts?: number }>
+		submissions: Array<PopulatedSubmission & { attempts?: number }>
 	): Array<{
 		userId: string;
 		username: string;
@@ -58,26 +66,20 @@ export class GameModeService {
 	}> {
 		const mode = game.options?.mode ?? gameModeEnum.FASTEST;
 
-		// Sort submissions using game mode strategy
 		const sortedSubmissions = sortSubmissionsByGameMode(
 			submissions,
 			mode,
 			game.createdAt
 		);
 
-		// Build leaderboard
 		return sortedSubmissions.map((submission, index) => {
-			type PopulatedUser = { _id: mongoose.Types.ObjectId; username: string };
-			const userId =
-				typeof submission.user === "string"
-					? submission.user
-					: ((submission.user as unknown as PopulatedUser)._id?.toString() ??
-						"");
+			const userId = isPopulatedUser(submission.user)
+				? submission.user._id.toString()
+				: submission.user.toString();
 
-			const username =
-				typeof submission.user === "string"
-					? ""
-					: ((submission.user as unknown as PopulatedUser).username ?? "");
+			const username = isPopulatedUser(submission.user)
+				? submission.user.username
+				: "";
 
 			const startTime = new Date(game.createdAt).getTime();
 			const submissionTime = new Date(submission.createdAt).getTime();

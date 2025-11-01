@@ -350,7 +350,7 @@
 								</div>
 
 								{#if isCodeExecutionSuccessResponse(testResults[index])}
-									<div 
+									<div
 										class="flex flex-col gap-4 lg:gap-6"
 										data-testid={testIds.PLAY_PUZZLE_COMPONENT_CONSOLE_OUTPUT}
 									>

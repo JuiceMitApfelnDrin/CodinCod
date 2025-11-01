@@ -3,7 +3,13 @@
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { Input } from "@/components/ui/input";
 	import { Textarea } from "@/components/ui/textarea";
-	import { backendUrls, httpRequestMethod, testIds, updateProfileSchema } from "types";
+	import {
+		backendUrls,
+		httpRequestMethod,
+		testIds,
+		updateProfileSchema
+	} from "types";
+	import { z } from "zod";
 	import { toast } from "svelte-sonner";
 	import { authenticatedUserInfo } from "@/stores";
 	import { onMount } from "svelte";
@@ -22,7 +28,7 @@
 
 	onMount(async () => {
 		mounted = true;
-		
+
 		// Load current user data
 		const username = $authenticatedUserInfo?.username;
 		if (!username) {
@@ -61,21 +67,22 @@
 				bio: bio.trim() || undefined,
 				location: location.trim() || undefined,
 				picture: picture.trim() || undefined,
-				socials: socials.filter(s => s.trim()).length > 0 
-					? socials.filter(s => s.trim()) 
-					: undefined
+				socials:
+					socials.filter((s) => s.trim()).length > 0
+						? socials.filter((s) => s.trim())
+						: undefined
 			};
 
 			const validationResult = updateProfileSchema.safeParse(profileData);
 
 			if (!validationResult.success) {
 				const errors: Record<string, string> = {};
-				validationResult.error.errors.forEach((err) => {
+				validationResult.error.issues.forEach((err) => {
 					const path = err.path.join(".");
 					errors[path] = err.message;
 				});
 				validationErrors = errors;
-				
+
 				// Show first error to user
 				const firstError = Object.values(errors)[0];
 				toast.error(firstError);
@@ -111,7 +118,7 @@
 
 	function addSocial() {
 		const trimmedSocial = newSocial.trim();
-		
+
 		if (!trimmedSocial) {
 			toast.error("Please enter a URL");
 			return;
@@ -122,14 +129,13 @@
 			return;
 		}
 
-		// Validate URL format using Zod
-		const urlSchema = updateProfileSchema.shape.socials?.element;
-		if (urlSchema) {
-			const result = urlSchema.safeParse(trimmedSocial);
-			if (!result.success) {
-				toast.error(result.error.errors[0]?.message || "Please enter a valid URL");
-				return;
-			}
+		const urlSchema = z.string().trim().url("Social link must be a valid URL");
+		const result = urlSchema.safeParse(trimmedSocial);
+		if (!result.success) {
+			toast.error(
+				result.error.issues[0]?.message || "Please enter a valid URL"
+			);
+			return;
 		}
 
 		// Check for duplicates
@@ -185,7 +191,9 @@
 					data-testid={testIds.PROFILE_SETTINGS_TEXTAREA_BIO}
 				/>
 				<div class="flex items-center justify-between">
-					<p class="text-muted-foreground text-xs">{bio.length}/500 characters</p>
+					<p class="text-muted-foreground text-xs">
+						{bio.length}/500 characters
+					</p>
 					{#if validationErrors.bio}
 						<p class="text-destructive text-xs">{validationErrors.bio}</p>
 					{/if}

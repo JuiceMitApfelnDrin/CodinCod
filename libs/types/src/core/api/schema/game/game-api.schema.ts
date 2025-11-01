@@ -4,7 +4,10 @@ import { gameEntitySchema } from "../../../game/schema/game-entity.schema.js";
 import { gameModeSchema } from "../../../game/schema/mode.schema.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
 import { gameVisibilitySchema } from "../../../game/schema/visibility.schema.js";
-import { DEFAULT_GAME_LENGTH_IN_SECONDS, MINIMUM_PLAYERS_IN_GAME } from "../../../game/config/game-config.js";
+import {
+	DEFAULT_GAME_LENGTH_IN_SECONDS,
+	MINIMUM_PLAYERS_IN_GAME,
+} from "../../../game/config/game-config.js";
 import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
 
 /**
@@ -15,7 +18,12 @@ export const createGameRequestSchema = z.object({
 	mode: gameModeSchema,
 	visibility: gameVisibilitySchema,
 	maxPlayers: z.number().int().min(MINIMUM_PLAYERS_IN_GAME),
-	timeLimit: z.number().int().min(60).max(DEFAULT_GAME_LENGTH_IN_SECONDS).optional(), // in seconds
+	timeLimit: z
+		.number()
+		.int()
+		.min(60)
+		.max(DEFAULT_GAME_LENGTH_IN_SECONDS)
+		.optional(), // in seconds
 });
 
 export const createGameResponseSchema = gameEntitySchema
@@ -48,7 +56,12 @@ export const listGamesRequestSchema = z.object({
 	mode: gameModeSchema.optional(),
 	status: z.enum(["waiting", "in_progress", "completed"]).optional(),
 	page: z.number().int().positive().default(PAGINATION_CONFIG.DEFAULT_PAGE),
-	pageSize: z.number().int().positive().max(PAGINATION_CONFIG.MAX_LIMIT).default(PAGINATION_CONFIG.DEFAULT_LIMIT),
+	pageSize: z
+		.number()
+		.int()
+		.positive()
+		.max(PAGINATION_CONFIG.MAX_LIMIT)
+		.default(PAGINATION_CONFIG.DEFAULT_LIMIT),
 });
 
 export const listGamesResponseSchema = z

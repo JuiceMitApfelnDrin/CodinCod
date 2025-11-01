@@ -11,7 +11,7 @@
 
 	type Props = WithElementRef<
 		Omit<HTMLInputAttributes, "type" | "data-testid"> &
-			DataTestIdProp &
+			Partial<DataTestIdProp> &
 			(
 				| { type: "file"; files?: FileList }
 				| { type?: InputType; files?: undefined }
