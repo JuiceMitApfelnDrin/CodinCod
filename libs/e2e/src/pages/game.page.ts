@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from './base.page';
-import { testIds } from 'types';
+import { testIds, frontendUrls } from 'types';
 
 /**
  * Page Object Model for the multiplayer game page
@@ -26,17 +26,17 @@ export class GamePage extends BasePage {
 		this.runButton = page.getByTestId(testIds.PLAY_PUZZLE_COMPONENT_BUTTON_RUN_CODE);
 		this.languageSelector = page.locator('select, [role="combobox"]').filter({ hasText: /language/i }).first();
 		this.timerDisplay = page.locator('text=/\\d+:\\d+/').first();
-		this.testResults = page.locator('[data-testid*="test-result"], .test-results').first();
-		this.playerRankings = page.locator('[data-testid*="ranking"], .rankings').first();
-		this.chatInput = page.locator('input[placeholder*="message"], textarea[placeholder*="message"]').first();
-		this.outputConsole = page.locator('[data-testid*="console"], .console-output, pre').first();
+		this.testResults = page.getByTestId(testIds.PLAY_PUZZLE_COMPONENT_TEST_RESULTS);
+		this.playerRankings = page.getByTestId(testIds.GAME_COMPONENT_PLAYER_RANKINGS);
+		this.chatInput = page.getByTestId(testIds.CHAT_COMPONENT_INPUT_MESSAGE);
+		this.outputConsole = page.getByTestId(testIds.PLAY_PUZZLE_COMPONENT_CONSOLE_OUTPUT);
 	}
 
 	/**
 	 * Navigate to game by ID
 	 */
 	async gotoGame(gameId: string): Promise<void> {
-		await this.goto(`/multiplayer/${gameId}`);
+		await this.goto(frontendUrls.multiplayerById(gameId));
 	}
 
 	/**

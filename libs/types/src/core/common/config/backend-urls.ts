@@ -7,7 +7,9 @@ export const backendUrls = {
 	REGISTER: `${baseRoute}/register`,
 	LOGIN: `${baseRoute}/login`,
 	LOGOUT: `${baseRoute}/logout`,
-	USER_ME: `${baseRoute}/user/me`,
+	ACCOUNT: `${baseRoute}/account`,
+	ACCOUNT_PREFERENCES: `${baseRoute}/account/preferences`,
+	ACCOUNT_PROFILE: `${baseRoute}/account/profile`,
 	USER: `${baseRoute}/user`,
 	userByUsername: (username: string) => `${baseRoute}/user/${username}`,
 	userByUsernamePuzzle: (username: string) =>
@@ -16,8 +18,6 @@ export const backendUrls = {
 		`${baseRoute}/user/${username}/activity`,
 	userByUsernameIsAvailable: (username: string) =>
 		`${baseRoute}/user/${username}/isAvailable`,
-	ACCOUNT: `${baseRoute}/account`,
-	ACCOUNT_PREFERENCES: `${baseRoute}/account/preferences`,
 	EXECUTE: `${baseRoute}/execute`,
 
 	// puzzle routes

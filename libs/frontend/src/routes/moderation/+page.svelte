@@ -24,6 +24,7 @@
 	import { buildBackendUrl } from "@/config/backend";
 	import { backendUrls } from "types";
 	import Pagination from "#/nav/pagination.svelte";
+	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 
 	let { data }: { data: PageData } = $props();
 
@@ -80,7 +81,7 @@
 
 	async function handleApprove(id: string) {
 		try {
-			const response = await fetch(
+			const response = await fetchWithAuthenticationCookie(
 				buildBackendUrl(backendUrls.moderationPuzzleApprove(id)),
 				{
 					method: httpRequestMethod.POST
@@ -117,7 +118,7 @@
 		}
 
 		try {
-			const response = await fetch(
+			const response = await fetchWithAuthenticationCookie(
 				buildBackendUrl(backendUrls.moderationPuzzleRevise(selectedPuzzleId)),
 				{
 					method: httpRequestMethod.POST,
@@ -146,7 +147,7 @@
 		status: typeof reviewStatusEnum.RESOLVED | typeof reviewStatusEnum.REJECTED
 	) {
 		try {
-			const response = await fetch(
+			const response = await fetchWithAuthenticationCookie(
 				buildBackendUrl(backendUrls.moderationReportResolve(id)),
 				{
 					method: httpRequestMethod.POST,
@@ -190,7 +191,7 @@
 		}
 
 		try {
-			const response = await fetch(
+			const response = await fetchWithAuthenticationCookie(
 				buildBackendUrl(
 					backendUrls.moderationUserByIdBanByType(selectedUserId, banType)
 				),
@@ -228,7 +229,7 @@
 		}
 
 		try {
-			const response = await fetch(
+			const response = await fetchWithAuthenticationCookie(
 				buildBackendUrl(backendUrls.moderationUserByIdUnban(userId)),
 				{
 					method: httpRequestMethod.POST,
@@ -260,7 +261,7 @@
 		banHistoryDialogOpen = true;
 
 		try {
-			const response = await fetch(
+			const response = await fetchWithAuthenticationCookie(
 				buildBackendUrl(backendUrls.moderationUserByIdBanHistory(userId)),
 				{
 					method: httpRequestMethod.GET

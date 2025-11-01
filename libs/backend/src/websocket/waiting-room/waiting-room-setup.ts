@@ -2,6 +2,7 @@ import { WebSocket } from "@fastify/websocket";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import {
 	DEFAULT_GAME_LENGTH_IN_MILLISECONDS,
+	ERROR_MESSAGES,
 	frontendUrls,
 	GameEntity,
 	gameModeEnum,
@@ -23,7 +24,7 @@ export function waitingRoomSetup(
 	fastify: FastifyInstance
 ) {
 	if (!isAuthenticatedInfo(req.user)) {
-		socket.close(1008, "Authentication required");
+		socket.close(1008, ERROR_MESSAGES.AUTHENTICATION.AUTHENTICATION_REQUIRED);
 		return;
 	}
 
@@ -69,7 +70,7 @@ export function waitingRoomSetup(
 				if (!success) {
 					waitingRoom.updateUser(req.user.username, {
 						event: waitingRoomEventEnum.ERROR,
-						message: `Room ${parsedMessage.roomId} not found`
+						message: ERROR_MESSAGES.GAME.NOT_FOUND
 					});
 				}
 				break;
@@ -91,7 +92,7 @@ export function waitingRoomSetup(
 				if (!success) {
 					waitingRoom.updateUser(req.user.username, {
 						event: waitingRoomEventEnum.ERROR,
-						message: "Failed to join room"
+						message: ERROR_MESSAGES.GAME.FAILED_TO_START
 					});
 				}
 				break;
@@ -108,7 +109,7 @@ export function waitingRoomSetup(
 				if (!room) {
 					waitingRoom.updateUser(req.user.username, {
 						event: waitingRoomEventEnum.ERROR,
-						message: `Room ${parsedMessage.roomId} not found`
+						message: ERROR_MESSAGES.GAME.NOT_FOUND
 					});
 					break;
 				}
@@ -118,7 +119,7 @@ export function waitingRoomSetup(
 				if (!userInRoom) {
 					waitingRoom.updateUser(req.user.username, {
 						event: waitingRoomEventEnum.ERROR,
-						message: "You must be in the room to send messages"
+						message: ERROR_MESSAGES.GAME.USER_NOT_IN_GAME
 					});
 					break;
 				}
@@ -150,7 +151,7 @@ export function waitingRoomSetup(
 					if (!room) {
 						waitingRoom.updateUser(req.user.username, {
 							event: waitingRoomEventEnum.ERROR,
-							message: `Room ${parsedMessage.roomId} not found`
+							message: ERROR_MESSAGES.GAME.NOT_FOUND
 						});
 						return;
 					}
@@ -161,7 +162,7 @@ export function waitingRoomSetup(
 						waitingRoom.removeEmptyRooms();
 						waitingRoom.updateUser(req.user.username, {
 							event: waitingRoomEventEnum.ERROR,
-							message: "No players in room"
+							message: ERROR_MESSAGES.GAME.USER_NOT_IN_GAME
 						});
 						return;
 					}
@@ -224,7 +225,7 @@ export function waitingRoomSetup(
 					fastify.log.error({ err: error }, "Error starting game");
 					waitingRoom.updateUser(req.user.username, {
 						event: waitingRoomEventEnum.ERROR,
-						message: "Failed to start game"
+						message: ERROR_MESSAGES.GAME.FAILED_TO_START
 					});
 				}
 				break;

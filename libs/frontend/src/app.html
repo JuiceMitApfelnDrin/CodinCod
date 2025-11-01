@@ -1,6 +1,36 @@
 <!doctype html>
-<html class="dark" lang="en">
+<html lang="en">
 	<head>
+		<script>
+			// Initialize theme before page renders to prevent flash
+			(function () {
+				const THEME_KEY = "theme";
+				const DARK = "dark";
+				const LIGHT = "light";
+
+				try {
+					const storedTheme = localStorage.getItem(THEME_KEY);
+					const prefersDark = window.matchMedia(
+						"(prefers-color-scheme: dark)"
+					).matches;
+					const theme =
+						storedTheme === DARK || storedTheme === LIGHT
+							? storedTheme
+							: prefersDark
+								? DARK
+								: LIGHT;
+
+					if (theme === DARK) {
+						document.documentElement.classList.add(DARK);
+					}
+				} catch (e) {
+					// Fallback to system preference if localStorage fails
+					if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+						document.documentElement.classList.add(DARK);
+					}
+				}
+			})();
+		</script>
 		<link
 			rel="apple-touch-icon"
 			sizes="180x180"

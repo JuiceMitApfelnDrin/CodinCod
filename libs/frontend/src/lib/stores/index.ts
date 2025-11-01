@@ -9,10 +9,6 @@ import {
 } from "types";
 import { preferences } from "./preferences";
 
-/**
- * start dark-theme store
- */
-
 const theme = writable<ThemeOption>();
 export const isDarkTheme = derived(
 	theme,
@@ -34,26 +30,24 @@ if (browser) {
 	const currentThemeOption = isThemeOption(storedTheme)
 		? storedTheme
 		: preferredTheme;
+
 	theme.set(currentThemeOption);
 
 	theme.subscribe((newTheme) => {
-		if (newTheme === themeOption.DARK) {
+		const isDarkClass = document.documentElement.classList.contains(
+			themeOption.DARK
+		);
+		const shouldBeDark = newTheme === themeOption.DARK;
+
+		if (shouldBeDark && !isDarkClass) {
 			document.documentElement.classList.add(themeOption.DARK);
-		} else {
+		} else if (!shouldBeDark && isDarkClass) {
 			document.documentElement.classList.remove(themeOption.DARK);
 		}
 
 		localStorage.setItem(localStorageKeys.THEME, newTheme);
 	});
 }
-
-/**
- * end dark-theme store
- */
-
-/**
- * start user-info store
- */
 
 export const authenticatedUserInfo = writable<AuthenticatedInfo | null>(null);
 

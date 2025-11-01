@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
-import authenticated from "../../../plugins/middleware/authenticated.js";
-import checkUserBan from "../../../plugins/middleware/check-user-ban.js";
+import authenticated from "../../plugins/middleware/authenticated.js";
+import checkUserBan from "../../plugins/middleware/check-user-ban.js";
 import { AuthenticatedInfo, DEFAULT_USER_ROLE, httpResponseCodes } from "types";
-import User from "../../../models/user/user.js";
+import User from "../../models/user/user.js";
 import { validateBody } from "@/plugins/middleware/validate-body.js";
 import { z } from "zod";
 
@@ -13,7 +13,8 @@ const updateProfileSchema = z.object({
 	socials: z.array(z.string().url()).max(5).optional()
 });
 
-export default async function userMeRoutes(fastify: FastifyInstance) {
+export default async function accountRoutes(fastify: FastifyInstance) {
+	// GET /account - Get current user info
 	fastify.get(
 		"/",
 		{
@@ -49,6 +50,7 @@ export default async function userMeRoutes(fastify: FastifyInstance) {
 		}
 	);
 
+	// PATCH /account/profile - Update user profile
 	fastify.patch(
 		"/profile",
 		{

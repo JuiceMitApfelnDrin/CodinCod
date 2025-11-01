@@ -1,32 +1,34 @@
-import { genericReturnMessages } from "@/config/generic-return-messages.js";
-import { leaderboardService } from "@/services/leaderboard.service.js";
+import { ERROR_MESSAGES, httpResponseCodes } from "types";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes } from "types";
+import authenticated from "@/plugins/middleware/authenticated.js";
+import moderatorOnly from "@/plugins/middleware/moderator-only.js";
+import { leaderboardService } from "@/services/leaderboard.service.js";
 
-export default async function leaderboardRecalculateRoutes(
+export default async function recalculateLeaderboardRoutes(
 	fastify: FastifyInstance
 ) {
-	fastify.post("/", async (request, reply) => {
-		const { OK } = httpResponseCodes.SUCCESSFUL;
-		const { INTERNAL_SERVER_ERROR } = httpResponseCodes.SERVER_ERROR;
+	fastify.post(
+		"/",
+		{
+			onRequest: [authenticated, moderatorOnly]
+		},
+		async (request, reply) => {
+			try {
+				const result = await leaderboardService.recalculateAllLeaderboards();
 
-		try {
-			request.log.info("Manual leaderboard recalculation triggered");
-
-			const results = await leaderboardService.recalculateAllLeaderboards();
-
-			return reply.status(OK).send({
-				success: true,
-				message: "Leaderboard recalculation completed",
-				processedGames: results.processedGames,
-				totalProcessed: results.totalProcessed
-			});
-		} catch (error) {
-			request.log.error({ err: error }, "Error during manual recalculation");
-			const { WENT_WRONG } = genericReturnMessages[INTERNAL_SERVER_ERROR];
-			return reply.status(INTERNAL_SERVER_ERROR).send({
-				error: `Leaderboard recalculation ${WENT_WRONG}`
-			});
+				return reply.status(httpResponseCodes.SUCCESSFUL.OK).send({
+					message: `Successfully recalculated leaderboards`,
+					processed: result
+				});
+			} catch (error) {
+				fastify.log.error(error, "Failed to recalculate leaderboards");
+				return reply
+					.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+					.send({
+						error: ERROR_MESSAGES.SERVER.INTERNAL_ERROR,
+						message: ERROR_MESSAGES.GENERIC.SOMETHING_WENT_WRONG
+					});
+			}
 		}
-	});
+	);
 }

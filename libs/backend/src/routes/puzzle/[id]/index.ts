@@ -1,24 +1,25 @@
 import { FastifyInstance } from "fastify";
 import {
 	AuthenticatedInfo,
-	puzzleEntitySchema,
-	puzzleVisibilityEnum,
-	isAuthor,
-	isAuthenticatedInfo,
 	DeletePuzzle,
+	ERROR_MESSAGES,
 	ErrorResponse,
 	httpResponseCodes,
-	PuzzleVisibility,
+	isAuthor,
+	isAuthenticatedInfo,
+	isModerator,
 	isPuzzleDto,
 	PUZZLE_CONFIG,
-	isModerator
+	PuzzleAPI,
+	puzzleVisibilityEnum,
+	type PuzzleVisibility
 } from "types";
 import Puzzle from "@/models/puzzle/puzzle.js";
+import User from "@/models/user/user.js";
 import authenticated from "@/plugins/middleware/authenticated.js";
 import checkUserBan from "@/plugins/middleware/check-user-ban.js";
 import { ParamsId } from "@/types/types.js";
 import { checkAllValidators } from "@/utils/functions/check-all-validators.js";
-import User from "@/models/user/user.js";
 
 export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 	fastify.get<ParamsId>("/", async (request, reply) => {
@@ -56,8 +57,8 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const { id } = request.params;
-			const parseResult = puzzleEntitySchema
-				.omit({ author: true })
+			const parseResult = PuzzleAPI.updatePuzzleRequestSchema
+				.omit({ id: true })
 				.safeParse(request.body);
 
 			if (!parseResult.success) {
@@ -87,12 +88,11 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				if (!puzzle) {
 					return reply
 						.status(httpResponseCodes.CLIENT_ERROR.NOT_FOUND)
-						.send({ error: "Puzzle not found" });
+						.send({ error: ERROR_MESSAGES.PUZZLE.NOT_FOUND });
 				}
 
 				const user = await User.findById(userId);
 
-				// Convert author ObjectId to string for comparison
 				const authorIdString = puzzle.author ? String(puzzle.author) : null;
 				const isAuthorCheck =
 					authorIdString !== null && isAuthor(authorIdString, userId);
@@ -113,7 +113,6 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 					});
 				}
 
-				// Since puzzle is a lean object, we need to use findByIdAndUpdate
 				const updatedPuzzle = await Puzzle.findByIdAndUpdate(
 					id,
 					parseResult.data,
@@ -152,7 +151,7 @@ export default async function puzzleByIdRoutes(fastify: FastifyInstance) {
 				return reply.send(updatedPuzzle);
 			} catch (error) {
 				const errorResponse: ErrorResponse = {
-					error: "Failed to update puzzle",
+					error: ERROR_MESSAGES.PUZZLE.FAILED_TO_UPDATE,
 					message: ""
 				};
 

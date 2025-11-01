@@ -1,6 +1,6 @@
 import { buildBackendUrl } from "@/config/backend.js";
 import type { ServerLoadEvent } from "@sveltejs/kit";
-import { backendUrls, type PaginatedQueryResponse } from "types";
+import { backendUrls, type PuzzleAPI } from "types";
 
 export async function load({ fetch, url }: ServerLoadEvent) {
 	const apiUrl = buildBackendUrl(backendUrls.PUZZLE);
@@ -9,7 +9,7 @@ export async function load({ fetch, url }: ServerLoadEvent) {
 	apiUrlWithQueryParams.search = url.search;
 
 	const res = await fetch(apiUrlWithQueryParams);
-	const paginatedPuzzles: PaginatedQueryResponse = await res.json();
+	const paginatedPuzzles: PuzzleAPI.GetPuzzlesResponse = await res.json();
 
 	return { ...paginatedPuzzles };
 }

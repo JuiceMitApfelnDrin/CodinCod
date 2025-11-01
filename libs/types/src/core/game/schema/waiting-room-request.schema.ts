@@ -3,6 +3,7 @@ import { waitingRoomEventEnum } from "../enum/waiting-room-event-enum.js";
 import { getValues } from "../../../utils/functions/get-values.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 import { gameOptionsSchema } from "./game-options.schema.js";
+import { CHAT_MESSAGE_CONFIG } from "../../chat/config/chat-message-config.js";
 
 const baseMessageSchema = z.object({
 	event: z.enum(getValues(waitingRoomEventEnum)),
@@ -36,7 +37,10 @@ const startGameSchema = baseMessageSchema.extend({
 const chatMessageSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.CHAT_MESSAGE),
 	roomId: objectIdSchema,
-	message: z.string().min(1).max(500),
+	message: z
+		.string()
+		.min(CHAT_MESSAGE_CONFIG.minChatMessageLength)
+		.max(CHAT_MESSAGE_CONFIG.maxChatMessageLength),
 });
 
 export const waitingRoomRequestSchema = z.discriminatedUnion("event", [

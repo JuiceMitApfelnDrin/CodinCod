@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import {
 	arePistonRuntimes,
+	ERROR_MESSAGES,
 	ErrorResponse,
 	httpResponseCodes,
 	isFetchError,
@@ -21,12 +22,12 @@ export const executionResponseErrors = {
 		message: "At the moment we don't support this language."
 	},
 	SERVICE_UNAVAILABLE: {
-		error: "Service unavailable",
-		message: "Unable to reach piston code execution service"
+		error: ERROR_MESSAGES.SERVER.INTERNAL_ERROR,
+		message: ERROR_MESSAGES.FETCH.NETWORK_ERROR
 	},
 	INTERNAL_SERVER_ERROR: {
-		error: "Internal Server Error",
-		message: "Something went wrong during piston code execution"
+		error: ERROR_MESSAGES.SERVER.INTERNAL_ERROR,
+		message: ERROR_MESSAGES.GENERIC.SOMETHING_WENT_WRONG
 	},
 	PISTON_ERROR: {
 		error: "Piston error"

@@ -83,7 +83,6 @@ export class LeaderboardService {
 			processedCount++;
 		}
 
-		// Update rankings after processing all games
 		if (processedCount > 0) {
 			await this.updateRankingsForMode(mode);
 		}
@@ -91,15 +90,11 @@ export class LeaderboardService {
 		return processedCount;
 	}
 
-	/**
-	 * Process results from a single game and update player ratings
-	 */
 	async processGameResults(game: GameDocument, mode: GameMode): Promise<void> {
 		if (!game.playerSubmissions || game.playerSubmissions.length === 0) {
 			return;
 		}
 
-		// Get all submissions with user data
 		const submissions = await Submission.find({
 			_id: { $in: game.playerSubmissions }
 		})
@@ -108,18 +103,15 @@ export class LeaderboardService {
 			.exec();
 
 		if (submissions.length < 2) {
-			// Not enough players to calculate ratings
 			return;
 		}
 
-		// Get leaderboard to determine winner and rankings
 		const leaderboard = gameModeService.getGameLeaderboard(game, submissions);
 
 		if (leaderboard.length === 0) return;
 
 		const winner = leaderboard[0];
 
-		// Update metrics for each player
 		for (let i = 0; i < leaderboard.length; i++) {
 			const entry = leaderboard[i];
 			const userId = entry.userId;
@@ -128,22 +120,20 @@ export class LeaderboardService {
 
 			const metrics = await this.getUserMetrics(userId);
 
-			// Initialize game mode metrics if not exists
 			if (!metrics[mode]) {
 				metrics[mode] = {
+					averageScore: 0,
+					bestScore: 0,
 					gamesPlayed: 0,
 					gamesWon: 0,
-					bestScore: 0,
-					averageScore: 0,
-					totalScore: 0,
-					glickoRating: getDefaultRating()
+					glickoRating: getDefaultRating(),
+					totalScore: 0
 				};
 			}
 
 			const modeMetrics = metrics[mode];
 			const isWinner = entry.userId === winner.userId;
 
-			// Update game count and scores
 			modeMetrics.gamesPlayed += 1;
 			if (isWinner) {
 				modeMetrics.gamesWon += 1;
@@ -157,7 +147,6 @@ export class LeaderboardService {
 				modeMetrics.bestScore = entry.score;
 			}
 
-			// Update Glicko rating based on outcomes against all opponents
 			const currentRating: GlickoRating = normalizeGlickoRating(
 				modeMetrics.glickoRating
 			);
@@ -169,7 +158,6 @@ export class LeaderboardService {
 						? normalizeGlickoRating(opponentMetrics.glickoRating)
 						: getDefaultRating();
 
-					// Determine if player beat this opponent
 					const playerWon = entry.rank < opponent.rank;
 
 					return { opponentRating, playerWon };
@@ -190,7 +178,6 @@ export class LeaderboardService {
 
 			modeMetrics.lastGameDate = game.createdAt;
 
-			// Update overall stats
 			metrics.totalGamesPlayed += 1;
 			if (isWinner) {
 				metrics.totalGamesWon += 1;

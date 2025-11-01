@@ -4,14 +4,13 @@ import { buildBackendUrl } from "@/config/backend";
 import {
 	backendUrls,
 	cookieKeys,
-	DELETE,
 	deletePuzzleSchema,
 	editPuzzleSchema,
 	ERROR_MESSAGES,
 	environment,
 	frontendUrls,
+	httpRequestMethod,
 	httpResponseCodes,
-	PUT,
 	type EditPuzzle
 } from "types";
 import { error, fail, redirect } from "@sveltejs/kit";
@@ -69,7 +68,7 @@ export const actions = {
 				"Content-Type": "application/json",
 				Cookie: request.headers.get("cookie") || ""
 			},
-			method: DELETE
+			method: httpRequestMethod.DELETE
 		});
 
 		if (!response.ok) {
@@ -100,7 +99,7 @@ export const actions = {
 				"Content-Type": "application/json",
 				Cookie: cookie
 			},
-			method: PUT
+			method: httpRequestMethod.PUT
 		});
 
 		if (!response.ok) {

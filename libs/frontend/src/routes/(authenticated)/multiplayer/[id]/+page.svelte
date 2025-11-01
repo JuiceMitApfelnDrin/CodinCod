@@ -128,6 +128,12 @@
 		onMessage: handleGameMessage,
 		onStateChange: (state) => {
 			connectionState = state;
+			if (state === "connected") {
+				// Automatically send join event when connected
+				sendGameMessage({
+					event: gameEventEnum.JOIN_GAME
+				});
+			}
 		},
 		validateResponse: isGameResponse
 	});
@@ -344,7 +350,7 @@
 				</div>
 
 				{#if game.players}
-					<ul>
+					<ul data-testid={testIds.GAME_COMPONENT_PLAYER_RANKINGS}>
 						{#each game.players as player}
 							<li>
 								{#if isUserDto(player)}

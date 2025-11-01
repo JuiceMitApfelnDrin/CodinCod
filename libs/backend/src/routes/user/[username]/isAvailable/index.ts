@@ -1,38 +1,37 @@
 import User from "@/models/user/user.js";
 import { FastifyInstance } from "fastify";
-import { httpResponseCodes, isUsername } from "types";
+import { ERROR_MESSAGES, httpResponseCodes, UserAPI } from "types";
 import { ParamsUsername } from "../types.js";
-import {
-	genericReturnMessages,
-	userProperties
-} from "@/config/generic-return-messages.js";
 
-export default async function userByUsernameIsAvailableRoutes(
+export default async function isUsernameAvailableRoutes(
 	fastify: FastifyInstance
 ) {
 	fastify.get<ParamsUsername>("/", async (request, reply) => {
 		const { username } = request.params;
 
-		if (!isUsername(username)) {
-			const { BAD_REQUEST } = httpResponseCodes.CLIENT_ERROR;
-			const { IS_INVALID } = genericReturnMessages[BAD_REQUEST];
-			const { USERNAME } = userProperties;
+		const parseResult =
+			UserAPI.checkUsernameAvailabilityRequestSchema.safeParse(request.params);
 
-			return reply.status(BAD_REQUEST).send({
-				message: `${USERNAME} ${IS_INVALID}`
-			});
+		if (!parseResult.success) {
+			return reply
+				.status(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST)
+				.send({ error: parseResult.error.issues });
 		}
 
 		try {
-			const existingUser = await User.findOne({ username });
+			const user = await User.findOne({ username });
+			const response: UserAPI.CheckUsernameAvailabilityResponse = {
+				available: !user
+			};
 
-			if (existingUser) {
-				return reply.status(200).send({ isAvailable: false });
-			}
-
-			return reply.status(200).send({ isAvailable: true });
+			return reply.status(httpResponseCodes.SUCCESSFUL.OK).send(response);
 		} catch (error) {
-			reply.status(500).send({ message: "Internal Server Error" });
+			return reply
+				.status(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+				.send({
+					error: ERROR_MESSAGES.SERVER.INTERNAL_ERROR,
+					message: ERROR_MESSAGES.GENERIC.SOMETHING_WENT_WRONG
+				});
 		}
 	});
 }

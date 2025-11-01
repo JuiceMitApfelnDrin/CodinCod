@@ -37,7 +37,7 @@ const puzzleSchema = new Schema<PuzzleDocument>({
 	},
 	author: {
 		ref: USER,
-		required: true, // Ensure every puzzle has an author
+		required: true,
 		type: mongoose.Schema.Types.ObjectId
 	},
 	validators: [validatorSchema],

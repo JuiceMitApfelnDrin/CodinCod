@@ -6,8 +6,8 @@ import {
 	backendUrls,
 	ERROR_MESSAGES,
 	frontendUrls,
+	httpRequestMethod,
 	httpResponseCodes,
-	POST,
 	registerSchema
 } from "types";
 import { setCookie } from "@/features/authentication/utils/set-cookie";
@@ -35,7 +35,7 @@ export const actions = {
 			headers: {
 				"Content-Type": "application/json"
 			},
-			method: POST
+			method: httpRequestMethod.POST
 		});
 
 		const data = await result.json();

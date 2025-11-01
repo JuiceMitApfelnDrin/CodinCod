@@ -5,6 +5,7 @@
 		HTMLButtonAttributes
 	} from "svelte/elements";
 	import { type VariantProps, tv } from "tailwind-variants/lite";
+	import type { DataTestIdProp } from "types";
 
 	export const buttonVariants = tv({
 		base: "ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -37,7 +38,8 @@
 	export type ButtonSize = VariantProps<typeof buttonVariants>["size"];
 
 	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
-		WithElementRef<HTMLAnchorAttributes> & {
+		WithElementRef<HTMLAnchorAttributes> &
+		DataTestIdProp & {
 			variant?: ButtonVariant;
 			size?: ButtonSize;
 		};
@@ -45,24 +47,25 @@
 
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import type { DataTestIdProp } from "types";
 
 	let {
 		children,
 		class: className,
+		"data-testid": testId,
 		href = undefined,
 		ref = $bindable(null),
 		size = "default",
 		type = "button",
 		variant = "default",
 		...restProps
-	}: ButtonProps & DataTestIdProp = $props();
+	}: ButtonProps = $props();
 </script>
 
 {#if href}
 	<a
 		bind:this={ref}
 		class={cn(buttonVariants({ size, variant }), className)}
+		data-testid={testId}
 		{href}
 		{...restProps}
 	>
@@ -72,6 +75,7 @@
 	<button
 		bind:this={ref}
 		class={cn(buttonVariants({ size, variant }), className)}
+		data-testid={testId}
 		{type}
 		{...restProps}
 	>

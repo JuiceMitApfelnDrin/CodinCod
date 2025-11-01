@@ -22,7 +22,7 @@ import commentByIdRoutes from "./routes/comment/[id]/index.js";
 import commentByIdVoteRoutes from "./routes/comment/[id]/vote/index.js";
 import commentByIdCommentRoutes from "./routes/comment/[id]/comment/index.js";
 import userByUsernamePuzzleRoutes from "./routes/user/[username]/puzzle/index.js";
-import userMeRoutes from "./routes/user/me/index.js";
+import accountRoutes from "./routes/account/index.js";
 import reportRoutes from "./routes/report/index.js";
 import moderationReportByIdRoutes from "./routes/moderation/report/[id]/resolve/index.js";
 import moderationReviewRoutes from "./routes/moderation/review/index.js";
@@ -44,7 +44,7 @@ export default async function router(fastify: FastifyInstance) {
 	fastify.register(loginRoutes, { prefix: backendUrls.LOGIN });
 	fastify.register(logoutRoutes, { prefix: backendUrls.LOGOUT });
 	fastify.register(userRoutes, { prefix: backendUrls.USER });
-	fastify.register(userMeRoutes, { prefix: backendUrls.USER_ME });
+	fastify.register(accountRoutes, { prefix: backendUrls.ACCOUNT });
 	fastify.register(userByUsernameRoutes, {
 		prefix: backendUrls.userByUsername(backendParams.USERNAME)
 	});

@@ -16,6 +16,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import * as ButtonGroup from "#/ui/button-group";
+	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 
 	// Reactive state using Svelte 5 runes
 	let selectedMode = $state<GameMode>(gameModeEnum.FASTEST);
@@ -61,10 +62,12 @@
 		error = null;
 
 		try {
-			const url = `${backendUrls.leaderboardByGameMode(mode)}?page=${page}&pageSize=${pageSize}`;
-			const response = await fetch(url, {
-				credentials: "include"
-			});
+			const response = await fetchWithAuthenticationCookie(
+				`${backendUrls.leaderboardByGameMode(mode)}?page=${page}&pageSize=${pageSize}`,
+				{
+					credentials: "include"
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch leaderboard: ${response.statusText}`);

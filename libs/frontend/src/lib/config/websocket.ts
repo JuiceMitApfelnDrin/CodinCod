@@ -1,9 +1,11 @@
+import { ERROR_MESSAGES } from "types";
+
 export function buildWebSocketUrl(path: string): string {
 	const wsBaseUrl = import.meta.env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER;
 
 	if (!wsBaseUrl) {
 		throw new Error(
-			"VITE_BACKEND_WEBSOCKET_MULTIPLAYER is not defined in .env"
+			`${ERROR_MESSAGES.SERVER.INTERNAL_ERROR}: VITE_BACKEND_WEBSOCKET_MULTIPLAYER environment variable is not set`
 		);
 	}
 

@@ -54,7 +54,6 @@ export async function createComment(
 	const comment = new Comment(commentData);
 	await comment.save();
 
-	// Update parent to include this comment
 	if (options.commentType === commentTypeEnum.PUZZLE) {
 		await Puzzle.findByIdAndUpdate(options.parentId, {
 			$push: { comments: comment._id }

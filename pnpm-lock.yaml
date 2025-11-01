@@ -122,8 +122,11 @@ importers:
         specifier: ^1.48.2
         version: 1.56.1
       '@types/node':
-        specifier: ^22.10.2
+        specifier: ^22.18.13
         version: 22.18.13
+      dotenv:
+        specifier: ^16.6.1
+        version: 16.6.1
       typescript:
         specifier: ^5.7.2
         version: 5.9.3

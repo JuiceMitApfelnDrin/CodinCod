@@ -31,7 +31,6 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 			const { gameId, submissionId, userId } = request.body;
 
 			try {
-				// Find submission and verify ownership
 				const matchingSubmission = await Submission.findById(submissionId)
 					.populate("programmingLanguage")
 					.exec();
@@ -45,7 +44,6 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					});
 				}
 
-				// Find game and validate
 				const matchingGame = await gameService.findByIdPopulated(gameId);
 
 				if (!matchingGame) {
@@ -54,11 +52,10 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 						.send({ error: `couldn't find a game with id (${gameId})` });
 				}
 
-				// Determine game mode and validate submission
 				const gameMode = matchingGame.options?.mode ?? gameModeEnum.FASTEST;
 				const validation = gameModeService.validateSubmissionForMode(gameMode, {
 					result: matchingSubmission.result,
-					attempts: 1 // TODO: Track actual attempts from client in database
+					attempts: 1
 				});
 
 				if (!validation.valid) {
@@ -68,7 +65,6 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					});
 				}
 
-				// Check submission timing
 				const latestSubmissionTime =
 					new Date(matchingSubmission.createdAt).getTime() +
 					SUBMISSION_BUFFER_IN_MILLISECONDS;
@@ -81,7 +77,6 @@ export default async function submissionGameRoutes(fastify: FastifyInstance) {
 					});
 				}
 
-				// Check if user already submitted
 				const gameHasExistingUserSubmission =
 					matchingGame.playerSubmissions.find((submission) => {
 						if (isString(submission)) {
