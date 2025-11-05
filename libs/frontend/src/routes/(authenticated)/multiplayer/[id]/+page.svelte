@@ -12,16 +12,14 @@
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
-	import { buildBackendUrl } from "@/config/backend";
-	import { backendUrls } from "types";
 	import { buildWebSocketUrl } from "@/config/websocket";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+	import { codincodApiWebGameControllerSubmitCode2 } from "@/api/generated/games/games";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
-	import { authenticatedUserInfo } from "@/stores";
-	import { currentTime } from "@/stores/current-time";
+	import { authenticatedUserInfo } from "@/stores/auth.store";
+	import { currentTime } from "@/stores/current-time.store";
 	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
 	import {
 		WEBSOCKET_STATES,
@@ -30,7 +28,6 @@
 	import dayjs from "dayjs";
 	import {
 		frontendUrls,
-		httpRequestMethod,
 		httpResponseCodes,
 		isAuthor,
 		isString,
@@ -42,7 +39,6 @@
 		type PuzzleDto,
 		type SubmissionDto,
 		type UserDto,
-		type GameSubmissionParams,
 		getUserIdFromUser,
 		type ChatMessage,
 		isGameResponse,
@@ -197,19 +193,8 @@
 
 	async function onPlayerSubmitCode(submissionId: string) {
 		if (!isGameOver && $authenticatedUserInfo) {
-			const gameSubmissionParams: GameSubmissionParams = {
-				gameId,
-				submissionId,
-				userId: $authenticatedUserInfo.userId
-			};
-
-			await fetchWithAuthenticationCookie(
-				buildBackendUrl(backendUrls.SUBMISSION_GAME),
-				{
-					body: JSON.stringify(gameSubmissionParams),
-					method: httpRequestMethod.POST
-				}
-			);
+			// Use generated Orval endpoint
+			await codincodApiWebGameControllerSubmitCode2(gameId, { submissionId });
 
 			sendGameMessage({
 				event: gameEventEnum.SUBMITTED_PLAYER

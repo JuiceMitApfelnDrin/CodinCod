@@ -1,27 +1,28 @@
-import { ObjectId as BsonObjectId } from "bson";
+// import { ObjectId as BsonObjectId } from "bson";
 import { z } from "zod";
-import { isString } from "../../../utils/functions/is-string.js";
+// import { isString } from "../../../utils/functions/is-string.js";
 
-export const objectIdSchema = z.preprocess(
-	(val: unknown) => {
-		if (val == null) {
-			return val;
-		}
+export const objectIdSchema = z.uuid();
+// z.preprocess(
+// 	(val: unknown) => {
+// 		if (val == null) {
+// 			return val;
+// 		}
 
-		if (isString(val)) {
-			return val;
-		}
+// 		if (isString(val)) {
+// 			return val;
+// 		}
 
-		if (val && typeof val === "object" && typeof val.toString === "function") {
-			return val.toString();
-		}
+// 		if (val && typeof val === "object" && typeof val.toString === "function") {
+// 			return val.toString();
+// 		}
 
-		return String(val);
-	},
-	z.string().refine((val) => {
-		return BsonObjectId.isValid(val);
-	}),
-);
+// 		return String(val);
+// 	},
+// 	z.string().refine((val) => {
+// 		return BsonObjectId.isValid(val);
+// 	}),
+// );
 
 export type ObjectId = z.infer<typeof objectIdSchema>;
 

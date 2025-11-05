@@ -2,12 +2,9 @@
 	import {
 		commentTypeEnum,
 		getUserIdFromUser,
-		httpRequestMethod,
 		isAuthor,
 		isCommentDto,
-		voteTypeEnum,
 		type CommentDto,
-		type CommentVoteRequest,
 		type ObjectId
 	} from "types";
 	import CommentMetaInfo from "./comment-meta-info.svelte";
@@ -21,10 +18,14 @@
 	import MessageCircle from "@lucide/svelte/icons/message-circle";
 	import MessageCircleOff from "@lucide/svelte/icons/message-circle-off";
 	import Trash from "@lucide/svelte/icons/trash";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
-	import { buildBackendUrl } from "@/config/backend";
-	import { backendUrls } from "types";
-	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import {
+		codincodApiWebCommentControllerVote2,
+		codincodApiWebCommentControllerShow2,
+		codincodApiWebCommentControllerDelete2
+	} from "@/api/generated/default/default";
+	import { VoteRequestType } from "@/api/generated/schemas/voteRequestType";
+	import type { VoteRequest } from "@/api/generated/schemas/voteRequest";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
 	import { testIds } from "types";
 
@@ -38,16 +39,11 @@
 
 	let isReplying: boolean = $state(false);
 
-	async function handleVote(commentVoteRequest: CommentVoteRequest) {
-		const response = await fetchWithAuthenticationCookie(
-			buildBackendUrl(backendUrls.commentByIdVote(comment._id)),
-			{
-				body: JSON.stringify(commentVoteRequest),
-				method: httpRequestMethod.POST
-			}
+	async function handleVote(commentVoteRequest: VoteRequest) {
+		const updatedComment = await codincodApiWebCommentControllerVote2(
+			comment._id,
+			commentVoteRequest
 		);
-
-		const updatedComment = await response.json();
 
 		if (isCommentDto(updatedComment)) {
 			comment = {
@@ -59,7 +55,7 @@
 	}
 
 	function onCommentAdded(newComment: CommentDto) {
-		const newComments = [...(comment.comments ?? []), newComment] as any[]; // unfortunately needed because recursive types are hard
+		const newComments = [...(comment.comments ?? []), newComment._id];
 		comment = {
 			...comment,
 			comments: newComments
@@ -69,19 +65,13 @@
 	}
 
 	async function fetchReplies() {
-		const response = await fetchWithAuthenticationCookie(
-			buildBackendUrl(backendUrls.commentById(comment._id)),
-			{
-				method: httpRequestMethod.GET
-			}
-		);
-
-		const updatedCommentInfoWithSubComments = await response.json();
+		const updatedCommentInfoWithSubComments =
+			await codincodApiWebCommentControllerShow2(comment._id);
 
 		if (isCommentDto(updatedCommentInfoWithSubComments)) {
 			comment = {
 				...comment,
-				comments: [...(updatedCommentInfoWithSubComments.comments ?? [])],
+				comments: updatedCommentInfoWithSubComments.comments ?? [],
 				downvote: updatedCommentInfoWithSubComments.downvote,
 				text: updatedCommentInfoWithSubComments.text,
 				updatedAt: updatedCommentInfoWithSubComments.updatedAt,
@@ -91,13 +81,7 @@
 	}
 
 	async function deleteComment() {
-		await fetchWithAuthenticationCookie(
-			buildBackendUrl(backendUrls.commentById(comment._id)),
-			{
-				method: httpRequestMethod.DELETE
-			}
-		);
-
+		await codincodApiWebCommentControllerDelete2(comment._id);
 		onDeleted(comment._id);
 	}
 </script>
@@ -154,7 +138,7 @@
 			data-testid={testIds.COMMENT_COMPONENT_BUTTON_UPVOTE_COMMENT}
 			variant="outline"
 			onclick={() => {
-				handleVote({ type: voteTypeEnum.UPVOTE });
+				handleVote({ type: VoteRequestType.upvote });
 			}}
 		>
 			<CircleArrowUp class="mr-2 size-4" />
@@ -164,7 +148,7 @@
 			data-testid={testIds.COMMENT_COMPONENT_BUTTON_DOWNVOTE_COMMENT}
 			variant="outline"
 			onclick={() => {
-				handleVote({ type: voteTypeEnum.DOWNVOTE });
+				handleVote({ type: VoteRequestType.downvote });
 			}}
 		>
 			<CircleArrowDown class="mr-2 size-4" />

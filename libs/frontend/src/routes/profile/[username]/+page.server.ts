@@ -1,39 +1,46 @@
-import {
-	activityTypeEnum,
-	backendUrls,
-	type PuzzleDto,
-	type SubmissionDto
-} from "types";
+import { codincodApiWebUserControllerActivity2 } from "$lib/api/generated";
+import { activityTypeEnum } from "types";
 import type { PageServerLoadEvent } from "./$types";
-import { buildBackendUrl } from "@/config/backend";
-import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 
-export async function load({ params }: PageServerLoadEvent) {
+export async function load({ params, fetch }: PageServerLoadEvent) {
 	const username = params.username;
 
-	const response = await fetchWithAuthenticationCookie(
-		buildBackendUrl(backendUrls.userByUsernameActivity(username))
-	);
-	if (!response.ok) {
-		console.error(response);
-	}
+	const userActivity = await codincodApiWebUserControllerActivity2(username, {
+		fetch
+	} as RequestInit);
 
-	const userActivity = await response.json();
+	const activity = userActivity.activity ?? { puzzles: [], submissions: [] };
+	const user = userActivity.user;
+	const { puzzles = [], submissions = [] } = activity;
 
-	const { activity, user } = userActivity;
-	const { puzzles, submissions } = activity;
+	// Filter out items without required fields and add type
+	const puzzlesWithType = puzzles
+		.filter((puzzle) => puzzle.createdAt != null && puzzle._id != null)
+		.map((puzzle) => ({
+			...puzzle,
+			createdAt: puzzle.createdAt!, // Safe because we filtered
+			_id: puzzle._id!, // Safe because we filtered
+			type: activityTypeEnum.CREATE_PUZZLE
+		}));
 
-	const puzzlesWithType = puzzles.map((puzzle: PuzzleDto) => ({
-		...puzzle,
-		type: activityTypeEnum.CREATE_PUZZLE
-	}));
+	const submissionsWithType = submissions
+		.filter(
+			(submission) => submission.createdAt != null && submission._id != null
+		)
+		.map((submission) => ({
+			...submission,
+			createdAt: submission.createdAt!, // Safe because we filtered
+			_id: submission._id!, // Safe because we filtered
+			type: activityTypeEnum.ADD_SUBMISSION
+		}));
 
-	const submissionsWithType = submissions.map((submission: SubmissionDto) => ({
-		...submission,
-		type: activityTypeEnum.ADD_SUBMISSION
-	}));
-
-	const userWithType = { ...user, type: activityTypeEnum.CREATE_ACCOUNT };
+	// Ensure user has required fields (fallback values if not present)
+	const userWithType = {
+		...user,
+		createdAt: user?.createdAt ?? new Date().toISOString(),
+		_id: user?._id ?? "",
+		type: activityTypeEnum.CREATE_ACCOUNT
+	};
 
 	return {
 		puzzles: puzzlesWithType,

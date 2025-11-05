@@ -7,10 +7,9 @@
 		isAuthor,
 		isUserDto,
 		puzzleVisibilityEnum,
-		type CommentDto,
-		type PuzzleDto
+		type CommentDto
 	} from "types";
-	import { authenticatedUserInfo, isAuthenticated } from "@/stores/index.js";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import Button from "@/components/ui/button/button.svelte";
 	import Accordion from "@/components/ui/accordion/accordion.svelte";
 	import { cn } from "@/utils/cn.js";
@@ -22,10 +21,17 @@
 	import AddCommentForm from "@/features/comment/components/add-comment-form.svelte";
 	import { testIds } from "types";
 	import { page } from "$app/state";
+	import { logger } from "@/utils/debug-logger.js";
+	import type { PuzzleResponse } from "@/api/generated/index.js";
 
 	let { data } = $props();
 
-	const { puzzle }: { puzzle: PuzzleDto } = data;
+	logger.page("Rendering puzzles +page.svelte", {
+		dataPresent: !!data,
+		data
+	});
+
+	const { puzzle }: { puzzle: PuzzleResponse } = data;
 	let puzzleComments = $derived(puzzle.comments ?? []);
 
 	let puzzleId = page.params.id ?? "";
@@ -33,7 +39,7 @@
 	const playUrl = frontendUrls.puzzleByIdPlay(puzzleId);
 
 	function onCommentAdded(newComment: CommentDto) {
-		puzzleComments = [...puzzle.comments, newComment] as any[]; // unfortunately needed because recursive types are hard
+		puzzleComments = [...(puzzle.comments ?? []), newComment._id];
 	}
 </script>
 

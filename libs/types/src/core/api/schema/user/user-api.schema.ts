@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { userDtoSchema } from "../../../user/schema/user-dto.schema.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
-import { usernameSchema } from "../../../authentication/schema/identifier.schema.js";
+import { usernameSchema } from "../../../user/schema/user-entity.schema.js";
 
 /**
  * GET /user/me - Get current user information

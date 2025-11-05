@@ -16,7 +16,7 @@
 		gameModeEnum,
 		gameVisibilityEnum
 	} from "types";
-	import { languages } from "@/stores/languages";
+	import { languages } from "@/stores/languages.store";
 
 	let {
 		open = $bindable(false),

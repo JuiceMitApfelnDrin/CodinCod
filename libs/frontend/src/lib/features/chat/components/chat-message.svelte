@@ -1,6 +1,6 @@
 <script lang="ts">
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
-	import { authenticatedUserInfo } from "@/stores";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import { cn } from "@/utils/cn";
 	import dayjs from "dayjs";
 	import type { ChatMessage } from "types";
@@ -34,7 +34,8 @@
 	}
 
 	let canReport = $derived(
-		$authenticatedUserInfo?.isAuthenticated &&
+		$isAuthenticated &&
+			$authenticatedUserInfo &&
 			chatMessage._id &&
 			chatMessage.username !== $authenticatedUserInfo.username
 	);

@@ -1,7 +1,5 @@
+import { codincodApiWebUserControllerPuzzles2 } from "$lib/api/generated";
 import type { PageServerLoadEvent } from "./$types";
-import { httpRequestMethod, type PuzzleAPI } from "types";
-import { buildBackendUrl } from "@/config/backend";
-import { backendUrls } from "types";
 
 export async function load({
 	fetch,
@@ -11,16 +9,21 @@ export async function load({
 }: PageServerLoadEvent) {
 	const username = params.username;
 
-	const apiUrl = buildBackendUrl(backendUrls.userByUsernamePuzzle(username));
+	// Parse query params
+	const page = url.searchParams.get("page");
+	const pageSize = url.searchParams.get("pageSize");
+	const difficulty = url.searchParams.get("difficulty");
+	const search = url.searchParams.get("search");
 
-	const apiUrlWithQueryParams = new URL(apiUrl, request.url);
-	apiUrlWithQueryParams.search = url.search;
-
-	const res = await fetch(apiUrlWithQueryParams, {
-		method: httpRequestMethod.GET
-	});
-
-	const paginatedPuzzles: PuzzleAPI.GetPuzzlesResponse = await res.json();
+	const paginatedPuzzles = await codincodApiWebUserControllerPuzzles2(
+		username,
+		{
+			...(page && { page: parseInt(page) }),
+			...(pageSize && { pageSize: parseInt(pageSize) }),
+			...(difficulty && { difficulty }),
+			...(search && { search })
+		}
+	);
 
 	return { ...paginatedPuzzles };
 }

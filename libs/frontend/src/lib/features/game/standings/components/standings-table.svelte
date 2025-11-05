@@ -2,7 +2,6 @@
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
 	import {
-		backendUrls,
 		gameModeEnum,
 		isObjectId,
 		isString,
@@ -14,8 +13,7 @@
 	} from "types";
 	import duration from "dayjs/plugin/duration";
 	import minMax from "dayjs/plugin/minMax";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
-	import { buildBackendUrl } from "@/config/backend";
+	import { codincodApiWebSubmissionControllerShow2 } from "@/api/generated/submission/submission";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import CodeXml from "@lucide/svelte/icons/code-xml";
@@ -51,10 +49,11 @@
 	// used for caching, check whether a solution was fetched
 	let hasBeenOpened: Record<string, boolean> = $state({});
 
-	async function fetchCode(id: string) {
-		const url = buildBackendUrl(backendUrls.submissionById(id));
-
-		return await fetchWithAuthenticationCookie(url).then((res) => res.json());
+	async function fetchCode(id: string): Promise<{ code: string }> {
+		const response = await codincodApiWebSubmissionControllerShow2(id);
+		return {
+			code: response.code ?? "// Code not available"
+		};
 	}
 
 	function formatDuration(submissionDate: AcceptedDate) {

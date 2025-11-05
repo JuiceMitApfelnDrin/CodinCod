@@ -1,0 +1,564 @@
+{
+  "components": {
+    "schemas": {
+      "AccountPreferences": {
+        "properties": {
+          "blockedUsers": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "editor": {
+            "type": "object"
+          },
+          "preferredLanguage": {
+            "nullable": true,
+            "type": "string"
+          },
+          "theme": {
+            "enum": [
+              "dark",
+              "light"
+            ],
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "title": "PreferencesPayload",
+        "type": "object"
+      },
+      "AccountProfileUpdateRequest": {
+        "properties": {
+          "bio": {
+            "maxLength": 500,
+            "type": "string"
+          },
+          "location": {
+            "maxLength": 100,
+            "type": "string"
+          },
+          "picture": {
+            "format": "uri",
+            "type": "string"
+          },
+          "socials": {
+            "items": {
+              "format": "uri",
+              "type": "string"
+            },
+            "maxItems": 5,
+            "type": "array"
+          }
+        },
+        "title": "ProfileUpdateRequest",
+        "type": "object"
+      },
+      "AccountProfileUpdateResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "object"
+          }
+        },
+        "title": "ProfileUpdateResponse",
+        "type": "object"
+      },
+      "AccountStatusResponse": {
+        "properties": {
+          "isAuthenticated": {
+            "type": "boolean"
+          },
+          "role": {
+            "type": "string"
+          },
+          "userId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "isAuthenticated"
+        ],
+        "title": "StatusResponse",
+        "type": "object"
+      },
+      "AuthMessageResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "title": "MessageResponse",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "LoginRequest": {
+        "properties": {
+          "identifier": {
+            "description": "Username or email",
+            "type": "string"
+          },
+          "password": {
+            "format": "password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "identifier",
+          "password"
+        ],
+        "title": "LoginRequest",
+        "type": "object"
+      },
+      "RegisterRequest": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "type": "string"
+          },
+          "password": {
+            "format": "password",
+            "minLength": 14,
+            "type": "string"
+          },
+          "passwordConfirmation": {
+            "format": "password",
+            "type": "string"
+          },
+          "username": {
+            "maxLength": 20,
+            "minLength": 3,
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password"
+        ],
+        "title": "RegisterRequest",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Phoenix implementation of the CodinCod backend",
+    "title": "CodinCod API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/account": {
+      "get": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AccountController.show",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.StatusResponse"
+              }
+            },
+            "description": "Authenticated account"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.StatusResponse"
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "summary": "Current account status",
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/api/account/preferences": {
+      "delete": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AccountPreferenceController.delete",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Preferences deleted"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Delete preferences",
+        "tags": [
+          "Account Preferences"
+        ]
+      },
+      "get": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AccountPreferenceController.show",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.PreferencesPayload"
+              }
+            },
+            "description": "Preferences"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Get account preferences",
+        "tags": [
+          "Account Preferences"
+        ]
+      },
+      "patch": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AccountPreferenceController.patch",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.PreferencesPayload"
+            }
+          },
+          "description": "Partial preferences",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.PreferencesPayload"
+              }
+            },
+            "description": "Updated preferences"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Invalid payload"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Patch preferences",
+        "tags": [
+          "Account Preferences"
+        ]
+      },
+      "put": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AccountPreferenceController.replace",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.PreferencesPayload"
+            }
+          },
+          "description": "Preferences payload",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.PreferencesPayload"
+              }
+            },
+            "description": "Updated preferences"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Invalid payload"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Replace preferences",
+        "tags": [
+          "Account Preferences"
+        ]
+      }
+    },
+    "/api/account/profile": {
+      "patch": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AccountController.update_profile",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.ProfileUpdateRequest"
+            }
+          },
+          "description": "Profile properties",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Account.ProfileUpdateResponse"
+              }
+            },
+            "description": "Profile updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Validation error"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Update profile",
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/api/login": {
+      "post": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AuthController.login",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Auth.LoginRequest"
+            }
+          },
+          "description": "Credentials",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Auth.MessageResponse"
+              }
+            },
+            "description": "Login success"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Bad request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "summary": "Authenticate user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/logout": {
+      "post": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AuthController.logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Auth.MessageResponse"
+              }
+            },
+            "description": "Logout success"
+          }
+        },
+        "summary": "Logout current user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/refresh": {
+      "post": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AuthController.refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Auth.MessageResponse"
+              }
+            },
+            "description": "Token refreshed"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "summary": "Refresh authentication token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/register": {
+      "post": {
+        "callbacks": {},
+        "operationId": "CodincodApiWeb.AuthController.register",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Auth.RegisterRequest"
+            }
+          },
+          "description": "Registration payload",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Auth.MessageResponse"
+              }
+            },
+            "description": "Registration success"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Validation error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": "Elixir.CodincodApiWeb.OpenAPI.Schemas.Common.ErrorResponse"
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "summary": "Register new user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    }
+  },
+  "security": [],
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "variables": {}
+    }
+  ],
+  "tags": []
+}

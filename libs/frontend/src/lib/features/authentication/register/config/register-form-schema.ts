@@ -1,8 +1,7 @@
-import { z } from "zod";
 import { registerSchema } from "types";
+import { z } from "zod";
 // import { fetchWithAuthenticationCookie } from "../../utils/fetch-with-authentication-cookie";
 // import { buildBackendUrl } from "@/config/backend";
-import { backendUrls } from "types";
 
 export const registerFormSchema = registerSchema;
 // TODO: fix this, doesn't go to backend right now, it does, but doesn't update the form

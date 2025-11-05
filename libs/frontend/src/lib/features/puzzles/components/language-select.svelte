@@ -2,7 +2,7 @@
 	import * as Select from "$lib/components/ui/select";
 	import { ScrollArea } from "@/components/ui/scroll-area";
 	import SelectGroupHeading from "@/components/ui/select/select-group-heading.svelte";
-	import { preferences } from "@/stores/preferences";
+	import { preferences } from "@/stores/preferences.store";
 	import { DEFAULT_LANGUAGE, type ProgrammingLanguageDto } from "types";
 
 	let {

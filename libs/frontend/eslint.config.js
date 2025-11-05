@@ -1,10 +1,10 @@
-import globals from "globals";
 import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import svelte from "eslint-plugin-svelte";
 import prettier from "eslint-config-prettier";
 import sortDestructureKeys from "eslint-plugin-sort-destructure-keys";
 import sortKeysFix from "eslint-plugin-sort-keys-fix";
+import svelte from "eslint-plugin-svelte";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -57,9 +57,9 @@ export default [
 			"sort-keys-fix": sortKeysFix
 		},
 		rules: {
-			"@typescript-eslint/no-unused-vars": "warn",
-			"no-undef": "warn",
-			"no-unused-vars": "warn",
+			"@typescript-eslint/no-unused-vars": "error",
+			"no-undef": "error",
+			"no-unused-vars": "error",
 			"sort-destructure-keys/sort-destructure-keys": [
 				2,
 				{ caseSensitive: true }

@@ -24,7 +24,7 @@
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import LanguageSelect from "./language-select.svelte";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
-	import { languages } from "@/stores/languages";
+	import { languages } from "@/stores/languages.store";
 	import { testIds } from "types";
 
 	let {

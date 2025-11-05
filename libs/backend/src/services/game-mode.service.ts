@@ -12,8 +12,15 @@ type PopulatedSubmission = Omit<SubmissionDocument, "user"> & {
 	user: ObjectId | { _id: ObjectId; username: string };
 };
 
-function isPopulatedUser(user: ObjectId | { _id: ObjectId; username: string }): user is { _id: ObjectId; username: string } {
-	return typeof user === "object" && user !== null && "_id" in user && "username" in user;
+function isPopulatedUser(
+	user: ObjectId | { _id: ObjectId; username: string }
+): user is { _id: ObjectId; username: string } {
+	return (
+		typeof user === "object" &&
+		user !== null &&
+		"_id" in user &&
+		"username" in user
+	);
 }
 
 /**

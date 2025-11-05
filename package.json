@@ -14,5 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "codin-cod": "file:"
+  },
+  "devDependencies": {
+    "knip": "^5.67.1"
   }
 }

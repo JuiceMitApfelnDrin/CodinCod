@@ -1,5 +1,4 @@
 import { defaultFetchOptions } from "@/config/default-fetch-options";
-import { environment } from "types";
 
 export function getCookieHeader(request: Request): Record<string, string> {
 	const cookie = request.headers.get("cookie");

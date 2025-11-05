@@ -207,6 +207,16 @@ export const testIds = {
 	REGISTER_FORM_INPUT_PASSWORD: "register-form-input-password",
 	REGISTER_FORM_INPUT_EMAIL: "register-form-input-email",
 
+	// reset password page
+	RESET_PASSWORD_PAGE_BUTTON_CONTINUE_TO_LOGIN:
+		"reset-password-page-button-continue-to-login",
+	RESET_PASSWORD_PAGE_BUTTON_SUBMIT: "reset-password-page-button-submit",
+
+	// forgot password page
+	FORGOT_PASSWORD_PAGE_BUTTON_BACK_TO_LOGIN:
+		"forgot-password-page-button-back-to-login",
+	FORGOT_PASSWORD_PAGE_BUTTON_SUBMIT: "forgot-password-page-button-submit",
+
 	// standings table component
 	STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE:
 		"standings-table-component-toggle-show-code",

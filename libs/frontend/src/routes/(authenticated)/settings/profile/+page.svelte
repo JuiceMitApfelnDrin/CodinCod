@@ -1,21 +1,24 @@
 <script lang="ts">
-	import { buildBackendUrl } from "@/config/backend";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+	import {
+		codincodApiWebUserControllerShow2,
+		codincodApiWebAccountControllerUpdateProfile2
+	} from "$lib/api/generated";
+	import type { AccountProfileUpdateRequest } from "@/api/generated/schemas/accountProfileUpdateRequest";
+	import {
+		showErrorNotification,
+		showSuccessNotification
+	} from "$lib/api/notifications";
 	import { Input } from "@/components/ui/input";
 	import { Textarea } from "@/components/ui/textarea";
-	import {
-		backendUrls,
-		httpRequestMethod,
-		testIds,
-		updateProfileSchema
-	} from "types";
+	import { testIds, updateProfileSchema } from "types";
 	import { z } from "zod";
 	import { toast } from "svelte-sonner";
-	import { authenticatedUserInfo } from "@/stores";
+	import { authenticatedUserInfo } from "@/stores/auth.store";
 	import { onMount } from "svelte";
 	import Button from "#/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import H2 from "@/components/typography/h2.svelte";
+	import { ApiError } from "@/api/errors";
 
 	let bio = $state("");
 	let location = $state("");
@@ -37,22 +40,16 @@
 		}
 
 		try {
-			const response = await fetchWithAuthenticationCookie(
-				buildBackendUrl(backendUrls.userByUsername(username))
-			);
-
-			if (response.ok) {
-				const userData = await response.json();
-				if (userData.profile) {
-					bio = userData.profile.bio || "";
-					location = userData.profile.location || "";
-					picture = userData.profile.picture || "";
-					socials = userData.profile.socials || [];
-				}
+			const userData = await codincodApiWebUserControllerShow2(username);
+			const userProfile = userData.user?.profile;
+			if (userProfile) {
+				bio = userProfile.bio ?? "";
+				location = userProfile.location ?? "";
+				picture = userProfile.picture ?? "";
+				socials = userProfile.socials ?? [];
 			}
 		} catch (error) {
-			console.error("Failed to load profile:", error);
-			toast.error("Failed to load profile data");
+			showErrorNotification(error, { title: "Failed to Load Profile" });
 		}
 	});
 
@@ -90,27 +87,44 @@
 				return;
 			}
 
-			const response = await fetchWithAuthenticationCookie(
-				buildBackendUrl(backendUrls.ACCOUNT_PROFILE),
-				{
-					method: httpRequestMethod.PATCH,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify(validationResult.data)
-				}
-			);
+			// Clean up undefined values
+			const cleanData = {
+				...(profileData.bio && { bio: profileData.bio }),
+				...(profileData.location && { location: profileData.location }),
+				...(profileData.picture && { picture: profileData.picture }),
+				...(profileData.socials && { socials: profileData.socials })
+			};
 
-			if (response.ok) {
-				toast.success("Profile updated successfully!");
-				validationErrors = {};
-			} else {
-				const error = await response.json();
-				toast.error(error.message || "Failed to update profile");
-			}
+			// Clean and prepare data for API call
+			const apiPayload: AccountProfileUpdateRequest = {};
+			if (cleanData.bio) apiPayload.bio = cleanData.bio;
+			if (cleanData.location) apiPayload.location = cleanData.location;
+			if (cleanData.picture) apiPayload.picture = cleanData.picture;
+			if (cleanData.socials) apiPayload.socials = cleanData.socials;
+
+			await codincodApiWebAccountControllerUpdateProfile2(apiPayload);
+
+			showSuccessNotification("Profile updated successfully!");
+			validationErrors = {};
 		} catch (error) {
-			console.error("Error updating profile:", error);
-			toast.error("Failed to update profile");
+			if (error instanceof ApiError) {
+				// Handle field-level errors
+				const fieldErrors = error.getFieldErrors();
+				if (Object.keys(fieldErrors).length > 0) {
+					validationErrors = Object.entries(fieldErrors).reduce(
+						(acc, [key, msgs]: [string, string[]]) => {
+							acc[key] = msgs[0];
+							return acc;
+						},
+						{} as Record<string, string>
+					);
+					toast.error("Please fix the validation errors");
+				} else {
+					showErrorNotification(error, { title: "Failed to Update Profile" });
+				}
+			} else {
+				showErrorNotification(error, { title: "Failed to Update Profile" });
+			}
 		} finally {
 			loading = false;
 		}

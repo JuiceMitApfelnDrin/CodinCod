@@ -15,7 +15,7 @@
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
 	import { testIds } from "types";
-	import { authenticatedUserInfo } from "@/stores/index.js";
+	import { authenticatedUserInfo } from "@/stores/auth.store";
 
 	let { data }: { data: PaginatedQueryResponse | undefined } = $props();
 
@@ -64,7 +64,7 @@
 	<LogicalUnit class="flex flex-col gap-8">
 		{#if totalItems <= 0}
 			<p data-testid={testIds.PUZZLES_PAGE_ANCHOR_PUZZLE}>
-				Couldn't find any puzzles.
+				Couldn't find any puzzles!
 				{#if page.params.username === $authenticatedUserInfo?.username}
 					But you can <Button
 						variant="outline"

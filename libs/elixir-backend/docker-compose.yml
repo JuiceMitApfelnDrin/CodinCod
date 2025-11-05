@@ -1,0 +1,124 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: codincod_postgres_dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-codincod_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - codincod_network
+
+  piston:
+    image: ghcr.io/engineer-man/piston
+    container_name: codincod_piston
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "${PISTON_PORT:-2000}:2000"
+    volumes:
+      - ../data/piston/packages:/piston/packages
+    tmpfs:
+      - /tmp:exec
+    networks:
+      - codincod_network
+
+  postgres_test:
+    image: postgres:16-alpine
+    container_name: codincod_postgres_test
+    environment:
+      POSTGRES_DB: codincod_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - codincod_network
+
+  # MongoDB for migration period
+  mongodb:
+    image: mongo
+    container_name: codincod_mongodb
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-codincod-development}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-codincod-dev}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-hunter2}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - codincod_network
+
+  # Redis for caching and rate limiting
+  redis:
+    image: redis:8-alpine
+    container_name: codincod_redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_password}
+    volumes:
+      - redis_data:/data
+    networks:
+      - codincod_network
+
+  api:
+    build:
+      context: ./codincod_api
+      dockerfile: Dockerfile
+    container_name: codincod_elixir_api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      piston:
+        condition: service_started
+    environment:
+      MIX_ENV: dev
+      PHX_SERVER: "true"
+      PHX_PORT: ${PHX_PORT:-4000}
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-codincod_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PISTON_URI: http://piston:2000
+      REDIS_HOST: redis
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173}
+      JWT_SECRET: ${JWT_SECRET:-dev_secret}
+      JWT_ISSUER: ${JWT_ISSUER:-codincod_api}
+    command: sh -c "mix deps.get && mix ecto.create && mix ecto.migrate && mix phx.server"
+    ports:
+      - "${PHX_PORT:-4000}:4000"
+    volumes:
+      - ./codincod_api:/app
+      - codincod_deps:/app/deps
+      - codincod_build:/app/_build
+    networks:
+      - codincod_network
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+  codincod_deps:
+  codincod_build:
+
+networks:
+  codincod_network:
+    driver: bridge

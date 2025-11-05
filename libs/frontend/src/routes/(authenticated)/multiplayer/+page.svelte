@@ -12,7 +12,7 @@
 	import CustomGameDialog from "@/features/multiplayer/components/custom-game-dialog.svelte";
 	import JoinByInviteDialog from "@/features/multiplayer/components/join-by-invite-dialog.svelte";
 	import { buildWebSocketUrl } from "@/config/websocket";
-	import { authenticatedUserInfo } from "@/stores";
+	import { authenticatedUserInfo } from "@/stores/auth.store";
 	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
 	import {
 		WEBSOCKET_STATES,
@@ -32,7 +32,7 @@
 		type ChatMessage
 	} from "types";
 	import { testIds } from "types";
-	import { currentTime } from "@/stores/current-time";
+	import { currentTime } from "@/stores/current-time.store";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import { Input } from "#/ui/input";
 

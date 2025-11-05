@@ -12,7 +12,7 @@
 		class: className = "",
 		showLabel = false
 	}: {
-		wsManager: WebSocketManager<any, any>;
+		wsManager: WebSocketManager;
 		state: WebSocketState;
 		class?: string;
 		showLabel?: boolean;

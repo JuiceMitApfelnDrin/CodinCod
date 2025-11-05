@@ -2,7 +2,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import LanguageSelect from "@/features/puzzles/components/language-select.svelte";
 	import H2 from "@/components/typography/h2.svelte";
-	import { preferences } from "@/stores/preferences";
+	import { preferences } from "@/stores/preferences.store";
 	import * as Select from "@/components/ui/select";
 	import { ScrollArea } from "@/components/ui/scroll-area";
 	import {
@@ -12,7 +12,7 @@
 		type PuzzleLanguage
 	} from "types";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
-	import { languages } from "@/stores/languages";
+	import { languages } from "@/stores/languages.store";
 	import Checkbox from "@/components/ui/toggle/checkbox.svelte";
 
 	let language: PuzzleLanguage = $state(

@@ -1,82 +1,30 @@
-import { buildBackendUrl } from "@/config/backend";
-import {
-	fetchWithAuthenticationCookie,
-	getCookieHeader
-} from "@/features/authentication/utils/fetch-with-authentication-cookie";
-import {
-	backendUrls,
-	ERROR_MESSAGES,
-	httpRequestMethod,
-	PAGINATION_CONFIG,
-	reviewItemTypeEnum,
-	type ReviewItem
-} from "types";
+import { loadWithFallback } from "$lib/api/error-handler";
+import { codincodApiWebModerationControllerListReviews2 } from "$lib/api/generated/moderation/moderation";
+import { PAGINATION_CONFIG } from "types";
 import type { PageServerLoadEvent } from "./$types";
 
-interface PaginatedResponse {
-	data: ReviewItem[];
-	pagination: {
-		page: number;
-		limit: number;
-		total: number;
-		totalPages: number;
-	};
-}
-
-export async function load({ request, url }: PageServerLoadEvent) {
+export async function load({ fetch, url }: PageServerLoadEvent) {
 	// Get query parameters
-	const type =
-		url.searchParams.get("type") || reviewItemTypeEnum.PENDING_PUZZLE;
+	const type = url.searchParams.get("type");
 	const page =
 		url.searchParams.get("page") || String(PAGINATION_CONFIG.DEFAULT_PAGE);
 	const limit =
 		url.searchParams.get("limit") || String(PAGINATION_CONFIG.DEFAULT_LIMIT);
 
-	// Fetch review items from backend
-	const reviewUrl = `${buildBackendUrl(backendUrls.MODERATION_REVIEW)}?type=${type}&page=${page}&limit=${limit}`;
-
-	try {
-		const response = await fetchWithAuthenticationCookie(reviewUrl, {
-			headers: getCookieHeader(request),
-			method: httpRequestMethod.GET
-		});
-
-		if (!response.ok) {
-			return {
-				reviewItems: {
-					data: [],
-					pagination: {
-						page: PAGINATION_CONFIG.DEFAULT_PAGE,
-						limit: PAGINATION_CONFIG.DEFAULT_LIMIT,
-						total: 0,
-						totalPages: 0
-					}
-				} as PaginatedResponse,
-				currentType: type,
-				error: ERROR_MESSAGES.MODERATION.FAILED_TO_FETCH_REVIEW_ITEMS
-			};
+	// Fetch review items from backend using Orval-generated function
+	const reviewItems = await loadWithFallback(
+		() =>
+			codincodApiWebModerationControllerListReviews2({
+				status: type as "pending" | "approved" | "rejected"
+			}),
+		{
+			reviews: [],
+			count: 0
 		}
+	);
 
-		const reviewItems: PaginatedResponse = await response.json();
-
-		return {
-			reviewItems,
-			currentType: type
-		};
-	} catch (error) {
-		console.error("Error fetching review items:", error);
-		return {
-			reviewItems: {
-				data: [],
-				pagination: {
-					page: PAGINATION_CONFIG.DEFAULT_PAGE,
-					limit: PAGINATION_CONFIG.DEFAULT_LIMIT,
-					total: 0,
-					totalPages: 0
-				}
-			} as PaginatedResponse,
-			currentType: type,
-			error: ERROR_MESSAGES.MODERATION.FAILED_TO_FETCH_REVIEW_ITEMS
-		};
-	}
+	return {
+		reviewItems,
+		currentType: type
+	};
 }

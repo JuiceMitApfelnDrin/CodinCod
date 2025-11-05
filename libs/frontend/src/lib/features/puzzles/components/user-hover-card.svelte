@@ -4,9 +4,7 @@
 	import * as Avatar from "$lib/components/ui/avatar";
 	import { frontendUrls, isUserDto, type UserDto } from "types";
 	import Calendar from "@lucide/svelte/icons/calendar";
-	import { buildBackendUrl } from "@/config/backend";
-	import { backendUrls } from "types";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+	import { codincodApiWebUserControllerShow2 } from "@/api/generated/user/user";
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
@@ -29,15 +27,10 @@
 			return userInfoCache[username];
 		}
 
-		let url = buildBackendUrl(backendUrls.userByUsername(username));
+		const response = await codincodApiWebUserControllerShow2(username);
+		userInfoCache[username] = response as UserDto;
 
-		const response = await fetchWithAuthenticationCookie(url).then((res) =>
-			res.json()
-		);
-
-		userInfoCache[username] = response;
-
-		return response;
+		return response as UserDto;
 	}
 </script>
 
@@ -56,7 +49,7 @@
 	<HoverCard.Content class="w-80">
 		{#await fetchUserInfo(username)}
 			loading...
-		{:then { user }}
+		{:then user}
 			{#if isUserDto(user)}
 				<div class="flex justify-between space-x-4">
 					<Avatar.Root>
