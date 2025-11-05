@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {
-		codincodApiWebUserControllerShow2,
-		codincodApiWebAccountControllerUpdateProfile2
+		codincodApiWebUserControllerShow,
+		codincodApiWebAccountControllerUpdateProfile
 	} from "$lib/api/generated";
 	import type { AccountProfileUpdateRequest } from "@/api/generated/schemas/accountProfileUpdateRequest";
 	import {
@@ -40,7 +40,7 @@
 		}
 
 		try {
-			const userData = await codincodApiWebUserControllerShow2(username);
+			const userData = await codincodApiWebUserControllerShow(username);
 			const userProfile = userData.user?.profile;
 			if (userProfile) {
 				bio = userProfile.bio ?? "";
@@ -102,7 +102,7 @@
 			if (cleanData.picture) apiPayload.picture = cleanData.picture;
 			if (cleanData.socials) apiPayload.socials = cleanData.socials;
 
-			await codincodApiWebAccountControllerUpdateProfile2(apiPayload);
+			await codincodApiWebAccountControllerUpdateProfile(apiPayload);
 
 			showSuccessNotification("Profile updated successfully!");
 			validationErrors = {};

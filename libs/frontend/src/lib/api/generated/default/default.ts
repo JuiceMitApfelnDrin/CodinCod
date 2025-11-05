@@ -7,7 +7,6 @@
  */
 import type {
 	CodincodApiWebProgrammingLanguageControllerIndex200Item,
-	CodincodApiWebProgrammingLanguageControllerIndex2200Item,
 	CommentResponse,
 	CreateRequest,
 	VoteRequest
@@ -18,76 +17,10 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Create a comment on a puzzle
  */
-export const getCodincodApiWebPuzzleCommentControllerCreate2Url = (
-	id: string
-) => {
-	return `/api/puzzle/${id}/comment`;
-};
-
-export const codincodApiWebPuzzleCommentControllerCreate2 = async (
-	id: string,
-	createRequest?: CreateRequest,
-	options?: RequestInit
-): Promise<CommentResponse> => {
-	return customClient<CommentResponse>(
-		getCodincodApiWebPuzzleCommentControllerCreate2Url(id),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(createRequest)
-		}
-	);
-};
-
-/**
- * @summary List all programming languages
- */
-export const getCodincodApiWebProgrammingLanguageControllerIndex2Url = () => {
-	return `/api/v1/programming-languages`;
-};
-
-export const codincodApiWebProgrammingLanguageControllerIndex2 = async (
-	options?: RequestInit
-): Promise<CodincodApiWebProgrammingLanguageControllerIndex2200Item[]> => {
-	return customClient<
-		CodincodApiWebProgrammingLanguageControllerIndex2200Item[]
-	>(getCodincodApiWebProgrammingLanguageControllerIndex2Url(), {
-		...options,
-		method: "GET"
-	});
-};
-
-/**
- * @summary Vote on a comment
- */
-export const getCodincodApiWebCommentControllerVote2Url = (id: string) => {
-	return `/api/comment/${id}/vote`;
-};
-
-export const codincodApiWebCommentControllerVote2 = async (
-	id: string,
-	voteRequest?: VoteRequest,
-	options?: RequestInit
-): Promise<CommentResponse> => {
-	return customClient<CommentResponse>(
-		getCodincodApiWebCommentControllerVote2Url(id),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(voteRequest)
-		}
-	);
-};
-
-/**
- * @summary Create a comment on a puzzle
- */
 export const getCodincodApiWebPuzzleCommentControllerCreateUrl = (
 	id: string
 ) => {
-	return `/api/v1/puzzle/${id}/comment`;
+	return `/api/puzzle/${id}/comment`;
 };
 
 export const codincodApiWebPuzzleCommentControllerCreate = async (
@@ -107,47 +40,10 @@ export const codincodApiWebPuzzleCommentControllerCreate = async (
 };
 
 /**
- * @summary Delete a comment
- */
-export const getCodincodApiWebCommentControllerDelete2Url = (id: string) => {
-	return `/api/comment/${id}`;
-};
-
-export const codincodApiWebCommentControllerDelete2 = async (
-	id: string,
-	options?: RequestInit
-): Promise<void> => {
-	return customClient<void>(getCodincodApiWebCommentControllerDelete2Url(id), {
-		...options,
-		method: "DELETE"
-	});
-};
-
-/**
- * @summary Get comment by ID
- */
-export const getCodincodApiWebCommentControllerShow2Url = (id: string) => {
-	return `/api/comment/${id}`;
-};
-
-export const codincodApiWebCommentControllerShow2 = async (
-	id: string,
-	options?: RequestInit
-): Promise<CommentResponse> => {
-	return customClient<CommentResponse>(
-		getCodincodApiWebCommentControllerShow2Url(id),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
  * @summary Vote on a comment
  */
 export const getCodincodApiWebCommentControllerVoteUrl = (id: string) => {
-	return `/api/v1/comment/${id}/vote`;
+	return `/api/comment/${id}/vote`;
 };
 
 export const codincodApiWebCommentControllerVote = async (
@@ -170,7 +66,7 @@ export const codincodApiWebCommentControllerVote = async (
  * @summary Delete a comment
  */
 export const getCodincodApiWebCommentControllerDeleteUrl = (id: string) => {
-	return `/api/v1/comment/${id}`;
+	return `/api/comment/${id}`;
 };
 
 export const codincodApiWebCommentControllerDelete = async (
@@ -187,7 +83,7 @@ export const codincodApiWebCommentControllerDelete = async (
  * @summary Get comment by ID
  */
 export const getCodincodApiWebCommentControllerShowUrl = (id: string) => {
-	return `/api/v1/comment/${id}`;
+	return `/api/comment/${id}`;
 };
 
 export const codincodApiWebCommentControllerShow = async (

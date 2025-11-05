@@ -1,5 +1,5 @@
 import { loadWithFallback } from "$lib/api/error-handler";
-import { codincodApiWebModerationControllerListReviews2 } from "$lib/api/generated/moderation/moderation";
+import { codincodApiWebModerationControllerListReviews } from "$lib/api/generated/moderation/moderation";
 import { PAGINATION_CONFIG } from "types";
 import type { PageServerLoadEvent } from "./$types";
 
@@ -14,7 +14,7 @@ export async function load({ fetch, url }: PageServerLoadEvent) {
 	// Fetch review items from backend using Orval-generated function
 	const reviewItems = await loadWithFallback(
 		() =>
-			codincodApiWebModerationControllerListReviews2({
+			codincodApiWebModerationControllerListReviews({
 				status: type as "pending" | "approved" | "rejected"
 			}),
 		{

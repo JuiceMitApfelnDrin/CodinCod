@@ -1,8 +1,8 @@
 import { logger } from "$lib/utils/debug-logger";
 import {
-	codincodApiWebPuzzleControllerDelete2,
-	codincodApiWebPuzzleControllerSolution2,
-	codincodApiWebPuzzleControllerUpdate2
+	codincodApiWebPuzzleControllerDelete,
+	codincodApiWebPuzzleControllerSolution,
+	codincodApiWebPuzzleControllerUpdate
 } from "@/api/generated/puzzle/puzzle";
 import type { PuzzleCreateRequest } from "@/api/generated/schemas/puzzleCreateRequest";
 import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse";
@@ -85,7 +85,7 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 
 	try {
 		// Use generated Orval endpoint with server-side fetch
-		const puzzle = await codincodApiWebPuzzleControllerSolution2(id, {
+		const puzzle = await codincodApiWebPuzzleControllerSolution(id, {
 			fetch
 		} as RequestInit);
 
@@ -132,7 +132,7 @@ export const actions = {
 		const id = deletePuzzleForm.data.id;
 
 		try {
-			await codincodApiWebPuzzleControllerDelete2(
+			await codincodApiWebPuzzleControllerDelete(
 				id as string,
 				{ fetch } as RequestInit
 			);
@@ -164,7 +164,7 @@ export const actions = {
 		const requestBody = transformEditToCreateRequest(form.data);
 
 		try {
-			await codincodApiWebPuzzleControllerUpdate2(id, requestBody, {
+			await codincodApiWebPuzzleControllerUpdate(id, requestBody, {
 				fetch
 			} as RequestInit);
 			return message(form, "Form updated successfully!");

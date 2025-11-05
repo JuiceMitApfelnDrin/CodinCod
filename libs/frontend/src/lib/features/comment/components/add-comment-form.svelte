@@ -5,7 +5,7 @@
 	import Label from "@/components/ui/label/label.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
-	import { codincodApiWebPuzzleCommentControllerCreate2 } from "@/api/generated/default/default";
+	import { codincodApiWebPuzzleCommentControllerCreate } from "@/api/generated/default/default";
 	import {
 		COMMENT_CONFIG,
 		commentTypeEnum,
@@ -33,8 +33,7 @@
 		if (!trimmedText) return;
 
 		try {
-			// Use generated Orval endpoint for puzzle comments
-			const newComment = (await codincodApiWebPuzzleCommentControllerCreate2(
+			const newComment = (await codincodApiWebPuzzleCommentControllerCreate(
 				replyOnId,
 				{
 					text: trimmedText,

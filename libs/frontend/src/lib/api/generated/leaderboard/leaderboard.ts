@@ -6,9 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type {
-	CodincodApiWebLeaderboardControllerGlobal2Params,
 	CodincodApiWebLeaderboardControllerGlobalParams,
-	CodincodApiWebLeaderboardControllerPuzzle2Params,
 	CodincodApiWebLeaderboardControllerPuzzleParams,
 	GlobalLeaderboardResponse,
 	PuzzleLeaderboardResponse
@@ -19,9 +17,9 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Get puzzle-specific leaderboard
  */
-export const getCodincodApiWebLeaderboardControllerPuzzle2Url = (
+export const getCodincodApiWebLeaderboardControllerPuzzleUrl = (
 	puzzleId: string,
-	params?: CodincodApiWebLeaderboardControllerPuzzle2Params
+	params?: CodincodApiWebLeaderboardControllerPuzzleParams
 ) => {
 	const normalizedParams = new URLSearchParams();
 
@@ -38,47 +36,13 @@ export const getCodincodApiWebLeaderboardControllerPuzzle2Url = (
 		: `/api/leaderboard/puzzle/${puzzleId}`;
 };
 
-export const codincodApiWebLeaderboardControllerPuzzle2 = async (
+export const codincodApiWebLeaderboardControllerPuzzle = async (
 	puzzleId: string,
-	params?: CodincodApiWebLeaderboardControllerPuzzle2Params,
+	params?: CodincodApiWebLeaderboardControllerPuzzleParams,
 	options?: RequestInit
 ): Promise<PuzzleLeaderboardResponse> => {
 	return customClient<PuzzleLeaderboardResponse>(
-		getCodincodApiWebLeaderboardControllerPuzzle2Url(puzzleId, params),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get global leaderboard rankings
- */
-export const getCodincodApiWebLeaderboardControllerGlobal2Url = (
-	params?: CodincodApiWebLeaderboardControllerGlobal2Params
-) => {
-	const normalizedParams = new URLSearchParams();
-
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
-
-	const stringifiedParams = normalizedParams.toString();
-
-	return stringifiedParams.length > 0
-		? `/api/leaderboard/global?${stringifiedParams}`
-		: `/api/leaderboard/global`;
-};
-
-export const codincodApiWebLeaderboardControllerGlobal2 = async (
-	params?: CodincodApiWebLeaderboardControllerGlobal2Params,
-	options?: RequestInit
-): Promise<GlobalLeaderboardResponse> => {
-	return customClient<GlobalLeaderboardResponse>(
-		getCodincodApiWebLeaderboardControllerGlobal2Url(params),
+		getCodincodApiWebLeaderboardControllerPuzzleUrl(puzzleId, params),
 		{
 			...options,
 			method: "GET"
@@ -103,8 +67,8 @@ export const getCodincodApiWebLeaderboardControllerGlobalUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `/api/v1/leaderboard/global?${stringifiedParams}`
-		: `/api/v1/leaderboard/global`;
+		? `/api/leaderboard/global?${stringifiedParams}`
+		: `/api/leaderboard/global`;
 };
 
 export const codincodApiWebLeaderboardControllerGlobal = async (
@@ -113,42 +77,6 @@ export const codincodApiWebLeaderboardControllerGlobal = async (
 ): Promise<GlobalLeaderboardResponse> => {
 	return customClient<GlobalLeaderboardResponse>(
 		getCodincodApiWebLeaderboardControllerGlobalUrl(params),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get puzzle-specific leaderboard
- */
-export const getCodincodApiWebLeaderboardControllerPuzzleUrl = (
-	puzzleId: string,
-	params?: CodincodApiWebLeaderboardControllerPuzzleParams
-) => {
-	const normalizedParams = new URLSearchParams();
-
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
-
-	const stringifiedParams = normalizedParams.toString();
-
-	return stringifiedParams.length > 0
-		? `/api/v1/leaderboard/puzzle/${puzzleId}?${stringifiedParams}`
-		: `/api/v1/leaderboard/puzzle/${puzzleId}`;
-};
-
-export const codincodApiWebLeaderboardControllerPuzzle = async (
-	puzzleId: string,
-	params?: CodincodApiWebLeaderboardControllerPuzzleParams,
-	options?: RequestInit
-): Promise<PuzzleLeaderboardResponse> => {
-	return customClient<PuzzleLeaderboardResponse>(
-		getCodincodApiWebLeaderboardControllerPuzzleUrl(puzzleId, params),
 		{
 			...options,
 			method: "GET"

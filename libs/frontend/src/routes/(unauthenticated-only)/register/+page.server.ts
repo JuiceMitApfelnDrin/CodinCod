@@ -1,4 +1,4 @@
-import { codincodApiWebAuthControllerRegister2 } from "$lib/api/generated";
+import { codincodApiWebAuthControllerRegister } from "$lib/api/generated";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
 import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
@@ -29,8 +29,7 @@ export const actions = {
 		}
 
 		try {
-			// Use the generated API endpoint for registration
-			await codincodApiWebAuthControllerRegister2(
+			await codincodApiWebAuthControllerRegister(
 				{
 					username: form.data.username,
 					email: form.data.email,

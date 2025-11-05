@@ -18,29 +18,6 @@ import { customClient } from "../../custom-client";
  * Sends password reset email if user exists
  * @summary Request password reset
  */
-export const getCodincodApiWebPasswordResetControllerRequestReset2Url = () => {
-	return `/api/v1/password-reset/request`;
-};
-
-export const codincodApiWebPasswordResetControllerRequestReset2 = async (
-	requestPayload?: RequestPayload,
-	options?: RequestInit
-): Promise<RequestResponse> => {
-	return customClient<RequestResponse>(
-		getCodincodApiWebPasswordResetControllerRequestReset2Url(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(requestPayload)
-		}
-	);
-};
-
-/**
- * Sends password reset email if user exists
- * @summary Request password reset
- */
 export const getCodincodApiWebPasswordResetControllerRequestResetUrl = () => {
 	return `/api/password-reset/request`;
 };
@@ -64,31 +41,8 @@ export const codincodApiWebPasswordResetControllerRequestReset = async (
  * Validates token and updates user password
  * @summary Reset password with token
  */
-export const getCodincodApiWebPasswordResetControllerResetPassword2Url = () => {
-	return `/api/password-reset/reset`;
-};
-
-export const codincodApiWebPasswordResetControllerResetPassword2 = async (
-	resetPayload?: ResetPayload,
-	options?: RequestInit
-): Promise<ResetResponse> => {
-	return customClient<ResetResponse>(
-		getCodincodApiWebPasswordResetControllerResetPassword2Url(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(resetPayload)
-		}
-	);
-};
-
-/**
- * Validates token and updates user password
- * @summary Reset password with token
- */
 export const getCodincodApiWebPasswordResetControllerResetPasswordUrl = () => {
-	return `/api/v1/password-reset/reset`;
+	return `/api/password-reset/reset`;
 };
 
 export const codincodApiWebPasswordResetControllerResetPassword = async (

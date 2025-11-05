@@ -13,7 +13,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
 	import { buildWebSocketUrl } from "@/config/websocket";
-	import { codincodApiWebGameControllerSubmitCode2 } from "@/api/generated/games/games";
+	import { codincodApiWebGameControllerSubmitCode } from "@/api/generated/games/games";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
@@ -193,8 +193,7 @@
 
 	async function onPlayerSubmitCode(submissionId: string) {
 		if (!isGameOver && $authenticatedUserInfo) {
-			// Use generated Orval endpoint
-			await codincodApiWebGameControllerSubmitCode2(gameId, { submissionId });
+			await codincodApiWebGameControllerSubmitCode(gameId, { submissionId });
 
 			sendGameMessage({
 				event: gameEventEnum.SUBMITTED_PLAYER

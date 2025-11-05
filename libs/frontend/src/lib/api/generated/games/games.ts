@@ -17,93 +17,10 @@ import type {
 import { customClient } from "../../custom-client";
 
 /**
- * @summary List all waiting game lobbies
- */
-export const getCodincodApiWebGameControllerListWaitingRooms2Url = () => {
-	return `/api/v1/games/waiting`;
-};
-
-export const codincodApiWebGameControllerListWaitingRooms2 = async (
-	options?: RequestInit
-): Promise<WaitingRoomsResponse> => {
-	return customClient<WaitingRoomsResponse>(
-		getCodincodApiWebGameControllerListWaitingRooms2Url(),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * Links an existing submission to a game, marking it as a player's game submission.
- * @summary Submit code for a game
- */
-export const getCodincodApiWebGameControllerSubmitCode2Url = (id: string) => {
-	return `/api/v1/games/${id}/submit`;
-};
-
-export const codincodApiWebGameControllerSubmitCode2 = async (
-	id: string,
-	gameSubmitCodeRequest?: GameSubmitCodeRequest,
-	options?: RequestInit
-): Promise<SubmitCodeResponse> => {
-	return customClient<SubmitCodeResponse>(
-		getCodincodApiWebGameControllerSubmitCode2Url(id),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(gameSubmitCodeRequest)
-		}
-	);
-};
-
-/**
- * @summary Start a game (host only)
- */
-export const getCodincodApiWebGameControllerStart2Url = (id: string) => {
-	return `/api/v1/games/${id}/start`;
-};
-
-export const codincodApiWebGameControllerStart2 = async (
-	id: string,
-	options?: RequestInit
-): Promise<GameResponse> => {
-	return customClient<GameResponse>(
-		getCodincodApiWebGameControllerStart2Url(id),
-		{
-			...options,
-			method: "POST"
-		}
-	);
-};
-
-/**
- * @summary Join a game lobby
- */
-export const getCodincodApiWebGameControllerJoin2Url = (id: string) => {
-	return `/api/games/${id}/join`;
-};
-
-export const codincodApiWebGameControllerJoin2 = async (
-	id: string,
-	options?: RequestInit
-): Promise<GameResponse> => {
-	return customClient<GameResponse>(
-		getCodincodApiWebGameControllerJoin2Url(id),
-		{
-			...options,
-			method: "POST"
-		}
-	);
-};
-
-/**
  * @summary Join a game lobby
  */
 export const getCodincodApiWebGameControllerJoinUrl = (id: string) => {
-	return `/api/v1/games/${id}/join`;
+	return `/api/games/${id}/join`;
 };
 
 export const codincodApiWebGameControllerJoin = async (
@@ -115,28 +32,6 @@ export const codincodApiWebGameControllerJoin = async (
 		{
 			...options,
 			method: "POST"
-		}
-	);
-};
-
-/**
- * @summary Create a new game lobby
- */
-export const getCodincodApiWebGameControllerCreate2Url = () => {
-	return `/api/v1/games`;
-};
-
-export const codincodApiWebGameControllerCreate2 = async (
-	createGameRequest?: CreateGameRequest,
-	options?: RequestInit
-): Promise<GameResponse> => {
-	return customClient<GameResponse>(
-		getCodincodApiWebGameControllerCreate2Url(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(createGameRequest)
 		}
 	);
 };
@@ -156,26 +51,6 @@ export const codincodApiWebGameControllerListWaitingRooms = async (
 		{
 			...options,
 			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Leave a game lobby
- */
-export const getCodincodApiWebGameControllerLeave2Url = (id: string) => {
-	return `/api/v1/games/${id}/leave`;
-};
-
-export const codincodApiWebGameControllerLeave2 = async (
-	id: string,
-	options?: RequestInit
-): Promise<LeaveGameResponse> => {
-	return customClient<LeaveGameResponse>(
-		getCodincodApiWebGameControllerLeave2Url(id),
-		{
-			...options,
-			method: "POST"
 		}
 	);
 };
@@ -203,16 +78,16 @@ export const codincodApiWebGameControllerStart = async (
 /**
  * @summary Get game details
  */
-export const getCodincodApiWebGameControllerShow2Url = (id: string) => {
+export const getCodincodApiWebGameControllerShowUrl = (id: string) => {
 	return `/api/games/${id}`;
 };
 
-export const codincodApiWebGameControllerShow2 = async (
+export const codincodApiWebGameControllerShow = async (
 	id: string,
 	options?: RequestInit
 ): Promise<GameResponse> => {
 	return customClient<GameResponse>(
-		getCodincodApiWebGameControllerShow2Url(id),
+		getCodincodApiWebGameControllerShowUrl(id),
 		{
 			...options,
 			method: "GET"
@@ -240,26 +115,6 @@ export const codincodApiWebGameControllerSubmitCode = async (
 			method: "POST",
 			headers: { "Content-Type": "application/json", ...options?.headers },
 			body: JSON.stringify(gameSubmitCodeRequest)
-		}
-	);
-};
-
-/**
- * @summary Get game details
- */
-export const getCodincodApiWebGameControllerShowUrl = (id: string) => {
-	return `/api/v1/games/${id}`;
-};
-
-export const codincodApiWebGameControllerShow = async (
-	id: string,
-	options?: RequestInit
-): Promise<GameResponse> => {
-	return customClient<GameResponse>(
-		getCodincodApiWebGameControllerShowUrl(id),
-		{
-			...options,
-			method: "GET"
 		}
 	);
 };

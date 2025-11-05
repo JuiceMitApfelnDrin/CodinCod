@@ -12,90 +12,8 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Delete preferences
  */
-export const getCodincodApiWebAccountPreferenceControllerDelete2Url = () => {
-	return `/api/account/preferences`;
-};
-
-export const codincodApiWebAccountPreferenceControllerDelete2 = async (
-	options?: RequestInit
-): Promise<unknown> => {
-	return customClient<unknown>(
-		getCodincodApiWebAccountPreferenceControllerDelete2Url(),
-		{
-			...options,
-			method: "DELETE"
-		}
-	);
-};
-
-/**
- * @summary Get account preferences
- */
-export const getCodincodApiWebAccountPreferenceControllerShow2Url = () => {
-	return `/api/account/preferences`;
-};
-
-export const codincodApiWebAccountPreferenceControllerShow2 = async (
-	options?: RequestInit
-): Promise<PreferencesPayload> => {
-	return customClient<PreferencesPayload>(
-		getCodincodApiWebAccountPreferenceControllerShow2Url(),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Patch preferences
- */
-export const getCodincodApiWebAccountPreferenceControllerPatch2Url = () => {
-	return `/api/account/preferences`;
-};
-
-export const codincodApiWebAccountPreferenceControllerPatch2 = async (
-	preferencesPayload?: PreferencesPayload,
-	options?: RequestInit
-): Promise<PreferencesPayload> => {
-	return customClient<PreferencesPayload>(
-		getCodincodApiWebAccountPreferenceControllerPatch2Url(),
-		{
-			...options,
-			method: "PATCH",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(preferencesPayload)
-		}
-	);
-};
-
-/**
- * @summary Replace preferences
- */
-export const getCodincodApiWebAccountPreferenceControllerReplace2Url = () => {
-	return `/api/account/preferences`;
-};
-
-export const codincodApiWebAccountPreferenceControllerReplace2 = async (
-	preferencesPayload: PreferencesPayload,
-	options?: RequestInit
-): Promise<PreferencesPayload> => {
-	return customClient<PreferencesPayload>(
-		getCodincodApiWebAccountPreferenceControllerReplace2Url(),
-		{
-			...options,
-			method: "PUT",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(preferencesPayload)
-		}
-	);
-};
-
-/**
- * @summary Delete preferences
- */
 export const getCodincodApiWebAccountPreferenceControllerDeleteUrl = () => {
-	return `/api/v1/account/preferences`;
+	return `/api/account/preferences`;
 };
 
 export const codincodApiWebAccountPreferenceControllerDelete = async (
@@ -114,7 +32,7 @@ export const codincodApiWebAccountPreferenceControllerDelete = async (
  * @summary Get account preferences
  */
 export const getCodincodApiWebAccountPreferenceControllerShowUrl = () => {
-	return `/api/v1/account/preferences`;
+	return `/api/account/preferences`;
 };
 
 export const codincodApiWebAccountPreferenceControllerShow = async (
@@ -133,7 +51,7 @@ export const codincodApiWebAccountPreferenceControllerShow = async (
  * @summary Patch preferences
  */
 export const getCodincodApiWebAccountPreferenceControllerPatchUrl = () => {
-	return `/api/v1/account/preferences`;
+	return `/api/account/preferences`;
 };
 
 export const codincodApiWebAccountPreferenceControllerPatch = async (
@@ -155,7 +73,7 @@ export const codincodApiWebAccountPreferenceControllerPatch = async (
  * @summary Replace preferences
  */
 export const getCodincodApiWebAccountPreferenceControllerReplaceUrl = () => {
-	return `/api/v1/account/preferences`;
+	return `/api/account/preferences`;
 };
 
 export const codincodApiWebAccountPreferenceControllerReplace = async (

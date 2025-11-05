@@ -16,7 +16,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import * as ButtonGroup from "#/ui/button-group";
-	import { codincodApiWebLeaderboardControllerGlobal2 } from "$lib/api/generated";
+	import { codincodApiWebLeaderboardControllerGlobal } from "$lib/api/generated";
 
 	// Reactive state using Svelte 5 runes
 	let selectedMode = $state<GameMode>(gameModeEnum.FASTEST);
@@ -61,7 +61,7 @@
 		try {
 			// Convert page/pageSize to offset/limit for the API
 			const offset = (page - 1) * pageSize;
-			const data = await codincodApiWebLeaderboardControllerGlobal2({
+			const data = await codincodApiWebLeaderboardControllerGlobal({
 				game_mode: "standard", // Backend currently only supports "standard" mode
 				offset,
 				limit: pageSize

@@ -1,6 +1,6 @@
 import { loadWithFallback } from "$lib/api/error-handler";
 import {
-	codincodApiWebAccountControllerShow2,
+	codincodApiWebAccountControllerShow,
 	codincodApiWebPuzzleControllerIndex
 } from "$lib/api/generated";
 import type { ServerLoadEvent } from "@sveltejs/kit";
@@ -22,7 +22,7 @@ export async function load({ fetch, url }: ServerLoadEvent) {
 
 	// Load current user account info (optional, won't break page if not authenticated)
 	const account = await loadWithFallback(
-		() => codincodApiWebAccountControllerShow2(),
+		() => codincodApiWebAccountControllerShow(),
 		null
 	);
 

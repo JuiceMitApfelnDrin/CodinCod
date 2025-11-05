@@ -1,13 +1,13 @@
 import { browser } from "$app/environment";
-import { codincodApiWebProgrammingLanguageControllerIndex2 } from "@/api/generated/default/default";
+import { codincodApiWebProgrammingLanguageControllerIndex } from "@/api/generated/default/default";
 import { localStorageKeys } from "@/config/local-storage";
 import { logger } from "@/utils/debug-logger";
 import { get, writable } from "svelte/store";
 import { type ProgrammingLanguageDto } from "types";
 import { isAuthenticated } from "./auth.store";
 
-const CACHE_DURATION_MS = 1000 * 60 * 60; // 1 hour
-const RETRY_DELAY_MS = 5000; // 5 seconds
+const CACHE_DURATION_MS = 1_000 * 60 * 60;
+const RETRY_DELAY_MS = 5_000;
 const MAX_RETRIES = 3;
 
 interface LanguagesCache {
@@ -95,7 +95,7 @@ const createLanguagesStore = () => {
 		try {
 			logger.store("Fetching languages from API...");
 			const languagesArray =
-				await codincodApiWebProgrammingLanguageControllerIndex2();
+				await codincodApiWebProgrammingLanguageControllerIndex();
 
 			logger.store("Raw languages response:", languagesArray);
 

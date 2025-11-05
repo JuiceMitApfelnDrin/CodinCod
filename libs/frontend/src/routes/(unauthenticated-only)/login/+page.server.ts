@@ -1,4 +1,4 @@
-import { codincodApiWebAuthControllerLogin2 } from "$lib/api/generated";
+import { codincodApiWebAuthControllerLogin } from "$lib/api/generated";
 import { logger } from "$lib/utils/debug-logger";
 import { searchParamKeys } from "@/config/search-params";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
@@ -46,13 +46,12 @@ export const actions = {
 			console.log("[SERVER] Calling login endpoint using generated API");
 			logger.auth("Calling login endpoint using generated API");
 
-			// Use the generated API endpoint - this returns the response directly
-			await codincodApiWebAuthControllerLogin2(
+			await codincodApiWebAuthControllerLogin(
 				{
 					identifier: form.data.identifier,
 					password: form.data.password
 				},
-				{ credentials: "include" }
+				{ credentials: "include", fetch } as RequestInit
 			);
 
 			console.log("[SERVER] ✅ Login successful");
