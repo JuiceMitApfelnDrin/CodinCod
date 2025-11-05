@@ -1,6 +1,6 @@
 import { loadWithFallback } from "$lib/api/error-handler";
 import { codincodApiWebModerationControllerListReviews } from "$lib/api/generated/moderation/moderation";
-import { PAGINATION_CONFIG } from "types";
+import { PAGINATION_CONFIG } from "$lib/types";
 import type { PageServerLoadEvent } from "./$types";
 
 export async function load({ fetch, url }: PageServerLoadEvent) {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Badge, type BadgeVariant } from "@/components/ui/badge";
-	import { puzzleVisibilityEnum, type PuzzleVisibility } from "types";
+	import { puzzleVisibilityEnum, type PuzzleVisibility } from "$lib/types";
 
 	let {
 		visibility = puzzleVisibilityEnum.DRAFT

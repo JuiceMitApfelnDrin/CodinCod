@@ -7,7 +7,7 @@ import {
 	frontendUrls,
 	httpResponseCodes,
 	registerSchema
-} from "types";
+} from "$lib/types";
 import type { RequestEvent } from "./$types.js";
 import { codincodApiWebAuthControllerRegister } from "@/api/generated/auth/auth.js";
 

@@ -1,7 +1,7 @@
 import { logger } from "$lib/utils/debug-logger";
 import { codincodApiWebAccountControllerShow } from "@/api/generated/account/account";
 import type { Cookies } from "@sveltejs/kit";
-import { cookieKeys } from "types";
+import { cookieKeys } from "$lib/types";
 
 /**
  * Verifies authentication status by checking with the backend

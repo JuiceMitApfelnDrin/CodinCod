@@ -6,7 +6,7 @@
 		testIds,
 		type GameMode,
 		type LeaderboardAPI
-	} from "types";
+	} from "$lib/types";
 	import type { GlobalLeaderboardResponse } from "@/api/generated/schemas/globalLeaderboardResponse";
 	import * as Card from "@/components/ui/card";
 	import * as Table from "@/components/ui/table";
@@ -140,14 +140,12 @@
 		{/each}
 	</ButtonGroup.Root>
 
-	<!-- Loading State -->
 	{#if loading}
 		<div class="flex items-center justify-center py-20">
 			<Loader />
 		</div>
 	{/if}
 
-	<!-- Error State -->
 	{#if error}
 		<Card.Card class="border-destructive">
 			<Card.CardContent class="pt-6">
@@ -156,7 +154,6 @@
 		</Card.Card>
 	{/if}
 
-	<!-- Leaderboard Table -->
 	{#if leaderboardData && !loading}
 		<Card.Card>
 			<Card.CardHeader>

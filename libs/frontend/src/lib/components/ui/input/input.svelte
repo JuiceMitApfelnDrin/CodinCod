@@ -5,7 +5,7 @@
 	} from "svelte/elements";
 	import type { WithElementRef } from "bits-ui";
 	import { cn } from "@/utils/cn";
-	import type { DataTestIdProp } from "types";
+	import type { DataTestIdProp } from "$lib/types";
 
 	type InputType = Exclude<HTMLInputTypeAttribute, "file">;
 

@@ -2,7 +2,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
-	import { getUserIdFromUser, isAuthor, isUserDto } from "types";
+	import { getUserIdFromUser, isAuthor, isUserDto } from "$lib/types";
 	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";

@@ -1,7 +1,7 @@
 import { env } from "$env/dynamic/private";
 import { ApiError } from "$lib/api/errors";
 import { redirect } from "@sveltejs/kit";
-import { cookieKeys, environment, frontendUrls, getCookieOptions } from "types";
+import { cookieKeys, environment, frontendUrls, getCookieOptions } from "$lib/types";
 import type { Actions } from "./$types";
 import { codincodApiWebAuthControllerLogout } from "@/api/generated/auth/auth";
 

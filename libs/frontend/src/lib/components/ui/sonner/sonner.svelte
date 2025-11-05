@@ -3,7 +3,7 @@
 		Toaster as Sonner,
 		type ToasterProps as SonnerProps
 	} from "svelte-sonner";
-	import { themeOption } from "types";
+	import { themeOption } from "$lib/types";
 	import { isDarkTheme } from "@/stores/theme.store";
 
 	let { ...restProps }: SonnerProps = $props();

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { frontendUrls, type FrontendLink } from "types";
+	import { frontendUrls, type FrontendLink } from "$lib/types";
 	import Container from "../ui/container/container.svelte";
 	import * as Card from "../ui/card";
 	import H1 from "../typography/h1.svelte";
 	import P from "../typography/p.svelte";
 	import Button from "../ui/button/button.svelte";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 
 	let {
 		header = null,

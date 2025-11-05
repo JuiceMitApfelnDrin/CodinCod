@@ -3,10 +3,10 @@
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import { cn } from "@/utils/cn";
 	import dayjs from "dayjs";
-	import type { ChatMessage } from "types";
+	import type { ChatMessage } from "$lib/types";
 	import { Button } from "@/components/ui/button";
 	import Flag from "@lucide/svelte/icons/flag";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 
 	let {
 		chatMessage,

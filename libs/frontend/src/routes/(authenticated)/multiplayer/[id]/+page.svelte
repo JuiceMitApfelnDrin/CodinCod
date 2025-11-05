@@ -45,8 +45,8 @@
 		gameEventEnum,
 		type GameRequest,
 		type GameResponse
-	} from "types";
-	import { testIds } from "types";
+	} from "$lib/types";
+	import { testIds } from "$lib/types";
 
 	function isUserIdInUserList(
 		userId: string,

@@ -3,7 +3,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 </script>
 
 <svelte:head>

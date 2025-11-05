@@ -8,10 +8,10 @@
 	} from "../config/register-form-schema";
 	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "types";
+	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "$lib/types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import { page } from "$app/state";
 	import Button from "#/ui/button/button.svelte";
 	import EyeClosed from "@lucide/svelte/icons/eye-closed";

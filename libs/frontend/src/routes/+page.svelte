@@ -2,7 +2,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import P from "@/components/typography/p.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
-	import { githubRepo, twitchChannel } from "types";
+	import { githubRepo, twitchChannel } from "$lib/types";
 	import H1 from "@/components/typography/h1.svelte";
 	import HighlightText from "@/components/ui/highlight-text/highlight-text.svelte";
 </script>

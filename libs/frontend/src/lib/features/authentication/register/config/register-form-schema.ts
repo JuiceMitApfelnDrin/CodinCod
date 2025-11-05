@@ -1,4 +1,4 @@
-import { registerSchema } from "types";
+import { registerSchema } from "$lib/types";
 import { z } from "zod";
 // import { fetchWithAuthenticationCookie } from "../../utils/fetch-with-authentication-cookie";
 // import { buildBackendUrl } from "@/config/backend";

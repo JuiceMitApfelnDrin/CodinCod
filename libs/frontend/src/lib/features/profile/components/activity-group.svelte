@@ -6,7 +6,7 @@
 		type AcceptedDate,
 		type Activity,
 		type ActivityType
-	} from "types";
+	} from "$lib/types";
 
 	let {
 		activities = [],

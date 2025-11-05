@@ -1,4 +1,4 @@
-import { BanType } from "../../moderation/schema/ban-type.schema.js";
+import type { BanType } from "../../moderation/schema/ban-type.schema.js";
 
 export const baseRoute = "/api/v1";
 

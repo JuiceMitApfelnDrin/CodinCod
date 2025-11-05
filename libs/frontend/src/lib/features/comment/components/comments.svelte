@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isCommentDto, type CommentDto, type ObjectId } from "types";
+	import { isCommentDto, type CommentDto, type ObjectId } from "$lib/types";
 	import Comment from "./comment.svelte";
 
 	let {

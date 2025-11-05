@@ -1,7 +1,7 @@
 <script lang="ts">
 	import dayjs from "dayjs";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
-	import { frontendUrls, type GroupedActivitiesByDate } from "types";
+	import { frontendUrls, type GroupedActivitiesByDate } from "$lib/types";
 	import { cn } from "@/utils/cn";
 
 	let {

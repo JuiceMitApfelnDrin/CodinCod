@@ -10,7 +10,7 @@ import {
 	ERROR_MESSAGES,
 	frontendUrls,
 	httpResponseCodes
-} from "types";
+} from "$lib/types";
 import type { RequestEvent } from "./$types.js";
 
 export async function load() {

@@ -12,7 +12,7 @@ import {
 	isThemeOption,
 	type PreferencesDto,
 	type UpdatePreferencesRequest
-} from "types";
+} from "$lib/types";
 import { isAuthenticated } from "./auth.store";
 import { theme } from "./theme.store";
 

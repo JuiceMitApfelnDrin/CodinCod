@@ -1,4 +1,4 @@
-import { ValueOf } from "../types/value-of.js";
+import type { ValueOf } from "../types/value-of.js";
 
 export const cookieKeys = {
 	TOKEN: "token",

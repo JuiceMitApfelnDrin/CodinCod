@@ -4,7 +4,7 @@
 		WEBSOCKET_STATES,
 		type WebSocketState
 	} from "@/websocket/websocket-constants";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 
 	let {
 		wsManager,

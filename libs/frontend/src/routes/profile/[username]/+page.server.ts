@@ -1,4 +1,4 @@
-import { activityTypeEnum } from "types";
+import { activityTypeEnum } from "$lib/types";
 import type { PageServerLoadEvent } from "./$types";
 import { codincodApiWebUserControllerActivity } from "@/api/generated/user/user";
 

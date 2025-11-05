@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { keymap, type PreferencesDto, type PuzzleLanguage } from "types";
+	import { keymap, type PreferencesDto, type PuzzleLanguage } from "$lib/types";
 	import { preferences } from "@/stores/preferences.store";
 	import type CodemirrorWrapperType from "#/external-wrapper/codemirror-wrapper.svelte";
 	import type { LanguageSupport, StreamLanguage } from "@codemirror/language";

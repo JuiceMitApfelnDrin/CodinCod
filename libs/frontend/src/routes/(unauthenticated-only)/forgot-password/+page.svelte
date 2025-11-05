@@ -10,7 +10,7 @@
 	import Mail from "@lucide/svelte/icons/mail";
 	import ArrowLeft from "@lucide/svelte/icons/arrow-left";
 	import Button from "#/ui/button/button.svelte";
-	import { frontendUrls, testIds } from "types";
+	import { frontendUrls, testIds } from "$lib/types";
 
 	let { data, form } = $props();
 

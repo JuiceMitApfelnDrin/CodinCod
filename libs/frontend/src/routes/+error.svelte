@@ -4,7 +4,7 @@
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
-	import { testIds, frontendUrls } from "types";
+	import { testIds, frontendUrls } from "$lib/types";
 	import AlertCircle from "@lucide/svelte/icons/alert-circle";
 	import Home from "@lucide/svelte/icons/home";
 	import RefreshCw from "@lucide/svelte/icons/refresh-cw";

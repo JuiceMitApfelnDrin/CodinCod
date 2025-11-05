@@ -7,9 +7,9 @@
 	import Label from "@/components/ui/label/label.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as ScrollArea from "@/components/ui/scroll-area";
-	import { CHAT_MESSAGE_CONFIG, type ChatMessage } from "types";
+	import { CHAT_MESSAGE_CONFIG, type ChatMessage } from "$lib/types";
 	import Message from "./chat-message.svelte";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import ReportChatDialog from "./report-chat-dialog.svelte";
 
 	let {

@@ -9,7 +9,7 @@
 		banTypeEnum,
 		reviewStatusEnum,
 		BAN_CONFIG
-	} from "types";
+	} from "$lib/types";
 	import type { PageData } from "./$types";
 	import { toast } from "svelte-sonner";
 	import {
@@ -29,7 +29,7 @@
 	import { Button } from "#/ui/button";
 	import { page } from "$app/state";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import Pagination from "#/nav/pagination.svelte";
 
 	let { data }: { data: PageData } = $props();

@@ -9,7 +9,7 @@ import {
 	frontendUrls,
 	httpResponseCodes,
 	loginSchema
-} from "types";
+} from "$lib/types";
 import type { RequestEvent } from "./$types";
 import { codincodApiWebAuthControllerLogin } from "@/api/generated/auth/auth";
 

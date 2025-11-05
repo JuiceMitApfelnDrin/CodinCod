@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
 	import type { HTMLInputAttributes } from "svelte/elements";
-	import { type PuzzleResult } from "types";
+	import { type PuzzleResult } from "$lib/types";
 	import ValidatorStatus from "./validator-status.svelte";
 
 	let {

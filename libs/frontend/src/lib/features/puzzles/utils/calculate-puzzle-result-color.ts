@@ -1,4 +1,4 @@
-import { PuzzleResultEnum, puzzleResultSchema } from "types";
+import { PuzzleResultEnum, puzzleResultSchema } from "$lib/types";
 
 /**
  * checks whether something is a puzzleResult

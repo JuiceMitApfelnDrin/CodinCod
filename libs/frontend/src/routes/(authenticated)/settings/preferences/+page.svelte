@@ -10,7 +10,7 @@
 		keymaps,
 		type EditorPreferences,
 		type PuzzleLanguage
-	} from "types";
+	} from "$lib/types";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages.store";
 	import Checkbox from "@/components/ui/toggle/checkbox.svelte";

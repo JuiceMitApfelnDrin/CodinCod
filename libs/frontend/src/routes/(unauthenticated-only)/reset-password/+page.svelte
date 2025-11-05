@@ -11,7 +11,7 @@
 	import KeyRound from "@lucide/svelte/icons/key-round";
 	import CheckCircle2 from "@lucide/svelte/icons/check-circle-2";
 	import Button from "#/ui/button/button.svelte";
-	import { frontendUrls, testIds } from "types";
+	import { frontendUrls, testIds } from "$lib/types";
 
 	let { form } = $props();
 

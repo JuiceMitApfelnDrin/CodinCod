@@ -18,7 +18,7 @@ import {
 	httpResponseCodes,
 	puzzleVisibilityEnum,
 	type EditPuzzle
-} from "types";
+} from "$lib/types";
 import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
 
 /**

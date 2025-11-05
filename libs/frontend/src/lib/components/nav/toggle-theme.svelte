@@ -5,7 +5,7 @@
 	import Toggle from "../ui/toggle/toggle.svelte";
 	import { cn } from "@/utils/cn";
 	import { Toggle as TogglePrimitive } from "bits-ui";
-	import type { DataTestIdProp } from "types";
+	import type { DataTestIdProp } from "$lib/types";
 
 	type $$Props = TogglePrimitive.RootProps & { class?: string };
 

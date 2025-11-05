@@ -3,7 +3,7 @@ import { codincodApiWebProgrammingLanguageControllerIndex } from "@/api/generate
 import { localStorageKeys } from "@/config/local-storage";
 import { logger } from "@/utils/debug-logger";
 import { get, writable } from "svelte/store";
-import { type ProgrammingLanguageDto } from "types";
+import { type ProgrammingLanguageDto } from "$lib/types";
 import { isAuthenticated } from "./auth.store";
 
 const CACHE_DURATION_MS = 1_000 * 60 * 60;

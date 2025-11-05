@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Button from "$lib/components/ui/button/index.js";
-	import type { DataTestIdProp } from "types";
+	import type { DataTestIdProp } from "$lib/types";
 
 	let { ref = $bindable(null), ...restProps }: Button.Props & DataTestIdProp =
 		$props();

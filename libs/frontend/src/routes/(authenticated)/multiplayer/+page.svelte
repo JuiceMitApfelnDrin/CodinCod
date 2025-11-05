@@ -30,8 +30,8 @@
 		type WaitingRoomResponse,
 		type GameOptions,
 		type ChatMessage
-	} from "types";
-	import { testIds } from "types";
+	} from "$lib/types";
+	import { testIds } from "$lib/types";
 	import { currentTime } from "@/stores/current-time.store";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import { Input } from "#/ui/input";

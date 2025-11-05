@@ -2,13 +2,13 @@
 	import * as HoverCard from "$lib/components/ui/hover-card";
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { frontendUrls, isUserDto, type UserDto } from "types";
+	import { frontendUrls, isUserDto, type UserDto } from "$lib/types";
 	import Calendar from "@lucide/svelte/icons/calendar";
 	import { codincodApiWebUserControllerShow } from "@/api/generated/user/user";
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 
 	let {
 		class: className = undefined,

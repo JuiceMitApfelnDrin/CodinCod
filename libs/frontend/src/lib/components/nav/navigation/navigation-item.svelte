@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { cn } from "@/utils/cn";
-	import type { FrontendUrl } from "types";
+	import type { FrontendUrl } from "$lib/types";
 	import type { Button as ButtonPrimitive } from "bits-ui";
-	import { type DataTestIdProp } from "types";
+	import { type DataTestIdProp } from "$lib/types";
 
 	type $$Props = ButtonPrimitive.RootProps & {
 		class?: string;

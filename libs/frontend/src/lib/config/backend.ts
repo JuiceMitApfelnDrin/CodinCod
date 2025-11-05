@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "types";
+import { ERROR_MESSAGES } from "$lib/types";
 
 /**
  * Builds a backend url,

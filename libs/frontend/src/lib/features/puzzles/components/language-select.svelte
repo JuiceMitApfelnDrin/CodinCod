@@ -3,7 +3,7 @@
 	import { ScrollArea } from "@/components/ui/scroll-area";
 	import SelectGroupHeading from "@/components/ui/select/select-group-heading.svelte";
 	import { preferences } from "@/stores/preferences.store";
-	import { DEFAULT_LANGUAGE, type ProgrammingLanguageDto } from "types";
+	import { DEFAULT_LANGUAGE, type ProgrammingLanguageDto } from "$lib/types";
 
 	let {
 		formAttributes = undefined,

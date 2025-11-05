@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Container from "@/components/ui/container/container.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
-	import { isUserDto } from "types";
+	import { isUserDto } from "$lib/types";
 
 	let { data } = $props();
 	let { puzzle } = data;

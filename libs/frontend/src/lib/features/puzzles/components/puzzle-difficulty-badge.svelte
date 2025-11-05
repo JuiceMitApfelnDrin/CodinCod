@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Badge, type BadgeVariant } from "@/components/ui/badge";
-	import { DifficultyEnum, type Difficulty } from "types";
+	import { DifficultyEnum, type Difficulty } from "$lib/types";
 
 	let {
 		difficulty = DifficultyEnum.INTERMEDIATE

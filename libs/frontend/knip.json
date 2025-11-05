@@ -16,5 +16,5 @@
 		"**/*.spec.ts",
 		"**/*.test.ts"
 	],
-	"ignoreDependencies": ["types"]
+	"ignoreDependencies": ["$lib/types"]
 }

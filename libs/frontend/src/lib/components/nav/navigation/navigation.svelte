@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { frontendUrls } from "types";
+	import { frontendUrls } from "$lib/types";
 	import ToggleTheme from "../toggle-theme.svelte";
 	import UserDropdown from "../user-dropdown.svelte";
 	import NavigationItem from "./navigation-item.svelte";
@@ -9,7 +9,7 @@
 	import Menu from "@lucide/svelte/icons/menu";
 	import Moon from "@lucide/svelte/icons/moon";
 	import Sun from "@lucide/svelte/icons/sun";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import { logger } from "$lib/utils/debug-logger";
 
 	const version = import.meta.env.VITE_APP_VERSION;

@@ -6,7 +6,7 @@
 		isCommentDto,
 		type CommentDto,
 		type ObjectId
-	} from "types";
+	} from "$lib/types";
 	import CommentMetaInfo from "./comment-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Button from "@/components/ui/button/button.svelte";
@@ -27,7 +27,7 @@
 	import type { VoteRequest } from "@/api/generated/schemas/voteRequest";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 
 	let {
 		comment = $bindable(),

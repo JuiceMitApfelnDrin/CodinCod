@@ -3,10 +3,10 @@
 	import * as Dialog from "@/components/ui/dialog";
 	import * as Form from "@/components/ui/form";
 	import Input from "@/components/ui/input/input.svelte";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import { superForm, type SuperValidated } from "sveltekit-superforms";
 	import { zod4Client } from "sveltekit-superforms/adapters";
-	import { deletePuzzleSchema, type DeletePuzzle } from "types";
+	import { deletePuzzleSchema, type DeletePuzzle } from "$lib/types";
 
 	let {
 		data

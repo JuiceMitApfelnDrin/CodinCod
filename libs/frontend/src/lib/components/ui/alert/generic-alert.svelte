@@ -4,7 +4,7 @@
 	import CircleCheck from "@lucide/svelte/icons/circle-check";
 	import * as Alert from "./index";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { httpResponseCodes } from "types";
+	import { httpResponseCodes } from "$lib/types";
 
 	let {
 		message,

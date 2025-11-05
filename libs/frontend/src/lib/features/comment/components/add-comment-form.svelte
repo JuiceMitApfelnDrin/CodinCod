@@ -12,8 +12,8 @@
 		type CommentDto,
 		type CommentType,
 		type ObjectId
-	} from "types";
-	import { testIds } from "types";
+	} from "$lib/types";
+	import { testIds } from "$lib/types";
 
 	let {
 		commentType,

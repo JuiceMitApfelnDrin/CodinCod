@@ -10,11 +10,11 @@
 		POST,
 		IDENTIFIER_CONFIG,
 		type Login
-	} from "types";
+	} from "$lib/types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/state";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import EyeClosed from "@lucide/svelte/icons/eye-closed";
 	import Eye from "@lucide/svelte/icons/eye";
 	import Button from "#/ui/button/button.svelte";

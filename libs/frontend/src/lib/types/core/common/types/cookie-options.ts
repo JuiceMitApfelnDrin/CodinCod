@@ -1,4 +1,4 @@
-import { CookieSameSite } from "../config/cookie.js";
+import type { CookieSameSite } from "../config/cookie.js";
 export type CookieOptions = {
 	path: string;
 	httpOnly: boolean;

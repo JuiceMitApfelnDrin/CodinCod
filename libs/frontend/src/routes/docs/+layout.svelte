@@ -6,7 +6,7 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import BecomeAContributor from "@/features/learn/components/become-a-contributor.svelte";
 	import type { Snippet } from "svelte";
-	import { frontendUrls } from "types";
+	import { frontendUrls } from "$lib/types";
 
 	let {
 		children

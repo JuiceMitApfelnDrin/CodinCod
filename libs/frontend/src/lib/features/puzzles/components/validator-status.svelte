@@ -4,7 +4,7 @@
 	import CircleX from "@lucide/svelte/icons/circle-x";
 	import Circle from "@lucide/svelte/icons/circle";
 	import type { HTMLInputAttributes } from "svelte/elements";
-	import { PuzzleResultEnum, type PuzzleResult } from "types";
+	import { PuzzleResultEnum, type PuzzleResult } from "$lib/types";
 
 	let {
 		class: className = undefined,

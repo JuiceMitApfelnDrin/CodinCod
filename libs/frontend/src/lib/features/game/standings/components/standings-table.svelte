@@ -10,7 +10,7 @@
 		type AcceptedDate,
 		type GameDto,
 		type GameSubmission
-	} from "types";
+	} from "$lib/types";
 	import duration from "dayjs/plugin/duration";
 	import minMax from "dayjs/plugin/minMax";
 	import { codincodApiWebSubmissionControllerShow } from "@/api/generated/submission/submission";

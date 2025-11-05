@@ -1,7 +1,7 @@
 import { browser } from "$app/environment";
 import { localStorageKeys } from "@/config/local-storage";
 import { derived, writable } from "svelte/store";
-import { isThemeOption, themeOption, type ThemeOption } from "types";
+import { isThemeOption, themeOption, type ThemeOption } from "$lib/types";
 
 /**
  * Store for the current theme (light/dark mode)

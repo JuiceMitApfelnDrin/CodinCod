@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as DropdownMenu from "#/ui/dropdown-menu";
 	import * as Avatar from "#/ui/avatar";
-	import { frontendUrls } from "types";
-	import { testIds } from "types";
+	import { frontendUrls } from "$lib/types";
+	import { testIds } from "$lib/types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import { Button } from "#/ui/button";
 </script>

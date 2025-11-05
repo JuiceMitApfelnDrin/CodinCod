@@ -9,12 +9,12 @@
 		isPaginatedQueryResponse,
 		type PaginatedQueryResponse,
 		type PuzzleDto
-	} from "types";
+	} from "$lib/types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
 
 	let { data }: { data: PaginatedQueryResponse | undefined } = $props();

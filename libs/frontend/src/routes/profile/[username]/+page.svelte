@@ -5,7 +5,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import ActivityGroup from "@/features/profile/components/activity-group.svelte";
 	import ActivityHeatmap from "@/features/profile/components/activity-heatmap.svelte";
 	import dayjs from "dayjs";
@@ -14,7 +14,7 @@
 		isUserDto,
 		type Activity,
 		type GroupedActivitiesByDate
-	} from "types";
+	} from "$lib/types";
 	import { logger } from "@/utils/debug-logger.js";
 
 	function groupByCreatedAtDate(items: Activity[]) {

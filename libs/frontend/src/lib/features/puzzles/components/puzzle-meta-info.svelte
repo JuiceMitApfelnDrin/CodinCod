@@ -3,7 +3,7 @@
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import UserHoverCard from "./user-hover-card.svelte";
 	import type { PuzzleResponse } from "@/api/generated/schemas";
-	import type { PuzzleDto, EditPuzzle } from "types";
+	import type { PuzzleDto, EditPuzzle } from "$lib/types";
 
 	let {
 		puzzle

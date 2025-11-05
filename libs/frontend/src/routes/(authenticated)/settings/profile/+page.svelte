@@ -6,7 +6,7 @@
 	} from "$lib/api/notifications";
 	import { Input } from "@/components/ui/input";
 	import { Textarea } from "@/components/ui/textarea";
-	import { testIds, updateProfileSchema } from "types";
+	import { testIds, updateProfileSchema } from "$lib/types";
 	import { z } from "zod";
 	import { toast } from "svelte-sonner";
 	import { authenticatedUserInfo } from "@/stores/auth.store";

@@ -16,7 +16,7 @@
 		DEFAULT_LANGUAGE,
 		isProgrammingLanguageDto,
 		isObjectId
-	} from "types";
+	} from "$lib/types";
 	import { page } from "$app/state";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
@@ -25,7 +25,7 @@
 	import LanguageSelect from "./language-select.svelte";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages.store";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 
 	let {
 		data

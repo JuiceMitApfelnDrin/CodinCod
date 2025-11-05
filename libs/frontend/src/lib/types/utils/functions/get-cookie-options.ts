@@ -1,4 +1,4 @@
-import { CookieOptions } from "../../core/common/types/cookie-options.js";
+import type { CookieOptions } from "../../core/common/types/cookie-options.js";
 
 export function getCookieOptions(options: {
 	isProduction: boolean;

@@ -1,7 +1,7 @@
 import { browser } from "$app/environment";
 import { logger } from "$lib/utils/debug-logger";
 import { derived, writable } from "svelte/store";
-import type { AuthenticatedInfo } from "types";
+import type { AuthenticatedInfo } from "$lib/types";
 
 /**
  * Store for authenticated user information

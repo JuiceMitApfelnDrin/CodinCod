@@ -11,7 +11,7 @@
 		httpResponseCodes,
 		DEFAULT_LANGUAGE,
 		testIds
-	} from "types";
+	} from "$lib/types";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
 	import { calculatePuzzleResultColor } from "@/features/puzzles/utils/calculate-puzzle-result-color.js";
@@ -33,7 +33,7 @@
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import type { PuzzleResponse } from "@/api/generated/schemas";
-	import type { PuzzleDto } from "types";
+	import type { PuzzleDto } from "$lib/types";
 
 	let {
 		endDate,

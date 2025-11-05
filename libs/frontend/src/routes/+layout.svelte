@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Nav from "@/components/nav/navigation/navigation.svelte";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
-	import { isAuthenticatedInfo, type AuthenticatedInfo } from "types";
+	import { isAuthenticatedInfo, type AuthenticatedInfo } from "$lib/types";
 	import { Toaster } from "$lib/components/ui/sonner";
 	import { untrack, type Snippet } from "svelte";
 	import { logger } from "$lib/utils/debug-logger";

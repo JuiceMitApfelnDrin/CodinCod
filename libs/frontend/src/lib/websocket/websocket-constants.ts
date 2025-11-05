@@ -1,4 +1,4 @@
-import { websocketCloseCodes } from "types";
+import { websocketCloseCodes } from "$lib/types";
 
 export const WEBSOCKET_STATES = {
 	CONNECTING: "connecting",

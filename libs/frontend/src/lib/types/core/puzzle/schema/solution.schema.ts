@@ -6,7 +6,6 @@ export const solutionSchema = z.object({
 	code: z.string().prefault(""),
 	programmingLanguage: z
 		.union([objectIdSchema, programmingLanguageDtoSchema])
-		.prefault(undefined)
 		.optional(),
 });
 export type Solution = z.infer<typeof solutionSchema>;

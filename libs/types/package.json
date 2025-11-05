@@ -4,10 +4,10 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"name": "types",
+	"name": "$lib/types",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"$lib/types": "./dist/index.d.ts",
 	"type": "module",
 	"scripts": {
 		"build": "tsc",

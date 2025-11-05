@@ -1,4 +1,4 @@
-import { httpRequestMethod } from "types";
+import { httpRequestMethod } from "$lib/types";
 
 export const defaultFetchOptions = {
 	headers: {

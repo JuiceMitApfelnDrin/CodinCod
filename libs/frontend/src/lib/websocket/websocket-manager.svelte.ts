@@ -9,7 +9,7 @@
  */
 
 import { logger } from "@/utils/debug-logger";
-import { websocketCloseCodes } from "types";
+import { websocketCloseCodes } from "$lib/types";
 import {
 	WEBSOCKET_RECONNECT,
 	WEBSOCKET_STATES,

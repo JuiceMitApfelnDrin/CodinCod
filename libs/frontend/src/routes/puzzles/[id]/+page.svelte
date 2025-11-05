@@ -8,7 +8,7 @@
 		isUserDto,
 		puzzleVisibilityEnum,
 		type CommentDto
-	} from "types";
+	} from "$lib/types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import Button from "@/components/ui/button/button.svelte";
 	import Accordion from "@/components/ui/accordion/accordion.svelte";
@@ -19,7 +19,7 @@
 	import H2 from "@/components/typography/h2.svelte";
 	import Comments from "@/features/comment/components/comments.svelte";
 	import AddCommentForm from "@/features/comment/components/add-comment-form.svelte";
-	import { testIds } from "types";
+	import { testIds } from "$lib/types";
 	import { page } from "$app/state";
 	import { logger } from "@/utils/debug-logger.js";
 	import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse.js";
