@@ -1,8 +1,4 @@
 <script lang="ts">
-	import {
-		codincodApiWebUserControllerShow2,
-		codincodApiWebAccountControllerUpdateProfile2
-	} from "$lib/api/generated";
 	import type { AccountProfileUpdateRequest } from "@/api/generated/schemas/accountProfileUpdateRequest";
 	import {
 		showErrorNotification,
@@ -19,6 +15,8 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import H2 from "@/components/typography/h2.svelte";
 	import { ApiError } from "@/api/errors";
+	import { codincodApiWebAccountControllerUpdateProfile } from "@/api/generated/account/account";
+	import { codincodApiWebUserControllerShow } from "@/api/generated/user/user";
 
 	let bio = $state("");
 	let location = $state("");
@@ -40,7 +38,7 @@
 		}
 
 		try {
-			const userData = await codincodApiWebUserControllerShow2(username);
+			const userData = await codincodApiWebUserControllerShow(username);
 			const userProfile = userData.user?.profile;
 			if (userProfile) {
 				bio = userProfile.bio ?? "";
@@ -102,7 +100,7 @@
 			if (cleanData.picture) apiPayload.picture = cleanData.picture;
 			if (cleanData.socials) apiPayload.socials = cleanData.socials;
 
-			await codincodApiWebAccountControllerUpdateProfile2(apiPayload);
+			await codincodApiWebAccountControllerUpdateProfile(apiPayload);
 
 			showSuccessNotification("Profile updated successfully!");
 			validationErrors = {};

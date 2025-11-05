@@ -1,21 +1,14 @@
 <script lang="ts">
 	import H1 from "@/components/typography/h1.svelte";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import type { PuzzleResponse } from "@/api/generated/index.js";
 	import UserHoverCard from "./user-hover-card.svelte";
+	import type { PuzzleResponse } from "@/api/generated/schemas";
+	import type { PuzzleDto, EditPuzzle } from "types";
 
 	let {
 		puzzle
 	}: {
-		puzzle:
-			| PuzzleResponse
-			| {
-					title?: string;
-					author?: unknown;
-					createdAt?: unknown;
-					updatedAt?: unknown;
-			  }
-			| null;
+		puzzle:	PuzzleResponse | PuzzleDto | EditPuzzle | null;
 	} = $props();
 
 	const hasBeenUpdated = puzzle && puzzle.updatedAt !== puzzle.createdAt;

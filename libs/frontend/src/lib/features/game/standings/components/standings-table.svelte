@@ -13,7 +13,7 @@
 	} from "types";
 	import duration from "dayjs/plugin/duration";
 	import minMax from "dayjs/plugin/minMax";
-	import { codincodApiWebSubmissionControllerShow2 } from "@/api/generated/submission/submission";
+	import { codincodApiWebSubmissionControllerShow } from "@/api/generated/submission/submission";
 	import { Button } from "@/components/ui/button";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import CodeXml from "@lucide/svelte/icons/code-xml";
@@ -50,7 +50,7 @@
 	let hasBeenOpened: Record<string, boolean> = $state({});
 
 	async function fetchCode(id: string): Promise<{ code: string }> {
-		const response = await codincodApiWebSubmissionControllerShow2(id);
+		const response = await codincodApiWebSubmissionControllerShow(id);
 		return {
 			code: response.code ?? "// Code not available"
 		};

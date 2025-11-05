@@ -13,31 +13,8 @@ import { customClient } from "../../custom-client";
  * Runs code against Piston with custom test input/output for validation
  * @summary Execute code without saving
  */
-export const getCodincodApiWebExecuteControllerCreate2Url = () => {
-	return `/api/execute`;
-};
-
-export const codincodApiWebExecuteControllerCreate2 = async (
-	executeRequest?: ExecuteRequest,
-	options?: RequestInit
-): Promise<ExecuteResponse> => {
-	return customClient<ExecuteResponse>(
-		getCodincodApiWebExecuteControllerCreate2Url(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(executeRequest)
-		}
-	);
-};
-
-/**
- * Runs code against Piston with custom test input/output for validation
- * @summary Execute code without saving
- */
 export const getCodincodApiWebExecuteControllerCreateUrl = () => {
-	return `/api/v1/execute`;
+	return `/api/execute`;
 };
 
 export const codincodApiWebExecuteControllerCreate = async (

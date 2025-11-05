@@ -8,9 +8,7 @@
 import type {
 	BanResponse,
 	BanUserRequest,
-	CodincodApiWebModerationControllerListReports2Params,
 	CodincodApiWebModerationControllerListReportsParams,
-	CodincodApiWebModerationControllerListReviews2Params,
 	CodincodApiWebModerationControllerListReviewsParams,
 	CreateReportRequest,
 	ReportResponse,
@@ -24,54 +22,20 @@ import type {
 import { customClient } from "../../custom-client";
 
 /**
- * @summary List pending moderation reviews (moderator only)
- */
-export const getCodincodApiWebModerationControllerListReviews2Url = (
-	params?: CodincodApiWebModerationControllerListReviews2Params
-) => {
-	const normalizedParams = new URLSearchParams();
-
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
-
-	const stringifiedParams = normalizedParams.toString();
-
-	return stringifiedParams.length > 0
-		? `/api/v1/moderation/reviews?${stringifiedParams}`
-		: `/api/v1/moderation/reviews`;
-};
-
-export const codincodApiWebModerationControllerListReviews2 = async (
-	params?: CodincodApiWebModerationControllerListReviews2Params,
-	options?: RequestInit
-): Promise<ReviewsListResponse> => {
-	return customClient<ReviewsListResponse>(
-		getCodincodApiWebModerationControllerListReviews2Url(params),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
  * @summary Unban a user (admin only)
  */
-export const getCodincodApiWebModerationControllerUnbanUser2Url = (
+export const getCodincodApiWebModerationControllerUnbanUserUrl = (
 	userId: string
 ) => {
 	return `/api/moderation/user/${userId}/unban`;
 };
 
-export const codincodApiWebModerationControllerUnbanUser2 = async (
+export const codincodApiWebModerationControllerUnbanUser = async (
 	userId: string,
 	options?: RequestInit
 ): Promise<BanResponse> => {
 	return customClient<BanResponse>(
-		getCodincodApiWebModerationControllerUnbanUser2Url(userId),
+		getCodincodApiWebModerationControllerUnbanUserUrl(userId),
 		{
 			...options,
 			method: "POST"
@@ -82,8 +46,8 @@ export const codincodApiWebModerationControllerUnbanUser2 = async (
 /**
  * @summary List reports (admin only)
  */
-export const getCodincodApiWebModerationControllerListReports2Url = (
-	params?: CodincodApiWebModerationControllerListReports2Params
+export const getCodincodApiWebModerationControllerListReportsUrl = (
+	params?: CodincodApiWebModerationControllerListReportsParams
 ) => {
 	const normalizedParams = new URLSearchParams();
 
@@ -100,65 +64,15 @@ export const getCodincodApiWebModerationControllerListReports2Url = (
 		: `/api/moderation/reports`;
 };
 
-export const codincodApiWebModerationControllerListReports2 = async (
-	params?: CodincodApiWebModerationControllerListReports2Params,
+export const codincodApiWebModerationControllerListReports = async (
+	params?: CodincodApiWebModerationControllerListReportsParams,
 	options?: RequestInit
 ): Promise<ReportsListResponse> => {
 	return customClient<ReportsListResponse>(
-		getCodincodApiWebModerationControllerListReports2Url(params),
+		getCodincodApiWebModerationControllerListReportsUrl(params),
 		{
 			...options,
 			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Ban a user (admin only)
- */
-export const getCodincodApiWebModerationControllerBanUser2Url = (
-	userId: string
-) => {
-	return `/api/v1/moderation/user/${userId}/ban`;
-};
-
-export const codincodApiWebModerationControllerBanUser2 = async (
-	userId: string,
-	banUserRequest?: BanUserRequest,
-	options?: RequestInit
-): Promise<BanResponse> => {
-	return customClient<BanResponse>(
-		getCodincodApiWebModerationControllerBanUser2Url(userId),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(banUserRequest)
-		}
-	);
-};
-
-/**
- * @summary Resolve a report (admin only)
- */
-export const getCodincodApiWebModerationControllerResolveReport2Url = (
-	id: string
-) => {
-	return `/api/v1/moderation/report/${id}/resolve`;
-};
-
-export const codincodApiWebModerationControllerResolveReport2 = async (
-	id: string,
-	resolveReportRequest?: ResolveReportRequest,
-	options?: RequestInit
-): Promise<ReportResponse> => {
-	return customClient<ReportResponse>(
-		getCodincodApiWebModerationControllerResolveReport2Url(id),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(resolveReportRequest)
 		}
 	);
 };
@@ -184,40 +98,6 @@ export const codincodApiWebModerationControllerBanUser = async (
 			method: "POST",
 			headers: { "Content-Type": "application/json", ...options?.headers },
 			body: JSON.stringify(banUserRequest)
-		}
-	);
-};
-
-/**
- * @summary List reports (admin only)
- */
-export const getCodincodApiWebModerationControllerListReportsUrl = (
-	params?: CodincodApiWebModerationControllerListReportsParams
-) => {
-	const normalizedParams = new URLSearchParams();
-
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
-
-	const stringifiedParams = normalizedParams.toString();
-
-	return stringifiedParams.length > 0
-		? `/api/v1/moderation/reports?${stringifiedParams}`
-		: `/api/v1/moderation/reports`;
-};
-
-export const codincodApiWebModerationControllerListReports = async (
-	params?: CodincodApiWebModerationControllerListReportsParams,
-	options?: RequestInit
-): Promise<ReportsListResponse> => {
-	return customClient<ReportsListResponse>(
-		getCodincodApiWebModerationControllerListReportsUrl(params),
-		{
-			...options,
-			method: "GET"
 		}
 	);
 };
@@ -259,19 +139,19 @@ export const codincodApiWebModerationControllerListReviews = async (
 /**
  * @summary Review and approve/reject content (moderator only)
  */
-export const getCodincodApiWebModerationControllerReviewContent2Url = (
+export const getCodincodApiWebModerationControllerReviewContentUrl = (
 	id: string
 ) => {
 	return `/api/moderation/review/${id}`;
 };
 
-export const codincodApiWebModerationControllerReviewContent2 = async (
+export const codincodApiWebModerationControllerReviewContent = async (
 	id: string,
 	reviewDecisionRequest?: ReviewDecisionRequest,
 	options?: RequestInit
 ): Promise<ReviewResponse> => {
 	return customClient<ReviewResponse>(
-		getCodincodApiWebModerationControllerReviewContent2Url(id),
+		getCodincodApiWebModerationControllerReviewContentUrl(id),
 		{
 			...options,
 			method: "POST",
@@ -284,16 +164,16 @@ export const codincodApiWebModerationControllerReviewContent2 = async (
 /**
  * @summary Create a new report for inappropriate content
  */
-export const getCodincodApiWebModerationControllerCreateReport2Url = () => {
+export const getCodincodApiWebModerationControllerCreateReportUrl = () => {
 	return `/api/moderation/report`;
 };
 
-export const codincodApiWebModerationControllerCreateReport2 = async (
+export const codincodApiWebModerationControllerCreateReport = async (
 	createReportRequest?: CreateReportRequest,
 	options?: RequestInit
 ): Promise<ReportResponse> => {
 	return customClient<ReportResponse>(
-		getCodincodApiWebModerationControllerCreateReport2Url(),
+		getCodincodApiWebModerationControllerCreateReportUrl(),
 		{
 			...options,
 			method: "POST",
@@ -324,75 +204,6 @@ export const codincodApiWebModerationControllerResolveReport = async (
 			method: "POST",
 			headers: { "Content-Type": "application/json", ...options?.headers },
 			body: JSON.stringify(resolveReportRequest)
-		}
-	);
-};
-
-/**
- * @summary Create a new report for inappropriate content
- */
-export const getCodincodApiWebModerationControllerCreateReportUrl = () => {
-	return `/api/v1/moderation/report`;
-};
-
-export const codincodApiWebModerationControllerCreateReport = async (
-	createReportRequest?: CreateReportRequest,
-	options?: RequestInit
-): Promise<ReportResponse> => {
-	return customClient<ReportResponse>(
-		getCodincodApiWebModerationControllerCreateReportUrl(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(createReportRequest)
-		}
-	);
-};
-
-/**
- * @summary Unban a user (admin only)
- */
-export const getCodincodApiWebModerationControllerUnbanUserUrl = (
-	userId: string
-) => {
-	return `/api/v1/moderation/user/${userId}/unban`;
-};
-
-export const codincodApiWebModerationControllerUnbanUser = async (
-	userId: string,
-	options?: RequestInit
-): Promise<BanResponse> => {
-	return customClient<BanResponse>(
-		getCodincodApiWebModerationControllerUnbanUserUrl(userId),
-		{
-			...options,
-			method: "POST"
-		}
-	);
-};
-
-/**
- * @summary Review and approve/reject content (moderator only)
- */
-export const getCodincodApiWebModerationControllerReviewContentUrl = (
-	id: string
-) => {
-	return `/api/v1/moderation/review/${id}`;
-};
-
-export const codincodApiWebModerationControllerReviewContent = async (
-	id: string,
-	reviewDecisionRequest?: ReviewDecisionRequest,
-	options?: RequestInit
-): Promise<ReviewResponse> => {
-	return customClient<ReviewResponse>(
-		getCodincodApiWebModerationControllerReviewContentUrl(id),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(reviewDecisionRequest)
 		}
 	);
 };

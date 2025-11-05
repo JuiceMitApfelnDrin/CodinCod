@@ -1,8 +1,8 @@
 import { logger } from "$lib/utils/debug-logger";
 import {
-	codincodApiWebPuzzleControllerDelete2,
-	codincodApiWebPuzzleControllerSolution2,
-	codincodApiWebPuzzleControllerUpdate2
+	codincodApiWebPuzzleControllerDelete,
+	codincodApiWebPuzzleControllerSolution,
+	codincodApiWebPuzzleControllerUpdate
 } from "@/api/generated/puzzle/puzzle";
 import type { PuzzleCreateRequest } from "@/api/generated/schemas/puzzleCreateRequest";
 import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse";
@@ -10,14 +10,14 @@ import { isSvelteKitRedirect } from "@/features/authentication/utils/is-svelteki
 import { error, fail, redirect } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
-import type { EditPuzzle } from "types";
 import {
 	deletePuzzleSchema,
 	editPuzzleSchema,
 	ERROR_MESSAGES,
 	frontendUrls,
 	httpResponseCodes,
-	puzzleVisibilityEnum
+	puzzleVisibilityEnum,
+	type EditPuzzle
 } from "types";
 import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
 
@@ -70,7 +70,7 @@ function transformEditToCreateRequest(data: EditPuzzle): PuzzleCreateRequest {
 		constraints: data.constraints || null,
 		validators:
 			data.validators && data.validators.length > 0
-				? data.validators.map((v) => ({
+				? data.validators.map((v: { input: string; output: string }) => ({
 						input: v.input,
 						output: v.output
 					}))
@@ -84,8 +84,7 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 	logger.page("Loading puzzle edit page", { id });
 
 	try {
-		// Use generated Orval endpoint with server-side fetch
-		const puzzle = await codincodApiWebPuzzleControllerSolution2(id, {
+		const puzzle = await codincodApiWebPuzzleControllerSolution(id, {
 			fetch
 		} as RequestInit);
 
@@ -132,7 +131,7 @@ export const actions = {
 		const id = deletePuzzleForm.data.id;
 
 		try {
-			await codincodApiWebPuzzleControllerDelete2(
+			await codincodApiWebPuzzleControllerDelete(
 				id as string,
 				{ fetch } as RequestInit
 			);
@@ -164,7 +163,7 @@ export const actions = {
 		const requestBody = transformEditToCreateRequest(form.data);
 
 		try {
-			await codincodApiWebPuzzleControllerUpdate2(id, requestBody, {
+			await codincodApiWebPuzzleControllerUpdate(id, requestBody, {
 				fetch
 			} as RequestInit);
 			return message(form, "Form updated successfully!");

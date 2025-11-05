@@ -4,9 +4,7 @@
 		backendUrls,
 		httpRequestMethod,
 		isSubmissionDto,
-		type PuzzleDto,
 		type CodeSubmissionParams,
-		type ValidatorEntity,
 		type CodeExecutionResponse,
 		isCodeExecutionSuccessResponse,
 		PuzzleResultEnum,
@@ -14,7 +12,6 @@
 		DEFAULT_LANGUAGE,
 		testIds
 	} from "types";
-	import type { PuzzleResponse } from "@/api/generated/index.js";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
 	import { calculatePuzzleResultColor } from "@/features/puzzles/utils/calculate-puzzle-result-color.js";
@@ -35,6 +32,8 @@
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
+	import type { PuzzleResponse } from "@/api/generated/schemas";
+	import type { PuzzleDto } from "types";
 
 	let {
 		endDate,
@@ -54,7 +53,6 @@
 	let isSubmittingCode = $state(false);
 	let testResults: Record<number, CodeExecutionResponse> = $state({});
 
-	// Get programmingLanguage ObjectId from selected language name
 	const programmingLanguageId = $derived.by(() => {
 		if (!language || !$languages) return undefined;
 		const lang = $languages.find((l) => l.language === language);

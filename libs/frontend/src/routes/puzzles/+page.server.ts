@@ -1,8 +1,6 @@
 import { loadWithFallback } from "$lib/api/error-handler";
-import {
-	codincodApiWebAccountControllerShow2,
-	codincodApiWebPuzzleControllerIndex
-} from "$lib/api/generated";
+import { codincodApiWebAccountControllerShow } from "@/api/generated/account/account";
+import { codincodApiWebPuzzleControllerIndex } from "@/api/generated/puzzle/puzzle";
 import type { ServerLoadEvent } from "@sveltejs/kit";
 
 export async function load({ fetch, url }: ServerLoadEvent) {
@@ -12,17 +10,16 @@ export async function load({ fetch, url }: ServerLoadEvent) {
 	const difficulty = url.searchParams.get("difficulty");
 	const search = url.searchParams.get("search");
 
-	// Use the generated endpoint with params
 	const puzzles = await codincodApiWebPuzzleControllerIndex({
 		page: parseInt(page),
 		pageSize: parseInt(pageSize),
 		...(difficulty && { difficulty }),
 		...(search && { search })
-	});
+	}, {fetch} as RequestInit);
 
 	// Load current user account info (optional, won't break page if not authenticated)
 	const account = await loadWithFallback(
-		() => codincodApiWebAccountControllerShow2(),
+		() => codincodApiWebAccountControllerShow({fetch} as RequestInit),
 		null
 	);
 

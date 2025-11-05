@@ -19,9 +19,9 @@
 	import MessageCircleOff from "@lucide/svelte/icons/message-circle-off";
 	import Trash from "@lucide/svelte/icons/trash";
 	import {
-		codincodApiWebCommentControllerVote2,
-		codincodApiWebCommentControllerShow2,
-		codincodApiWebCommentControllerDelete2
+		codincodApiWebCommentControllerVote,
+		codincodApiWebCommentControllerShow,
+		codincodApiWebCommentControllerDelete
 	} from "@/api/generated/default/default";
 	import { VoteRequestType } from "@/api/generated/schemas/voteRequestType";
 	import type { VoteRequest } from "@/api/generated/schemas/voteRequest";
@@ -40,7 +40,7 @@
 	let isReplying: boolean = $state(false);
 
 	async function handleVote(commentVoteRequest: VoteRequest) {
-		const updatedComment = await codincodApiWebCommentControllerVote2(
+		const updatedComment = await codincodApiWebCommentControllerVote(
 			comment._id,
 			commentVoteRequest
 		);
@@ -66,7 +66,7 @@
 
 	async function fetchReplies() {
 		const updatedCommentInfoWithSubComments =
-			await codincodApiWebCommentControllerShow2(comment._id);
+			await codincodApiWebCommentControllerShow(comment._id);
 
 		if (isCommentDto(updatedCommentInfoWithSubComments)) {
 			comment = {
@@ -81,7 +81,7 @@
 	}
 
 	async function deleteComment() {
-		await codincodApiWebCommentControllerDelete2(comment._id);
+		await codincodApiWebCommentControllerDelete(comment._id);
 		onDeleted(comment._id);
 	}
 </script>

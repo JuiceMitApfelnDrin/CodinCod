@@ -5,7 +5,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { toast } from "svelte-sonner";
 	import { REPORT_CONFIG } from "types";
-	import { codincodApiWebModerationControllerCreateReport2 } from "@/api/generated/moderation/moderation";
+	import { codincodApiWebModerationControllerCreateReport } from "@/api/generated/moderation/moderation";
 	import { CreateReportRequestContentType } from "@/api/generated/schemas/createReportRequestContentType";
 	import { CreateReportRequestProblemType } from "@/api/generated/schemas/createReportRequestProblemType";
 	import { testIds } from "types";
@@ -54,7 +54,7 @@
 		isSubmitting = true;
 
 		try {
-			await codincodApiWebModerationControllerCreateReport2({
+			await codincodApiWebModerationControllerCreateReport({
 				contentType: CreateReportRequestContentType.comment,
 				contentId: chatMessageId,
 				problemType: CreateReportRequestProblemType.inappropriate,

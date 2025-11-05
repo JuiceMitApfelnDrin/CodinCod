@@ -43,7 +43,7 @@ end
     plug CodincodApiWeb.Plugs.CurrentUser
   end
 
-  @api_versions ["/api", "/api/v1"]
+  @api_versions ["/api"]
 
   for base_path <- @api_versions do
     scope base_path, CodincodApiWeb do

@@ -1,11 +1,11 @@
-import { codincodApiWebUserControllerActivity2 } from "$lib/api/generated";
 import { activityTypeEnum } from "types";
 import type { PageServerLoadEvent } from "./$types";
+import { codincodApiWebUserControllerActivity } from "@/api/generated/user/user";
 
 export async function load({ params, fetch }: PageServerLoadEvent) {
 	const username = params.username;
 
-	const userActivity = await codincodApiWebUserControllerActivity2(username, {
+	const userActivity = await codincodApiWebUserControllerActivity(username, {
 		fetch
 	} as RequestInit);
 

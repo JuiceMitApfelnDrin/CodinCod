@@ -8,7 +8,6 @@
 import type {
 	ActivityResponse,
 	AvailabilityResponse,
-	CodincodApiWebUserControllerPuzzles2Params,
 	CodincodApiWebUserControllerPuzzlesParams,
 	PaginatedListResponse,
 	ShowResponse
@@ -19,88 +18,10 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Get user activity (puzzles and submissions)
  */
-export const getCodincodApiWebUserControllerActivity2Url = (
-	username: string
-) => {
-	return `/api/user/${username}/activity`;
-};
-
-export const codincodApiWebUserControllerActivity2 = async (
-	username: string,
-	options?: RequestInit
-): Promise<ActivityResponse> => {
-	return customClient<ActivityResponse>(
-		getCodincodApiWebUserControllerActivity2Url(username),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary List puzzles authored by a user
- */
-export const getCodincodApiWebUserControllerPuzzles2Url = (
-	username: string,
-	params?: CodincodApiWebUserControllerPuzzles2Params
-) => {
-	const normalizedParams = new URLSearchParams();
-
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
-
-	const stringifiedParams = normalizedParams.toString();
-
-	return stringifiedParams.length > 0
-		? `/api/user/${username}/puzzle?${stringifiedParams}`
-		: `/api/user/${username}/puzzle`;
-};
-
-export const codincodApiWebUserControllerPuzzles2 = async (
-	username: string,
-	params?: CodincodApiWebUserControllerPuzzles2Params,
-	options?: RequestInit
-): Promise<PaginatedListResponse> => {
-	return customClient<PaginatedListResponse>(
-		getCodincodApiWebUserControllerPuzzles2Url(username, params),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get user by username
- */
-export const getCodincodApiWebUserControllerShow2Url = (username: string) => {
-	return `/api/user/${username}`;
-};
-
-export const codincodApiWebUserControllerShow2 = async (
-	username: string,
-	options?: RequestInit
-): Promise<ShowResponse> => {
-	return customClient<ShowResponse>(
-		getCodincodApiWebUserControllerShow2Url(username),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get user activity (puzzles and submissions)
- */
 export const getCodincodApiWebUserControllerActivityUrl = (
 	username: string
 ) => {
-	return `/api/v1/user/${username}/activity`;
+	return `/api/user/${username}/activity`;
 };
 
 export const codincodApiWebUserControllerActivity = async (
@@ -134,8 +55,8 @@ export const getCodincodApiWebUserControllerPuzzlesUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `/api/v1/user/${username}/puzzle?${stringifiedParams}`
-		: `/api/v1/user/${username}/puzzle`;
+		? `/api/user/${username}/puzzle?${stringifiedParams}`
+		: `/api/user/${username}/puzzle`;
 };
 
 export const codincodApiWebUserControllerPuzzles = async (
@@ -156,7 +77,7 @@ export const codincodApiWebUserControllerPuzzles = async (
  * @summary Get user by username
  */
 export const getCodincodApiWebUserControllerShowUrl = (username: string) => {
-	return `/api/v1/user/${username}`;
+	return `/api/user/${username}`;
 };
 
 export const codincodApiWebUserControllerShow = async (
@@ -175,32 +96,10 @@ export const codincodApiWebUserControllerShow = async (
 /**
  * @summary Check username availability
  */
-export const getCodincodApiWebUserControllerAvailability2Url = (
-	username: string
-) => {
-	return `/api/user/${username}/isAvailable`;
-};
-
-export const codincodApiWebUserControllerAvailability2 = async (
-	username: string,
-	options?: RequestInit
-): Promise<AvailabilityResponse> => {
-	return customClient<AvailabilityResponse>(
-		getCodincodApiWebUserControllerAvailability2Url(username),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Check username availability
- */
 export const getCodincodApiWebUserControllerAvailabilityUrl = (
 	username: string
 ) => {
-	return `/api/v1/user/${username}/isAvailable`;
+	return `/api/user/${username}/isAvailable`;
 };
 
 export const codincodApiWebUserControllerAvailability = async (

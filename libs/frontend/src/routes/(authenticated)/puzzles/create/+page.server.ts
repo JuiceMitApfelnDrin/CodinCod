@@ -1,6 +1,6 @@
 import { ApiError } from "$lib/api/errors";
 import { logger } from "$lib/utils/debug-logger";
-import { codincodApiWebPuzzleControllerCreate2 } from "@/api/generated/puzzle/puzzle";
+import { codincodApiWebPuzzleControllerCreate } from "@/api/generated/puzzle/puzzle";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
 import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
@@ -39,7 +39,7 @@ export const actions = {
 		try {
 			logger.api("Calling puzzle create endpoint with puzzle data", form.data);
 
-			const data = await codincodApiWebPuzzleControllerCreate2(form.data, {
+			const data = await codincodApiWebPuzzleControllerCreate(form.data, {
 				fetch
 			} as RequestInit);
 

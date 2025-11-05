@@ -1,8 +1,8 @@
 import { browser } from "$app/environment";
 import {
-	codincodApiWebAccountPreferenceControllerDelete2,
-	codincodApiWebAccountPreferenceControllerReplace2,
-	codincodApiWebAccountPreferenceControllerShow2
+	codincodApiWebAccountPreferenceControllerDelete,
+	codincodApiWebAccountPreferenceControllerReplace,
+	codincodApiWebAccountPreferenceControllerShow
 } from "@/api/generated/account-preferences/account-preferences";
 import { localStorageKeys } from "@/config/local-storage";
 import { derived, writable } from "svelte/store";
@@ -79,7 +79,7 @@ const createPreferencesStore = () => {
 			if (!browser) return;
 
 			try {
-				const data = await codincodApiWebAccountPreferenceControllerShow2();
+				const data = await codincodApiWebAccountPreferenceControllerShow();
 
 				set(data as PreferencesDto);
 				saveToLocalStorage(data as PreferencesDto);
@@ -112,7 +112,7 @@ const createPreferencesStore = () => {
 			if (!browser) return;
 
 			try {
-				await codincodApiWebAccountPreferenceControllerDelete2();
+				await codincodApiWebAccountPreferenceControllerDelete();
 
 				set(null);
 				saveToLocalStorage(null);
@@ -134,7 +134,7 @@ const createPreferencesStore = () => {
 				);
 
 				const updatedData =
-					await codincodApiWebAccountPreferenceControllerReplace2(cleanUpdates);
+					await codincodApiWebAccountPreferenceControllerReplace(cleanUpdates);
 
 				// Use the server response as source of truth
 				update((current) => {

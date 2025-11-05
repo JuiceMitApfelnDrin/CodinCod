@@ -1,4 +1,3 @@
-import { codincodApiWebAuthControllerRegister2 } from "$lib/api/generated";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
 import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
@@ -10,6 +9,7 @@ import {
 	registerSchema
 } from "types";
 import type { RequestEvent } from "./$types.js";
+import { codincodApiWebAuthControllerRegister } from "@/api/generated/auth/auth.js";
 
 export async function load() {
 	const form = await superValidate(zod4(registerSchema));
@@ -29,15 +29,14 @@ export const actions = {
 		}
 
 		try {
-			// Use the generated API endpoint for registration
-			await codincodApiWebAuthControllerRegister2(
+			await codincodApiWebAuthControllerRegister(
 				{
 					username: form.data.username,
 					email: form.data.email,
 					password: form.data.password,
 					passwordConfirmation: form.data.password
 				},
-				{ credentials: "include" }
+				{ credentials: "include", fetch } as RequestInit
 			);
 
 			throw redirect(httpResponseCodes.REDIRECTION.FOUND, frontendUrls.ROOT);

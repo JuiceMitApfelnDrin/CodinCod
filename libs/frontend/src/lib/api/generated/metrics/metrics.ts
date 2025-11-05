@@ -16,40 +16,18 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Get detailed statistics for a puzzle
  */
-export const getCodincodApiWebMetricsControllerPuzzleStats2Url = (
+export const getCodincodApiWebMetricsControllerPuzzleStatsUrl = (
 	puzzleId: string
 ) => {
 	return `/api/metrics/puzzle/${puzzleId}`;
 };
 
-export const codincodApiWebMetricsControllerPuzzleStats2 = async (
+export const codincodApiWebMetricsControllerPuzzleStats = async (
 	puzzleId: string,
 	options?: RequestInit
 ): Promise<PuzzleStatsResponse> => {
 	return customClient<PuzzleStatsResponse>(
-		getCodincodApiWebMetricsControllerPuzzleStats2Url(puzzleId),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get detailed statistics for a user
- */
-export const getCodincodApiWebMetricsControllerUserStats2Url = (
-	userId: string
-) => {
-	return `/api/v1/metrics/user/${userId}`;
-};
-
-export const codincodApiWebMetricsControllerUserStats2 = async (
-	userId: string,
-	options?: RequestInit
-): Promise<UserStatsResponse> => {
-	return customClient<UserStatsResponse>(
-		getCodincodApiWebMetricsControllerUserStats2Url(userId),
+		getCodincodApiWebMetricsControllerPuzzleStatsUrl(puzzleId),
 		{
 			...options,
 			method: "GET"
@@ -82,49 +60,8 @@ export const codincodApiWebMetricsControllerUserStats = async (
 /**
  * @summary Get platform-wide statistics
  */
-export const getCodincodApiWebMetricsControllerPlatform2Url = () => {
-	return `/api/metrics/platform`;
-};
-
-export const codincodApiWebMetricsControllerPlatform2 = async (
-	options?: RequestInit
-): Promise<PlatformMetricsResponse> => {
-	return customClient<PlatformMetricsResponse>(
-		getCodincodApiWebMetricsControllerPlatform2Url(),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get detailed statistics for a puzzle
- */
-export const getCodincodApiWebMetricsControllerPuzzleStatsUrl = (
-	puzzleId: string
-) => {
-	return `/api/v1/metrics/puzzle/${puzzleId}`;
-};
-
-export const codincodApiWebMetricsControllerPuzzleStats = async (
-	puzzleId: string,
-	options?: RequestInit
-): Promise<PuzzleStatsResponse> => {
-	return customClient<PuzzleStatsResponse>(
-		getCodincodApiWebMetricsControllerPuzzleStatsUrl(puzzleId),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get platform-wide statistics
- */
 export const getCodincodApiWebMetricsControllerPlatformUrl = () => {
-	return `/api/v1/metrics/platform`;
+	return `/api/metrics/platform`;
 };
 
 export const codincodApiWebMetricsControllerPlatform = async (

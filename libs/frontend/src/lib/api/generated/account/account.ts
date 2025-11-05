@@ -18,53 +18,15 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Get current user's leaderboard ranking
  */
-export const getCodincodApiWebAccountControllerLeaderboardRank2Url = () => {
+export const getCodincodApiWebAccountControllerLeaderboardRankUrl = () => {
 	return `/api/account/leaderboard`;
 };
 
-export const codincodApiWebAccountControllerLeaderboardRank2 = async (
+export const codincodApiWebAccountControllerLeaderboardRank = async (
 	options?: RequestInit
 ): Promise<UserRankResponse> => {
 	return customClient<UserRankResponse>(
-		getCodincodApiWebAccountControllerLeaderboardRank2Url(),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Current account status
- */
-export const getCodincodApiWebAccountControllerShow2Url = () => {
-	return `/api/account`;
-};
-
-export const codincodApiWebAccountControllerShow2 = async (
-	options?: RequestInit
-): Promise<AccountStatusResponse> => {
-	return customClient<AccountStatusResponse>(
-		getCodincodApiWebAccountControllerShow2Url(),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Get games for current user
- */
-export const getCodincodApiWebAccountControllerGames2Url = () => {
-	return `/api/account/games`;
-};
-
-export const codincodApiWebAccountControllerGames2 = async (
-	options?: RequestInit
-): Promise<UserGamesResponse> => {
-	return customClient<UserGamesResponse>(
-		getCodincodApiWebAccountControllerGames2Url(),
+		getCodincodApiWebAccountControllerLeaderboardRankUrl(),
 		{
 			...options,
 			method: "GET"
@@ -76,7 +38,7 @@ export const codincodApiWebAccountControllerGames2 = async (
  * @summary Current account status
  */
 export const getCodincodApiWebAccountControllerShowUrl = () => {
-	return `/api/v1/account`;
+	return `/api/account`;
 };
 
 export const codincodApiWebAccountControllerShow = async (
@@ -92,54 +54,10 @@ export const codincodApiWebAccountControllerShow = async (
 };
 
 /**
- * @summary Update profile
- */
-export const getCodincodApiWebAccountControllerUpdateProfile2Url = () => {
-	return `/api/account/profile`;
-};
-
-export const codincodApiWebAccountControllerUpdateProfile2 = async (
-	profileUpdateRequest?: ProfileUpdateRequest,
-	options?: RequestInit
-): Promise<ProfileUpdateResponse> => {
-	return customClient<ProfileUpdateResponse>(
-		getCodincodApiWebAccountControllerUpdateProfile2Url(),
-		{
-			...options,
-			method: "PATCH",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(profileUpdateRequest)
-		}
-	);
-};
-
-/**
- * @summary Update profile
- */
-export const getCodincodApiWebAccountControllerUpdateProfileUrl = () => {
-	return `/api/v1/account/profile`;
-};
-
-export const codincodApiWebAccountControllerUpdateProfile = async (
-	profileUpdateRequest?: ProfileUpdateRequest,
-	options?: RequestInit
-): Promise<ProfileUpdateResponse> => {
-	return customClient<ProfileUpdateResponse>(
-		getCodincodApiWebAccountControllerUpdateProfileUrl(),
-		{
-			...options,
-			method: "PATCH",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(profileUpdateRequest)
-		}
-	);
-};
-
-/**
  * @summary Get games for current user
  */
 export const getCodincodApiWebAccountControllerGamesUrl = () => {
-	return `/api/v1/account/games`;
+	return `/api/account/games`;
 };
 
 export const codincodApiWebAccountControllerGames = async (
@@ -155,20 +73,23 @@ export const codincodApiWebAccountControllerGames = async (
 };
 
 /**
- * @summary Get current user's leaderboard ranking
+ * @summary Update profile
  */
-export const getCodincodApiWebAccountControllerLeaderboardRankUrl = () => {
-	return `/api/v1/account/leaderboard`;
+export const getCodincodApiWebAccountControllerUpdateProfileUrl = () => {
+	return `/api/account/profile`;
 };
 
-export const codincodApiWebAccountControllerLeaderboardRank = async (
+export const codincodApiWebAccountControllerUpdateProfile = async (
+	profileUpdateRequest?: ProfileUpdateRequest,
 	options?: RequestInit
-): Promise<UserRankResponse> => {
-	return customClient<UserRankResponse>(
-		getCodincodApiWebAccountControllerLeaderboardRankUrl(),
+): Promise<ProfileUpdateResponse> => {
+	return customClient<ProfileUpdateResponse>(
+		getCodincodApiWebAccountControllerUpdateProfileUrl(),
 		{
 			...options,
-			method: "GET"
+			method: "PATCH",
+			headers: { "Content-Type": "application/json", ...options?.headers },
+			body: JSON.stringify(profileUpdateRequest)
 		}
 	);
 };

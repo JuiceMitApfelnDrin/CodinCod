@@ -22,7 +22,7 @@
 	import { testIds } from "types";
 	import { page } from "$app/state";
 	import { logger } from "@/utils/debug-logger.js";
-	import type { PuzzleResponse } from "@/api/generated/index.js";
+	import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse.js";
 
 	let { data } = $props();
 

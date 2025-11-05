@@ -16,7 +16,7 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import * as ButtonGroup from "#/ui/button-group";
-	import { codincodApiWebLeaderboardControllerGlobal2 } from "$lib/api/generated";
+	import { codincodApiWebLeaderboardControllerGlobal } from "@/api/generated/leaderboard/leaderboard";
 
 	// Reactive state using Svelte 5 runes
 	let selectedMode = $state<GameMode>(gameModeEnum.FASTEST);
@@ -53,7 +53,6 @@
 		[gameModeEnum.RANDOM]: testIds.LEADERBOARD_PAGE_BUTTON_MODE_RANDOM
 	} as const;
 
-	// Fetch leaderboard data
 	async function fetchLeaderboard(mode: GameMode, page: number) {
 		loading = true;
 		error = null;
@@ -61,8 +60,8 @@
 		try {
 			// Convert page/pageSize to offset/limit for the API
 			const offset = (page - 1) * pageSize;
-			const data = await codincodApiWebLeaderboardControllerGlobal2({
-				game_mode: "standard", // Backend currently only supports "standard" mode
+			const data = await codincodApiWebLeaderboardControllerGlobal({
+				game_mode: "standard",
 				offset,
 				limit: pageSize
 			});
@@ -81,7 +80,6 @@
 		fetchLeaderboard(selectedMode, currentPage);
 	});
 
-	// Page navigation
 	function nextPage() {
 		if (
 			leaderboardData?.rankings &&
@@ -102,13 +100,11 @@
 		currentPage = PAGINATION_CONFIG.DEFAULT_PAGE; // Reset to first page when changing modes
 	}
 
-	// Format date nicely
 	function formatDate(date: string | Date): string {
 		const dateObj = typeof date === "string" ? new Date(date) : date;
 		return dateObj.toLocaleString();
 	}
 
-	// Format rating with color
 	function getRatingColor(rating: number): string {
 		const { RATING_THRESHOLDS, COLORS } = LEADERBOARD_CONFIG;
 
@@ -119,7 +115,6 @@
 		return COLORS.BEGINNER;
 	}
 
-	// Get rank badge
 	function getRankBadge(rank: number): string {
 		const { MEDALS } = LEADERBOARD_CONFIG;
 
@@ -133,7 +128,6 @@
 <Container>
 	<H1>Leaderboards</H1>
 
-	<!-- Game Mode Selector -->
 	<ButtonGroup.Root>
 		{#each Object.values(gameModeEnum) as mode}
 			<Button

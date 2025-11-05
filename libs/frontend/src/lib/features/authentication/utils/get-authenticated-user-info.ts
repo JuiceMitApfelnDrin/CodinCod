@@ -1,5 +1,5 @@
 import { logger } from "$lib/utils/debug-logger";
-import { codincodApiWebAccountControllerShow2 } from "@/api/generated/account/account";
+import { codincodApiWebAccountControllerShow } from "@/api/generated/account/account";
 import type { Cookies } from "@sveltejs/kit";
 import { cookieKeys } from "types";
 
@@ -32,9 +32,8 @@ export async function getAuthenticatedUserInfo(
 			};
 		}
 
-		// Use generated Orval endpoint with server-side fetch
 		logger.auth("Calling account endpoint to verify token...");
-		const authenticatedInfo = await codincodApiWebAccountControllerShow2({
+		const authenticatedInfo = await codincodApiWebAccountControllerShow({
 			fetch: eventFetch
 		} as RequestInit);
 		logger.auth("✅ Account endpoint response received", authenticatedInfo);

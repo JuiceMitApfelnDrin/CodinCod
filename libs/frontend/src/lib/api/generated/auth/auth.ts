@@ -16,112 +16,8 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Authenticate user
  */
-export const getCodincodApiWebAuthControllerLogin2Url = () => {
-	return `/api/login`;
-};
-
-export const codincodApiWebAuthControllerLogin2 = async (
-	loginRequest: LoginRequest,
-	options?: RequestInit
-): Promise<MessageResponse> => {
-	return customClient<MessageResponse>(
-		getCodincodApiWebAuthControllerLogin2Url(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(loginRequest)
-		}
-	);
-};
-
-/**
- * @summary Register new user
- */
-export const getCodincodApiWebAuthControllerRegister2Url = () => {
-	return `/api/register`;
-};
-
-export const codincodApiWebAuthControllerRegister2 = async (
-	registerRequest: RegisterRequest,
-	options?: RequestInit
-): Promise<MessageResponse> => {
-	return customClient<MessageResponse>(
-		getCodincodApiWebAuthControllerRegister2Url(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(registerRequest)
-		}
-	);
-};
-
-/**
- * @summary Refresh authentication token
- */
-export const getCodincodApiWebAuthControllerRefresh2Url = () => {
-	return `/api/v1/refresh`;
-};
-
-export const codincodApiWebAuthControllerRefresh2 = async (
-	options?: RequestInit
-): Promise<MessageResponse> => {
-	return customClient<MessageResponse>(
-		getCodincodApiWebAuthControllerRefresh2Url(),
-		{
-			...options,
-			method: "POST"
-		}
-	);
-};
-
-/**
- * @summary Logout current user
- */
-export const getCodincodApiWebAuthControllerLogout2Url = () => {
-	return `/api/logout`;
-};
-
-export const codincodApiWebAuthControllerLogout2 = async (
-	options?: RequestInit
-): Promise<MessageResponse> => {
-	return customClient<MessageResponse>(
-		getCodincodApiWebAuthControllerLogout2Url(),
-		{
-			...options,
-			method: "POST"
-		}
-	);
-};
-
-/**
- * @summary Register new user
- */
-export const getCodincodApiWebAuthControllerRegisterUrl = () => {
-	return `/api/v1/register`;
-};
-
-export const codincodApiWebAuthControllerRegister = async (
-	registerRequest: RegisterRequest,
-	options?: RequestInit
-): Promise<MessageResponse> => {
-	return customClient<MessageResponse>(
-		getCodincodApiWebAuthControllerRegisterUrl(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(registerRequest)
-		}
-	);
-};
-
-/**
- * @summary Authenticate user
- */
 export const getCodincodApiWebAuthControllerLoginUrl = () => {
-	return `/api/v1/login`;
+	return `/api/login`;
 };
 
 export const codincodApiWebAuthControllerLogin = async (
@@ -140,10 +36,32 @@ export const codincodApiWebAuthControllerLogin = async (
 };
 
 /**
+ * @summary Register new user
+ */
+export const getCodincodApiWebAuthControllerRegisterUrl = () => {
+	return `/api/register`;
+};
+
+export const codincodApiWebAuthControllerRegister = async (
+	registerRequest: RegisterRequest,
+	options?: RequestInit
+): Promise<MessageResponse> => {
+	return customClient<MessageResponse>(
+		getCodincodApiWebAuthControllerRegisterUrl(),
+		{
+			...options,
+			method: "POST",
+			headers: { "Content-Type": "application/json", ...options?.headers },
+			body: JSON.stringify(registerRequest)
+		}
+	);
+};
+
+/**
  * @summary Logout current user
  */
 export const getCodincodApiWebAuthControllerLogoutUrl = () => {
-	return `/api/v1/logout`;
+	return `/api/logout`;
 };
 
 export const codincodApiWebAuthControllerLogout = async (

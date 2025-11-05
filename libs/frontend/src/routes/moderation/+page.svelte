@@ -13,10 +13,10 @@
 	import type { PageData } from "./$types";
 	import { toast } from "svelte-sonner";
 	import {
-		codincodApiWebModerationControllerReviewContent2,
-		codincodApiWebModerationControllerResolveReport2,
-		codincodApiWebModerationControllerBanUser2,
-		codincodApiWebModerationControllerUnbanUser2
+		codincodApiWebModerationControllerReviewContent,
+		codincodApiWebModerationControllerResolveReport,
+		codincodApiWebModerationControllerBanUser,
+		codincodApiWebModerationControllerUnbanUser
 	} from "@/api/generated/moderation/moderation";
 	import * as Table from "$lib/components/ui/table";
 	import * as Select from "$lib/components/ui/select";
@@ -100,7 +100,7 @@
 
 	async function handleApprove(id: string) {
 		try {
-			await codincodApiWebModerationControllerReviewContent2(id, {
+			await codincodApiWebModerationControllerReviewContent(id, {
 				status: "approved"
 			});
 			showSuccessNotification("Puzzle approved successfully");
@@ -128,7 +128,7 @@
 		}
 
 		try {
-			await codincodApiWebModerationControllerReviewContent2(selectedPuzzleId, {
+			await codincodApiWebModerationControllerReviewContent(selectedPuzzleId, {
 				status: "rejected",
 				reviewerNotes: revisionReason
 			});
@@ -146,7 +146,7 @@
 		status: typeof reviewStatusEnum.RESOLVED | typeof reviewStatusEnum.REJECTED
 	) {
 		try {
-			await codincodApiWebModerationControllerResolveReport2(id, {
+			await codincodApiWebModerationControllerResolveReport(id, {
 				status: status === reviewStatusEnum.RESOLVED ? "resolved" : "dismissed"
 			});
 
@@ -178,7 +178,7 @@
 		}
 
 		try {
-			await codincodApiWebModerationControllerBanUser2(selectedUserId, {
+			await codincodApiWebModerationControllerBanUser(selectedUserId, {
 				...(banType === banTypeEnum.TEMPORARY && { durationDays: banDuration }),
 				reason: banReason
 			});
@@ -199,7 +199,7 @@
 		}
 
 		try {
-			await codincodApiWebModerationControllerUnbanUser2(userId);
+			await codincodApiWebModerationControllerUnbanUser(userId);
 
 			showSuccessNotification("User unbanned successfully");
 			await invalidateAll();

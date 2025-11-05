@@ -5,32 +5,9 @@
  * Phoenix implementation of the CodinCod backend
  * OpenAPI spec version: 0.1.0
  */
-import type {
-	CodincodApiWebHealthControllerShow200,
-	CodincodApiWebHealthControllerShow2200
-} from ".././schemas";
+import type { CodincodApiWebHealthControllerShow200 } from ".././schemas";
 
 import { customClient } from "../../custom-client";
-
-/**
- * Returns service health status
- * @summary Health check
- */
-export const getCodincodApiWebHealthControllerShow2Url = () => {
-	return `/api/v1/health`;
-};
-
-export const codincodApiWebHealthControllerShow2 = async (
-	options?: RequestInit
-): Promise<CodincodApiWebHealthControllerShow2200> => {
-	return customClient<CodincodApiWebHealthControllerShow2200>(
-		getCodincodApiWebHealthControllerShow2Url(),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
 
 /**
  * Returns service health status

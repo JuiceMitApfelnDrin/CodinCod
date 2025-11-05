@@ -16,28 +16,8 @@ import { customClient } from "../../custom-client";
 /**
  * @summary Fetch submission by id
  */
-export const getCodincodApiWebSubmissionControllerShow2Url = (id: string) => {
-	return `/api/submission/${id}`;
-};
-
-export const codincodApiWebSubmissionControllerShow2 = async (
-	id: string,
-	options?: RequestInit
-): Promise<SubmissionResponse> => {
-	return customClient<SubmissionResponse>(
-		getCodincodApiWebSubmissionControllerShow2Url(id),
-		{
-			...options,
-			method: "GET"
-		}
-	);
-};
-
-/**
- * @summary Fetch submission by id
- */
 export const getCodincodApiWebSubmissionControllerShowUrl = (id: string) => {
-	return `/api/v1/submission/${id}`;
+	return `/api/submission/${id}`;
 };
 
 export const codincodApiWebSubmissionControllerShow = async (
@@ -56,30 +36,8 @@ export const codincodApiWebSubmissionControllerShow = async (
 /**
  * @summary Submit code for evaluation
  */
-export const getCodincodApiWebSubmissionControllerCreate2Url = () => {
-	return `/api/submission`;
-};
-
-export const codincodApiWebSubmissionControllerCreate2 = async (
-	submitCodeRequest?: SubmitCodeRequest,
-	options?: RequestInit
-): Promise<SubmitCodeResponse> => {
-	return customClient<SubmitCodeResponse>(
-		getCodincodApiWebSubmissionControllerCreate2Url(),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(submitCodeRequest)
-		}
-	);
-};
-
-/**
- * @summary Submit code for evaluation
- */
 export const getCodincodApiWebSubmissionControllerCreateUrl = () => {
-	return `/api/v1/submission`;
+	return `/api/submission`;
 };
 
 export const codincodApiWebSubmissionControllerCreate = async (
