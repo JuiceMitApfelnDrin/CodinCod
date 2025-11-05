@@ -6,7 +6,7 @@
 		fallbackText = "no fallback provided",
 		markdown = undefined
 	}: {
-		markdown?: string | undefined;
+		markdown?: string | null | undefined;
 		fallbackText?: string;
 	} = $props();
 
@@ -17,7 +17,7 @@
 	};
 </script>
 
-{#if markdown !== undefined}
+{#if markdown !== undefined && markdown !== null}
 	{#await parseMarkdown(markdown)}
 		<P>Loading...</P>
 	{:then parsedMarkdown}

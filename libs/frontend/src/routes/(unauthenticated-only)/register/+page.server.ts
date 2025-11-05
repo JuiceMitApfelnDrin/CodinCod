@@ -1,16 +1,14 @@
+import { codincodApiWebAuthControllerRegister2 } from "$lib/api/generated";
+import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
+import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
-import { fail, redirect } from "@sveltejs/kit";
-import { buildBackendUrl } from "@/config/backend";
 import {
-	backendUrls,
 	ERROR_MESSAGES,
 	frontendUrls,
 	httpResponseCodes,
-	POST,
 	registerSchema
 } from "types";
-import { setCookie } from "@/features/authentication/utils/set-cookie";
 import type { RequestEvent } from "./$types.js";
 
 export async function load() {
@@ -20,7 +18,7 @@ export async function load() {
 }
 
 export const actions = {
-	default: async ({ cookies, request }: RequestEvent) => {
+	default: async ({ cookies, request, fetch }: RequestEvent) => {
 		const form = await superValidate(request, zod4(registerSchema));
 
 		if (!form.valid) {
@@ -30,27 +28,31 @@ export const actions = {
 			});
 		}
 
-		const result = await fetch(buildBackendUrl(backendUrls.REGISTER), {
-			body: JSON.stringify(form.data),
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: POST
-		});
+		try {
+			// Use the generated API endpoint for registration
+			await codincodApiWebAuthControllerRegister2(
+				{
+					username: form.data.username,
+					email: form.data.email,
+					password: form.data.password,
+					passwordConfirmation: form.data.password
+				},
+				{ credentials: "include" }
+			);
 
-		const data = await result.json();
+			throw redirect(httpResponseCodes.REDIRECTION.FOUND, frontendUrls.ROOT);
+		} catch (error) {
+			// Re-throw SvelteKit redirect errors (successful registration)
+			if (isSvelteKitRedirect(error)) {
+				throw error;
+			}
 
-		if (!result.ok) {
-			const message: string = data.message;
-
-			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, {
+			console.error("Registration error:", error);
+			return fail(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR, {
 				form,
-				message
+				message:
+					"An unexpected error occurred during registration. Please try again."
 			});
 		}
-
-		setCookie(result, cookies);
-
-		throw redirect(httpResponseCodes.REDIRECTION.FOUND, frontendUrls.ROOT);
 	}
 };

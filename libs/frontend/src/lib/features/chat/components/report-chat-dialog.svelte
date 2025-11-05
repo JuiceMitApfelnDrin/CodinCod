@@ -4,11 +4,11 @@
 	import { Label } from "$lib/components/ui/label";
 	import { Button } from "$lib/components/ui/button";
 	import { toast } from "svelte-sonner";
-	import { httpRequestMethod, REPORT_CONFIG, ProblemTypeEnum } from "types";
-	import { buildBackendUrl } from "@/config/backend";
-	import { backendUrls } from "types";
+	import { REPORT_CONFIG } from "types";
+	import { codincodApiWebModerationControllerCreateReport2 } from "@/api/generated/moderation/moderation";
+	import { CreateReportRequestContentType } from "@/api/generated/schemas/createReportRequestContentType";
+	import { CreateReportRequestProblemType } from "@/api/generated/schemas/createReportRequestProblemType";
 	import { testIds } from "types";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import type { ChatMessage } from "types";
 
 	let {
@@ -54,33 +54,20 @@
 		isSubmitting = true;
 
 		try {
-			const response = await fetchWithAuthenticationCookie(
-				buildBackendUrl(backendUrls.REPORT),
-				{
-					method: httpRequestMethod.POST,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						problematicIdentifier: chatMessageId,
-						problemType: ProblemTypeEnum.GAME_CHAT,
-						explanation: reportReason
-					})
-				}
-			);
+			await codincodApiWebModerationControllerCreateReport2({
+				contentType: CreateReportRequestContentType.comment,
+				contentId: chatMessageId,
+				problemType: CreateReportRequestProblemType.inappropriate,
+				description: reportReason
+			});
 
-			if (!response.ok) {
-				throw new Error("Failed to submit report");
-			}
-
-			toast.success(
-				"Report submitted successfully. Moderators will review it."
-			);
-			reportReason = "";
+			toast.success("Report submitted successfully");
 			onClose();
-		} catch (error) {
-			console.error("Error submitting report:", error);
-			toast.error("Failed to submit report. Please try again.");
+			reportReason = "";
+		} catch (error: unknown) {
+			const errorMessage =
+				error instanceof Error ? error.message : "Failed to submit report";
+			toast.error(errorMessage);
 		} finally {
 			isSubmitting = false;
 		}

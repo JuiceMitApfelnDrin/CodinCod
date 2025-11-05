@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isDarkTheme, toggleDarkTheme } from "@/stores";
+	import { isDarkTheme, toggleDarkTheme } from "@/stores/theme.store";
 	import Moon from "@lucide/svelte/icons/moon";
 	import Sun from "@lucide/svelte/icons/sun";
 	import Toggle from "../ui/toggle/toggle.svelte";

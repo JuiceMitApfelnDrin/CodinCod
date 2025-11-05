@@ -3,15 +3,30 @@
 	import ToggleTheme from "../toggle-theme.svelte";
 	import UserDropdown from "../user-dropdown.svelte";
 	import NavigationItem from "./navigation-item.svelte";
-	import { isAuthenticated, isDarkTheme, toggleDarkTheme } from "@/stores";
+	import { isDarkTheme, toggleDarkTheme } from "@/stores/theme.store";
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-	import { authenticatedUserInfo } from "@/stores";
+	import { isAuthenticated, authenticatedUserInfo } from "@/stores/auth.store";
 	import Menu from "@lucide/svelte/icons/menu";
 	import Moon from "@lucide/svelte/icons/moon";
 	import Sun from "@lucide/svelte/icons/sun";
 	import { testIds } from "types";
+	import { logger } from "$lib/utils/debug-logger";
 
 	const version = import.meta.env.VITE_APP_VERSION;
+
+	// Log navigation state changes
+	$effect(() => {
+		logger.nav("Navigation rendering with auth state", {
+			isAuthenticated: $isAuthenticated,
+			userInfo: $authenticatedUserInfo
+				? {
+						userId: $authenticatedUserInfo.userId,
+						username: $authenticatedUserInfo.username,
+						isAuthenticated: $authenticatedUserInfo.isAuthenticated
+					}
+				: null
+		});
+	});
 </script>
 
 <header class="lg:mx-8">
@@ -108,7 +123,7 @@
 						{/snippet}
 					</DropdownMenu.Item>
 
-					{#if $authenticatedUserInfo?.isAuthenticated}
+					{#if $isAuthenticated && $authenticatedUserInfo}
 						{@const profileLink = frontendUrls.userProfileByUsername(
 							$authenticatedUserInfo.username
 						)}
@@ -122,7 +137,7 @@
 
 					<DropdownMenu.Separator />
 
-					{#if $authenticatedUserInfo?.isAuthenticated}
+					{#if $isAuthenticated}
 						<DropdownMenu.Item>
 							{#snippet child(props)}
 								<a href={frontendUrls.SETTINGS_PROFILE} {...props}>Settings</a>
@@ -139,7 +154,7 @@
 
 					<DropdownMenu.Separator />
 
-					{#if $authenticatedUserInfo?.isAuthenticated}
+					{#if $isAuthenticated}
 						<DropdownMenu.Item>
 							{#snippet child(props)}
 								<a href={frontendUrls.LOGOUT} {...props}>Log out</a>

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { goto, invalidateAll } from "$app/navigation";
 	import {
-		httpRequestMethod,
+		showErrorNotification,
+		showSuccessNotification
+	} from "$lib/api/notifications";
+	import {
 		reviewItemTypeEnum,
 		banTypeEnum,
 		reviewStatusEnum,
@@ -9,6 +12,12 @@
 	} from "types";
 	import type { PageData } from "./$types";
 	import { toast } from "svelte-sonner";
+	import {
+		codincodApiWebModerationControllerReviewContent2,
+		codincodApiWebModerationControllerResolveReport2,
+		codincodApiWebModerationControllerBanUser2,
+		codincodApiWebModerationControllerUnbanUser2
+	} from "@/api/generated/moderation/moderation";
 	import * as Table from "$lib/components/ui/table";
 	import * as Select from "$lib/components/ui/select";
 	import * as Dialog from "$lib/components/ui/dialog";
@@ -21,11 +30,14 @@
 	import { page } from "$app/state";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import { testIds } from "types";
-	import { buildBackendUrl } from "@/config/backend";
-	import { backendUrls } from "types";
 	import Pagination from "#/nav/pagination.svelte";
 
 	let { data }: { data: PageData } = $props();
+
+	// Derived values for easier access
+	const reviewItems = $derived(data.reviewItems);
+	const reviews = $derived(reviewItems.reviews ?? []);
+	const reviewCount = $derived(reviewItems.count ?? 0);
 
 	let reviseDialogOpen = $state(false);
 	let selectedPuzzleId = $state("");
@@ -41,7 +53,15 @@
 	>(banTypeEnum.TEMPORARY);
 
 	let banHistoryDialogOpen = $state(false);
-	let banHistory = $state<any[]>([]);
+	let banHistory = $state<
+		Array<{
+			banType: string;
+			reason: string;
+			startDate: string | Date;
+			endDate?: string | Date | null;
+			isActive: boolean;
+		}>
+	>([]);
 	let loadingBanHistory = $state(false);
 
 	const reviewTypes = [
@@ -80,22 +100,13 @@
 
 	async function handleApprove(id: string) {
 		try {
-			const response = await fetch(
-				buildBackendUrl(backendUrls.moderationPuzzleApprove(id)),
-				{
-					method: httpRequestMethod.POST
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Failed to approve puzzle");
-			}
-
-			toast.success("Puzzle approved successfully");
+			await codincodApiWebModerationControllerReviewContent2(id, {
+				status: "approved"
+			});
+			showSuccessNotification("Puzzle approved successfully");
 			await invalidateAll();
 		} catch (error) {
-			console.error("Error approving puzzle:", error);
-			toast.error("Failed to approve puzzle");
+			showErrorNotification(error, { title: "Failed to Approve Puzzle" });
 		}
 	}
 
@@ -117,27 +128,16 @@
 		}
 
 		try {
-			const response = await fetch(
-				buildBackendUrl(backendUrls.moderationPuzzleRevise(selectedPuzzleId)),
-				{
-					method: httpRequestMethod.POST,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({ reason: revisionReason })
-				}
-			);
+			await codincodApiWebModerationControllerReviewContent2(selectedPuzzleId, {
+				status: "rejected",
+				reviewerNotes: revisionReason
+			});
 
-			if (!response.ok) {
-				throw new Error("Failed to request revisions");
-			}
-
-			toast.success("Puzzle sent back for revisions");
+			showSuccessNotification("Puzzle sent back for revisions");
 			reviseDialogOpen = false;
 			await invalidateAll();
 		} catch (error) {
-			console.error("Error requesting revisions:", error);
-			toast.error("Failed to request revisions");
+			showErrorNotification(error, { title: "Failed to Request Revisions" });
 		}
 	}
 
@@ -146,26 +146,14 @@
 		status: typeof reviewStatusEnum.RESOLVED | typeof reviewStatusEnum.REJECTED
 	) {
 		try {
-			const response = await fetch(
-				buildBackendUrl(backendUrls.moderationReportResolve(id)),
-				{
-					method: httpRequestMethod.POST,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({ status })
-				}
-			);
+			await codincodApiWebModerationControllerResolveReport2(id, {
+				status: status === reviewStatusEnum.RESOLVED ? "resolved" : "dismissed"
+			});
 
-			if (!response.ok) {
-				throw new Error("Failed to resolve report");
-			}
-
-			toast.success(`Report ${status} successfully`);
+			showSuccessNotification(`Report ${status} successfully`);
 			await invalidateAll();
 		} catch (error) {
-			console.error("Error resolving report:", error);
-			toast.error("Failed to resolve report");
+			showErrorNotification(error, { title: "Failed to Resolve Report" });
 		}
 	}
 
@@ -190,35 +178,18 @@
 		}
 
 		try {
-			const response = await fetch(
-				buildBackendUrl(
-					backendUrls.moderationUserByIdBanByType(selectedUserId, banType)
-				),
-				{
-					method: httpRequestMethod.POST,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						duration:
-							banType === banTypeEnum.TEMPORARY ? banDuration : undefined,
-						reason: banReason
-					})
-				}
-			);
+			await codincodApiWebModerationControllerBanUser2(selectedUserId, {
+				...(banType === banTypeEnum.TEMPORARY && { durationDays: banDuration }),
+				reason: banReason
+			});
 
-			if (!response.ok) {
-				throw new Error("Failed to ban user");
-			}
-
-			toast.success(
+			showSuccessNotification(
 				`User ${banType === banTypeEnum.TEMPORARY ? `banned for ${banDuration} day(s)` : "permanently banned"}`
 			);
 			banDialogOpen = false;
 			await invalidateAll();
 		} catch (error) {
-			console.error("Error banning user:", error);
-			toast.error("Failed to ban user");
+			showErrorNotification(error, { title: "Failed to Ban User" });
 		}
 	}
 
@@ -228,28 +199,12 @@
 		}
 
 		try {
-			const response = await fetch(
-				buildBackendUrl(backendUrls.moderationUserByIdUnban(userId)),
-				{
-					method: httpRequestMethod.POST,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						reason: "Unbanned by moderator"
-					})
-				}
-			);
+			await codincodApiWebModerationControllerUnbanUser2(userId);
 
-			if (!response.ok) {
-				throw new Error("Failed to unban user");
-			}
-
-			toast.success("User unbanned successfully");
+			showSuccessNotification("User unbanned successfully");
 			await invalidateAll();
 		} catch (error) {
-			console.error("Error unbanning user:", error);
-			toast.error("Failed to unban user");
+			showErrorNotification(error, { title: "Failed to Unban User" });
 		}
 	}
 
@@ -260,22 +215,13 @@
 		banHistoryDialogOpen = true;
 
 		try {
-			const response = await fetch(
-				buildBackendUrl(backendUrls.moderationUserByIdBanHistory(userId)),
-				{
-					method: httpRequestMethod.GET
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Failed to fetch ban history");
-			}
-
-			const data = await response.json();
-			banHistory = data.bans || [];
+			// TODO: Implement ban history endpoint in backend
+			// const data = await getBanHistory(userId);
+			// banHistory = data.bans || [];
+			banHistory = [];
+			toast.info("Ban history feature not yet implemented in backend");
 		} catch (error) {
-			console.error("Error fetching ban history:", error);
-			toast.error("Failed to fetch ban history");
+			showErrorNotification(error, { title: "Failed to Load Ban History" });
 			banHistory = [];
 		} finally {
 			loadingBanHistory = false;
@@ -293,7 +239,7 @@
 
 		<Select.Root
 			type="single"
-			value={data.currentType}
+			value={data.currentType ?? ""}
 			onValueChange={(v: string | undefined) => changeType(v)}
 		>
 			<Select.Trigger class="w-full max-w-md">
@@ -309,13 +255,7 @@
 	</div>
 
 	<!-- Error Message -->
-	{#if data.error}
-		<div
-			class="mb-4 rounded-md bg-red-100 p-4 text-red-700 dark:bg-red-900 dark:text-red-200"
-		>
-			{data.error}
-		</div>
-	{/if}
+	<!-- Note: error property removed from PageData type as it's not part of the schema -->
 
 	<!-- Review Items Table -->
 	<div class="rounded-lg border">
@@ -333,7 +273,7 @@
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{#if data.reviewItems.data.length === 0}
+				{#if reviews.length === 0}
 					<Table.Row>
 						<Table.Cell
 							colspan={4}
@@ -343,7 +283,7 @@
 						</Table.Cell>
 					</Table.Row>
 				{:else}
-					{#each data.reviewItems.data as item}
+					{#each reviews as item}
 						<Table.Row>
 							<Table.Cell>
 								<div class="font-medium">
@@ -413,7 +353,7 @@
 								{#if data.currentType === reviewItemTypeEnum.PENDING_PUZZLE}
 									<div class="flex gap-2">
 										<Button
-											onclick={() => handleApprove(item.id)}
+											onclick={() => handleApprove(item.id ?? "")}
 											variant="default"
 											size="sm"
 											class="bg-green-600 hover:bg-green-700"
@@ -422,7 +362,7 @@
 											Approve
 										</Button>
 										<Button
-											onclick={() => openReviseDialog(item.id)}
+											onclick={() => openReviseDialog(item.id ?? "")}
 											variant="default"
 											size="sm"
 											class="bg-yellow-600 hover:bg-yellow-700"
@@ -436,7 +376,10 @@
 										<div class="flex gap-2">
 											<Button
 												onclick={() =>
-													handleResolve(item.id, reviewStatusEnum.RESOLVED)}
+													handleResolve(
+														item.id ?? "",
+														reviewStatusEnum.RESOLVED
+													)}
 												variant="default"
 												size="sm"
 												class="bg-blue-600 hover:bg-blue-700"
@@ -446,7 +389,10 @@
 											</Button>
 											<Button
 												onclick={() =>
-													handleResolve(item.id, reviewStatusEnum.REJECTED)}
+													handleResolve(
+														item.id ?? "",
+														reviewStatusEnum.REJECTED
+													)}
 												variant="destructive"
 												size="sm"
 												data-testid={testIds.MODERATION_PAGE_BUTTON_REJECT_REPORT}
@@ -493,11 +439,12 @@
 		</Table.Root>
 	</div>
 
-	{#if data.reviewItems.pagination.totalPages > 1}
-		<Pagination
-			currentPage={data.reviewItems.pagination.page}
-			totalPages={data.reviewItems.pagination.totalPages}
-		/>
+	<!-- Pagination removed: ReviewsListResponse doesn't include pagination data -->
+	<!-- Total count display -->
+	{#if reviewCount > 0}
+		<div class="text-muted-foreground text-sm">
+			Showing {reviewCount} review{reviewCount === 1 ? "" : "s"}
+		</div>
 	{/if}
 </Container>
 

@@ -3,8 +3,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build && node scripts/copy-maintenance.mjs",
+		"dev": "concurrently \"pnpm run generate:api:watch\" \"vite dev\"",
+		"build": "pnpm run generate:api && vite build && node scripts/copy-maintenance.mjs",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -12,7 +12,9 @@
 		"prettier": "npx prettier . --check",
 		"prettier:fix": "npm run prettier -- --write",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"generate:api": "orval",
+		"generate:api:watch": "orval --watch"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.7.0",
@@ -29,6 +31,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.22.0",
 		"@typescript-eslint/parser": "^8.22.0",
 		"bits-ui": "^2.14.1",
+		"concurrently": "^9.2.1",
 		"eslint": "^9.10.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-sort-destructure-keys": "^2.0.0",
@@ -37,9 +40,12 @@
 		"formsnap": "2.0.0-next.1",
 		"globals": "^16.2.0",
 		"mdsvex": "^0.12.3",
+		"openapi-typescript": "^7.10.1",
+		"orval": "^7.16.0",
 		"paneforge": "1.0.0-next.5",
 		"postcss": "^8.4.33",
 		"prettier": "^3.3.3",
+		"prettier-plugin-organize-imports": "^4.3.0",
 		"prettier-plugin-svelte": "^3.2.6",
 		"prettier-plugin-tailwindcss": "^0.7.1",
 		"svelte": "^5.0.0",

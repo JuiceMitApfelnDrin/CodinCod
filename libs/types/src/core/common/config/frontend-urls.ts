@@ -8,6 +8,8 @@ export const frontendUrls = {
 	REGISTER: "/register",
 	LOGIN: "/login",
 	LOGOUT: "/logout",
+	FORGOT_PASSWORD: "/forgot-password",
+	RESET_PASSWORD: "/reset-password",
 
 	// puzzles
 	PUZZLES: "/puzzles",

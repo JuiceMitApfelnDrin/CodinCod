@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Tabs from "$lib/components/ui/tabs/index.js";
+	import * as Tabs from "$lib/components/ui/tabs";
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";

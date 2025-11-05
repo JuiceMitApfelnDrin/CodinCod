@@ -4,6 +4,7 @@
 		WEBSOCKET_STATES,
 		type WebSocketState
 	} from "@/websocket/websocket-constants";
+	import { testIds } from "types";
 
 	let {
 		wsManager,
@@ -11,7 +12,7 @@
 		class: className = "",
 		showLabel = false
 	}: {
-		wsManager: WebSocketManager<any, any>;
+		wsManager: WebSocketManager;
 		state: WebSocketState;
 		class?: string;
 		showLabel?: boolean;
@@ -93,6 +94,7 @@
 	onclick={handleClick}
 	disabled={!statusConfig.canReconnect}
 	title={statusConfig.tooltip}
+	data-testid={testIds.GAME_COMPONENT_CONNECTION_STATUS}
 	class="flex items-center gap-2 text-sm motion-safe:transition-opacity {className} {statusConfig.canReconnect
 		? 'cursor-pointer hover:opacity-80'
 		: 'cursor-default'}"

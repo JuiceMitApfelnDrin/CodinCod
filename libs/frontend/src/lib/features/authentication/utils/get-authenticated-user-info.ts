@@ -1,70 +1,87 @@
-import { httpRequestMethod, backendUrls, cookieKeys } from "types";
+import { logger } from "$lib/utils/debug-logger";
+import { codincodApiWebAccountControllerShow2 } from "@/api/generated/account/account";
 import type { Cookies } from "@sveltejs/kit";
-import { buildBackendUrl } from "@/config/backend";
+import { cookieKeys } from "types";
 
+/**
+ * Verifies authentication status by checking with the backend
+ * @param cookies - SvelteKit cookies object
+ * @param eventFetch - SvelteKit's fetch function (for SSR)
+ * @returns Authentication info including user data if authenticated
+ */
 export async function getAuthenticatedUserInfo(
 	cookies: Cookies,
 	eventFetch = fetch
 ) {
-	try {
-		const url = buildBackendUrl(backendUrls.USER_ME);
+	logger.auth("🔍 Checking authentication status...");
 
-		// Get the token cookie to forward to the backend
+	try {
+		// Check if token cookie exists
 		const token = cookies.get(cookieKeys.TOKEN);
 
+		logger.auth("Token cookie check", {
+			exists: !!token,
+			cookieKey: cookieKeys.TOKEN,
+			tokenPreview: token ? `${token.substring(0, 20)}...` : null
+		});
+
 		if (!token) {
+			logger.auth("❌ No token found - user not authenticated");
 			return {
 				isAuthenticated: false
 			};
 		}
 
-		const headers: HeadersInit = {
-			"Content-Type": "application/json",
-			// Forward the cookie to the backend
-			Cookie: `${cookieKeys.TOKEN}=${token}`
-		};
+		// Use generated Orval endpoint with server-side fetch
+		logger.auth("Calling account endpoint to verify token...");
+		const authenticatedInfo = await codincodApiWebAccountControllerShow2({
+			fetch: eventFetch
+		} as RequestInit);
+		logger.auth("✅ Account endpoint response received", authenticatedInfo);
 
-		const response = await eventFetch(url, {
-			method: httpRequestMethod.GET,
-			headers
-		});
-
-		if (!response.ok) {
-			if (response.status === 401) {
-				// Token is invalid, just return unauthenticated
-				return {
-					isAuthenticated: false
-				};
-			}
-			console.error(
-				`Failed to verify authentication: ${response.status} ${response.statusText} from ${url}`
-			);
-			const errorBody = await response
-				.text()
-				.catch(() => "Unable to read response body");
-			console.error("Response body:", errorBody);
-			throw new Error(
-				`Failed to verify authentication: ${response.status} ${response.statusText}`
-			);
-		}
-
-		const authenticatedInfo = await response.json();
-
-		if (authenticatedInfo.isAuthenticated) {
+		// The backend returns { isAuthenticated: true, userId, username, role }
+		if (
+			authenticatedInfo &&
+			typeof authenticatedInfo === "object" &&
+			"isAuthenticated" in authenticatedInfo
+		) {
+			logger.auth("✅ User authenticated successfully", {
+				userId: authenticatedInfo.userId,
+				username: authenticatedInfo.username,
+				role: authenticatedInfo.role,
+				isAuthenticated: authenticatedInfo.isAuthenticated
+			});
 			return authenticatedInfo;
 		}
-	} catch (err) {
-		if (err instanceof Error) {
-			console.error("Error verifying authentication:", err.message);
-			if ("cause" in err) {
-				console.error("Error cause:", err.cause);
-			}
-		} else {
-			console.error("Error verifying authentication:", err);
-		}
-	}
 
-	return {
-		isAuthenticated: false
-	};
+		logger.auth(
+			"⚠️ Invalid response format from account endpoint - treating as not authenticated"
+		);
+		return {
+			isAuthenticated: false
+		};
+	} catch (err) {
+		// Handle 401 Unauthorized gracefully (invalid/expired token)
+		if (err instanceof Error && err.message.includes("401")) {
+			logger.auth("❌ 401 Unauthorized - token invalid or expired");
+			return {
+				isAuthenticated: false
+			};
+		}
+
+		// Log other errors for debugging
+		if (err instanceof Error) {
+			logger.error("Error verifying authentication", {
+				message: err.message,
+				name: err.name,
+				stack: err.stack
+			});
+		} else {
+			logger.error("Error verifying authentication (unknown error)", err);
+		}
+
+		return {
+			isAuthenticated: false
+		};
+	}
 }

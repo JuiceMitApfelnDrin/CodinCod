@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LogicalUnit from "../logical-unit/logical-unit.svelte";
 	import { cn } from "@/utils/cn";
-	import { currentTime } from "@/stores/current-time";
+	import { currentTime } from "@/stores/current-time.store";
 	import dayjs from "dayjs";
 
 	let {

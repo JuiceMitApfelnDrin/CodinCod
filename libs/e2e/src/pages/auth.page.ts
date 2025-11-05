@@ -61,12 +61,17 @@ export class AuthPage extends BasePage {
 	/**
 	 * Perform registration
 	 */
-	async register(username: string, password: string): Promise<void> {
+	async register(username: string, password: string, email?: string): Promise<void> {
 		const usernameInput = this.page.getByTestId(testIds.REGISTER_FORM_INPUT_USERNAME);
+		const emailInput = this.page.getByTestId(testIds.REGISTER_FORM_INPUT_EMAIL);
 		const passwordInput = this.page.getByTestId(testIds.REGISTER_FORM_INPUT_PASSWORD);
 		const registerButton = this.page.getByTestId(testIds.REGISTER_FORM_BUTTON_REGISTER);
 		
+		// Generate email if not provided
+		const userEmail = email || `${username}@test.local`;
+		
 		await this.fillInput(usernameInput, username);
+		await this.fillInput(emailInput, userEmail);
 		await this.fillInput(passwordInput, password);
 		await this.clickElement(registerButton);
 		

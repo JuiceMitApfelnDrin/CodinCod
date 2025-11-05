@@ -5,6 +5,7 @@
 	import Pagination from "@/components/nav/pagination.svelte";
 	import {
 		frontendUrls,
+		type AuthenticatedInfo,
 		type PaginatedQueryResponse,
 		type PuzzleDto
 	} from "types";
@@ -13,20 +14,33 @@
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
 	import { testIds } from "types";
-	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
+	import { isAuthenticated } from "@/stores/auth.store";
+	import { logger } from "@/utils/debug-logger";
 
-	let { data }: { data: PaginatedQueryResponse | undefined } = $props();
+	let {
+		data
+	}: {
+		data: {
+			account: AuthenticatedInfo;
+			puzzles: PaginatedQueryResponse | undefined;
+		};
+	} = $props();
 
-	let items: PuzzleDto[] = $derived(data?.items ?? []);
-	let page: number = $derived(data?.page ?? 1);
-	let totalItems: number = $derived(data?.totalItems ?? 0);
-	let totalPages: number = $derived(data?.totalPages ?? 0);
+	const puzzles = $derived(data.puzzles);
+
+	logger.page("Rendering puzzles +page.svelte", {
+		dataPresent: !!data,
+		data
+	});
+
+	let items: PuzzleDto[] = $derived(puzzles?.items ?? []);
+	let page: number = $derived(puzzles?.page ?? 1);
+	let totalItems: number = $derived(puzzles?.totalItems ?? 0);
+	let totalPages: number = $derived(puzzles?.totalPages ?? 0);
 
 	let myPuzzlesUrl: string | undefined = $derived(
-		$authenticatedUserInfo?.isAuthenticated
-			? frontendUrls.userProfileByUsernamePuzzles(
-					$authenticatedUserInfo.username
-				)
+		$isAuthenticated
+			? frontendUrls.userProfileByUsernamePuzzles(data.account.username)
 			: undefined
 	);
 </script>

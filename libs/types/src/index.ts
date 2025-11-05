@@ -1,5 +1,6 @@
 // top level
 export * from "./general.js";
+export * as ElixirOpenAPI from "./generated/elixir-openapi.js";
 
 // activity
 export * from "./core/activity/enum/activity-type-enum.js";
@@ -118,8 +119,10 @@ export * from "./core/programming-language/schema/programming-language-dto.schem
 export * from "./core/programming-language/schema/create-programming-language.schema.js";
 
 // profile
+export * from "./core/profile/config/profile-config.js";
 export * from "./core/profile/schema/profile-dto.schema.js";
 export * from "./core/profile/schema/profile-entity.schema.js";
+export * from "./core/profile/schema/update-profile.schema.js";
 
 // puzzle
 export * from "./core/puzzle/config/puzzle-config.js";
@@ -141,6 +144,7 @@ export * from "./core/puzzle/schema/validator.schema.js";
 // submission
 export * from "./core/submission/config/game-submission-params.js";
 export * from "./core/submission/config/code-submission-params.js";
+export * from "./core/submission/config/submission-config.js";
 export * from "./core/submission/schema/submission-dto.schema.js";
 export * from "./core/submission/schema/submission-entity.schema.js";
 

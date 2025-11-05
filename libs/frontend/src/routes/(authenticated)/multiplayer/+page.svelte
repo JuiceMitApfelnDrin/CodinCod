@@ -12,7 +12,7 @@
 	import CustomGameDialog from "@/features/multiplayer/components/custom-game-dialog.svelte";
 	import JoinByInviteDialog from "@/features/multiplayer/components/join-by-invite-dialog.svelte";
 	import { buildWebSocketUrl } from "@/config/websocket";
-	import { authenticatedUserInfo } from "@/stores";
+	import { authenticatedUserInfo } from "@/stores/auth.store";
 	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
 	import {
 		WEBSOCKET_STATES,
@@ -32,7 +32,7 @@
 		type ChatMessage
 	} from "types";
 	import { testIds } from "types";
-	import { currentTime } from "@/stores/current-time";
+	import { currentTime } from "@/stores/current-time.store";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import { Input } from "#/ui/input";
 
@@ -309,10 +309,38 @@
 		</LogicalUnit>
 
 		{#if pendingGameStart}
-			<div class="flex flex-col items-center gap-4">
-				<h2 class="text-xl font-semibold">Game Starting Soon!</h2>
-				<p>Get ready! The game will begin in:</p>
-				<CountdownTimer endDate={pendingGameStart.startTime} />
+			<div class="space-y-4">
+				<div
+					class="bg-primary/10 flex flex-col items-center gap-4 rounded-lg border p-6"
+				>
+					<h2 class="text-xl font-semibold">Game Starting Soon!</h2>
+					<p>Get ready! The game will begin in:</p>
+					<CountdownTimer endDate={pendingGameStart.startTime} />
+				</div>
+
+				{#if room}
+					<div class="grid gap-4 md:grid-cols-2">
+						<div class="space-y-2">
+							<h3 class="text-lg font-semibold">Players in Game</h3>
+							<ul class="space-y-1">
+								{#each room.users as user}
+									<li class="list-inside list-disc">
+										{user.username}{#if isAuthor(room.owner.userId, user.userId)}
+											{` - Host!`}{/if}
+									</li>
+								{/each}
+							</ul>
+						</div>
+
+						{#if $authenticatedUserInfo?.username}
+							<Chat
+								{chatMessages}
+								sendMessage={sendChatMessage}
+								gameId={room.roomId}
+							/>
+						{/if}
+					</div>
+				{/if}
 			</div>
 		{:else if room}
 			<div class="space-y-4">

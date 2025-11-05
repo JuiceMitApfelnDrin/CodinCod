@@ -6,21 +6,23 @@ import { userProfileSchema } from "./user-profile.schema.js";
 import { DEFAULT_USER_ROLE, userRoleSchema } from "../enum/user-role.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
 
+export const usernameSchema = z
+	.string()
+	.min(
+		USERNAME_CONFIG.minUsernameLength,
+		`Username must be at least ${USERNAME_CONFIG.minUsernameLength} characters long`,
+	)
+	.max(
+		USERNAME_CONFIG.maxUsernameLength,
+		`Username must be at most ${USERNAME_CONFIG.maxUsernameLength} characters long`,
+	)
+	.regex(
+		USERNAME_CONFIG.allowedCharacters,
+		"Username can only contain letters, numbers, hyphens, and underscores",
+	);
+
 export const userEntitySchema = z.object({
-	username: z
-		.string()
-		.min(
-			USERNAME_CONFIG.minUsernameLength,
-			`Username must be at least ${USERNAME_CONFIG.minUsernameLength} characters long`,
-		)
-		.max(
-			USERNAME_CONFIG.maxUsernameLength,
-			`Username must be at most ${USERNAME_CONFIG.maxUsernameLength} characters long`,
-		)
-		.regex(
-			USERNAME_CONFIG.allowedCharacters,
-			"Username can only contain letters, numbers, hyphens, and underscores",
-		),
+	username: usernameSchema,
 	password: z
 		.string()
 		.min(

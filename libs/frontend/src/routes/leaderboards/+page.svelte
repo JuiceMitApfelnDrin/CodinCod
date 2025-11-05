@@ -7,7 +7,7 @@
 		type GameMode,
 		type LeaderboardAPI
 	} from "types";
-	import { backendUrls } from "types";
+	import type { GlobalLeaderboardResponse } from "@/api/generated/schemas/globalLeaderboardResponse";
 	import * as Card from "@/components/ui/card";
 	import * as Table from "@/components/ui/table";
 	import { Button } from "@/components/ui/button";
@@ -16,13 +16,11 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import * as ButtonGroup from "#/ui/button-group";
+	import { codincodApiWebLeaderboardControllerGlobal2 } from "$lib/api/generated";
 
 	// Reactive state using Svelte 5 runes
 	let selectedMode = $state<GameMode>(gameModeEnum.FASTEST);
-	let leaderboardData = $state<Exclude<
-		LeaderboardAPI.GetLeaderboardResponse,
-		{ error: string }
-	> | null>(null);
+	let leaderboardData = $state<GlobalLeaderboardResponse | null>(null);
 	let loading = $state(false);
 	let error = $state<string | null>(null);
 	let currentPage = $state(PAGINATION_CONFIG.DEFAULT_PAGE);
@@ -61,21 +59,13 @@
 		error = null;
 
 		try {
-			const url = `${backendUrls.leaderboardByGameMode(mode)}?page=${page}&pageSize=${pageSize}`;
-			const response = await fetch(url, {
-				credentials: "include"
+			// Convert page/pageSize to offset/limit for the API
+			const offset = (page - 1) * pageSize;
+			const data = await codincodApiWebLeaderboardControllerGlobal2({
+				game_mode: "standard", // Backend currently only supports "standard" mode
+				offset,
+				limit: pageSize
 			});
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch leaderboard: ${response.statusText}`);
-			}
-
-			const data = await response.json();
-
-			// Type guard to check if response is error
-			if ("error" in data) {
-				throw new Error(data.error);
-			}
 
 			leaderboardData = data;
 		} catch (err) {
@@ -93,7 +83,10 @@
 
 	// Page navigation
 	function nextPage() {
-		if (leaderboardData && currentPage < leaderboardData.totalPages) {
+		if (
+			leaderboardData?.rankings &&
+			leaderboardData.rankings.length >= pageSize
+		) {
 			currentPage++;
 		}
 	}
@@ -177,7 +170,9 @@
 					>{gameModeNames[selectedMode]} Leaderboard</Card.CardTitle
 				>
 				<Card.CardDescription>
-					Last updated: {formatDate(leaderboardData.lastUpdated)}
+					Last updated: {leaderboardData.cachedAt
+						? formatDate(leaderboardData.cachedAt)
+						: "Unknown"}
 				</Card.CardDescription>
 			</Card.CardHeader>
 			<Card.CardContent>
@@ -194,28 +189,40 @@
 						</Table.TableRow>
 					</Table.TableHeader>
 					<Table.TableBody>
-						{#each leaderboardData.entries as entry}
+						{#each leaderboardData.rankings ?? [] as entry}
 							<Table.TableRow>
 								<Table.TableCell>
-									<span class="text-2xl">{getRankBadge(entry.rank)}</span>
-									<span class="ml-2 font-semibold">#{entry.rank}</span>
+									<span class="text-2xl">{getRankBadge(entry.rank ?? 0)}</span>
+									<span class="ml-2 font-semibold">#{entry.rank ?? 0}</span>
 								</Table.TableCell>
 								<Table.TableCell>
-									<a
-										href="/user/{entry.username}"
-										class="font-medium text-blue-600 hover:underline dark:text-blue-400"
-									>
-										{entry.username}
-									</a>
+									{#if entry.username}
+										<a
+											href="/user/{entry.username}"
+											class="font-medium text-blue-600 hover:underline dark:text-blue-400"
+										>
+											{entry.username}
+										</a>
+									{:else}
+										<!-- svelte-ignore a11y_invalid_attribute -->
+										<a
+											href="#"
+											class="font-medium text-blue-600 hover:underline dark:text-blue-400"
+										>
+											Unknown
+										</a>
+									{/if}
 								</Table.TableCell>
 								<Table.TableCell>
 									<span
-										class="text-lg font-bold {getRatingColor(entry.rating)}"
+										class="text-lg font-bold {getRatingColor(
+											entry.rating ?? 1500
+										)}"
 									>
-										{Math.round(entry.rating)}
+										{Math.round(entry.rating ?? 1500)}
 									</span>
 									<span class="text-muted-foreground ml-1 text-xs">
-										(±{Math.round(entry.glicko.rd)})
+										(±{Math.round(entry.glicko?.rd ?? 350)})
 									</span>
 								</Table.TableCell>
 								<Table.TableCell>
@@ -229,19 +236,19 @@
 										<div class="bg-muted h-2 w-20 rounded-full">
 											<div
 												class="bg-success h-2 rounded-full"
-												style="width: {entry.winRate * 100}%"
+												style="width: {(entry.winRate ?? 0) * 100}%"
 											></div>
 										</div>
 										<span class="text-sm font-medium">
-											{(entry.winRate * 100).toFixed(1)}%
+											{((entry.winRate ?? 0) * 100).toFixed(1)}%
 										</span>
 									</div>
 								</Table.TableCell>
 								<Table.TableCell class="font-medium">
-									{Math.round(entry.bestScore).toLocaleString()}
+									{Math.round(entry.bestScore ?? 0).toLocaleString()}
 								</Table.TableCell>
 								<Table.TableCell>
-									{Math.round(entry.averageScore).toLocaleString()}
+									{Math.round(entry.averageScore ?? 0).toLocaleString()}
 								</Table.TableCell>
 							</Table.TableRow>
 						{/each}
@@ -252,8 +259,8 @@
 				<p class="text-muted-foreground text-sm">
 					Showing {(currentPage - 1) * pageSize + 1} to {Math.min(
 						currentPage * pageSize,
-						leaderboardData.totalEntries
-					)} of {leaderboardData.totalEntries} players
+						leaderboardData.totalEntries ?? 0
+					)} of {leaderboardData.totalEntries ?? 0} players
 				</p>
 				<ButtonGroup.Root>
 					<Button
@@ -265,12 +272,12 @@
 						Previous
 					</Button>
 					<Badge variant="outline">
-						Page {currentPage} of {leaderboardData.totalPages}
+						Page {currentPage} of {leaderboardData.totalPages ?? 1}
 					</Badge>
 					<Button
 						variant="outline"
 						onclick={nextPage}
-						disabled={currentPage >= leaderboardData.totalPages}
+						disabled={currentPage >= (leaderboardData.totalPages ?? 1)}
 						data-testid={testIds.LEADERBOARD_PAGE_BUTTON_NEXT_PAGE}
 					>
 						Next

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import { fileURLToPath } from "url";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

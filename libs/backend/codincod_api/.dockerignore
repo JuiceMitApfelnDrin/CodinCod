@@ -1,0 +1,5 @@
+_build
+cover
+deps
+node_modules
+*.ez

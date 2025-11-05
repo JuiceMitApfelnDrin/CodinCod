@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from './base.page';
-import { testIds } from 'types';
+import { testIds, frontendUrls } from 'types';
 
 /**
  * Page Object Model for the multiplayer waiting room page
@@ -37,10 +37,10 @@ export class MultiplayerPage extends BasePage {
 		this.inviteCodeInput = page.locator('input[type="password"], input[type="text"]').filter({ has: page.locator('..').filter({ hasText: /invite code/i }) });
 		this.roomsList = page.locator('ul').filter({ has: page.getByTestId(testIds.MULTIPLAYER_PAGE_BUTTON_JOIN_ROOM) });
 		this.playersList = page.locator('ul').filter({ hasText: /players in room/i });
-		this.chatInput = page.locator('input[placeholder*="message"], textarea[placeholder*="message"]').first();
-		this.chatSendButton = page.getByTestId(testIds.WAITING_ROOM_CHAT_BUTTON_SEND);
-		this.chatMessages = page.locator('[data-testid*="chat"], .chat-messages').first();
-		this.connectionStatus = page.locator('[data-testid*="connection-status"]').first();
+		this.chatInput = page.getByTestId(testIds.CHAT_COMPONENT_INPUT_MESSAGE);
+		this.chatSendButton = page.getByTestId(testIds.CHAT_COMPONENT_BUTTON_SEND_MESSAGE);
+		this.chatMessages = page.getByTestId(testIds.CHAT_COMPONENT_MESSAGES_CONTAINER);
+		this.connectionStatus = page.getByTestId(testIds.GAME_COMPONENT_CONNECTION_STATUS);
 		this.countdownTimer = page.locator('text=/game starting soon|get ready/i').first();
 	}
 
@@ -48,7 +48,7 @@ export class MultiplayerPage extends BasePage {
 	 * Navigate to multiplayer page
 	 */
 	async gotoMultiplayer(): Promise<void> {
-		await this.goto('/multiplayer');
+		await this.goto(frontendUrls.MULTIPLAYER);
 	}
 
 	/**

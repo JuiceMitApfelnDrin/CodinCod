@@ -15,7 +15,8 @@
 		"type-check": "tsc",
 		"lint": "pnpm biome lint ./src",
 		"lint:fix": "pnpm biome lint --write ./src",
-		"format": "pnpm biome format --write ./src"
+		"format": "pnpm biome format --write ./src",
+		"openapi:types": "openapi-typescript ../backend/codincod_api/priv/static/openapi.json --output ./src/generated/elixir-openapi.ts"
 	},
 	"dependencies": {
 		"bson": "^6.10.4",
@@ -26,6 +27,7 @@
 		"@tsconfig/recommended": "^1.0.7",
 		"eslint-plugin-sort-destructure-keys": "^2.0.0",
 		"globals": "^16.2.0",
+		"openapi-typescript": "^6.7.0",
 		"typescript": "^5.5.4"
 	}
 }

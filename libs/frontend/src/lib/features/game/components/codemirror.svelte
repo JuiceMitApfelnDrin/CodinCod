@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { keymap, type PreferencesDto, type PuzzleLanguage } from "types";
-	import { preferences } from "@/stores/preferences";
+	import { preferences } from "@/stores/preferences.store";
 	import type CodemirrorWrapperType from "#/external-wrapper/codemirror-wrapper.svelte";
+	import type { LanguageSupport, StreamLanguage } from "@codemirror/language";
 
 	const CodemirrorWrapper = import(
 		"#/external-wrapper/codemirror-wrapper.svelte"
@@ -76,7 +77,7 @@
 
 	async function getLanguageExtensions(
 		language: PuzzleLanguage
-	): Promise<any[]> {
+	): Promise<LanguageSupport[] | StreamLanguage<unknown>[]> {
 		switch (language) {
 			case "javascript": {
 				return [(await import("@codemirror/lang-javascript")).javascript()];

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { invalidateAll } from "$app/navigation";
-	import { authenticatedUserInfo } from "@/stores";
+	import { authenticatedUserInfo } from "@/stores/auth.store";
 	import { onMount } from "svelte";
 
 	let formElement: HTMLFormElement;

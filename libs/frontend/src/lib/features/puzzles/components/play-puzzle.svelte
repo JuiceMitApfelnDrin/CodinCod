@@ -14,6 +14,7 @@
 		DEFAULT_LANGUAGE,
 		testIds
 	} from "types";
+	import type { PuzzleResponse } from "@/api/generated/index.js";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
 	import { calculatePuzzleResultColor } from "@/features/puzzles/utils/calculate-puzzle-result-color.js";
@@ -23,16 +24,17 @@
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import CountdownTimer from "@/components/ui/countdown-timer/countdown-timer.svelte";
-	import { currentTime } from "@/stores/current-time";
+	import { currentTime } from "@/stores/current-time.store";
 	import dayjs from "dayjs";
 	import Markdown from "@/components/typography/markdown.svelte";
 	import { buildBackendUrl } from "@/config/backend";
 	import OutputBox from "./output-box.svelte";
 	import LanguageSelect from "./language-select.svelte";
-	import { authenticatedUserInfo, isAuthenticated } from "@/stores";
-	import { languages } from "@/stores/languages";
+	import { languages } from "@/stores/languages.store";
 	import { toast } from "svelte-sonner";
 	import { calculatePercentage } from "@/utils/calculate-percentage";
+	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 
 	let {
 		endDate,
@@ -40,7 +42,7 @@
 		onPlayerSubmitCode = () => {},
 		puzzle
 	}: {
-		puzzle: PuzzleDto;
+		puzzle: PuzzleResponse | PuzzleDto;
 		onPlayerSubmitCode?: (submissionId: string) => void;
 		onPlayerChangeLanguage?: (language: string) => void;
 		endDate: Date | undefined;
@@ -64,15 +66,18 @@
 		testInput: string,
 		testOutput: string
 	) {
-		const response = await fetch(buildBackendUrl(backendUrls.EXECUTE), {
-			body: JSON.stringify({
-				code,
-				language,
-				testInput,
-				testOutput
-			}),
-			method: httpRequestMethod.POST
-		});
+		const response = await fetchWithAuthenticationCookie(
+			buildBackendUrl(backendUrls.EXECUTE),
+			{
+				body: JSON.stringify({
+					code,
+					language,
+					testInput,
+					testOutput
+				}),
+				method: httpRequestMethod.POST
+			}
+		);
 
 		// Handle rate limiting
 		if (response.status === httpResponseCodes.CLIENT_ERROR.TOO_MANY_REQUESTS) {
@@ -148,8 +153,12 @@
 			isExecutingTests = true;
 
 			const convertToPromises = puzzle.validators.map(
-				(validator: ValidatorEntity, index: number) => {
-					return executeCode(index, validator.input, validator.output);
+				(validator, index: number) => {
+					return executeCode(
+						index,
+						validator.input ?? "",
+						validator.output ?? ""
+					);
 				}
 			);
 
@@ -188,14 +197,17 @@
 		const submissionParams: CodeSubmissionParams = {
 			code,
 			programmingLanguage: programmingLanguageId,
-			puzzleId: puzzle._id,
+			puzzleId: puzzle._id ?? "",
 			userId: $authenticatedUserInfo.userId
 		};
 
-		const response = await fetch(buildBackendUrl(backendUrls.SUBMISSION), {
-			body: JSON.stringify(submissionParams),
-			method: httpRequestMethod.POST
-		});
+		const response = await fetchWithAuthenticationCookie(
+			buildBackendUrl(backendUrls.SUBMISSION),
+			{
+				body: JSON.stringify(submissionParams),
+				method: httpRequestMethod.POST
+			}
+		);
 
 		const submission = await response.json();
 
@@ -292,10 +304,10 @@
 </LogicalUnit>
 
 {#if puzzle.validators}
-	<LogicalUnit>
+	<LogicalUnit data-testid={testIds.PLAY_PUZZLE_COMPONENT_TEST_RESULTS}>
 		<TestProgressBar
 			{openTestsAccordion}
-			puzzleResults={puzzle.validators.map((_, index) => {
+			puzzleResults={puzzle.validators.map((_validator, index: number) => {
 				const testResult = testResults[index];
 				if (testResult === undefined) {
 					return undefined;
@@ -331,19 +343,22 @@
 								<div class="flex flex-col gap-4 lg:flex-row lg:gap-8">
 									<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
 										<OutputBox title="Input"
-											>{validator.input.trimEnd()}</OutputBox
+											>{(validator.input ?? "").trimEnd()}</OutputBox
 										>
 									</LogicalUnit>
 
 									<LogicalUnit class="w-full space-y-2 lg:max-w-[50%]">
 										<OutputBox title="Expected output"
-											>{validator.output.trimEnd()}</OutputBox
+											>{(validator.output ?? "").trimEnd()}</OutputBox
 										>
 									</LogicalUnit>
 								</div>
 
 								{#if isCodeExecutionSuccessResponse(testResults[index])}
-									<div class="flex flex-col gap-4 lg:gap-6">
+									<div
+										class="flex flex-col gap-4 lg:gap-6"
+										data-testid={testIds.PLAY_PUZZLE_COMPONENT_CONSOLE_OUTPUT}
+									>
 										<h3 class="text-xl font-semibold">Actual output</h3>
 
 										<LogicalUnit class="w-full space-y-2">
@@ -375,8 +390,8 @@
 										Promise.all([
 											runSingularTestItem(
 												index,
-												validator.input,
-												validator.output
+												validator.input ?? "",
+												validator.output ?? ""
 											),
 											patience()
 										]).then(() => {

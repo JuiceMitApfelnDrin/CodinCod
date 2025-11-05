@@ -17,6 +17,8 @@ export const testIds = {
 
 	// chat component
 	CHAT_COMPONENT_BUTTON_SEND_MESSAGE: "chat-component-button-send-message",
+	CHAT_COMPONENT_MESSAGES_CONTAINER: "chat-component-messages-container",
+	CHAT_COMPONENT_INPUT_MESSAGE: "chat-component-input-message",
 
 	// comment component
 	COMMENT_COMPONENT_BUTTON_DOWNVOTE_COMMENT:
@@ -166,9 +168,27 @@ export const testIds = {
 		"play-puzzle-component-button-run-code",
 	PLAY_PUZZLE_COMPONENT_BUTTON_SUBMIT_CODE:
 		"play-puzzle-component-button-submit-code",
+	PLAY_PUZZLE_COMPONENT_TEST_RESULTS: "play-puzzle-component-test-results",
+	PLAY_PUZZLE_COMPONENT_CONSOLE_OUTPUT: "play-puzzle-component-console-output",
+
+	// game/multiplayer components
+	GAME_COMPONENT_PLAYER_RANKINGS: "game-component-player-rankings",
+	GAME_COMPONENT_STANDINGS_TABLE: "game-component-standings-table",
+	GAME_COMPONENT_CONNECTION_STATUS: "game-component-connection-status",
 
 	// profile
 	PROFILE_PAGE_BUTTON_USER_PUZZLES: "profile-page-button-user-puzzles",
+
+	// profile settings
+	PROFILE_SETTINGS_TEXTAREA_BIO: "profile-settings-textarea-bio",
+	PROFILE_SETTINGS_INPUT_LOCATION: "profile-settings-input-location",
+	PROFILE_SETTINGS_INPUT_PICTURE: "profile-settings-input-picture",
+	PROFILE_SETTINGS_INPUT_SOCIAL_LINK: "profile-settings-input-social-link",
+	PROFILE_SETTINGS_INPUT_NEW_SOCIAL: "profile-settings-input-new-social",
+	PROFILE_SETTINGS_BUTTON_ADD_SOCIAL: "profile-settings-button-add-social",
+	PROFILE_SETTINGS_BUTTON_REMOVE_SOCIAL:
+		"profile-settings-button-remove-social",
+	PROFILE_SETTINGS_BUTTON_SAVE: "profile-settings-button-save",
 
 	// puzzles by id page
 	PUZZLES_BY_ID_PAGE_ANCHOR_EDIT_PUZZLE: "puzzles-by-id-page-edit-puzzle",
@@ -186,6 +206,16 @@ export const testIds = {
 	REGISTER_FORM_INPUT_USERNAME: "register-form-input-username",
 	REGISTER_FORM_INPUT_PASSWORD: "register-form-input-password",
 	REGISTER_FORM_INPUT_EMAIL: "register-form-input-email",
+
+	// reset password page
+	RESET_PASSWORD_PAGE_BUTTON_CONTINUE_TO_LOGIN:
+		"reset-password-page-button-continue-to-login",
+	RESET_PASSWORD_PAGE_BUTTON_SUBMIT: "reset-password-page-button-submit",
+
+	// forgot password page
+	FORGOT_PASSWORD_PAGE_BUTTON_BACK_TO_LOGIN:
+		"forgot-password-page-button-back-to-login",
+	FORGOT_PASSWORD_PAGE_BUTTON_SUBMIT: "forgot-password-page-button-submit",
 
 	// standings table component
 	STANDINGS_TABLE_COMPONENT_TOGGLE_SHOW_CODE:

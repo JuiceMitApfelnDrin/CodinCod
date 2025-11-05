@@ -2,14 +2,20 @@ import { z } from "zod";
 import { gameModeSchema } from "../../../game/schema/mode.schema.js";
 import { leaderboardEntrySchema } from "../../../leaderboard/schema/leaderboard-entry.schema.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
+import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
 
 /**
  * GET /leaderboard/:gameMode - Get leaderboard for a specific game mode
  */
 export const getLeaderboardRequestSchema = z.object({
 	gameMode: gameModeSchema,
-	page: z.number().int().positive().default(1),
-	pageSize: z.number().int().positive().max(100).default(50),
+	page: z.number().int().positive().default(PAGINATION_CONFIG.DEFAULT_PAGE),
+	pageSize: z
+		.number()
+		.int()
+		.positive()
+		.max(PAGINATION_CONFIG.MAX_LIMIT)
+		.default(PAGINATION_CONFIG.DEFAULT_LIMIT_LEADERBOARD),
 });
 
 export const getLeaderboardResponseSchema = z

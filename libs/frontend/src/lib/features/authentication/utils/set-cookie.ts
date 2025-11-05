@@ -1,5 +1,5 @@
-import type { Cookies } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
+import type { Cookies } from "@sveltejs/kit";
 import { environment, getCookieOptions } from "types";
 
 export function setCookie(result: Response, cookies: Cookies) {

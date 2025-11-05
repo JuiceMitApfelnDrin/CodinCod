@@ -1,30 +1,53 @@
 <script lang="ts">
 	import Nav from "@/components/nav/navigation/navigation.svelte";
-	import { authenticatedUserInfo } from "@/stores/index.js";
-	import { isAuthenticatedInfo } from "types";
+	import { authenticatedUserInfo } from "@/stores/auth.store";
+	import { isAuthenticatedInfo, type AuthenticatedInfo } from "types";
 	import { Toaster } from "$lib/components/ui/sonner";
-	import { untrack } from "svelte";
+	import { untrack, type Snippet } from "svelte";
+	import { logger } from "$lib/utils/debug-logger";
 
-	let { children, data } = $props();
+	let { children, data }: { children: Snippet; data: AuthenticatedInfo } =
+		$props();
 
-	// Use untrack to prevent the store read from causing infinite loops
+	// Derive auth info once
+	const newAuthInfo = $derived(isAuthenticatedInfo(data) ? data : null);
+
+	// Fix: Use untrack properly and add dependencies
 	$effect(() => {
-		const newAuthInfo = isAuthenticatedInfo(data) ? data : null;
+		// Read newAuthInfo to establish dependency
+		const authInfo = newAuthInfo;
+
+		logger.page("+layout.svelte $effect triggered", {
+			dataReceived: !!data,
+			data
+		});
+
+		// Read current store value without tracking
 		const currentAuthInfo = untrack(() => $authenticatedUserInfo);
 
+		logger.auth("Syncing server auth data to client store", {
+			newAuthInfo: authInfo,
+			currentAuthInfo,
+			willUpdate: JSON.stringify(authInfo) !== JSON.stringify(currentAuthInfo)
+		});
+
 		// Only update if the data has actually changed
-		if (JSON.stringify(newAuthInfo) !== JSON.stringify(currentAuthInfo)) {
-			authenticatedUserInfo.set(newAuthInfo);
+		if (JSON.stringify(authInfo) !== JSON.stringify(currentAuthInfo)) {
+			logger.auth("🔄 Updating authenticatedUserInfo store", {
+				from: currentAuthInfo,
+				to: authInfo
+			});
+			authenticatedUserInfo.set(authInfo);
+		} else {
+			logger.auth("⏭️  No auth state change, skipping store update");
 		}
 	});
 </script>
 
 <Nav />
-
 <main
 	class="dark:bg-primary-900 dark:text-primary-100 flex min-h-screen flex-col"
 >
-	{@render children?.()}
+	{@render children()}
 </main>
-
 <Toaster richColors closeButton />

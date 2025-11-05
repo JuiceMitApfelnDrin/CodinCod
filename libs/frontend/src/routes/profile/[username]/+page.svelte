@@ -15,6 +15,7 @@
 		type Activity,
 		type GroupedActivitiesByDate
 	} from "types";
+	import { logger } from "@/utils/debug-logger.js";
 
 	function groupByCreatedAtDate(items: Activity[]) {
 		return items.reduce<GroupedActivitiesByDate>((acc, item) => {
@@ -32,6 +33,11 @@
 	}
 
 	let { data } = $props();
+
+	logger.page("Rendering profile +page.svelte", {
+		dataPresent: !!data,
+		data
+	});
 
 	const { puzzles, submissions, user } = data;
 	const originalActivities: Activity[] = [...submissions, ...puzzles, user];

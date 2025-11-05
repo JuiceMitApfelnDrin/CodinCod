@@ -3,11 +3,11 @@
 	import * as Avatar from "#/ui/avatar";
 	import { frontendUrls } from "types";
 	import { testIds } from "types";
-	import { authenticatedUserInfo } from "@/stores";
+	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import { Button } from "#/ui/button";
 </script>
 
-{#if $authenticatedUserInfo?.isAuthenticated}
+{#if $isAuthenticated && $authenticatedUserInfo}
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger>
 			{#snippet child({ props: avatarProps })}

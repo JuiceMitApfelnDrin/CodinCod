@@ -5,16 +5,12 @@
 	import Label from "@/components/ui/label/label.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
-	import { buildBackendUrl } from "@/config/backend";
-	import { backendUrls } from "types";
-	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
+	import { codincodApiWebPuzzleCommentControllerCreate2 } from "@/api/generated/default/default";
 	import {
 		COMMENT_CONFIG,
 		commentTypeEnum,
-		httpRequestMethod,
 		type CommentDto,
 		type CommentType,
-		type CreateComment,
 		type ObjectId
 	} from "types";
 	import { testIds } from "types";
@@ -32,41 +28,28 @@
 	let commentText: string = $state("");
 
 	async function handleCommentType() {
-		const createComment: CreateComment = {
-			replyOn: replyOnId,
-			text: commentText.trim()
-		};
+		const trimmedText = commentText.trim();
 
-		let response: Response;
+		if (!trimmedText) return;
 
-		switch (commentType) {
-			case commentTypeEnum.PUZZLE:
-				response = await fetchWithAuthenticationCookie(
-					buildBackendUrl(backendUrls.puzzleByIdComment(replyOnId)),
-					{
-						body: JSON.stringify(createComment),
-						method: httpRequestMethod.POST
-					}
-				);
-				break;
-			case commentTypeEnum.COMMENT:
-				response = await fetchWithAuthenticationCookie(
-					buildBackendUrl(backendUrls.puzzleByIdComment(replyOnId)),
-					{
-						body: JSON.stringify(createComment),
-						method: httpRequestMethod.POST
-					}
-				);
-				break;
-			default:
-				return;
+		try {
+			// Use generated Orval endpoint for puzzle comments
+			const newComment = (await codincodApiWebPuzzleCommentControllerCreate2(
+				replyOnId,
+				{
+					text: trimmedText,
+					...(commentType === commentTypeEnum.COMMENT && replyOnId
+						? { replyOn: replyOnId }
+						: {})
+				}
+			)) as unknown as CommentDto;
+
+			onCommentAdded(newComment);
+			commentText = "";
+		} catch (error) {
+			console.error("Failed to create comment:", error);
+			// TODO: Show error to user
 		}
-
-		const newComment = await response.json();
-
-		onCommentAdded(newComment);
-
-		commentText = "";
 	}
 </script>
 

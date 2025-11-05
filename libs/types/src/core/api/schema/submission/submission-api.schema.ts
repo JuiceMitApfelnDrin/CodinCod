@@ -2,6 +2,7 @@ import { z } from "zod";
 import { objectIdSchema } from "../../../common/schema/object-id.js";
 import { submissionEntitySchema } from "../../../submission/schema/submission-entity.schema.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
+import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
 
 /**
  * POST /submission - Submit code for evaluation
@@ -59,8 +60,13 @@ export type GetSubmissionByIdResponse = z.infer<
 export const listSubmissionsRequestSchema = z.object({
 	userId: objectIdSchema.optional(),
 	puzzleId: objectIdSchema.optional(),
-	page: z.number().int().positive().default(1),
-	pageSize: z.number().int().positive().max(100).default(20),
+	page: z.number().int().positive().default(PAGINATION_CONFIG.DEFAULT_PAGE),
+	pageSize: z
+		.number()
+		.int()
+		.positive()
+		.max(PAGINATION_CONFIG.MAX_LIMIT)
+		.default(PAGINATION_CONFIG.DEFAULT_LIMIT),
 });
 
 export const listSubmissionsResponseSchema = z
