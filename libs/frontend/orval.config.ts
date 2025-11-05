@@ -4,7 +4,7 @@ export default defineConfig({
 	elixirApi: {
 		input: {
 			// Point to your Elixir backend OpenAPI spec
-			target: "../elixir-backend/codincod_api/priv/static/openapi.json"
+			target: "../backend/codincod_api/priv/static/openapi.json"
 		},
 		output: {
 			mode: "tags-split",

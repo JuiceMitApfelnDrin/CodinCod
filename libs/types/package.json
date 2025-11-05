@@ -16,7 +16,7 @@
 		"lint": "pnpm biome lint ./src",
 		"lint:fix": "pnpm biome lint --write ./src",
 		"format": "pnpm biome format --write ./src",
-		"openapi:types": "openapi-typescript ../elixir-backend/codincod_api/priv/static/openapi.json --output ./src/generated/elixir-openapi.ts"
+		"openapi:types": "openapi-typescript ../backend/codincod_api/priv/static/openapi.json --output ./src/generated/elixir-openapi.ts"
 	},
 	"dependencies": {
 		"bson": "^6.10.4",

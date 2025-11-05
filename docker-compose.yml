@@ -1,4 +1,22 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: codincod-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: codincod_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   piston:
     image: ghcr.io/engineer-man/piston
     container_name: piston
@@ -12,56 +30,51 @@ services:
       - /tmp:exec
 
   backend:
-    container_name: backend
+    container_name: codincod-backend
     restart: unless-stopped
     build:
-      context: . # Root directory
-      args:
-        - ORIGIN=${APP_ORIGIN:-https://codincod.com}
-      dockerfile: libs/backend/Dockerfile # Correct path
+      context: ./libs/backend/codincod_api
+      dockerfile: Dockerfile
     ports:
-      - "8888:8888"
-    # env_file:
-    #  - ./libs/backend/.env # Load frontend environment variables
+      - "4000:4000"
     environment:
-      - NODE_ENV=production
-      - PISTON_URI=http://piston:2000
-      - FRONTEND_URL=https://codincod.com
-      - FRONTEND_HOST=.codincod.com
+      - MIX_ENV=dev
+      - DATABASE_URL=ecto://postgres:postgres@postgres:5432/codincod_dev
+      - SECRET_KEY_BASE=your_secret_key_base_here_change_in_production
+      - PISTON_BASE_URL=http://piston:2000
+      - PORT=4000
+      - PHX_HOST=localhost
     depends_on:
-      - piston
-  #   # optional for when you want to run mongodb locally
-  #     - mongo
+      postgres:
+        condition: service_healthy
+      piston:
+        condition: service_started
+    volumes:
+      - ./libs/backend/codincod_api:/app
+      - backend_build:/app/_build
+      - backend_deps:/app/deps
+    command: sh -c "mix deps.get && mix ecto.create && mix ecto.migrate && mix phx.server"
 
   frontend:
-    container_name: frontend
+    container_name: codincod-frontend
     restart: unless-stopped
     build:
       context: . # Root directory
       dockerfile: libs/frontend/Dockerfile # Correct path
       args:
-        - VITE_BACKEND_URL=https://backend.codincod.com
-        - VITE_BACKEND_WEBSOCKET_MULTIPLAYER=wss://backend.codincod.com
-        - ORIGIN=https://codincod.com
+        - VITE_BACKEND_URL=http://localhost:4000
+        - VITE_BACKEND_WEBSOCKET_MULTIPLAYER=ws://localhost:4000
+        - ORIGIN=http://localhost:5173
     ports:
       - "5173:5173"
-    # env_file:
-    #  - ./libs/frontend/.env # Load frontend environment variables
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
       - PORT=5173
-      - FRONTEND_HOST=.codincod.com
     depends_on:
       - backend
-#   # optional for when you want to run mongodb locally
-#   mongo:
-#     image: mongo:latest
-#     environment:
-#       MONGO_INITDB_ROOT_USERNAME: codincod-dev
-#       MONGO_INITDB_ROOT_PASSWORD: hunter2
-#     volumes:
-#       - mongo_data:/data/db
 
-# volumes:
-#   mongo_data:
+volumes:
+  postgres_data:
+  backend_build:
+  backend_deps:
