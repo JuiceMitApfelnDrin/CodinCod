@@ -78,4 +78,4 @@ export const testIds = {
 	SAVE_BUTTON: "save-button"
 } as const;
 
-export type TestId = typeof testIds[keyof typeof testIds];
+export type TestId = (typeof testIds)[keyof typeof testIds];
