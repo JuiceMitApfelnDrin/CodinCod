@@ -1,4 +1,4 @@
-import { test, expect, BrowserContext, Page } from "@playwright/test";
+import { test, expect, type BrowserContext, type Page } from "@playwright/test";
 import { EnhancedAuthPage } from "@/pages/enhanced-auth.page";
 import { EnhancedMultiplayerPage } from "@/pages/enhanced-multiplayer.page";
 

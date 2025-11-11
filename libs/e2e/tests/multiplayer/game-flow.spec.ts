@@ -3,7 +3,7 @@ import { TEST_PASSWORD } from "@/utils/test-constants";
 import { generateTestUsername } from "@/utils/test-helpers";
 import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 import { testIds } from "@codincod/shared/constants/test-ids";
-import { BrowserContext, Page } from "@playwright/test";
+import type { BrowserContext, Page } from "@playwright/test";
 
 /**
  * Complete Multiplayer Game Flow E2E tests
