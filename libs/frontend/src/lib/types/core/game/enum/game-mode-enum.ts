@@ -14,7 +14,7 @@ export const gameModeEnum = {
 	INCREMENTAL: "incremental", // Requirements added each minute
 
 	// Special modes
-	RANDOM: "random", // Randomized game mode
+	RANDOM: "random" // Randomized game mode
 } as const;
 
 // dont fucking add random game modes that don't belong

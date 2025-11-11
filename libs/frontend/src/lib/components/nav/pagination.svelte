@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import { DEFAULT_PAGE } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 	import { Button } from "../ui/button";
-	import { testIds } from "$lib/types";
+	import { DEFAULT_PAGE } from "$lib/types/core/common/config/default-values-query-params.js";
 
 	let {
 		currentPage,

@@ -1,12 +1,4 @@
 <script lang="ts">
-	import {
-		gameModeEnum,
-		LEADERBOARD_CONFIG,
-		PAGINATION_CONFIG,
-		testIds,
-		type GameMode,
-		type LeaderboardAPI
-	} from "$lib/types";
 	import type { GlobalLeaderboardResponse } from "@/api/generated/schemas/globalLeaderboardResponse";
 	import * as Card from "@/components/ui/card";
 	import * as Table from "@/components/ui/table";
@@ -17,6 +9,11 @@
 	import Loader from "@/components/ui/loader/loader.svelte";
 	import * as ButtonGroup from "#/ui/button-group";
 	import { codincodApiWebLeaderboardControllerGlobal } from "@/api/generated/leaderboard/leaderboard";
+	import type { GameMode } from "$lib/types/core/game/schema/mode.schema.js";
+	import { gameModeEnum } from "$lib/types/core/game/enum/game-mode-enum.js";
+	import { PAGINATION_CONFIG } from "$lib/types/core/common/config/pagination.js";
+	import { LEADERBOARD_CONFIG } from "$lib/types/core/leaderboard/config/leaderboard-config.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	// Reactive state using Svelte 5 runes
 	let selectedMode = $state<GameMode>(gameModeEnum.FASTEST);

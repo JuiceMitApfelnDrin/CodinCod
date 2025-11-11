@@ -4,12 +4,12 @@
 	import { Label } from "$lib/components/ui/label";
 	import { Button } from "$lib/components/ui/button";
 	import { toast } from "svelte-sonner";
-	import { REPORT_CONFIG } from "$lib/types";
+	import { REPORT_CONFIG } from "$lib/types/core/moderation/config/report-config";
 	import { codincodApiWebModerationControllerCreateReport } from "@/api/generated/moderation/moderation";
 	import { CreateReportRequestContentType } from "@/api/generated/schemas/createReportRequestContentType";
 	import { CreateReportRequestProblemType } from "@/api/generated/schemas/createReportRequestProblemType";
-	import { testIds } from "$lib/types";
-	import type { ChatMessage } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import type { ChatMessage } from "$lib/types/core/chat/schema/chat-message.schema";
 
 	let {
 		chatMessage,

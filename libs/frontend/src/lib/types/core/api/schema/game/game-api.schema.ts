@@ -1,14 +1,14 @@
 import { z } from "zod";
-import { objectIdSchema } from "../../../common/schema/object-id.js";
-import { gameEntitySchema } from "../../../game/schema/game-entity.schema.js";
-import { gameModeSchema } from "../../../game/schema/mode.schema.js";
+import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
-import { gameVisibilitySchema } from "../../../game/schema/visibility.schema.js";
+import { objectIdSchema } from "../../../common/schema/object-id.js";
 import {
 	DEFAULT_GAME_LENGTH_IN_SECONDS,
-	MINIMUM_PLAYERS_IN_GAME,
+	MINIMUM_PLAYERS_IN_GAME
 } from "../../../game/config/game-config.js";
-import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
+import { gameEntitySchema } from "../../../game/schema/game-entity.schema.js";
+import { gameModeSchema } from "../../../game/schema/mode.schema.js";
+import { gameVisibilitySchema } from "../../../game/schema/visibility.schema.js";
 
 /**
  * POST /game - Create a new multiplayer game
@@ -23,12 +23,12 @@ export const createGameRequestSchema = z.object({
 		.int()
 		.min(60)
 		.max(DEFAULT_GAME_LENGTH_IN_SECONDS)
-		.optional(), // in seconds
+		.optional() // in seconds
 });
 
 export const createGameResponseSchema = gameEntitySchema
 	.extend({
-		inviteCode: z.string().optional(), // For private games
+		inviteCode: z.string().optional() // For private games
 	})
 	.or(errorResponseSchema);
 
@@ -39,7 +39,7 @@ export type CreateGameResponse = z.infer<typeof createGameResponseSchema>;
  * GET /game/:id - Get game details
  */
 export const getGameByIdRequestSchema = z.object({
-	id: objectIdSchema,
+	id: objectIdSchema
 });
 
 export const getGameByIdResponseSchema =
@@ -61,7 +61,7 @@ export const listGamesRequestSchema = z.object({
 		.int()
 		.positive()
 		.max(PAGINATION_CONFIG.MAX_LIMIT)
-		.default(PAGINATION_CONFIG.DEFAULT_LIMIT),
+		.default(PAGINATION_CONFIG.DEFAULT_LIMIT)
 });
 
 export const listGamesResponseSchema = z
@@ -70,7 +70,7 @@ export const listGamesResponseSchema = z
 		page: z.number().int().positive(),
 		pageSize: z.number().int().positive(),
 		totalPages: z.number().int().nonnegative(),
-		totalItems: z.number().int().nonnegative(),
+		totalItems: z.number().int().nonnegative()
 	})
 	.or(errorResponseSchema);
 
@@ -82,14 +82,14 @@ export type ListGamesResponse = z.infer<typeof listGamesResponseSchema>;
  */
 export const joinGameRequestSchema = z.object({
 	gameId: objectIdSchema,
-	inviteCode: z.string().optional(),
+	inviteCode: z.string().optional()
 });
 
 export const joinGameResponseSchema = z
 	.object({
 		success: z.boolean(),
 		message: z.string(),
-		game: gameEntitySchema.optional(),
+		game: gameEntitySchema.optional()
 	})
 	.or(errorResponseSchema);
 
@@ -100,13 +100,13 @@ export type JoinGameResponse = z.infer<typeof joinGameResponseSchema>;
  * POST /game/:id/leave - Leave a game
  */
 export const leaveGameRequestSchema = z.object({
-	gameId: objectIdSchema,
+	gameId: objectIdSchema
 });
 
 export const leaveGameResponseSchema = z
 	.object({
 		success: z.boolean(),
-		message: z.string(),
+		message: z.string()
 	})
 	.or(errorResponseSchema);
 
@@ -117,14 +117,14 @@ export type LeaveGameResponse = z.infer<typeof leaveGameResponseSchema>;
  * POST /game/:id/start - Start a game (host only)
  */
 export const startGameRequestSchema = z.object({
-	gameId: objectIdSchema,
+	gameId: objectIdSchema
 });
 
 export const startGameResponseSchema = z
 	.object({
 		success: z.boolean(),
 		message: z.string(),
-		startTime: z.date().or(z.string()).optional(),
+		startTime: z.date().or(z.string()).optional()
 	})
 	.or(errorResponseSchema);
 

@@ -19,9 +19,12 @@ defmodule SeedHelpers do
   def insert_or_find(module, attrs, unique_field) do
     case Repo.get_by(module, [{unique_field, Map.get(attrs, unique_field)}]) do
       nil ->
-        %{module.__struct__() | id: Ecto.UUID.generate()}
-        |> module.changeset(attrs)
-        |> Repo.insert!()
+        changeset = case module do
+          User -> User.registration_changeset(%User{id: Ecto.UUID.generate()}, attrs)
+          _ -> module.changeset(%{module.__struct__() | id: Ecto.UUID.generate()}, attrs)
+        end
+
+        Repo.insert!(changeset)
 
       existing ->
         Logger.info("#{module} with #{unique_field}=#{Map.get(attrs, unique_field)} already exists")
@@ -39,46 +42,46 @@ Logger.info("Creating programming languages...")
 
 languages = [
   %{
-    name: "python",
+    language: "python",
     version: "3.12.0",
     runtime: "python",
-    piston_name: "python"
+    aliases: ["python3", "py"]
   },
   %{
-    name: "javascript",
+    language: "javascript",
     version: "18.15.0",
     runtime: "node",
-    piston_name: "javascript"
+    aliases: ["js", "node"]
   },
   %{
-    name: "ruby",
+    language: "ruby",
     version: "3.2.0",
     runtime: "ruby",
-    piston_name: "ruby"
+    aliases: ["rb"]
   },
   %{
-    name: "rust",
+    language: "rust",
     version: "1.68.2",
     runtime: "rust",
-    piston_name: "rust"
+    aliases: ["rs"]
   },
   %{
-    name: "elixir",
+    language: "elixir",
     version: "1.14.0",
     runtime: "elixir",
-    piston_name: "elixir"
+    aliases: ["ex", "exs"]
   },
   %{
-    name: "go",
+    language: "go",
     version: "1.21.0",
     runtime: "go",
-    piston_name: "go"
+    aliases: ["golang"]
   }
 ]
 
 _created_languages =
   Enum.map(languages, fn lang_attrs ->
-    SeedHelpers.insert_or_find(ProgrammingLanguage, lang_attrs, :name)
+    SeedHelpers.insert_or_find(ProgrammingLanguage, lang_attrs, :language)
   end)
 
 # ============================================================================

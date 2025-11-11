@@ -1,17 +1,15 @@
+import { loginSchema } from "$lib/types/core/authentication/schema/login.schema.js";
+import { ERROR_MESSAGES } from "$lib/types/core/common/config/error-messages.js";
+import { httpResponseCodes } from "$lib/types/core/common/enum/http-response-codes.js";
 import { logger } from "$lib/utils/debug-logger";
+import { codincodApiWebAuthControllerLogin } from "@/api/generated/auth/auth";
 import { searchParamKeys } from "@/config/search-params";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
+import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
-import {
-	ERROR_MESSAGES,
-	frontendUrls,
-	httpResponseCodes,
-	loginSchema
-} from "$lib/types";
 import type { RequestEvent } from "./$types";
-import { codincodApiWebAuthControllerLogin } from "@/api/generated/auth/auth";
 
 export async function load() {
 	logger.page("Login page load");
@@ -72,8 +70,20 @@ export const actions = {
 				throw error;
 			}
 
-			console.error("[SERVER] Login error:", error);
-			logger.error("Login error", error);
+			// Handle API errors with specific messages
+			if (error instanceof Error) {
+				console.error("[SERVER] Login error:", error.message);
+				logger.error("Login error", error);
+
+				// Return the error message from the API (e.g., "Invalid email/username or password")
+				return fail(httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED, {
+					form,
+					message: error.message || "Invalid credentials. Please try again."
+				});
+			}
+
+			console.error("[SERVER] Unexpected login error:", error);
+			logger.error("Unexpected login error", error);
 			return fail(httpResponseCodes.SERVER_ERROR.INTERNAL_SERVER_ERROR, {
 				form,
 				message: "An unexpected error occurred. Please try again."

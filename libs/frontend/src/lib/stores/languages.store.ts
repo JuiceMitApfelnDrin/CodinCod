@@ -1,14 +1,17 @@
 import { browser } from "$app/environment";
+import { type CodincodApiWebProgrammingLanguageControllerIndex200Item } from "$lib/api/generated/schemas/codincodApiWebProgrammingLanguageControllerIndex200Item.js";
 import { codincodApiWebProgrammingLanguageControllerIndex } from "@/api/generated/default/default";
 import { localStorageKeys } from "@/config/local-storage";
 import { logger } from "@/utils/debug-logger";
 import { get, writable } from "svelte/store";
-import { type ProgrammingLanguageDto } from "$lib/types";
-import { isAuthenticated } from "./auth.store";
+import { isAuthenticated } from "./auth.store.js";
 
 const CACHE_DURATION_MS = 1_000 * 60 * 60;
 const RETRY_DELAY_MS = 5_000;
 const MAX_RETRIES = 3;
+
+type ProgrammingLanguageDto =
+	CodincodApiWebProgrammingLanguageControllerIndex200Item;
 
 interface LanguagesCache {
 	languages: ProgrammingLanguageDto[];

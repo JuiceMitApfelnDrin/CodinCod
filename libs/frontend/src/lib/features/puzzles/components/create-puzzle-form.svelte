@@ -3,11 +3,13 @@
 	import { type SuperValidated, superForm } from "sveltekit-superforms";
 	import { zod4Client } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
-	import { createPuzzleSchema, POST, type CreatePuzzle } from "$lib/types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/stores";
-	import { testIds } from "$lib/types";
+	import type { CreatePuzzle } from "$lib/types/core/puzzle/schema/puzzle-entity.schema.js";
+	import { createPuzzleSchema } from "$lib/types/core/puzzle/schema/puzzle-entity.schema.js";
+	import { POST } from "$lib/types/utils/constants/http-methods.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	let {
 		data

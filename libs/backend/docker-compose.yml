@@ -11,7 +11,7 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./libs/backend:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -48,7 +48,6 @@ services:
     networks:
       - codincod_network
 
-  # MongoDB for migration period
   mongodb:
     image: mongo
     container_name: codincod_mongodb
@@ -63,7 +62,6 @@ services:
     networks:
       - codincod_network
 
-  # Redis for caching and rate limiting
   redis:
     image: redis:8-alpine
     container_name: codincod_redis

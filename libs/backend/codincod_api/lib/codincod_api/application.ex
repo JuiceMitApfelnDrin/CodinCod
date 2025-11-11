@@ -12,6 +12,8 @@ defmodule CodincodApi.Application do
       CodincodApi.Repo,
       {DNSCluster, query: Application.get_env(:codincod_api, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: CodincodApi.PubSub},
+      # Phoenix.Presence for real-time player tracking in multiplayer
+      CodincodApiWeb.Presence,
       {Finch, name: CodincodApiFinch},
       # Start a worker by calling: CodincodApi.Worker.start_link(arg)
       # {CodincodApi.Worker, arg},

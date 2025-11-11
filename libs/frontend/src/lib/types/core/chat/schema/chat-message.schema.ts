@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
-import { CHAT_MESSAGE_CONFIG } from "../config/chat-message-config.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
+import { CHAT_MESSAGE_CONFIG } from "../config/chat-message-config.js";
 
 export const chatMessageSchema = z.object({
 	_id: objectIdSchema.optional(),
@@ -10,7 +10,7 @@ export const chatMessageSchema = z.object({
 		.string()
 		.min(CHAT_MESSAGE_CONFIG.minChatMessageLength)
 		.max(CHAT_MESSAGE_CONFIG.maxChatMessageLength),
-	createdAt: acceptedDateSchema,
+	createdAt: acceptedDateSchema
 });
 
 export type ChatMessage = z.infer<typeof chatMessageSchema>;

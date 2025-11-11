@@ -424,8 +424,6 @@ defmodule CodincodApiWeb.GameController do
   end
 
   defp validate_can_join(%Game{players: players}, user_id) do
-    # Note: max_players is not in schema, so we just check if already joined
-    # You may need to add max_players field to games table if needed
     cond do
       Enum.any?(players, fn p -> p.user_id == user_id end) ->
         {:error, :already_joined}

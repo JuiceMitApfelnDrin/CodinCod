@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { keymap, type PreferencesDto, type PuzzleLanguage } from "$lib/types";
 	import { preferences } from "@/stores/preferences.store";
+	import type { PreferencesPayload } from "@/api/generated/schemas";
 	import type CodemirrorWrapperType from "#/external-wrapper/codemirror-wrapper.svelte";
 	import type { LanguageSupport, StreamLanguage } from "@codemirror/language";
+	import { keymap } from "$lib/types/core/preferences/config/editor-config.js";
 
 	const CodemirrorWrapper = import(
 		"#/external-wrapper/codemirror-wrapper.svelte"
@@ -17,7 +18,7 @@
 	}: {
 		readonly?: boolean;
 		value?: string | undefined;
-		language?: PuzzleLanguage | undefined;
+		language?: string | undefined;
 	} = $props();
 
 	async function getEditorTheme() {
@@ -27,7 +28,7 @@
 
 	async function getEditorConfig(
 		language: string,
-		preferences: PreferencesDto | null
+		preferences: PreferencesPayload | null
 	) {
 		const languageExtensions = await getLanguageExtensions(language);
 		const keymapExtension = await getKeymapExtensions(
@@ -76,7 +77,7 @@
 	}
 
 	async function getLanguageExtensions(
-		language: PuzzleLanguage
+		language: string
 	): Promise<LanguageSupport[] | StreamLanguage<unknown>[]> {
 		switch (language) {
 			case "javascript": {

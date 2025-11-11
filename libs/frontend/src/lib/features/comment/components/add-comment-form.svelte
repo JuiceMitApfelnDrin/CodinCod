@@ -6,14 +6,12 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Textarea from "@/components/ui/textarea/textarea.svelte";
 	import { codincodApiWebPuzzleCommentControllerCreate } from "@/api/generated/default/default";
-	import {
-		COMMENT_CONFIG,
-		commentTypeEnum,
-		type CommentDto,
-		type CommentType,
-		type ObjectId
-	} from "$lib/types";
-	import { testIds } from "$lib/types";
+	import type { CommentType } from "$lib/types/core/comment/schema/comment-type.schema.js";
+	import type { ObjectId } from "$lib/types/core/common/schema/object-id.js";
+	import type { CommentDto } from "$lib/types/core/comment/schema/comment-dto.schema.js";
+	import { commentTypeEnum } from "$lib/types/core/comment/enum/comment-type-enum.js";
+	import { COMMENT_CONFIG } from "$lib/types/core/comment/config/comment-config.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	let {
 		commentType,

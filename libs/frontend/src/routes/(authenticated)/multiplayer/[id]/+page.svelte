@@ -13,46 +13,82 @@
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import * as Resizable from "@/components/ui/resizable";
 	import { buildWebSocketUrl } from "@/config/websocket";
-	import { codincodApiWebGameControllerSubmitCode } from "@/api/generated/games/games";
+	import {
+		codincodApiWebGameControllerSubmitCode,
+		codincodApiWebGameControllerShow,
+		codincodApiWebGameControllerJoin
+	} from "@/api/generated/games/games";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import StandingsTable from "@/features/game/standings/components/standings-table.svelte";
 	import PlayPuzzle from "@/features/puzzles/components/play-puzzle.svelte";
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
 	import { currentTime } from "@/stores/current-time.store";
-	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
+	import { logger } from "@/utils/debug-logger";
+	import { PhoenixSocketManager } from "@/websocket/phoenix-socket-manager.svelte";
 	import {
 		WEBSOCKET_STATES,
 		type WebSocketState
 	} from "@/websocket/websocket-constants";
 	import dayjs from "dayjs";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
+	import { httpResponseCodes } from "$lib/types/core/common/enum/http-response-codes.js";
+	import { isAuthor } from "$lib/types/utils/functions/is-author.js";
+	import { isString } from "$lib/types/utils/functions/is-string.js";
+	import { getUserIdFromUser } from "$lib/types/utils/functions/get-user-id-from-user.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 	import {
-		frontendUrls,
-		httpResponseCodes,
-		isAuthor,
-		isString,
-		isSubmissionDto,
-		isUserDto,
-		SUBMISSION_BUFFER_IN_MILLISECONDS,
 		webSocketUrls,
-		type GameDto,
-		type PuzzleDto,
-		type SubmissionDto,
-		type UserDto,
-		getUserIdFromUser,
-		type ChatMessage,
-		isGameResponse,
-		gameEventEnum,
-		type GameRequest,
-		type GameResponse
-	} from "$lib/types";
-	import { testIds } from "$lib/types";
+		phoenixChannels
+	} from "$lib/types/core/common/config/web-socket-urls.js";
+	import { SUBMISSION_BUFFER_IN_MILLISECONDS } from "$lib/types/core/game/config/game-config.js";
+	import { type GameResponse } from "$lib/api/generated/schemas/gameResponse.js";
+	import { type GameResponsePlayersItem } from "$lib/api/generated/schemas/gameResponsePlayersItem.js";
+	import { type PuzzleResponse } from "$lib/api/generated/schemas/puzzleResponse.js";
+	import { type SubmissionResponse } from "$lib/api/generated/schemas/submissionResponse.js";
+	import { type UserShowResponse } from "$lib/api/generated/schemas/userShowResponse.js";
+	import { type ChatMessage } from "$lib/types/core/chat/schema/chat-message.schema.js";
+	import {
+		GAME_CHANNEL_SERVER_EVENTS,
+		GAME_CHANNEL_CLIENT_EVENTS
+	} from "$lib/types/core/websocket/config/game-channel-events.js";
+	import {
+		validators,
+		type PlayerOnlinePayload,
+		type PlayerCodeUpdatedPayload,
+		type PlayerSubmittedPayload,
+		type PlayerReadyPayload,
+		type ChatMessageReceivedPayload,
+		type GameStateUpdatedPayload
+	} from "$lib/types/core/websocket/schema/game-channel-payloads.schema.js";
+
+	// Type aliases for better readability
+	type GameDto = GameResponse;
+	type PuzzleDto = PuzzleResponse;
+	type SubmissionDto = SubmissionResponse;
+	type UserDto = UserShowResponse;
+
+	// Access layout data which includes wsToken for WebSocket authentication
+	let { data } = $props();
+
+	// Validation functions
+	function isSubmissionDto(data: unknown): data is SubmissionDto {
+		return typeof data === "object" && data !== null && "id" in data;
+	}
+
+	function isUserDto(data: unknown): data is UserDto {
+		return typeof data === "object" && data !== null && "user" in data;
+	}
 
 	function isUserIdInUserList(
 		userId: string,
-		players: (UserDto | string)[] = []
+		players: (UserDto | string | GameResponsePlayersItem)[] = []
 	): boolean {
-		return players.some((player) => getUserIdFromUser(player) === userId);
+		return players.some((player) => {
+			if (typeof player === "string") return player === userId;
+			if ("id" in player && player.id) return player.id === userId;
+			return getUserIdFromUser(player) === userId;
+		});
 	}
 
 	const gameIdParam = page.params.id;
@@ -65,80 +101,199 @@
 
 	let isGameOver = $state(false);
 
-	let game: GameDto | undefined = $state();
-	let puzzle: PuzzleDto | undefined = $state();
+	let game: GameResponse | undefined = $state();
+	let puzzle: PuzzleResponse | undefined = $state();
 	let errorMessage: string | undefined = $state();
 	let chatMessages: ChatMessage[] = $state([]);
 	const playerLanguages: Record<string, string> = $state({});
 	let connectionState = $state<WebSocketState>(WEBSOCKET_STATES.DISCONNECTED);
+	let onlinePlayers = $state<Set<string>>(new Set());
 
-	function handleGameMessage(data: GameResponse) {
-		const { event } = data;
+	/**
+	 * Handle incoming Phoenix Channel events
+	 */
+	function handleGameMessage(event: string, payload: unknown) {
+		logger.ws("Received game event", { event, payload });
 
 		switch (event) {
-			case gameEventEnum.OVERVIEW_GAME:
-				{
-					game = data.game;
-
-					if (data.puzzle) {
-						puzzle = data.puzzle;
+			case GAME_CHANNEL_SERVER_EVENTS.PRESENCE_STATE: {
+				// Full presence state on join
+				logger.ws("Received presence_state", payload);
+				updatePresenceFromState(payload);
+				break;
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.PRESENCE_DIFF: {
+				// Incremental presence updates
+				logger.ws("Received presence_diff", payload);
+				updatePresenceFromDiff(payload);
+				break;
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.PLAYER_ONLINE: {
+				if (validators.playerOnline(payload)) {
+					logger.ws(`Player ${payload.username} came online`);
+				} else {
+					logger.error("Invalid player_online payload", payload);
+				}
+				break;
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.PLAYER_CODE_UPDATED: {
+				if (validators.playerCodeUpdated(payload)) {
+					if (payload.language) {
+						playerLanguages[payload.username] = payload.language;
 					}
+				} else {
+					logger.error("Invalid player_code_updated payload", payload);
 				}
 				break;
-			case gameEventEnum.NONEXISTENT_GAME:
-				errorMessage = data.message;
-				break;
-			case gameEventEnum.FINISHED_GAME:
-				{
-					game = data.game;
-					isGameOver = true;
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.PLAYER_SUBMITTED: {
+				if (validators.playerSubmitted(payload)) {
+					logger.ws(`Player ${payload.username} submitted`);
+					// Reload game state to get updated submissions
+					loadGameState();
+				} else {
+					logger.error("Invalid player_submitted payload", payload);
 				}
 				break;
-			case gameEventEnum.SEND_MESSAGE:
-				{
-					chatMessages = [...chatMessages, data.chatMessage];
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.PLAYER_READY: {
+				if (validators.playerReady(payload)) {
+					logger.ws(`Player ${payload.username} is ready`);
+				} else {
+					logger.error("Invalid player_ready payload", payload);
 				}
 				break;
-			case gameEventEnum.CHANGE_LANGUAGE:
-				{
-					playerLanguages[data.username] = data.language;
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.CHAT_MESSAGE: {
+				if (validators.chatMessageReceived(payload)) {
+					const chatMessage: ChatMessage = {
+						message: payload.message,
+						username: payload.username,
+						createdAt: payload.timestamp || new Date().toISOString()
+					};
+					chatMessages = [...chatMessages, chatMessage];
+				} else {
+					logger.error("Invalid chat_message payload", payload);
 				}
 				break;
-			case gameEventEnum.ERROR:
-				{
-					console.error(data.message);
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.GAME_STATE_UPDATED: {
+				if (validators.gameStateUpdated(payload)) {
+					// Game state changed, reload
+					loadGameState();
+				} else {
+					logger.error("Invalid game_state_updated payload", payload);
 				}
 				break;
+			}
+			case GAME_CHANNEL_SERVER_EVENTS.GAME_COMPLETED: {
+				// Game is complete
+				logger.ws("Game completed!", payload);
+				isGameOver = true;
+				loadGameState(); // Reload to get final state
 				break;
+			}
 			default: {
-				// Exhaustiveness check - all cases should be handled above
-				const _exhaustive: never = data as never;
-				console.error("Unhandled event type:", _exhaustive);
-				break;
+				logger.error("Unknown game event", { event, payload });
 			}
 		}
 	}
 
-	const wsManager = new WebSocketManager<GameRequest, GameResponse>({
-		url: buildWebSocketUrl(webSocketUrls.gameById(gameId)),
+	/**
+	 * Update presence state from full state (on join)
+	 */
+	function updatePresenceFromState(state: unknown) {
+		if (typeof state !== "object" || state === null) return;
+
+		const newOnline = new Set<string>();
+		for (const [userId, _presenceData] of Object.entries(state)) {
+			newOnline.add(userId);
+		}
+		onlinePlayers = newOnline;
+		logger.ws(
+			`Updated presence state: ${onlinePlayers.size} players online`,
+			Array.from(onlinePlayers)
+		);
+	}
+
+	/**
+	 * Update presence from diff (incremental updates)
+	 */
+	function updatePresenceFromDiff(diff: unknown) {
+		if (typeof diff !== "object" || diff === null) return;
+
+		const typedDiff = diff as {
+			joins?: Record<string, unknown>;
+			leaves?: Record<string, unknown>;
+		};
+
+		// Handle joins
+		if (typedDiff.joins) {
+			for (const userId of Object.keys(typedDiff.joins)) {
+				onlinePlayers.add(userId);
+				logger.ws(`Player joined: ${userId}`);
+			}
+		}
+
+		// Handle leaves
+		if (typedDiff.leaves) {
+			for (const userId of Object.keys(typedDiff.leaves)) {
+				onlinePlayers.delete(userId);
+				logger.ws(`Player left: ${userId}`);
+			}
+		}
+
+		logger.ws(
+			`Updated presence diff: ${onlinePlayers.size} players online`,
+			Array.from(onlinePlayers)
+		);
+	}
+
+	/**
+	 * Load game state from backend
+	 */
+	async function loadGameState() {
+		try {
+			const gameResponse = await codincodApiWebGameControllerShow(gameId);
+
+			// The API now returns the game object directly
+			game = gameResponse;
+
+			// Puzzle is nested within the game response
+			if (gameResponse.puzzle) {
+				puzzle = gameResponse.puzzle;
+			}
+
+			logger.ws("Game state loaded", { game, puzzle });
+		} catch (error) {
+			logger.error("Failed to load game state", error);
+			errorMessage = "Failed to load game state";
+		}
+	}
+
+	const wsManager = new PhoenixSocketManager({
+		url: buildWebSocketUrl(webSocketUrls.ROOT),
+		topic: phoenixChannels.game(gameId),
+		params: {
+			userId: $authenticatedUserInfo?.userId
+			// No token needed - browser automatically sends HTTP-only cookies
+		},
 		onMessage: handleGameMessage,
 		onStateChange: (state) => {
 			connectionState = state;
-			if (state === "connected") {
-				// Automatically send join event when connected
-				sendGameMessage({
-					event: gameEventEnum.JOIN_GAME
-				});
-			}
 		},
-		validateResponse: isGameResponse
+		onJoinError: (reason) => {
+			errorMessage = reason;
+		}
 	});
 
-	if (browser) {
-		wsManager.connect();
-	}
-
+	// Load initial game state and connect WebSocket
 	$effect(() => {
+		if (browser) {
+			loadGameState();
+			wsManager.connect();
+		}
+
 		return () => {
 			wsManager.destroy();
 		};
@@ -151,9 +306,13 @@
 		)
 	);
 
-	let endDate: Date | undefined = $derived(
-		game && dayjs(game.endTime).toDate()
-	);
+	let endDate: Date | undefined = $derived.by(() => {
+		if (!game?.startedAt || !game?.timeLimit) return undefined;
+
+		const startTime = dayjs(game.startedAt);
+
+		return startTime.add(game.timeLimit, "seconds").toDate();
+	});
 
 	$effect(() => {
 		const now = $currentTime;
@@ -164,39 +323,30 @@
 				now
 			);
 
-		const playerHasSubmitted = game?.playerSubmissions.some(
-			(submission: unknown) => {
-				if (!isSubmissionDto(submission) || !$authenticatedUserInfo?.userId) {
-					return false;
-				}
+		// TODO: Backend API doesn't yet return playerSubmissions
+		// Need to add submissions array to GameResponse schema
+		const playerHasSubmitted = false;
 
-				const playerId = getUserIdFromUser(submission.user);
-				return isAuthor(playerId, $authenticatedUserInfo?.userId);
-			}
-		);
 		isGameOver = Boolean(isGameOver || gameIsInThePast || playerHasSubmitted);
 	});
 
-	function findPlayerSubmission(playerId: string) {
-		if (!game) {
-			return undefined;
-		}
-
-		const playerSubmissions: SubmissionDto[] =
-			game.playerSubmissions?.filter((item: unknown): item is SubmissionDto =>
-				isSubmissionDto(item)
-			) ?? [];
-		return playerSubmissions?.find(
-			(submission) => getUserIdFromUser(submission.user) === playerId
-		);
+	function findPlayerSubmission(
+		playerId: string
+	): SubmissionResponse | undefined {
+		// TODO: Backend API doesn't yet return playerSubmissions
+		// Need to add submissions array to GameResponse schema
+		return undefined;
 	}
 
 	async function onPlayerSubmitCode(submissionId: string) {
 		if (!isGameOver && $authenticatedUserInfo) {
 			await codincodApiWebGameControllerSubmitCode(gameId, { submissionId });
 
-			sendGameMessage({
-				event: gameEventEnum.SUBMITTED_PLAYER
+			// Notify other players via WebSocket
+			wsManager.push(GAME_CHANNEL_CLIENT_EVENTS.SUBMISSION_RESULT, {
+				status: "submitted",
+				executionTime: 0,
+				submissionId
 			});
 
 			isGameOver = true;
@@ -208,33 +358,30 @@
 			return;
 		}
 
-		const newChatMessage: ChatMessage = {
-			createdAt: new Date().toISOString(),
-			message: composedMessage,
-			username: $authenticatedUserInfo?.username
-		};
-
-		sendGameMessage({
-			chatMessage: newChatMessage,
-			event: gameEventEnum.SEND_MESSAGE
+		// Send chat message via Phoenix channel
+		wsManager.push(GAME_CHANNEL_CLIENT_EVENTS.CHAT_MESSAGE, {
+			message: composedMessage
 		});
 	}
 
 	function onPlayerChangeLanguage(language: string) {
-		sendGameMessage({
-			event: gameEventEnum.CHANGE_LANGUAGE,
+		// Notify other players of language change
+		wsManager.push(GAME_CHANNEL_CLIENT_EVENTS.CODE_UPDATE, {
+			code: "", // Code will be sent separately
 			language
 		});
 	}
 
-	function sendGameMessage(data: GameRequest) {
-		wsManager.send(data);
-	}
-
-	function joinGame() {
-		sendGameMessage({
-			event: gameEventEnum.JOIN_GAME
-		});
+	async function joinGame() {
+		try {
+			const gameResponse = await codincodApiWebGameControllerJoin(gameId);
+			game = gameResponse;
+			// Reload full game state
+			await loadGameState();
+		} catch (error) {
+			logger.error("Failed to join game", error);
+			errorMessage = "Failed to join game";
+		}
 	}
 </script>
 
@@ -297,11 +444,9 @@
 
 		{#if !game}
 			<Loader />
-		{:else if game.playerSubmissions}
-			<StandingsTable bind:game />
-			<!-- TODO: this is absolute shit, wtf are you doing? filtering this shit instead of something far more simple? search that simple solution! thinkge  -->
 		{:else}
-			<P>No player submissions for this game</P>
+			<!-- TODO: Backend API doesn't yet return playerSubmissions -->
+			<P>Game over! Check back soon for full standings.</P>
 		{/if}
 	</Container>
 {:else if isNotPlayerInGame}
@@ -330,27 +475,27 @@
 			>
 				<div class="flex items-center gap-2">
 					<H2>Standings - <WorkInProgress /></H2>
-					<ConnectionStatus {wsManager} state={connectionState} />
+
+					{#if wsManager}
+						<ConnectionStatus {wsManager} state={connectionState} />
+					{/if}
 				</div>
 
 				{#if game.players}
 					<ul data-testid={testIds.GAME_COMPONENT_PLAYER_RANKINGS}>
 						{#each game.players as player}
-							<li>
-								{#if isUserDto(player)}
-									{@const playerSubmission = findPlayerSubmission(player._id)}
-									{@const submissionLanguage =
-										playerSubmission?.programmingLanguage
-											? isString(playerSubmission.programmingLanguage)
-												? playerSubmission.programmingLanguage
-												: playerSubmission.programmingLanguage.language
-											: (playerLanguages[player.username] ?? "???")}
-									<UserHoverCard
-										username={player.username}
-									/>{` - using ${submissionLanguage} - ${playerSubmission?.result.result ?? "still busy solving the puzzle"}!`}
-								{:else if isString(player)}
-									{player}
-								{/if}
+							{@const playerId = player.id ?? ""}
+							{@const playerSubmission = findPlayerSubmission(playerId)}
+							{@const username = player.username ?? "Unknown"}
+							{@const submissionLanguage = playerLanguages[username] ?? "???"}
+							{@const isOnline = onlinePlayers.has(playerId)}
+							<li class="flex items-center gap-2">
+								<span class={isOnline ? "text-green-500" : "text-gray-400"}>
+									{isOnline ? "●" : "○"}
+								</span>
+								<UserHoverCard
+									{username}
+								/>{` - using ${submissionLanguage} - ${playerSubmission?.result?.result ?? "still busy solving the puzzle"}!`}
 							</li>
 						{/each}
 					</ul>

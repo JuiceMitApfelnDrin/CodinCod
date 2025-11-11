@@ -19,7 +19,7 @@ export const commentEntitySchema = z.object({
 	updatedAt: acceptedDateSchema.optional(),
 	commentType: commentTypeSchema,
 	comments: z.array(objectIdSchema),
-	parentId: objectIdSchema,
+	parentId: objectIdSchema
 });
 
 export type CommentEntity = z.infer<typeof commentEntitySchema>;

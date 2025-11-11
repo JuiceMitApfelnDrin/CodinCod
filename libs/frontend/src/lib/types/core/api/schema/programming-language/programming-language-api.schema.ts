@@ -1,13 +1,13 @@
 import { z } from "zod";
-import { programmingLanguageDtoSchema } from "../../../programming-language/schema/programming-language-dto.schema.js";
-import { objectIdSchema } from "../../../common/schema/object-id.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
+import { objectIdSchema } from "../../../common/schema/object-id.js";
+import { programmingLanguageDtoSchema } from "../../../programming-language/schema/programming-language-dto.schema.js";
 
 /**
  * GET /programming-language - List all available programming languages
  */
 export const getProgrammingLanguagesResponseSchema = z.array(
-	programmingLanguageDtoSchema,
+	programmingLanguageDtoSchema
 );
 
 export type GetProgrammingLanguagesResponse = z.infer<
@@ -18,7 +18,7 @@ export type GetProgrammingLanguagesResponse = z.infer<
  * GET /programming-language/:id - Get programming language by ID
  */
 export const getProgrammingLanguageByIdRequestSchema = z.object({
-	id: objectIdSchema,
+	id: objectIdSchema
 });
 
 export const getProgrammingLanguageByIdResponseSchema =

@@ -1,15 +1,13 @@
+import { registerSchema } from "$lib/types/core/authentication/schema/register.schema.js";
+import { ERROR_MESSAGES } from "$lib/types/core/common/config/error-messages.js";
+import { httpResponseCodes } from "$lib/types/core/common/enum/http-response-codes.js";
+import { codincodApiWebAuthControllerRegister } from "@/api/generated/auth/auth.js";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
+import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
-import {
-	ERROR_MESSAGES,
-	frontendUrls,
-	httpResponseCodes,
-	registerSchema
-} from "$lib/types";
 import type { RequestEvent } from "./$types.js";
-import { codincodApiWebAuthControllerRegister } from "@/api/generated/auth/auth.js";
 
 export async function load() {
 	const form = await superValidate(zod4(registerSchema));

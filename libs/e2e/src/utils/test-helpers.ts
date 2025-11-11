@@ -1,4 +1,6 @@
-import { Browser, BrowserContext, Page } from '@playwright/test';
+import type { Browser, BrowserContext, Page } from "@playwright/test";
+import { USERNAME_CONFIG } from "@codincod/shared/constants/username-config";
+import { v7 } from "uuid";
 
 /**
  * Helper class to manage multiple browser contexts for multiplayer tests
@@ -12,13 +14,15 @@ export class MultiplayerTestHelper {
 	/**
 	 * Create a new player context
 	 */
-	async createPlayer(playerName: string): Promise<{ context: BrowserContext; page: Page }> {
+	async createPlayer(
+		playerName: string,
+	): Promise<{ context: BrowserContext; page: Page }> {
 		const context = await this.browser.newContext();
 		const page = await context.newPage();
-		
+
 		this.contexts.set(playerName, context);
 		this.pages.set(playerName, page);
-		
+
 		return { context, page };
 	}
 
@@ -64,9 +68,12 @@ export class MultiplayerTestHelper {
 
 /**
  * Generate unique test username
+ * Only uses characters allowed by backend: A-Za-z0-9_-
+ * Ensures length is between 3-20 characters (backend validation)
+ * Format: t_<timestamp><random> (e.g., "t_1762871191_a3f9")
  */
-export function generateTestUsername(prefix: string = 'test'): string {
-	return `${prefix}_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+export function generateTestUsername(): string {
+	return `${v7()}`.substring(0, USERNAME_CONFIG.maxUsernameLength);
 }
 
 /**
@@ -75,17 +82,17 @@ export function generateTestUsername(prefix: string = 'test'): string {
 export async function waitFor(
 	condition: () => Promise<boolean>,
 	timeout: number = 10000,
-	interval: number = 500
+	interval: number = 500,
 ): Promise<boolean> {
 	const startTime = Date.now();
-	
+
 	while (Date.now() - startTime < timeout) {
 		if (await condition()) {
 			return true;
 		}
-		await new Promise(resolve => setTimeout(resolve, interval));
+		await new Promise((resolve) => setTimeout(resolve, interval));
 	}
-	
+
 	return false;
 }
 
@@ -95,22 +102,38 @@ export async function waitFor(
 export async function retryWithBackoff<T>(
 	fn: () => Promise<T>,
 	maxRetries: number = 3,
-	baseDelay: number = 1000
+	baseDelay: number = 1000,
 ): Promise<T> {
 	let lastError: Error | undefined;
-	
+
 	for (let i = 0; i < maxRetries; i++) {
 		try {
 			return await fn();
 		} catch (error) {
 			lastError = error as Error;
-			
+
 			if (i < maxRetries - 1) {
-				const delay = baseDelay * Math.pow(2, i);
-				await new Promise(resolve => setTimeout(resolve, delay));
+				const delay = baseDelay * 2 ** i;
+				await new Promise((resolve) => setTimeout(resolve, delay));
 			}
 		}
 	}
-	
-	throw lastError || new Error('Retry failed');
+
+	throw lastError || new Error("Retry failed");
+}
+
+/**
+ * Generate multiple unique usernames
+ *
+ * @param count - Number of usernames to generate
+ * @param prefix - Short prefix for all usernames
+ * @returns Array of unique usernames
+ */
+export function generateTestUsernames(count: number, prefix = "u"): string[] {
+	const usernames: string[] = [];
+	for (let i = 0; i < count; i++) {
+		// Add small delay to ensure unique timestamps
+		usernames.push(generateTestUsername());
+	}
+	return usernames;
 }

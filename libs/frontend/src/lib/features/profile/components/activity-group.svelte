@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import ChevronDown from "@lucide/svelte/icons/chevron-down";
-	import {
-		activityTypeEnum,
-		type AcceptedDate,
-		type Activity,
-		type ActivityType
-	} from "$lib/types";
+	import type { Activity } from "$lib/types/core/activity/schema/activity.schema.js";
+	import type { ActivityType } from "$lib/types/core/activity/enum/activity-type-enum.js";
+	import { activityTypeEnum } from "$lib/types/core/activity/enum/activity-type-enum.js";
+	import type { AcceptedDate } from "$lib/types/core/common/schema/accepted-date.js";
 
 	let {
 		activities = [],

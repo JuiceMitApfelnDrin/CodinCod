@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { reviewItemTypeEnum } from "../enum/review-item-type-enum.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
+import { reviewItemTypeEnum } from "../enum/review-item-type-enum.js";
 
 /**
  * Unified review item that can represent different types of items needing moderation
@@ -13,7 +13,7 @@ export const reviewItemSchema = z.object({
 		reviewItemTypeEnum.REPORTED_PUZZLE,
 		reviewItemTypeEnum.REPORTED_USER,
 		reviewItemTypeEnum.REPORTED_COMMENT,
-		reviewItemTypeEnum.REPORTED_GAME_CHAT,
+		reviewItemTypeEnum.REPORTED_GAME_CHAT
 	]),
 	title: z.string(),
 	description: z.string().optional(),
@@ -33,7 +33,7 @@ export const reviewItemSchema = z.object({
 	// For game chat: game ID
 	gameId: objectIdSchema.optional(),
 	// For game chat: context messages
-	contextMessages: z.array(z.any()).optional(),
+	contextMessages: z.array(z.any()).optional()
 });
 export type ReviewItem = z.infer<typeof reviewItemSchema>;
 
@@ -47,10 +47,10 @@ export const reviewItemQuerySchema = z.object({
 			reviewItemTypeEnum.REPORTED_PUZZLE,
 			reviewItemTypeEnum.REPORTED_USER,
 			reviewItemTypeEnum.REPORTED_COMMENT,
-			reviewItemTypeEnum.REPORTED_GAME_CHAT,
+			reviewItemTypeEnum.REPORTED_GAME_CHAT
 		])
 		.optional(),
 	page: z.number().int().positive().optional(),
-	limit: z.number().int().positive().optional(),
+	limit: z.number().int().positive().optional()
 });
 export type ReviewItemQuery = z.infer<typeof reviewItemQuerySchema>;

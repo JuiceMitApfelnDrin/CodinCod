@@ -4,16 +4,16 @@ export const webSocketUrls = {
 	WAITING_ROOM: "/socket",
 	// Phoenix channels use the pattern: channel_name:identifier
 	// The actual channel join happens after WebSocket connection
-	gameById: (id: string) => `/socket`,
+	gameById: (id: string) => `/socket`
 } as const;
 
 export const webSocketParams = {
-	ID: ":id",
+	ID: ":id"
 };
 
 // Phoenix channel names (used after WebSocket connection)
 export const phoenixChannels = {
-	game: (id: string) => `game:${id}`,
+	game: (id: string) => `game:${id}`
 } as const;
 
 export type WebSocketUrl = (typeof webSocketUrls)[keyof typeof webSocketUrls];

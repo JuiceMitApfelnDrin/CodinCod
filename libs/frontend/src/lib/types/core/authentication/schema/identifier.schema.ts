@@ -7,8 +7,8 @@ export const identifierSchema = z.string().refine(
 		return isEmail(value) || isUsername(value);
 	},
 	{
-		error: "Invalid username or email",
-	},
+		error: "Invalid username or email"
+	}
 );
 
 export type Identifier = z.infer<typeof identifierSchema>;

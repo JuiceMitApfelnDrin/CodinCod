@@ -4,7 +4,7 @@ import { programmingLanguageEntitySchema } from "./programming-language-entity.s
 export const programmingLanguageDtoSchema =
 	programmingLanguageEntitySchema.omit({
 		createdAt: true,
-		updatedAt: true,
+		updatedAt: true
 	});
 
 export type ProgrammingLanguageDto = z.infer<
@@ -12,7 +12,7 @@ export type ProgrammingLanguageDto = z.infer<
 >;
 
 export function isProgrammingLanguageDto(
-	data: unknown,
+	data: unknown
 ): data is ProgrammingLanguageDto {
 	return programmingLanguageDtoSchema.safeParse(data).success;
 }

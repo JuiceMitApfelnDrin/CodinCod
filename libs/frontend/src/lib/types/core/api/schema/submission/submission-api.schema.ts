@@ -1,8 +1,8 @@
 import { z } from "zod";
+import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
+import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
 import { objectIdSchema } from "../../../common/schema/object-id.js";
 import { submissionEntitySchema } from "../../../submission/schema/submission-entity.schema.js";
-import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
-import { PAGINATION_CONFIG } from "../../../common/config/pagination.js";
 
 /**
  * POST /submission - Submit code for evaluation
@@ -12,7 +12,7 @@ export const submitCodeRequestSchema = z.object({
 	puzzleId: objectIdSchema,
 	programmingLanguageId: objectIdSchema,
 	code: z.string().min(1, "Code cannot be empty"),
-	userId: objectIdSchema, // Should come from authenticated session
+	userId: objectIdSchema // Should come from authenticated session
 });
 
 export const submitCodeResponseSchema = z
@@ -28,9 +28,9 @@ export const submitCodeResponseSchema = z
 			successRate: z.number().min(0).max(1),
 			passed: z.number().int().nonnegative(),
 			failed: z.number().int().nonnegative(),
-			total: z.number().int().positive(),
+			total: z.number().int().positive()
 		}),
-		createdAt: z.date().or(z.string()),
+		createdAt: z.date().or(z.string())
 	})
 	.or(errorResponseSchema);
 
@@ -41,7 +41,7 @@ export type SubmitCodeResponse = z.infer<typeof submitCodeResponseSchema>;
  * GET /submission/:id - Get submission by ID
  */
 export const getSubmissionByIdRequestSchema = z.object({
-	id: objectIdSchema,
+	id: objectIdSchema
 });
 
 export const getSubmissionByIdResponseSchema =
@@ -66,7 +66,7 @@ export const listSubmissionsRequestSchema = z.object({
 		.int()
 		.positive()
 		.max(PAGINATION_CONFIG.MAX_LIMIT)
-		.default(PAGINATION_CONFIG.DEFAULT_LIMIT),
+		.default(PAGINATION_CONFIG.DEFAULT_LIMIT)
 });
 
 export const listSubmissionsResponseSchema = z
@@ -75,7 +75,7 @@ export const listSubmissionsResponseSchema = z
 		page: z.number().int().positive(),
 		pageSize: z.number().int().positive(),
 		totalPages: z.number().int().nonnegative(),
-		totalItems: z.number().int().nonnegative(),
+		totalItems: z.number().int().nonnegative()
 	})
 	.or(errorResponseSchema);
 
@@ -92,7 +92,7 @@ export type ListSubmissionsResponse = z.infer<
 export const submitToGameRequestSchema = z.object({
 	gameId: objectIdSchema,
 	submissionId: objectIdSchema,
-	userId: objectIdSchema,
+	userId: objectIdSchema
 });
 
 export const submitToGameResponseSchema = z
@@ -103,10 +103,10 @@ export const submitToGameResponseSchema = z
 			.object({
 				id: objectIdSchema,
 				status: z.enum(["waiting", "in_progress", "completed"]),
-				playerCount: z.number().int().nonnegative(),
+				playerCount: z.number().int().nonnegative()
 			})
 			.optional(),
-		leaderboardPosition: z.number().int().positive().optional(),
+		leaderboardPosition: z.number().int().positive().optional()
 	})
 	.or(errorResponseSchema);
 

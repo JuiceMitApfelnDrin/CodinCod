@@ -11,7 +11,7 @@ export type GetSubmissionByIdResponse = z.infer<
 export const submitGameRequestSchema = z.object({
 	gameId: z.string(),
 	code: z.string(),
-	language: z.string(),
+	language: z.string()
 });
 export type SubmitGameRequest = z.infer<typeof submitGameRequestSchema>;
 

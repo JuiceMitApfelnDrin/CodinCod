@@ -13,28 +13,30 @@
 	import JoinByInviteDialog from "@/features/multiplayer/components/join-by-invite-dialog.svelte";
 	import { buildWebSocketUrl } from "@/config/websocket";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
-	import { WebSocketManager } from "@/websocket/websocket-manager.svelte";
+	import { PhoenixSocketManager } from "@/websocket/phoenix-socket-manager.svelte";
 	import {
 		WEBSOCKET_STATES,
 		type WebSocketState
 	} from "@/websocket/websocket-constants";
-	import {
-		frontendUrls,
-		isAuthor,
-		isWaitingRoomResponse,
-		waitingRoomEventEnum,
-		webSocketUrls,
-		type RoomOverviewResponse,
-		type RoomStateResponse,
-		type WaitingRoomRequest,
-		type WaitingRoomResponse,
-		type GameOptions,
-		type ChatMessage
-	} from "$lib/types";
-	import { testIds } from "$lib/types";
 	import { currentTime } from "@/stores/current-time.store";
 	import Chat from "@/features/chat/components/chat.svelte";
 	import { Input } from "#/ui/input";
+	import { waitingRoomEventEnum } from "$lib/types/core/game/enum/waiting-room-event-enum.js";
+	import { isAuthor } from "$lib/types/utils/functions/is-author.js";
+	import type {
+		RoomOverviewResponse,
+		RoomStateResponse,
+		WaitingRoomResponse
+	} from "$lib/types/core/game/schema/waiting-room-response.schema.js";
+	import type { WaitingRoomRequest } from "$lib/types/core/game/schema/waiting-room-request.schema.js";
+	import type { GameOptions } from "$lib/types/core/game/schema/game-options.schema.js";
+	import type { ChatMessage } from "$lib/types/core/chat/schema/chat-message.schema.js";
+	import { webSocketUrls } from "$lib/types/core/common/config/web-socket-urls.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
+
+	// Access layout data which includes wsToken for WebSocket authentication
+	let { data } = $props();
 
 	let room: RoomStateResponse | undefined = $state();
 	let rooms: RoomOverviewResponse[] = $state([]);
@@ -52,14 +54,20 @@
 	};
 
 	function updateRoomIdInUrl() {
+		const currentRoomIdInUrl = query.get(queryParamKeys.ROOM_ID);
+
 		if (room?.roomId) {
-			query.set(queryParamKeys.ROOM_ID, room.roomId);
-
-			goto(`?${query.toString()}`, { replaceState: true });
+			// Only update URL if it's different
+			if (currentRoomIdInUrl !== room.roomId) {
+				query.set(queryParamKeys.ROOM_ID, room.roomId);
+				goto(`?${query.toString()}`, { replaceState: true, keepFocus: true });
+			}
 		} else {
-			query.delete(queryParamKeys.ROOM_ID);
-
-			goto(`?${query.toString()}`, { replaceState: true });
+			// Only clear URL if there was a roomId
+			if (currentRoomIdInUrl) {
+				query.delete(queryParamKeys.ROOM_ID);
+				goto(`?${query.toString()}`, { replaceState: true, keepFocus: true });
+			}
 		}
 	}
 
@@ -70,130 +78,275 @@
 			return;
 		}
 
-		wsManager.send({
+		console.log("🔵 Auto-joining room from URL:", roomId);
+		sendLobbyMessage({
 			event: waitingRoomEventEnum.JOIN_ROOM,
 			roomId
 		});
 	}
 
-	function handleWaitingRoomMessage(data: WaitingRoomResponse) {
-		const { event } = data;
-
+	// Handle lobby-level messages (room list updates)
+	function handleLobbyMessage(event: string, data: WaitingRoomResponse) {
+		console.log("🔵 Lobby message:", event, data);
 		switch (event) {
 			case waitingRoomEventEnum.OVERVIEW_OF_ROOMS:
 				{
-					rooms = data.rooms;
+					if (data.event === waitingRoomEventEnum.OVERVIEW_OF_ROOMS) {
+						rooms = data.rooms;
+					}
 				}
 				break;
-			case waitingRoomEventEnum.OVERVIEW_ROOM:
+			case "room_created":
 				{
-					room = data.room;
+					// Server tells us to join the room we just created
+					const roomId = (data as any).roomId;
+					if (roomId) {
+						console.log("🔵 Room created, setting room state:", roomId);
+						room = {
+							roomId,
+							users: [],
+							owner: { userId: "", username: "" },
+							inviteCode: roomId
+						} as any;
+					}
 				}
 				break;
-			case waitingRoomEventEnum.CHAT_MESSAGE:
+			case waitingRoomEventEnum.JOIN_ROOM:
 				{
-					chatMessages.push({
-						username: data.username,
-						message: data.message,
-						createdAt: new Date(data.createdAt)
-					});
-
-					chatMessages = chatMessages; // Trigger reactivity
-				}
-				break;
-			case waitingRoomEventEnum.START_GAME:
-				{
-					pendingGameStart = {
-						gameUrl: data.gameUrl,
-						startTime: new Date(data.startTime)
-					};
-				}
-				break;
-			case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
-				{
-					errorMessage = data.message;
-				}
-				break;
-			case waitingRoomEventEnum.ERROR:
-				{
-					console.error(data.message);
-
-					// If we got an error about room not found, clear the URL param
-					if (
-						data.message.includes("Room") &&
-						data.message.includes("not found")
-					) {
-						query.delete(queryParamKeys.ROOM_ID);
-						goto(`?${query.toString()}`, { replaceState: true });
+					// Server acknowledges join_room, telling us the roomId to connect to
+					const roomId = (data as any).roomId;
+					if (roomId) {
+						console.log("🔵 Join approved, setting room state:", roomId);
+						room = {
+							roomId,
+							users: [],
+							owner: { userId: "", username: "" },
+							inviteCode: roomId
+						} as any;
 					}
 				}
 				break;
 			default: {
-				// Exhaustiveness check - all cases should be handled above
-				const _exhaustive: never = data as never;
-				console.error("Unhandled event type:", _exhaustive);
-				break;
+				console.log("🔵 Unhandled lobby event:", event);
 			}
 		}
 	}
-	const wsManager = new WebSocketManager<
-		WaitingRoomRequest,
-		WaitingRoomResponse
-	>({
-		url: buildWebSocketUrl(webSocketUrls.WAITING_ROOM),
-		onMessage: handleWaitingRoomMessage,
-		onStateChange: (state) => {
-			connectionState = state;
-			if (state === "connected") {
-				checkForRoomId();
-			} else if (state === "disconnected") {
-				// Only clear room state, keep URL param for sharing/rejoining
-				room = undefined;
-			}
-		},
-		validateResponse: isWaitingRoomResponse
-	});
 
-	if (browser) {
-		wsManager.connect();
+	// Handle room-specific messages (player updates, chat, game start)
+	function handleRoomMessage(event: string, data: WaitingRoomResponse) {
+		console.log("🟢 Room message:", event, data);
+		switch (event) {
+			case waitingRoomEventEnum.OVERVIEW_ROOM:
+				{
+					if (data.event === waitingRoomEventEnum.OVERVIEW_ROOM) {
+						// Update room state from room-specific channel
+						room = data.room;
+					}
+				}
+				break;
+			case waitingRoomEventEnum.CHAT_MESSAGE:
+				{
+					if (data.event === waitingRoomEventEnum.CHAT_MESSAGE) {
+						chatMessages.push({
+							username: data.username,
+							message: data.message,
+							createdAt: new Date(data.createdAt)
+						});
+
+						chatMessages = chatMessages; // Trigger reactivity
+					}
+				}
+				break;
+			case waitingRoomEventEnum.START_GAME:
+				{
+					if (data.event === waitingRoomEventEnum.START_GAME) {
+						console.log("🎮 START_GAME event received:", {
+							gameUrl: data.gameUrl,
+							startTime: data.startTime,
+							parsed: new Date(data.startTime).toISOString()
+						});
+						pendingGameStart = {
+							gameUrl: data.gameUrl,
+							startTime: new Date(data.startTime)
+						};
+						console.log("🎮 pendingGameStart set:", pendingGameStart);
+					}
+				}
+				break;
+			case waitingRoomEventEnum.NOT_ENOUGH_PUZZLES:
+				{
+					if (data.event === waitingRoomEventEnum.NOT_ENOUGH_PUZZLES) {
+						errorMessage = data.message;
+					}
+				}
+				break;
+			case waitingRoomEventEnum.ERROR:
+				{
+					if (data.event === waitingRoomEventEnum.ERROR) {
+						console.error(data.message);
+
+						// If we got an error about room not found, clear the URL param
+						if (
+							data.message.includes("Room") &&
+							data.message.includes("not found")
+						) {
+							query.delete(queryParamKeys.ROOM_ID);
+							goto(`?${query.toString()}`, { replaceState: true });
+						}
+					}
+				}
+				break;
+			default: {
+				console.log("🟢 Unhandled room event:", event);
+			}
+		}
 	}
 
+	let lobbyWsManager: PhoenixSocketManager | undefined = $state();
+	let roomWsManager: PhoenixSocketManager | undefined = $state();
+
+	// Create lobby manager for browsing rooms
+	function createLobbyManager() {
+		console.log("🔵 Creating lobby manager");
+		return new PhoenixSocketManager({
+			url: buildWebSocketUrl(webSocketUrls.ROOT),
+			topic: "waiting_room:lobby",
+			params: {},
+			onMessage: handleLobbyMessage,
+			onStateChange: (state) => {
+				connectionState = state;
+				if (state === "connected") {
+					checkForRoomId();
+				}
+			}
+		});
+	}
+
+	// Create room manager for specific room
+	function createRoomManager(roomId: string) {
+		console.log("🟢 Creating room manager for:", roomId);
+		return new PhoenixSocketManager({
+			url: buildWebSocketUrl(webSocketUrls.ROOT),
+			topic: `waiting_room:${roomId}`,
+			params: {},
+			onMessage: handleRoomMessage,
+			onStateChange: (state) => {
+				console.log("🟢 Room channel state:", state);
+			}
+		});
+	}
+
+	// Connect to lobby when component mounts
 	$effect(() => {
-		if (room?.roomId) updateRoomIdInUrl();
+		console.log("🔥 Lobby effect running! browser =", browser);
+		if (browser && !lobbyWsManager) {
+			lobbyWsManager = createLobbyManager();
+			lobbyWsManager.connect().catch((err) => {
+				console.error("🔥 Failed to connect to lobby:", err);
+			});
+		}
+
+		return () => {
+			console.log("🔥 Cleaning up lobby connection");
+			lobbyWsManager?.destroy();
+			lobbyWsManager = undefined;
+		};
+	});
+
+	// Connect to room-specific channel when joining a room
+	$effect(() => {
+		if (!browser || !room?.roomId) {
+			// No room, disconnect if connected
+			if (roomWsManager) {
+				console.log("🟢 No room, cleaning up room connection");
+				roomWsManager.destroy();
+				roomWsManager = undefined;
+			}
+			return;
+		}
+
+		const roomId = room.roomId;
+
+		// Connect to room channel if not already connected
+		if (!roomWsManager) {
+			console.log("🟢 Connecting to room channel:", roomId);
+			roomWsManager = createRoomManager(roomId);
+			roomWsManager.connect().catch((err) => {
+				console.error("� Failed to connect to room:", err);
+			});
+		}
+
+		return () => {
+			// Cleanup happens when room becomes undefined
+		};
+	});
+
+	// Update URL when room changes
+	$effect(() => {
+		if (room?.roomId) {
+			updateRoomIdInUrl();
+		}
 	});
 
 	$effect(() => {
-		if (!pendingGameStart) return;
+		if (!pendingGameStart) {
+			console.log("⏱️ pendingGameStart $effect: no pending game");
+			return;
+		}
 
 		const now = $currentTime.getTime();
 		const startTime = new Date(pendingGameStart.startTime).getTime();
+		const timeUntilStart = startTime - now;
+
+		console.log("⏱️ pendingGameStart $effect:", {
+			now: new Date(now).toISOString(),
+			startTime: new Date(startTime).toISOString(),
+			timeUntilStart,
+			shouldNavigate: now >= startTime,
+			gameUrl: pendingGameStart.gameUrl
+		});
 
 		if (now >= startTime) {
-			goto(pendingGameStart.gameUrl);
-		}
-	});
+			// Clear room state before navigation to prevent loops
+			const gameUrl = pendingGameStart.gameUrl;
+			console.log("⏱️ NAVIGATING TO GAME:", gameUrl);
+			room = undefined;
+			pendingGameStart = undefined;
+			chatMessages = [];
 
-	$effect(() => {
-		return () => {
-			wsManager.destroy();
-		};
+			goto(gameUrl);
+		}
 	});
 
 	let query = new URLSearchParams($page.url.searchParams.toString());
 
-	function sendWaitingRoomMessage(data: WaitingRoomRequest) {
-		wsManager.send(data);
+	function sendLobbyMessage(data: WaitingRoomRequest) {
+		if (!lobbyWsManager) {
+			console.error("Lobby manager not connected");
+			return;
+		}
+		console.log("🔵 Sending lobby message:", data);
+		lobbyWsManager.push(data.event, data);
+	}
+
+	function sendRoomMessage(data: WaitingRoomRequest) {
+		if (!roomWsManager) {
+			console.error("Room manager not connected");
+			return;
+		}
+		console.log("🟢 Sending room message:", data);
+		roomWsManager.push(data.event, data);
 	}
 
 	function handleHostRoom(options?: GameOptions) {
-		sendWaitingRoomMessage({
+		sendLobbyMessage({
 			event: waitingRoomEventEnum.HOST_ROOM,
 			...(options && { options })
 		});
 	}
 
 	function handleJoinByInvite(inviteCode: string) {
-		sendWaitingRoomMessage({
+		sendLobbyMessage({
 			event: waitingRoomEventEnum.JOIN_BY_INVITE_CODE,
 			inviteCode
 		});
@@ -210,7 +363,7 @@
 	function sendChatMessage(message: string) {
 		if (!room?.roomId) return;
 
-		sendWaitingRoomMessage({
+		sendRoomMessage({
 			event: waitingRoomEventEnum.CHAT_MESSAGE,
 			roomId: room.roomId,
 			message
@@ -241,11 +394,20 @@
 		>
 			<div class="flex items-center gap-4">
 				<H1>Multiplayer</H1>
-				<ConnectionStatus {wsManager} state={connectionState} />
+				{#if lobbyWsManager}
+					<ConnectionStatus
+						wsManager={lobbyWsManager}
+						state={connectionState}
+					/>
+				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 md:flex-row md:gap-4">
 				{#if room && room.roomId}
+					{console.log(
+						"[Multiplayer] Rendering leave button, room:",
+						room.roomId
+					)}
 					<Button
 						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_LEAVE_ROOM}
 						onclick={() => {
@@ -253,13 +415,32 @@
 								return;
 							}
 
-							sendWaitingRoomMessage({
+							const roomId = room.roomId;
+							console.log("🔴 Leaving room:", roomId);
+
+							// Send leave message to room channel
+							sendRoomMessage({
 								event: waitingRoomEventEnum.LEAVE_ROOM,
-								roomId: room.roomId
+								roomId
 							});
 
+							// Clear local state immediately
 							room = undefined;
 							chatMessages = [];
+							pendingGameStart = undefined;
+
+							// Disconnect from room channel
+							if (roomWsManager) {
+								roomWsManager.destroy();
+								roomWsManager = undefined;
+							}
+
+							// Clear URL to prevent auto-rejoin
+							query.delete(queryParamKeys.ROOM_ID);
+							goto(`?${query.toString()}`, {
+								replaceState: true,
+								keepFocus: true
+							});
 						}}
 						disabled={Boolean(pendingGameStart)}
 					>
@@ -273,7 +454,8 @@
 									return;
 								}
 
-								sendWaitingRoomMessage({
+								console.log("🎮 Starting game:", room.roomId);
+								sendRoomMessage({
 									event: waitingRoomEventEnum.START_GAME,
 									roomId: room.roomId
 								});
@@ -283,7 +465,7 @@
 							Start game
 						</Button>
 					{/if}
-				{:else}
+				{:else if connectionState === WEBSOCKET_STATES.CONNECTED}
 					<Button
 						data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_HOST_ROOM}
 						onclick={() => handleHostRoom()}
@@ -349,6 +531,7 @@
 						<p class="mb-2 text-sm font-medium">Invite Code</p>
 						<div class="flex items-center gap-2">
 							<Input
+								data-testid={testIds.MULTIPLAYER_PAGE_INPUT_INVITE_CODE}
 								type={showInviteCode ? "text" : "password"}
 								value={room.inviteCode}
 								readonly
@@ -383,7 +566,10 @@
 				<div class="grid gap-4 md:grid-cols-2">
 					<div class="space-y-2">
 						<h3 class="text-lg font-semibold">Players in Room</h3>
-						<ul class="space-y-1">
+						<ul
+							class="space-y-1"
+							data-testid={testIds.MULTIPLAYER_PAGE_PLAYERS_LIST}
+						>
 							{#each room.users as user}
 								<li class="list-inside list-disc">
 									{user.username}{#if isAuthor(room.owner.userId, user.userId)}
@@ -406,13 +592,14 @@
 				</div>
 			</div>
 		{:else if rooms && rooms.length > 0}
-			<ul>
+			<ul class="grid gap-2">
 				{#each rooms as joinableRoom}
 					<li>
 						<Button
 							data-testid={testIds.MULTIPLAYER_PAGE_BUTTON_JOIN_ROOM}
 							onclick={() => {
-								sendWaitingRoomMessage({
+								console.log("🔵 Joining room:", joinableRoom.roomId);
+								sendLobbyMessage({
 									event: waitingRoomEventEnum.JOIN_ROOM,
 									roomId: joinableRoom.roomId
 								});
@@ -423,11 +610,13 @@
 					</li>
 				{/each}
 			</ul>
-		{:else}
+		{:else if connectionState === WEBSOCKET_STATES.CONNECTED}
 			<p>
 				No rooms are being hosted by other players. You can host one yourself by
 				clicking on the "host room" button.
 			</p>
+		{:else}
+			<p>Connecting to the server! One second please!</p>
 		{/if}
 	</Container>
 {/if}

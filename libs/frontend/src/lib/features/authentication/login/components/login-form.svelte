@@ -4,20 +4,18 @@
 	import { Input } from "@/components/ui/input";
 	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import {
-		loginSchema,
-		PASSWORD_CONFIG,
-		POST,
-		IDENTIFIER_CONFIG,
-		type Login
-	} from "$lib/types";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
 	import { page } from "$app/state";
-	import { testIds } from "$lib/types";
+	import type { Login } from "$lib/types/core/authentication/schema/login.schema.js";
+	import { loginSchema } from "$lib/types/core/authentication/schema/login.schema.js";
+	import { IDENTIFIER_CONFIG } from "$lib/types/core/authentication/config/identifier-config.js";
+	import { POST } from "$lib/types/utils/constants/http-methods.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 	import EyeClosed from "@lucide/svelte/icons/eye-closed";
 	import Eye from "@lucide/svelte/icons/eye";
 	import Button from "#/ui/button/button.svelte";
+	import { PASSWORD_CONFIG } from "@/types/core/authentication/config/password-config";
 
 	let {
 		data,
@@ -68,14 +66,15 @@
 				<Form.Label class="text-lg">Password</Form.Label>
 
 				<Input
-					type={showPassword ? "text" : "password"}
 					{...props}
+					type={showPassword ? "text" : "password"}
 					data-testid={testIds.LOGIN_FORM_INPUT_PASSWORD}
 					bind:value={$formData.password}
 					minlength={PASSWORD_CONFIG.minPasswordLength}
 					class="pr-10"
 				/>
 				<Button
+					type="button"
 					variant="outline"
 					onclick={() => (showPassword = !showPassword)}
 					data-testid={testIds.LOGIN_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
@@ -93,6 +92,7 @@
 
 	{#if message}
 		<GenericAlert
+			data-testid={testIds.LOGIN_FORM_ALERT_ERROR}
 			title={isHttpErrorCode(page.status)
 				? "Unable to log-in"
 				: "Login successful"}

@@ -5,18 +5,6 @@
 	import { zod4Client } from "sveltekit-superforms/adapters";
 	import Input from "@/components/ui/input/input.svelte";
 	import Button from "@/components/ui/button/button.svelte";
-	import {
-		frontendUrls,
-		POST,
-		PUZZLE_CONFIG,
-		puzzleEntitySchema,
-		puzzleVisibilityEnum,
-		type EditPuzzle,
-		type PuzzleVisibility,
-		DEFAULT_LANGUAGE,
-		isProgrammingLanguageDto,
-		isObjectId
-	} from "$lib/types";
 	import { page } from "$app/state";
 	import * as Select from "$lib/components/ui/select";
 	import P from "@/components/typography/p.svelte";
@@ -25,12 +13,22 @@
 	import LanguageSelect from "./language-select.svelte";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages.store";
-	import { testIds } from "$lib/types";
+	import type { EditPuzzle } from "$lib/types/core/puzzle/schema/puzzle-entity.schema.js";
+	import { puzzleEntitySchema } from "$lib/types/core/puzzle/schema/puzzle-entity.schema.js";
+	import type { PuzzleVisibility } from "$lib/types/core/puzzle/schema/puzzle-visibility.schema.js";
+	import { puzzleVisibilityEnum } from "$lib/types/core/puzzle/enum/puzzle-visibility-enum.js";
+	import { isProgrammingLanguageDto } from "$lib/types/core/programming-language/schema/programming-language-dto.schema.js";
+	import { isObjectId } from "$lib/types/core/common/schema/object-id.js";
+	import { DEFAULT_LANGUAGE } from "$lib/types/core/game/config/game-config.js";
+	import { PUZZLE_CONFIG } from "$lib/types/core/puzzle/config/puzzle-config.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
+	import { POST } from "$lib/types/utils/constants/http-methods.js";
 
 	let {
 		data
 	}: {
-		data: SuperValidated<EditPuzzle>;
+		data: SuperValidated<any>;
 	} = $props();
 
 	const learnMarkdownUrl = frontendUrls.LEARN_MARKDOWN;
@@ -91,7 +89,7 @@
 				$languages
 			) {
 				const lang = $languages.find(
-					(l) => l._id === $formData.solution.programmingLanguage
+					(l) => l.id === $formData.solution.programmingLanguage
 				);
 				selectedLanguageName = lang?.language || DEFAULT_LANGUAGE;
 			}
@@ -103,8 +101,8 @@
 	$effect(() => {
 		if (selectedLanguageName && $languages) {
 			const lang = $languages.find((l) => l.language === selectedLanguageName);
-			if (lang && lang._id) {
-				$formData.solution.programmingLanguage = lang._id;
+			if (lang && lang.id) {
+				$formData.solution.programmingLanguage = lang.id;
 			}
 		}
 	});
@@ -248,8 +246,8 @@
 						<Form.Label class="text-lg">Language</Form.Label>
 						<LanguageSelect
 							{...props}
-							bind:language={selectedLanguageName}
-							languages={$languages ?? []}
+							bind:selectedProgrammingLanguageId={selectedLanguageName}
+							selectableProgrammingLanguages={$languages ?? []}
 						/>
 						<Form.Description
 							>Programming language used for the solution.</Form.Description

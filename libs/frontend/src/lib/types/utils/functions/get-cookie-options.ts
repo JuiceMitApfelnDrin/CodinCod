@@ -11,7 +11,7 @@ export function getCookieOptions(options: {
 		path: "/",
 		httpOnly: true,
 		secure: isProduction,
-		sameSite: isProduction ? "none" : "lax",
+		sameSite: isProduction ? "none" : "lax"
 	};
 
 	if (isProduction && frontendHost) {

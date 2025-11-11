@@ -1,7 +1,8 @@
+import { cookieKeys } from "$lib/types/core/common/config/cookie.js";
 import { logger } from "$lib/utils/debug-logger";
 import { codincodApiWebAccountControllerShow } from "@/api/generated/account/account";
+import { httpResponseCodes } from "@/types/core/common/enum/http-response-codes";
 import type { Cookies } from "@sveltejs/kit";
-import { cookieKeys } from "$lib/types";
 
 /**
  * Verifies authentication status by checking with the backend
@@ -61,7 +62,12 @@ export async function getAuthenticatedUserInfo(
 		};
 	} catch (err) {
 		// Handle 401 Unauthorized gracefully (invalid/expired token)
-		if (err instanceof Error && err.message.includes("401")) {
+		if (
+			err instanceof Error &&
+			err.message.includes(
+				httpResponseCodes.CLIENT_ERROR.UNAUTHORIZED.toString()
+			)
+		) {
 			logger.auth("❌ 401 Unauthorized - token invalid or expired");
 			return {
 				isAuthenticated: false

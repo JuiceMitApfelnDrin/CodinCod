@@ -214,6 +214,40 @@ end
     end
   end
 
+  operation(:websocket_token,
+    summary: "Get WebSocket authentication token",
+    responses: %{
+      200 => {"Token retrieved", "application/json", Schemas.Auth.TokenResponse},
+      401 => {"Unauthorized", "application/json", Schemas.Common.ErrorResponse}
+    }
+  )
+
+  @spec websocket_token(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def websocket_token(conn, _params) do
+    case get_token_from_cookie(conn) do
+      {:ok, token} ->
+        conn
+        |> put_status(:ok)
+        |> json(%{token: token})
+
+      :error ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{message: "Authentication required"})
+    end
+  end
+
+  # Extract token from cookie for WebSocket authentication
+  defp get_token_from_cookie(conn) do
+    conn = Plug.Conn.fetch_cookies(conn)
+
+    case Map.get(conn.req_cookies, @token_cookie) do
+      nil -> :error
+      "" -> :error
+      token -> {:ok, token}
+    end
+  end
+
   defp valid_identifier?(identifier) when is_binary(identifier) do
     username_regex = User.username_regex()
     email_regex = User.email_regex()
@@ -248,19 +282,40 @@ end
   defp base_cookie_options do
     prod? = production?()
 
-    # In development, use SameSite=None to allow cross-origin cookies
-    # (frontend on :5173, backend on :4000)
-    # In production, use SameSite=None with Secure for cross-domain
-    options = [
+    # Cookie settings based on environment
+    # Development:
+    #   - NO domain (cookie specific to the server that set it: localhost:4000)
+    #   - secure: false (can't use in development with http://)
+    #   - same_site: "Lax" (works for same-site requests only)
+    #
+    # For WebSocket to work from frontend (localhost:5173) to backend (localhost:4000),
+    # we need the cookie to be sent cross-port. This is tricky:
+    # - `domain: "localhost"` should work but some browsers are strict about it
+    # - No domain means cookie is port-specific (localhost:4000 only)
+    # - The best solution is to use the Vite proxy so everything appears on same port
+    #
+    # Production:
+    #   - domain: from FRONTEND_HOST env var
+    #   - secure: true (https:// and wss:// require secure cookies)
+    #   - same_site: "None" (allows cross-domain, requires secure: true)
+
+    base_options = [
       path: "/",
       http_only: true,
-      # Secure must be true when SameSite=None, browsers allow this for localhost
-      secure: true,
-      same_site: "None"
+      secure: prod?,
+      same_site: if(prod?, do: "None", else: "Lax")
     ]
 
-    options
-    |> maybe_put_domain(prod?)
+    # In development: do NOT set domain to make cookie origin-specific
+    # When accessed through Vite proxy (localhost:5173), cookie will be for that origin
+    # When accessed directly (localhost:4000), cookie will be for that origin
+    # This ensures cookies work properly in both scenarios
+    if prod? do
+      maybe_put_domain(base_options, true)
+    else
+      # No domain in development - cookie will be specific to the requesting origin
+      base_options
+    end
   end
 
   defp maybe_put_domain(options, true) do

@@ -15,6 +15,7 @@ defmodule CodincodApiWeb.GameChannel do
 
   alias CodincodApi.{Games, Accounts}
   alias CodincodApi.Games.Game
+  alias CodincodApiWeb.Presence
 
   @impl true
   def join("game:" <> game_id, payload, socket) do
@@ -61,15 +62,22 @@ defmodule CodincodApiWeb.GameChannel do
     user_id = socket.assigns.user_id
     username = socket.assigns.username
 
+    # Track presence using Phoenix.Presence
+    # This will automatically clean up when the player disconnects
+    {:ok, _} = Presence.track(socket, user_id, %{
+      username: username,
+      online_at: System.system_time(:second)
+    })
+
+    # Push current presence state to the joining player
+    push(socket, "presence_state", Presence.list(socket))
+
     # Announce player presence to others
     broadcast_from!(socket, "player_online", %{
       userId: user_id,
       username: username,
       timestamp: DateTime.utc_now()
     })
-
-    # Track presence
-    push(socket, "presence_state", %{})
 
     {:noreply, socket}
   end
@@ -97,6 +105,7 @@ defmodule CodincodApiWeb.GameChannel do
   def handle_in("submission_result", payload, socket) do
     user_id = socket.assigns.user_id
     username = socket.assigns.username
+    game_id = socket.assigns.game_id
 
     # Broadcast submission results to all players
     broadcast!(socket, "player_submitted", %{
@@ -107,8 +116,28 @@ defmodule CodincodApiWeb.GameChannel do
       timestamp: DateTime.utc_now()
     })
 
-    # Check if game should end (first to solve or all submitted)
-    check_game_completion(socket)
+    # Check if game should end (atomically with locking)
+    game = Games.get_game!(game_id, preload: [:owner, :puzzle, players: :user])
+
+    case Games.check_and_complete_game(game) do
+      {:ok, :completed, completed_game} ->
+        # Game is now complete, broadcast to all players
+        broadcast!(socket, "game_completed", %{
+          status: "completed",
+          endedAt: completed_game.ended_at,
+          timestamp: DateTime.utc_now()
+        })
+
+      {:ok, :in_progress, _game} ->
+        # Game still ongoing, just broadcast state update
+        broadcast!(socket, "game_state_updated", %{
+          status: "in_progress",
+          timestamp: DateTime.utc_now()
+        })
+
+      {:error, reason} ->
+        Logger.error("Failed to check game completion: #{inspect(reason)}")
+    end
 
     {:reply, :ok, socket}
   end
@@ -179,9 +208,35 @@ defmodule CodincodApiWeb.GameChannel do
 
   # Catch-all for unknown events
   @impl true
+  def handle_in("heartbeat", _payload, socket) do
+    # Client-side heartbeat to keep channel alive
+    # Simply acknowledge it
+    {:reply, :ok, socket}
+  end
+
+  @impl true
   def handle_in(event, _payload, socket) do
     Logger.warning("Unknown game channel event: #{event}")
     {:reply, {:error, %{reason: "Unknown event"}}, socket}
+  end
+
+  ## Lifecycle callbacks
+
+  @impl true
+  def terminate(reason, socket) do
+    user_id = socket.assigns[:user_id]
+    game_id = socket.assigns[:game_id]
+    username = socket.assigns[:username]
+
+    Logger.info("Player #{username} (#{user_id}) left game #{game_id}, reason: #{inspect(reason)}")
+
+    # Phoenix.Presence will automatically clean up the presence entry
+    # No manual cleanup needed - Presence handles it within ~30 seconds
+
+    # Optionally mark player as disconnected in database if needed for game logic
+    # Games.mark_player_disconnected(game_id, user_id)
+
+    :ok
   end
 
   ## Private functions
@@ -206,24 +261,6 @@ defmodule CodincodApiWeb.GameChannel do
     end
   end
 
-  defp check_game_completion(socket) do
-    game_id = socket.assigns.game_id
-
-    # Reload game to check current state
-    game = Games.get_game!(game_id, preload: [:owner, :puzzle, players: :user])
-
-    # Logic to determine if game is complete
-    # This could check if:
-    # - Someone has finished (first to finish mode)
-    # - All players have submitted
-    # - Time limit reached
-    # For now, we'll just broadcast game state
-    broadcast!(socket, "game_state_updated", %{
-      status: game.status,
-      timestamp: DateTime.utc_now()
-    })
-  end
-
   defp serialize_game(%Game{} = game) do
     %{
       id: game.id,
@@ -240,7 +277,7 @@ defmodule CodincodApiWeb.GameChannel do
         id: game.puzzle.id,
         title: game.puzzle.title,
         difficulty: game.puzzle.difficulty,
-        description: game.puzzle.description
+        statement: game.puzzle.statement
       },
       players:
         Enum.map(game.players, fn player ->

@@ -4,17 +4,15 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import { page } from "$app/state";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import {
-		frontendUrls,
-		isPaginatedQueryResponse,
-		type PaginatedQueryResponse,
-		type PuzzleDto
-	} from "$lib/types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
-	import { testIds } from "$lib/types";
+	import type { PaginatedQueryResponse } from "$lib/types/core/common/schema/paginated-query-response.schema.js";
+	import { isPaginatedQueryResponse } from "$lib/types/core/common/schema/paginated-query-response.schema.js";
+	import type { PuzzleDto } from "$lib/types/core/puzzle/schema/puzzle-dto.schema.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
 
 	let { data }: { data: PaginatedQueryResponse | undefined } = $props();

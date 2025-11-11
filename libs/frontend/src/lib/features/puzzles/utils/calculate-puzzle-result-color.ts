@@ -1,4 +1,5 @@
-import { PuzzleResultEnum, puzzleResultSchema } from "$lib/types";
+import { puzzleResultSchema } from "$lib/types/core/piston/schema/puzzle-result.js";
+import { PuzzleResultEnum } from "$lib/types/core/puzzle/enum/puzzle-result-enum.js";
 
 /**
  * checks whether something is a puzzleResult

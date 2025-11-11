@@ -17,5 +17,5 @@ export const httpRequestMethod = {
 	OPTIONS: "OPTIONS",
 	TRACE: "TRACE",
 	HEAD: "HEAD",
-	CONNECT: "CONNECT",
+	CONNECT: "CONNECT"
 } as const;

@@ -17,7 +17,7 @@ export const PROFILE_CONFIG = {
 	/**
 	 * Maximum number of social media links
 	 */
-	maxSocials: 5,
+	maxSocials: 5
 } as const;
 
 export type ProfileConfig = typeof PROFILE_CONFIG;

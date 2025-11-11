@@ -63,12 +63,12 @@ export const backendUrls = {
 	moderationUserByIdBanHistory: (userId: string) =>
 		`${baseRoute}/moderation/user/${userId}/ban/history`,
 	moderationUserByIdUnban: (userId: string) =>
-		`${baseRoute}/moderation/user/${userId}/unban`,
+		`${baseRoute}/moderation/user/${userId}/unban`
 } as const;
 
 export const backendParams = {
 	USERNAME: ":username",
 	ID: ":id",
 	TYPE: ":type",
-	GAME_MODE: ":gameMode",
+	GAME_MODE: ":gameMode"
 } as const;

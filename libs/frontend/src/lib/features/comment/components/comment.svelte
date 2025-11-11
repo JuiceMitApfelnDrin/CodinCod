@@ -1,12 +1,4 @@
 <script lang="ts">
-	import {
-		commentTypeEnum,
-		getUserIdFromUser,
-		isAuthor,
-		isCommentDto,
-		type CommentDto,
-		type ObjectId
-	} from "$lib/types";
 	import CommentMetaInfo from "./comment-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import Button from "@/components/ui/button/button.svelte";
@@ -27,7 +19,13 @@
 	import type { VoteRequest } from "@/api/generated/schemas/voteRequest";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
-	import { testIds } from "$lib/types";
+	import type { CommentDto } from "$lib/types/core/comment/schema/comment-dto.schema.js";
+	import { isCommentDto } from "$lib/types/core/comment/schema/comment-dto.schema.js";
+	import type { ObjectId } from "$lib/types/core/common/schema/object-id.js";
+	import { isAuthor } from "$lib/types/utils/functions/is-author.js";
+	import { getUserIdFromUser } from "$lib/types/utils/functions/get-user-id-from-user.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { commentTypeEnum } from "$lib/types/core/comment/enum/comment-type-enum.js";
 
 	let {
 		comment = $bindable(),

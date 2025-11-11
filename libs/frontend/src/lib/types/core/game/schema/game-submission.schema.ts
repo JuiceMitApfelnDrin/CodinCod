@@ -7,7 +7,7 @@ import { submissionDtoSchema } from "../../submission/schema/submission-dto.sche
  */
 export const gameSubmissionSchema = submissionDtoSchema.extend({
 	codeLength: z.number().int().nonnegative().optional(),
-	timeSpent: z.number().nonnegative().optional(), // Time spent in seconds
+	timeSpent: z.number().nonnegative().optional() // Time spent in seconds
 });
 
 export type GameSubmission = z.infer<typeof gameSubmissionSchema>;

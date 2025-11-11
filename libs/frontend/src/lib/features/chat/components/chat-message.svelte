@@ -3,10 +3,10 @@
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import { cn } from "@/utils/cn";
 	import dayjs from "dayjs";
-	import type { ChatMessage } from "$lib/types";
+	import type { ChatMessage } from "$lib/types/core/chat/schema/chat-message.schema.js";
 	import { Button } from "@/components/ui/button";
 	import Flag from "@lucide/svelte/icons/flag";
-	import { testIds } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	let {
 		chatMessage,

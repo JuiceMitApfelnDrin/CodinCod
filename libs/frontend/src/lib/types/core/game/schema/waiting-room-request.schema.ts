@@ -1,37 +1,37 @@
 import { z } from "zod";
-import { waitingRoomEventEnum } from "../enum/waiting-room-event-enum.js";
 import { getValues } from "../../../utils/functions/get-values.js";
-import { objectIdSchema } from "../../common/schema/object-id.js";
-import { gameOptionsSchema } from "./game-options.schema.js";
 import { CHAT_MESSAGE_CONFIG } from "../../chat/config/chat-message-config.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
+import { waitingRoomEventEnum } from "../enum/waiting-room-event-enum.js";
+import { gameOptionsSchema } from "./game-options.schema.js";
 
 const baseMessageSchema = z.object({
-	event: z.enum(getValues(waitingRoomEventEnum)),
+	event: z.enum(getValues(waitingRoomEventEnum))
 });
 
 const joinRoomSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.JOIN_ROOM),
-	roomId: objectIdSchema,
+	roomId: objectIdSchema
 });
 
 const joinByInviteCodeSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.JOIN_BY_INVITE_CODE),
-	inviteCode: z.string(),
+	inviteCode: z.string()
 });
 
 const leaveRoomSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.LEAVE_ROOM),
-	roomId: objectIdSchema,
+	roomId: objectIdSchema
 });
 
 const hostRoomSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.HOST_ROOM),
-	options: gameOptionsSchema.optional(),
+	options: gameOptionsSchema.optional()
 });
 
 const startGameSchema = baseMessageSchema.extend({
 	event: z.literal(waitingRoomEventEnum.START_GAME),
-	roomId: objectIdSchema,
+	roomId: objectIdSchema
 });
 
 const chatMessageSchema = baseMessageSchema.extend({
@@ -40,7 +40,7 @@ const chatMessageSchema = baseMessageSchema.extend({
 	message: z
 		.string()
 		.min(CHAT_MESSAGE_CONFIG.minChatMessageLength)
-		.max(CHAT_MESSAGE_CONFIG.maxChatMessageLength),
+		.max(CHAT_MESSAGE_CONFIG.maxChatMessageLength)
 });
 
 export const waitingRoomRequestSchema = z.discriminatedUnion("event", [
@@ -49,13 +49,13 @@ export const waitingRoomRequestSchema = z.discriminatedUnion("event", [
 	leaveRoomSchema,
 	hostRoomSchema,
 	startGameSchema,
-	chatMessageSchema,
+	chatMessageSchema
 ]);
 
 export type WaitingRoomRequest = z.infer<typeof waitingRoomRequestSchema>;
 
 export function isWaitingRoomRequest(
-	data: unknown,
+	data: unknown
 ): data is WaitingRoomRequest {
 	return waitingRoomRequestSchema.safeParse(data).success;
 }

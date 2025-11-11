@@ -9,13 +9,13 @@ defmodule CodincodApiWeb.UserControllerTest do
 
   @valid_password "Sup3rSecurePass!"
 
-  describe "GET /api/v1/user/:username" do
+  describe "GET /api/user/:username" do
     test "returns user details", %{conn: conn} do
       user = insert_user!(%{username: "ada", email: "ada@example.com"})
 
       response =
         conn
-        |> get(~p"/api/v1/user/#{user.username}")
+        |> get(~p"/api/user/#{user.username}")
         |> json_response(200)
 
       assert response["message"] == "User found"
@@ -26,34 +26,34 @@ defmodule CodincodApiWeb.UserControllerTest do
     test "returns 404 when user missing", %{conn: conn} do
       response =
         conn
-        |> get(~p"/api/v1/user/missing-user")
+        |> get(~p"/api/user/missing-user")
         |> json_response(404)
 
       assert response["message"] == "User not found"
     end
   end
 
-  describe "GET /api/v1/user/:username/isAvailable" do
+  describe "GET /api/user/:username/isAvailable" do
     test "reports username availability", %{conn: conn} do
       insert_user!(%{username: "lovelace"})
 
       response =
         conn
-        |> get(~p"/api/v1/user/lovelace/isAvailable")
+        |> get(~p"/api/user/lovelace/isAvailable")
         |> json_response(200)
 
       refute response["available"]
 
       response =
         conn
-        |> get(~p"/api/v1/user/newhandle/isAvailable")
+        |> get(~p"/api/user/newhandle/isAvailable")
         |> json_response(200)
 
       assert response["available"]
     end
   end
 
-  describe "GET /api/v1/user/:username/puzzle" do
+  describe "GET /api/user/:username/puzzle" do
     test "paginates public puzzles for non-owners", %{conn: conn} do
       author = insert_user!(%{username: "puzzler"})
 
@@ -62,7 +62,7 @@ defmodule CodincodApiWeb.UserControllerTest do
 
       response =
         conn
-        |> get(~p"/api/v1/user/#{author.username}/puzzle", %{page: 1, pageSize: 10})
+        |> get(~p"/api/user/#{author.username}/puzzle", %{page: 1, pageSize: 10})
         |> json_response(200)
 
       assert response["totalItems"] == 1
@@ -80,7 +80,7 @@ defmodule CodincodApiWeb.UserControllerTest do
     end
   end
 
-  describe "GET /api/v1/user/:username/activity" do
+  describe "GET /api/user/:username/activity" do
     test "returns public activity", %{conn: conn} do
       author = insert_user!(%{username: "activity"})
       language = insert_language!(%{language: "elixir", version: "1.16"})
@@ -90,7 +90,7 @@ defmodule CodincodApiWeb.UserControllerTest do
 
       response =
         conn
-        |> get(~p"/api/v1/user/#{author.username}/activity")
+        |> get(~p"/api/user/#{author.username}/activity")
         |> json_response(200)
 
       assert response["message"] == "User activity found"

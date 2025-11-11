@@ -76,6 +76,7 @@ end
 
       post "/logout", AuthController, :logout
       post "/refresh", AuthController, :refresh
+      get "/websocket-token", AuthController, :websocket_token
 
       get "/account", AccountController, :show
       patch "/account/profile", AccountController, :update_profile

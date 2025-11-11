@@ -3,5 +3,5 @@ export const PuzzleResultEnum = {
 	SUCCESS: "success",
 
 	// TODO: probably want to get rid of unknown situations eventually :)
-	UNKNOWN: "unknown",
+	UNKNOWN: "unknown"
 } as const;

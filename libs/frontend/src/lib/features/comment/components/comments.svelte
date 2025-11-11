@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { isCommentDto, type CommentDto, type ObjectId } from "$lib/types";
+	import type { CommentDto } from "$lib/types/core/comment/schema/comment-dto.schema.js";
+	import { isCommentDto } from "$lib/types/core/comment/schema/comment-dto.schema.js";
+	import type { ObjectId } from "$lib/types/core/common/schema/object-id.js";
 	import Comment from "./comment.svelte";
 
 	let {

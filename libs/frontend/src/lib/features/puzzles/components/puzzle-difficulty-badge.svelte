@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Badge, type BadgeVariant } from "@/components/ui/badge";
-	import { DifficultyEnum, type Difficulty } from "$lib/types";
+	import type { Difficulty } from "$lib/types/core/puzzle/schema/difficulty.schema.js";
+	import { DifficultyEnum } from "$lib/types/core/puzzle/enum/difficulty-enum.js";
 
 	let {
 		difficulty = DifficultyEnum.INTERMEDIATE

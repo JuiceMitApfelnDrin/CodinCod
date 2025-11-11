@@ -43,4 +43,16 @@ defmodule CodincodApiWeb.OpenAPI.Schemas.Auth do
       }
     })
   end
+
+  defmodule TokenResponse do
+    @moduledoc false
+    OpenApiSpex.schema(%{
+      title: "TokenResponse",
+      type: :object,
+      required: [:token],
+      properties: %{
+        token: %OpenApiSpex.Schema{type: :string, description: "JWT authentication token"}
+      }
+    })
+  end
 end

@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { paginatedQuerySchema } from "../../../common/schema/paginated-query.schema.js";
-import { paginatedQueryResponseSchema } from "../../../common/schema/paginated-query-response.schema.js";
-import { puzzleEntitySchema } from "../../../puzzle/schema/puzzle-entity.schema.js";
-import { objectIdSchema } from "../../../common/schema/object-id.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
+import { objectIdSchema } from "../../../common/schema/object-id.js";
+import { paginatedQueryResponseSchema } from "../../../common/schema/paginated-query-response.schema.js";
+import { paginatedQuerySchema } from "../../../common/schema/paginated-query.schema.js";
 import { PUZZLE_CONFIG } from "../../../puzzle/config/puzzle-config.js";
+import { puzzleEntitySchema } from "../../../puzzle/schema/puzzle-entity.schema.js";
 
 /**
  * GET /puzzle - List puzzles with pagination
@@ -12,7 +12,7 @@ import { PUZZLE_CONFIG } from "../../../puzzle/config/puzzle-config.js";
 export const getPuzzlesRequestSchema = paginatedQuerySchema;
 
 export const getPuzzlesResponseSchema = paginatedQueryResponseSchema.extend({
-	items: z.array(puzzleEntitySchema),
+	items: z.array(puzzleEntitySchema)
 });
 
 export type GetPuzzlesRequest = z.infer<typeof getPuzzlesRequestSchema>;
@@ -22,7 +22,7 @@ export type GetPuzzlesResponse = z.infer<typeof getPuzzlesResponseSchema>;
  * GET /puzzle/:id - Get single puzzle by ID
  */
 export const getPuzzleByIdRequestSchema = z.object({
-	id: objectIdSchema,
+	id: objectIdSchema
 });
 
 export const getPuzzleByIdResponseSchema =
@@ -45,11 +45,11 @@ export const createPuzzleRequestSchema = z.object({
 		.array(
 			z.object({
 				input: z.string(),
-				output: z.string(),
-			}),
+				output: z.string()
+			})
 		)
 		.min(1),
-	tags: z.array(z.string()).optional(),
+	tags: z.array(z.string()).optional()
 });
 
 export const createPuzzleResponseSchema =
@@ -62,7 +62,7 @@ export type CreatePuzzleResponse = z.infer<typeof createPuzzleResponseSchema>;
  * PUT /puzzle/:id - Update existing puzzle
  */
 export const updatePuzzleRequestSchema = puzzleEntitySchema.partial().extend({
-	id: objectIdSchema,
+	id: objectIdSchema
 });
 
 export const updatePuzzleResponseSchema =
@@ -75,7 +75,7 @@ export type UpdatePuzzleResponse = z.infer<typeof updatePuzzleResponseSchema>;
  * DELETE /puzzle/:id - Delete puzzle
  */
 export const deletePuzzleRequestSchema = z.object({
-	id: objectIdSchema,
+	id: objectIdSchema
 });
 
 export const deletePuzzleResponseSchema = z.void().or(errorResponseSchema);

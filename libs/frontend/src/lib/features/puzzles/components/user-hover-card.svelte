@@ -2,13 +2,14 @@
 	import * as HoverCard from "$lib/components/ui/hover-card";
 	import Button from "@/components/ui/button/button.svelte";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { frontendUrls, isUserDto, type UserDto } from "$lib/types";
 	import Calendar from "@lucide/svelte/icons/calendar";
 	import { codincodApiWebUserControllerShow } from "@/api/generated/user/user";
 	import type { Button as ButtonPrimitive } from "bits-ui";
 	import dayjs from "dayjs";
 	import { cn } from "@/utils/cn";
-	import { testIds } from "$lib/types";
+	import type { ShowResponseUser } from "@/api/generated/schemas/showResponseUser";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 
 	let {
 		class: className = undefined,
@@ -18,19 +19,24 @@
 		username: string;
 	} = $props();
 
-	const userInfoCache: Record<string, UserDto> = {};
+	const userInfoCache: Record<string, ShowResponseUser> = {};
 
 	const profileUrl = frontendUrls.userProfileByUsername(username);
 
-	async function fetchUserInfo(username: string) {
+	async function fetchUserInfo(
+		username: string
+	): Promise<ShowResponseUser | null> {
 		if (userInfoCache[username]) {
 			return userInfoCache[username];
 		}
 
 		const response = await codincodApiWebUserControllerShow(username);
-		userInfoCache[username] = response as UserDto;
+		if (response.user) {
+			userInfoCache[username] = response.user;
+			return response.user;
+		}
 
-		return response as UserDto;
+		return null;
 	}
 </script>
 
@@ -50,7 +56,7 @@
 		{#await fetchUserInfo(username)}
 			loading...
 		{:then user}
-			{#if isUserDto(user)}
+			{#if user}
 				<div class="flex justify-between space-x-4">
 					<Avatar.Root>
 						{#snippet child(props)}

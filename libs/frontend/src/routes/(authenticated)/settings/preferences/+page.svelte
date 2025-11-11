@@ -5,19 +5,22 @@
 	import { preferences } from "@/stores/preferences.store";
 	import * as Select from "@/components/ui/select";
 	import { ScrollArea } from "@/components/ui/scroll-area";
-	import {
-		DEFAULT_LANGUAGE,
-		keymaps,
-		type EditorPreferences,
-		type PuzzleLanguage
-	} from "$lib/types";
 	import Codemirror from "@/features/game/components/codemirror.svelte";
 	import { languages } from "@/stores/languages.store";
 	import Checkbox from "@/components/ui/toggle/checkbox.svelte";
+	import { DEFAULT_LANGUAGE } from "$lib/types/core/game/config/game-config.js";
+	import type { PreferencesPayloadEditor } from "@/api/generated/schemas";
+	import { keymaps } from "$lib/types/core/preferences/enum/keymap.js";
 
-	let language: PuzzleLanguage = $state(
-		$preferences?.preferredLanguage ?? DEFAULT_LANGUAGE
-	);
+	let selectedProgrammingLanguageId: string | undefined = $derived.by(() => {
+		const preferredLanguage =
+			$preferences?.preferredLanguage ?? DEFAULT_LANGUAGE;
+
+		return $languages.find(
+			(language) => language.language === preferredLanguage
+		)?.id;
+	});
+
 	let code: string = $state('print("Hello, World!")');
 
 	function updatePreferredLanguage(newPreferredLanguage: string) {
@@ -28,11 +31,9 @@
 		}
 	}
 
-	$effect(() => {
-		updatePreferredLanguage(language);
-	});
-
-	function CheckboxEditorPreference<K extends keyof EditorPreferences>(key: K) {
+	function CheckboxEditorPreference<K extends keyof PreferencesPayloadEditor>(
+		key: K
+	) {
 		if ($preferences?.editor) {
 			preferences.updatePreferences({
 				editor: {
@@ -60,16 +61,21 @@
 <h1 class="sr-only">Preferences</h1>
 
 <LogicalUnit class="flex w-full flex-col gap-8">
-	<LogicalUnit class="flex flex-col gap-4">
-		<H2>Preferred programming language</H2>
+	{#if $languages && selectedProgrammingLanguageId}
+		<LogicalUnit class="flex flex-col gap-4">
+			<H2>Preferred programming language</H2>
 
-		<div class="flex flex-col gap-2">
-			<p class="text-muted-foreground text-sm">
-				This is your default language when joining a game.
-			</p>
-			<LanguageSelect bind:language languages={$languages ?? []} />
-		</div>
-	</LogicalUnit>
+			<div class="flex flex-col gap-2">
+				<p class="text-muted-foreground text-sm">
+					This is your default language when joining a game.
+				</p>
+				<LanguageSelect
+					bind:selectedProgrammingLanguageId
+					selectableProgrammingLanguages={$languages ?? []}
+				/>
+			</div>
+		</LogicalUnit>
+	{/if}
 
 	{#if $preferences && $preferences.editor}
 		<LogicalUnit class="flex flex-col gap-4">
@@ -96,7 +102,7 @@
 					}}
 				-->
 
-				<Select.Root type="single" bind:value={$preferences.editor.keymap}>
+				<Select.Root type="single" bind:value={$preferences.editor!.keymap!}>
 					<Select.Trigger class="w-[180px]">
 						{triggerContent}
 					</Select.Trigger>
@@ -129,7 +135,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.lineNumbers}
+						checked={$preferences?.editor?.lineNumbers ?? true}
 						onChecked={() => CheckboxEditorPreference("lineNumbers")}
 					/>
 				</div>
@@ -142,7 +148,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.highlightActiveLine}
+						checked={$preferences?.editor?.highlightActiveLine ?? true}
 						onChecked={() => CheckboxEditorPreference("highlightActiveLine")}
 					/>
 				</div>
@@ -155,7 +161,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.highlightActiveLineGutter}
+						checked={$preferences?.editor?.highlightActiveLineGutter ?? true}
 						onChecked={() =>
 							CheckboxEditorPreference("highlightActiveLineGutter")}
 					/>
@@ -173,7 +179,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.bracketMatching}
+						checked={$preferences?.editor?.bracketMatching ?? true}
 						onChecked={() => CheckboxEditorPreference("bracketMatching")}
 					/>
 				</div>
@@ -186,7 +192,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.closeBrackets}
+						checked={$preferences?.editor?.closeBrackets ?? true}
 						onChecked={() => CheckboxEditorPreference("closeBrackets")}
 					/>
 				</div>
@@ -199,7 +205,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.indentOnInput}
+						checked={$preferences?.editor?.indentOnInput ?? true}
 						onChecked={() => CheckboxEditorPreference("indentOnInput")}
 					/>
 				</div>
@@ -216,7 +222,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.highlightSpecialChars}
+						checked={$preferences?.editor?.highlightSpecialChars ?? true}
 						onChecked={() => CheckboxEditorPreference("highlightSpecialChars")}
 					/>
 				</div>
@@ -229,7 +235,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.highlightSelectionMatches}
+						checked={$preferences?.editor?.highlightSelectionMatches ?? true}
 						onChecked={() =>
 							CheckboxEditorPreference("highlightSelectionMatches")}
 					/>
@@ -243,7 +249,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.crosshairCursor}
+						checked={$preferences?.editor?.crosshairCursor ?? true}
 						onChecked={() => CheckboxEditorPreference("crosshairCursor")}
 					/>
 				</div>
@@ -260,7 +266,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.allowMultipleSelections}
+						checked={$preferences?.editor?.allowMultipleSelections ?? true}
 						onChecked={() =>
 							CheckboxEditorPreference("allowMultipleSelections")}
 					/>
@@ -274,7 +280,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.rectangularSelection}
+						checked={$preferences?.editor?.rectangularSelection ?? true}
 						onChecked={() => CheckboxEditorPreference("rectangularSelection")}
 					/>
 				</div>
@@ -287,7 +293,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.dropCursor}
+						checked={$preferences?.editor?.dropCursor ?? true}
 						onChecked={() => CheckboxEditorPreference("dropCursor")}
 					/>
 				</div>
@@ -304,7 +310,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.history}
+						checked={$preferences?.editor?.history ?? true}
 						onChecked={() => CheckboxEditorPreference("history")}
 					/>
 				</div>
@@ -317,7 +323,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.foldGutter}
+						checked={$preferences?.editor?.foldGutter ?? true}
 						onChecked={() => CheckboxEditorPreference("foldGutter")}
 					/>
 				</div>
@@ -334,7 +340,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.autocompletion}
+						checked={$preferences?.editor?.autocompletion ?? true}
 						onChecked={() => CheckboxEditorPreference("autocompletion")}
 					/>
 				</div>
@@ -347,7 +353,7 @@
 						</p>
 					</div>
 					<Checkbox
-						checked={$preferences.editor.lintKeymap}
+						checked={$preferences?.editor?.lintKeymap ?? true}
 						onChecked={() => CheckboxEditorPreference("lintKeymap")}
 					/>
 				</div>
@@ -362,6 +368,6 @@
 			All your changes will be reflected in this code editor
 		</p>
 
-		<Codemirror {language} bind:value={code} />
+		<Codemirror language={selectedProgrammingLanguageId} bind:value={code} />
 	</LogicalUnit>
 </LogicalUnit>

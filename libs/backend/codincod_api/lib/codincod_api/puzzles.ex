@@ -171,6 +171,19 @@ defmodule CodincodApi.Puzzles do
     |> Repo.get(id)
   end
 
+  @doc """
+  Gets a random active/approved puzzle for use in matchmaking.
+  Returns nil if no suitable puzzles exist.
+  """
+  @spec get_random_puzzle() :: Puzzle.t() | nil
+  def get_random_puzzle do
+    base_query()
+    |> where([p], p.visibility == "APPROVED")
+    |> order_by(fragment("RANDOM()"))
+    |> limit(1)
+    |> Repo.one()
+  end
+
   @spec fetch_puzzle_with_validators(Ecto.UUID.t()) :: {:ok, Puzzle.t()} | {:error, :not_found}
   def fetch_puzzle_with_validators(id) do
     case get_puzzle(id) do

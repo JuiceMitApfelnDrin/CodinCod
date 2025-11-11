@@ -42,5 +42,5 @@ export const websocketCloseCodes = {
 	BAD_GATEWAY: 1014,
 
 	/** TLS handshake failure */
-	TLS_HANDSHAKE: 1015,
+	TLS_HANDSHAKE: 1015
 } as const;

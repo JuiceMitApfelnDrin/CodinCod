@@ -2,7 +2,7 @@
 	import type { WithElementRef, WithoutChildren } from "bits-ui";
 	import type { HTMLTextareaAttributes } from "svelte/elements";
 	import { cn } from "@/utils/cn";
-	import type { DataTestIdProp } from "$lib/types";
+	import type { DataTestIdProp } from "@codincod/shared/constants/test-ids";
 
 	let {
 		class: className,

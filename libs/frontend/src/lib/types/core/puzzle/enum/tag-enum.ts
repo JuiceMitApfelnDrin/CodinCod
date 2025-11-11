@@ -6,5 +6,5 @@ export const TagEnum = {
 	ARRAYS: "arrays",
 	MATH: "math",
 	GRAPH_THEORY: "graph_theory",
-	DYNAMIC_PROGRAMMING: "dynamic_programming",
+	DYNAMIC_PROGRAMMING: "dynamic_programming"
 } as const;

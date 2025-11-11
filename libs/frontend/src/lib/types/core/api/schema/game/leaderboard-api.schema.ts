@@ -1,14 +1,14 @@
 import { z } from "zod";
-import { objectIdSchema } from "../../../common/schema/object-id.js";
-import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
-import { gameModeSchema } from "../../../game/schema/mode.schema.js";
 import { acceptedDateSchema } from "../../../common/schema/accepted-date.js";
+import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
+import { objectIdSchema } from "../../../common/schema/object-id.js";
+import { gameModeSchema } from "../../../game/schema/mode.schema.js";
 
 /**
  * GET /game/:id/leaderboard - Get ranked leaderboard for a game
  */
 export const getGameLeaderboardRequestSchema = z.object({
-	gameId: objectIdSchema,
+	gameId: objectIdSchema
 });
 
 export const getGameLeaderboardResponseSchema = z
@@ -24,10 +24,10 @@ export const getGameLeaderboardResponseSchema = z
 				codeLength: z.number().int().nonnegative().optional(),
 				successRate: z.number().min(0).max(1),
 				rank: z.number().int().positive(),
-				programmingLanguage: z.string().optional(),
-			}),
+				programmingLanguage: z.string().optional()
+			})
 		),
-		totalPlayers: z.number().int().nonnegative(),
+		totalPlayers: z.number().int().nonnegative()
 	})
 	.or(errorResponseSchema);
 
@@ -42,7 +42,7 @@ export type GetGameLeaderboardResponse = z.infer<
  * GET /game/:id/stats - Get game statistics and metadata
  */
 export const getGameStatsRequestSchema = z.object({
-	gameId: objectIdSchema,
+	gameId: objectIdSchema
 });
 
 export const getGameStatsResponseSchema = z
@@ -58,9 +58,9 @@ export const getGameStatsResponseSchema = z
 			.object({
 				mode: gameModeSchema,
 				maxPlayers: z.number().int().positive(),
-				timeLimit: z.number().int().positive().optional(),
+				timeLimit: z.number().int().positive().optional()
 			})
-			.optional(),
+			.optional()
 	})
 	.or(errorResponseSchema);
 

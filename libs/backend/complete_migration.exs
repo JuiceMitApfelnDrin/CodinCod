@@ -57,7 +57,7 @@ IO.puts """
    Option A: Use WSL2 (RECOMMENDED)
    $ wsl --install
    $ wsl
-   $ cd /mnt/c/Users/ReevenGovaert/Documents/projects/CodinCod/libs/elixir-backend/codincod_api
+   $ cd /mnt/c/Users/ReevenGovaert/Documents/projects/CodinCod/libs/backend/codincod_api
 
    Option B: Install Visual Studio Build Tools
    Download from: https://visualstudio.microsoft.com/downloads/

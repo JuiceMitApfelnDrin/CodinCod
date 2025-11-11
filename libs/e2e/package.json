@@ -4,6 +4,8 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
+		"setup:db": "bash ./scripts/setup-test-db.sh",
+		"setup:db:windows": "scripts\\setup-test-db.bat",
 		"test": "playwright test",
 		"test:ui": "playwright test --ui",
 		"test:headed": "playwright test --headed",
@@ -12,15 +14,18 @@
 		"test:report": "playwright show-report",
 		"test:api": "playwright test --grep @api",
 		"test:e2e": "playwright test --grep @e2e",
-		"test:multiplayer": "playwright test --grep @multiplayer"
+		"test:multiplayer": "playwright test --grep @multiplayer",
+		"test:full": "pnpm run setup:db && pnpm run test",
+		"test:full:windows": "pnpm run setup:db:windows && pnpm run test",
+		"format": "pnpm exec biome format --write && pnpm exec biome lint --fix"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "2.3.4",
+		"@codincod/shared": "workspace:*",
 		"@playwright/test": "^1.48.2",
 		"@types/node": "^22.18.13",
 		"dotenv": "^16.6.1",
-		"typescript": "^5.7.2"
-	},
-	"dependencies": {
-		"types": "workspace:*"
+		"typescript": "^5.7.2",
+		"uuid": "^13.0.0"
 	}
 }

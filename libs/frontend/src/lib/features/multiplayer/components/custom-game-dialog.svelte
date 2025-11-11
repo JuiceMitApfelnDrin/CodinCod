@@ -5,18 +5,15 @@
 	import { Label } from "@/components/ui/label";
 	import { Input } from "@/components/ui/input";
 	import { Checkbox } from "@/components/ui/checkbox";
-	import { testIds } from "$lib/types";
-	import {
-		DEFAULT_GAME_LENGTH_IN_SECONDS,
-		type GameOptions,
-		isString,
-		DEFAULT_GAME_LENGTH_IN_MINUTES,
-		type GameMode,
-		type GameVisibility,
-		gameModeEnum,
-		gameVisibilityEnum
-	} from "$lib/types";
 	import { languages } from "@/stores/languages.store";
+	import type { GameOptions } from "$lib/types/core/game/schema/game-options.schema.js";
+	import type { GameMode } from "$lib/types/core/game/schema/mode.schema.js";
+	import type { GameVisibility } from "$lib/types/core/game/schema/visibility.schema.js";
+	import { gameModeEnum } from "$lib/types/core/game/enum/game-mode-enum.js";
+	import { gameVisibilityEnum } from "$lib/types/core/game/enum/game-visibility-enum.js";
+	import { isString } from "$lib/types/utils/functions/is-string.js";
+	import { DEFAULT_GAME_LENGTH_IN_MINUTES } from "$lib/types/core/game/config/game-config.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	let {
 		open = $bindable(false),
@@ -34,7 +31,7 @@
 	let selectedLanguageIds = $state<Set<string>>(
 		new Set(
 			$languages
-				.map((language) => language._id)
+				.map((language) => language.id)
 				.filter((languageId) => isString(languageId))
 		)
 	);
@@ -62,7 +59,7 @@
 		} else {
 			const ids =
 				$languages
-					?.map((l) => l._id)
+					?.map((l) => l.id)
 					.filter((id): id is string => id !== undefined) || [];
 			selectedLanguageIds = new Set(ids);
 		}
@@ -88,7 +85,7 @@
 		// Reset form
 		selectedMode = gameModeEnum.FASTEST;
 		selectedVisibility = gameVisibilityEnum.PUBLIC;
-		durationMinutes = DEFAULT_GAME_LENGTH_IN_SECONDS / 60;
+		durationMinutes = DEFAULT_GAME_LENGTH_IN_MINUTES;
 		selectedLanguageIds.clear();
 	}
 </script>
@@ -221,7 +218,7 @@
 					<div class="border-t pt-2">
 						{#if $languages}
 							{#each $languages as language}
-								{@const langId = language._id}
+								{@const langId = language.id}
 								{#if langId}
 									<div class="flex items-center space-x-2 py-1">
 										<Checkbox

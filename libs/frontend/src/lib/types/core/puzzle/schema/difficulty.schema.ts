@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { DifficultyEnum } from "../enum/difficulty-enum.js";
 import { getValues } from "../../../utils/functions/get-values.js";
+import { DifficultyEnum } from "../enum/difficulty-enum.js";
 
 export const difficultySchema = z.enum(getValues(DifficultyEnum));
 

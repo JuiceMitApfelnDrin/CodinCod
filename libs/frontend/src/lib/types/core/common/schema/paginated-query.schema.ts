@@ -10,7 +10,7 @@ export const paginatedQuerySchema = z.object({
 		.number()
 		.min(PAGINATION_CONFIG.MIN_LIMIT)
 		.max(PAGINATION_CONFIG.MAX_LIMIT)
-		.prefault(PAGINATION_CONFIG.DEFAULT_LIMIT),
+		.prefault(PAGINATION_CONFIG.DEFAULT_LIMIT)
 });
 
 export type PaginatedQuery = z.infer<typeof paginatedQuerySchema>;

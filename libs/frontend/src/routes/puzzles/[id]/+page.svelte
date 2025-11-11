@@ -1,14 +1,5 @@
 <script lang="ts">
 	import Container from "@/components/ui/container/container.svelte";
-	import {
-		commentTypeEnum,
-		frontendUrls,
-		getUserIdFromUser,
-		isAuthor,
-		isUserDto,
-		puzzleVisibilityEnum,
-		type CommentDto
-	} from "$lib/types";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
 	import Button from "@/components/ui/button/button.svelte";
 	import Accordion from "@/components/ui/accordion/accordion.svelte";
@@ -19,10 +10,17 @@
 	import H2 from "@/components/typography/h2.svelte";
 	import Comments from "@/features/comment/components/comments.svelte";
 	import AddCommentForm from "@/features/comment/components/add-comment-form.svelte";
-	import { testIds } from "$lib/types";
 	import { page } from "$app/state";
 	import { logger } from "@/utils/debug-logger.js";
 	import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse.js";
+	import type { CommentDto } from "$lib/types/core/comment/schema/comment-dto.schema.js";
+	import { isUserDto } from "$lib/types/core/user/schema/user-dto.schema.js";
+	import { getUserIdFromUser } from "$lib/types/utils/functions/get-user-id-from-user.js";
+	import { isAuthor } from "$lib/types/utils/functions/is-author.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
+	import { puzzleVisibilityEnum } from "$lib/types/core/puzzle/enum/puzzle-visibility-enum.js";
+	import { commentTypeEnum } from "$lib/types/core/comment/enum/comment-type-enum.js";
 
 	let { data } = $props();
 

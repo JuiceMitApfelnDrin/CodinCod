@@ -1,11 +1,11 @@
-import type { ValueOf } from "../types/value-of.js";
+import type { ValueOf } from "@codincod/shared/types/value-of";
 
 export const httpResponseCodes = {
 	INFORMATION: {
 		CONTINUE: 100,
 		SWITCHING_PROTOCOLS: 101,
 		PROCESSING: 102,
-		EARLY_HINTS: 103,
+		EARLY_HINTS: 103
 	},
 
 	SUCCESSFUL: {
@@ -18,7 +18,7 @@ export const httpResponseCodes = {
 		PARTIAL_CONTENT: 206,
 		MULTI_STATUS: 207,
 		ALREADY_REPORTED: 208,
-		I_AM_USED: 226,
+		I_AM_USED: 226
 	},
 
 	REDIRECTION: {
@@ -29,7 +29,7 @@ export const httpResponseCodes = {
 		NOT_MODIFIED: 304, // for caching, says it has not been modified, so keep on using the one you have
 		// 305 and 306 aren't used anymore
 		TEMPORARY_REDIRECT: 307, // post/put/patch/get it at another uri
-		PERMANENT_REDIRECT: 308, // permanently located on another uri
+		PERMANENT_REDIRECT: 308 // permanently located on another uri
 	},
 
 	CLIENT_ERROR: {
@@ -61,7 +61,7 @@ export const httpResponseCodes = {
 		PRECONDITION_REQUIRED: 428,
 		TOO_MANY_REQUESTS: 429,
 		REQUEST_HEADER_FIELDS_TOO_LARGE: 431,
-		UNAVAILABLE_FOR_LEGAL_REASONS: 451,
+		UNAVAILABLE_FOR_LEGAL_REASONS: 451
 	},
 
 	SERVER_ERROR: {
@@ -75,8 +75,8 @@ export const httpResponseCodes = {
 		INSUFFICIENT_STORAGE: 507,
 		LOOP_DETECTED: 508,
 		NOT_EXTENDED: 510,
-		NETWORK_AUTHENTICATION_REQUIRED: 511,
-	},
+		NETWORK_AUTHENTICATION_REQUIRED: 511
+	}
 } as const;
 
 export type HttpResponseCode = ValueOf<{

@@ -39,6 +39,39 @@ defmodule CodincodApiWeb.OpenAPI.Schemas.Account do
     })
   end
 
+  defmodule PreferencesPayloadEditor do
+    @moduledoc false
+    OpenApiSpex.schema(%{
+      title: "PreferencesPayloadEditor",
+      type: :object,
+      properties: %{
+        keymap: %OpenApiSpex.Schema{type: :string},
+        lineNumbers: %OpenApiSpex.Schema{type: :boolean},
+        highlightActiveLineGutter: %OpenApiSpex.Schema{type: :boolean},
+        highlightSpecialChars: %OpenApiSpex.Schema{type: :boolean},
+        history: %OpenApiSpex.Schema{type: :boolean},
+        foldGutter: %OpenApiSpex.Schema{type: :boolean},
+        drawSelection: %OpenApiSpex.Schema{type: :boolean},
+        dropCursor: %OpenApiSpex.Schema{type: :boolean},
+        allowMultipleSelections: %OpenApiSpex.Schema{type: :boolean},
+        indentOnInput: %OpenApiSpex.Schema{type: :boolean},
+        bracketMatching: %OpenApiSpex.Schema{type: :boolean},
+        closeBrackets: %OpenApiSpex.Schema{type: :boolean},
+        autocompletion: %OpenApiSpex.Schema{type: :boolean},
+        rectangularSelection: %OpenApiSpex.Schema{type: :boolean},
+        crosshairCursor: %OpenApiSpex.Schema{type: :boolean},
+        highlightActiveLine: %OpenApiSpex.Schema{type: :boolean},
+        highlightSelectionMatches: %OpenApiSpex.Schema{type: :boolean},
+        defaultKeymap: %OpenApiSpex.Schema{type: :boolean},
+        searchKeymap: %OpenApiSpex.Schema{type: :boolean},
+        foldKeymap: %OpenApiSpex.Schema{type: :boolean},
+        completionKeymap: %OpenApiSpex.Schema{type: :boolean},
+        lintKeymap: %OpenApiSpex.Schema{type: :boolean},
+        syntaxHighlighting: %OpenApiSpex.Schema{type: :boolean}
+      }
+    })
+  end
+
   defmodule PreferencesPayload do
     @moduledoc false
     OpenApiSpex.schema(%{
@@ -55,7 +88,7 @@ defmodule CodincodApiWeb.OpenAPI.Schemas.Account do
           type: :array,
           items: %OpenApiSpex.Schema{type: :string, format: :uuid}
         },
-        editor: %OpenApiSpex.Schema{type: :object}
+        editor: PreferencesPayloadEditor.schema()
       }
     })
   end

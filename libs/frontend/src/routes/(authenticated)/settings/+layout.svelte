@@ -10,7 +10,7 @@
 	import Settings2 from "@lucide/svelte/icons/settings-2";
 	import User from "@lucide/svelte/icons/user";
 	import type { Snippet } from "svelte";
-	import { frontendUrls } from "$lib/types";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 
 	let {
 		children

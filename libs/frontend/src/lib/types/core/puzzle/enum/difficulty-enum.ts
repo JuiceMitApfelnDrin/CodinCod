@@ -2,5 +2,5 @@ export const DifficultyEnum = {
 	BEGINNER: "beginner",
 	INTERMEDIATE: "intermediate",
 	ADVANCED: "advanced",
-	EXPERT: "expert",
+	EXPERT: "expert"
 } as const;

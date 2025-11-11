@@ -2,7 +2,7 @@
 	import { page } from "$app/state";
 	import { cn } from "@/utils/cn";
 	import type { Component } from "svelte";
-	import type { FrontendUrl } from "$lib/types";
+	import type { FrontendUrl } from "@codincod/shared/constants/frontend-urls";
 
 	let {
 		href,

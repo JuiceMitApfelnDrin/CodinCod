@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { keymapSchema } from "../enum/keymap.js";
 import { keymap } from "../config/editor-config.js";
+import { keymapSchema } from "../enum/keymap.js";
 
 export const editorPreferencesSchema = z.object({
 	keymap: keymapSchema.prefault(keymap.VSCODE),
@@ -25,7 +25,7 @@ export const editorPreferencesSchema = z.object({
 	foldKeymap: z.boolean().prefault(true),
 	completionKeymap: z.boolean().prefault(true),
 	lintKeymap: z.boolean().prefault(true),
-	syntaxHighlighting: z.boolean().prefault(true),
+	syntaxHighlighting: z.boolean().prefault(true)
 });
 
 export type EditorPreferences = z.infer<typeof editorPreferencesSchema>;

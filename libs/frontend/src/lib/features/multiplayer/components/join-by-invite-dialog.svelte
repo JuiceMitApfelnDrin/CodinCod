@@ -3,7 +3,7 @@
 	import * as Dialog from "@/components/ui/dialog";
 	import { Input } from "@/components/ui/input";
 	import { Label } from "@/components/ui/label";
-	import { testIds } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	let {
 		open = $bindable(false),

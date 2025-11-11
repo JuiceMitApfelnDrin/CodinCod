@@ -1,6 +1,6 @@
-import { activityTypeEnum } from "$lib/types";
-import type { PageServerLoadEvent } from "./$types";
+import { activityTypeEnum } from "$lib/types/core/activity/enum/activity-type-enum.js";
 import { codincodApiWebUserControllerActivity } from "@/api/generated/user/user";
+import type { PageServerLoadEvent } from "./$types";
 
 export async function load({ params, fetch }: PageServerLoadEvent) {
 	const username = params.username;

@@ -1,7 +1,7 @@
-import { test as base, Page } from '@playwright/test';
-import { AuthPage } from '@/pages/auth.page';
-import { MultiplayerPage } from '@/pages/multiplayer.page';
-import { GamePage } from '@/pages/game.page';
+import { test as base, type Page } from "@playwright/test";
+import { AuthPage } from "@/pages/auth.page";
+import { MultiplayerPage } from "@/pages/multiplayer.page";
+import { GamePage } from "@/pages/game.page";
 
 /**
  * Extended test fixtures with page objects
@@ -19,20 +19,20 @@ type TestFixtures = {
 export const testUsers = {
 	player1: {
 		username: `test_player_1_${Date.now()}`,
-		password: 'TestPassword123!'
+		password: "TestPassword123!",
 	},
 	player2: {
 		username: `test_player_2_${Date.now()}`,
-		password: 'TestPassword123!'
+		password: "TestPassword123!",
 	},
 	player3: {
 		username: `test_player_3_${Date.now()}`,
-		password: 'TestPassword123!'
+		password: "TestPassword123!",
 	},
 	host: {
 		username: `test_host_${Date.now()}`,
-		password: 'TestPassword123!'
-	}
+		password: "TestPassword123!",
+	},
 };
 
 /**
@@ -59,17 +59,17 @@ export const test = base.extend<TestFixtures>({
 	 */
 	authenticatedPage: async ({ page }, use) => {
 		const authPage = new AuthPage(page);
-		
+
 		// Register and login
 		await authPage.gotoRegister();
 		const username = `test_user_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-		await authPage.register(username, 'TestPassword123!');
-		
+		await authPage.register(username, "TestPassword123!");
+
 		// Verify login was successful
-		await page.waitForURL('**/puzzle', { timeout: 10000 });
-		
+		await page.waitForURL("**/puzzle", { timeout: 10000 });
+
 		await use(page);
-	}
+	},
 });
 
-export { expect } from '@playwright/test';
+export { expect } from "@playwright/test";

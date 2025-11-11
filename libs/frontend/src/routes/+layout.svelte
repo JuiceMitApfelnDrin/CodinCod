@@ -1,10 +1,11 @@
 <script lang="ts">
 	import Nav from "@/components/nav/navigation/navigation.svelte";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
-	import { isAuthenticatedInfo, type AuthenticatedInfo } from "$lib/types";
 	import { Toaster } from "$lib/components/ui/sonner";
 	import { untrack, type Snippet } from "svelte";
 	import { logger } from "$lib/utils/debug-logger";
+	import type { AuthenticatedInfo } from "$lib/types/core/authentication/schema/authenticated-info.schema.js";
+	import { isAuthenticatedInfo } from "$lib/types/core/authentication/schema/authenticated-info.schema.js";
 
 	let { children, data }: { children: Snippet; data: AuthenticatedInfo } =
 		$props();

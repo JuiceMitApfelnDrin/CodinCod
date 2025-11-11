@@ -21,7 +21,7 @@ export const updateProfileSchema = z.object({
 	socials: z
 		.array(z.string().trim().url("Social link must be a valid URL"))
 		.max(5, "Maximum of 5 social links allowed")
-		.optional(),
+		.optional()
 });
 
 export type UpdateProfile = z.infer<typeof updateProfileSchema>;

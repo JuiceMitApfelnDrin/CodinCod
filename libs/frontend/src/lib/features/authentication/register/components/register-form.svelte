@@ -8,14 +8,16 @@
 	} from "../config/register-form-schema";
 	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { debounce } from "@/utils/debounce";
-	import { PASSWORD_CONFIG, POST, USERNAME_CONFIG } from "$lib/types";
+	import { POST } from "$lib/types/utils/constants/http-methods.js";
 	import GenericAlert from "@/components/ui/alert/generic-alert.svelte";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { testIds } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { USERNAME_CONFIG } from "../../../../../../../shared/src/constants/username-config.js";
 	import { page } from "$app/state";
 	import Button from "#/ui/button/button.svelte";
 	import EyeClosed from "@lucide/svelte/icons/eye-closed";
 	import Eye from "@lucide/svelte/icons/eye";
+	import { PASSWORD_CONFIG } from "@/types/core/authentication/config/password-config";
 
 	let {
 		data,
@@ -55,7 +57,7 @@
 					placeholder="john_doe123"
 					minlength={USERNAME_CONFIG.minUsernameLength}
 					maxlength={USERNAME_CONFIG.maxUsernameLength}
-					pattern={USERNAME_CONFIG.allowedCharacters.source}
+					pattern={USERNAME_CONFIG.allowedCharactersPattern}
 				/>
 			{/snippet}
 		</Form.Control>
@@ -88,13 +90,14 @@
 			{#snippet children({ props })}
 				<Form.Label class="text-lg">Password</Form.Label>
 				<Input
-					type="password"
 					{...props}
+					type={showPassword ? "text" : "password"}
 					data-testid={testIds.REGISTER_FORM_INPUT_PASSWORD}
 					bind:value={$formData.password}
 					placeholder={`${PASSWORD_CONFIG.minPasswordLength}characters`}
 				/>
 				<Button
+					type="button"
 					variant="outline"
 					onclick={() => (showPassword = !showPassword)}
 					data-testid={testIds.REGISTER_FORM_BUTTON_TOGGLE_SHOW_PASSWORD}
@@ -124,6 +127,7 @@
 
 	{#if message}
 		<GenericAlert
+			data-testid={testIds.REGISTER_FORM_ALERT_ERROR}
 			title={isHttpErrorCode(page.status)
 				? "Unable to register"
 				: "Registration successful"}

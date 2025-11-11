@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { frontendUrls, type FrontendLink } from "$lib/types";
+	import type { FrontendLink } from "$lib/types/core/common/types/link.js";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 	import Container from "../ui/container/container.svelte";
 	import * as Card from "../ui/card";
 	import H1 from "../typography/h1.svelte";
 	import P from "../typography/p.svelte";
 	import Button from "../ui/button/button.svelte";
-	import { testIds } from "$lib/types";
 
 	let {
 		header = null,

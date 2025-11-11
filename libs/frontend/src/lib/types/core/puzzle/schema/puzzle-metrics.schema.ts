@@ -24,6 +24,6 @@ export const puzzleMetricsSchema = z.object({
 	totalAttempts: z.number().prefault(0),
 	successfulAttempts: z.number().prefault(0),
 	upvote: z.number().prefault(0),
-	downvote: z.number().prefault(0),
+	downvote: z.number().prefault(0)
 });
 export type PuzzleMetrics = z.infer<typeof puzzleMetricsSchema>;

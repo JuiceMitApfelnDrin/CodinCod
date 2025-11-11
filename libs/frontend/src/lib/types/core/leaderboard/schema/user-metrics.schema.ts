@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { objectIdSchema } from "../../common/schema/object-id.js";
-import { gameModeSchema } from "../../game/schema/mode.schema.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 /**
  * Glicko-2 rating components
@@ -10,7 +9,7 @@ export const glickoRatingSchema = z.object({
 	rating: z.number().default(1500), // Base rating
 	rd: z.number().default(350), // Rating deviation
 	volatility: z.number().default(0.06), // Volatility
-	lastUpdated: acceptedDateSchema.default(() => new Date()),
+	lastUpdated: acceptedDateSchema.default(() => new Date())
 });
 
 export type GlickoRating = z.infer<typeof glickoRatingSchema>;
@@ -26,7 +25,7 @@ export const gameModeMetricsSchema = z.object({
 	totalScore: z.number().nonnegative().default(0),
 	glickoRating: glickoRatingSchema,
 	rank: z.number().int().positive().optional(), // Position in leaderboard
-	lastGameDate: acceptedDateSchema.optional(),
+	lastGameDate: acceptedDateSchema.optional()
 });
 
 export type GameModeMetrics = z.infer<typeof gameModeMetricsSchema>;
@@ -58,7 +57,7 @@ export const userMetricsEntitySchema = z.object({
 	lastCalculationDate: acceptedDateSchema.default(() => new Date()),
 
 	createdAt: acceptedDateSchema.default(() => new Date()),
-	updatedAt: acceptedDateSchema.default(() => new Date()),
+	updatedAt: acceptedDateSchema.default(() => new Date())
 });
 
 export type UserMetricsEntity = z.infer<typeof userMetricsEntitySchema>;

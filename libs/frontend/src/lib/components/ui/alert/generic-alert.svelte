@@ -4,13 +4,15 @@
 	import CircleCheck from "@lucide/svelte/icons/circle-check";
 	import * as Alert from "./index";
 	import { isHttpErrorCode } from "@/utils/is-http-error-code";
-	import { httpResponseCodes } from "$lib/types";
+	import { httpResponseCodes } from "$lib/types/core/common/enum/http-response-codes.js";
+	import type { HTMLAttributes } from "svelte/elements";
 
 	let {
 		message,
 		status,
-		title
-	}: {
+		title,
+		...restProps
+	}: HTMLAttributes<HTMLDivElement> & {
 		message: string;
 		title: string;
 		status: number;
@@ -22,6 +24,7 @@
 </script>
 
 <Alert.Root
+	{...restProps}
 	variant={isHttpErrorCode(status)
 		? isRateLimited
 			? "default"

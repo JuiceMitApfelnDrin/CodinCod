@@ -2,13 +2,14 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
 	import UserHoverCard from "./user-hover-card.svelte";
-	import type { PuzzleResponse } from "@/api/generated/schemas";
-	import type { PuzzleDto, EditPuzzle } from "$lib/types";
+	import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse";
+	import type { PuzzleDto } from "$lib/types/core/puzzle/schema/puzzle-dto.schema";
+	import type { EditPuzzle } from "$lib/types/core/puzzle/schema/puzzle-entity.schema";
 
 	let {
 		puzzle
 	}: {
-		puzzle:	PuzzleResponse | PuzzleDto | EditPuzzle | null;
+		puzzle: PuzzleResponse | PuzzleDto | EditPuzzle | null;
 	} = $props();
 
 	const hasBeenUpdated = puzzle && puzzle.updatedAt !== puzzle.createdAt;

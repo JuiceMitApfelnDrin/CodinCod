@@ -1,7 +1,8 @@
 <script lang="ts">
 	import UserHoverCard from "@/features/puzzles/components/user-hover-card.svelte";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { isUserDto, type CommentDto } from "$lib/types";
+	import type { CommentDto } from "$lib/types/core/comment/schema/comment-dto.schema.js";
+	import { isUserDto } from "$lib/types/core/user/schema/user-dto.schema.js";
 
 	let {
 		comment

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import H1 from "@/components/typography/h1.svelte";
-	import type { ValidatorEntity } from "$lib/types";
+	import type { ValidatorEntity } from "$lib/types/core/puzzle/schema/validator.schema.js";
 
 	let {
 		validators

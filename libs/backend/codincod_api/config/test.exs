@@ -12,6 +12,7 @@ config :codincod_api, CodincodApi.Repo,
   username: System.get_env("POSTGRES_USER") || "postgres",
   password: System.get_env("POSTGRES_PASSWORD") || "postgres",
   hostname: System.get_env("POSTGRES_HOST") || "localhost",
+  port: String.to_integer(System.get_env("POSTGRES_PORT") || "5433"),
   database: test_db <> (test_partition || ""),
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
@@ -21,7 +22,7 @@ config :codincod_api, CodincodApi.Repo,
 config :codincod_api, CodincodApiWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "c7sts8bQHiU24YfV7shYKABl1vrkugz+Hc2rtgp6AzEWLPCgxinjIGiNG/dVHT0w",
-  server: false
+  server: true  # Enable server for E2E tests
 
 # In test we don't send emails
 config :codincod_api, CodincodApi.Mailer, adapter: Swoosh.Adapters.Test

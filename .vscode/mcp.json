@@ -1,0 +1,23 @@
+{
+	"servers": {
+		"svelte mcp": {
+			"url": "https://mcp.svelte.dev/mcp",
+			"type": "http"
+		},
+		"zod mcp": {
+			"url": "https://mcp.inkeep.com/zod/mcp",
+			"type": "http"
+		},
+		"playwright": {
+      		"command": "npx",
+      		"args": [
+        		"@playwright/mcp@latest"
+      		]
+    	},
+		"hexdocs": {
+      		"command": "npx",
+      		"args": ["-y", "hexdocs-mcp@0.2.0"]
+    	}
+	},
+	"inputs": []
+}

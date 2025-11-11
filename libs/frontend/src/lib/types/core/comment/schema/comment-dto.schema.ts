@@ -5,7 +5,7 @@ import { commentEntitySchema } from "./comment-entity.schema.js";
 export const commentDtoSchema = commentEntitySchema.extend({
 	_id: objectIdSchema,
 	comments: z.array(objectIdSchema).optional(),
-	parentId: objectIdSchema,
+	parentId: objectIdSchema
 });
 
 export type CommentDto = z.infer<typeof commentDtoSchema>;

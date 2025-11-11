@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { WebSocketManager } from "@/websocket/websocket-manager.svelte";
+	import type { PhoenixSocketManager } from "@/websocket/phoenix-socket-manager.svelte";
 	import {
 		WEBSOCKET_STATES,
 		type WebSocketState
 	} from "@/websocket/websocket-constants";
-	import { testIds } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	let {
 		wsManager,
@@ -12,7 +13,7 @@
 		class: className = "",
 		showLabel = false
 	}: {
-		wsManager: WebSocketManager;
+		wsManager: PhoenixSocketManager<any, any> | WebSocketManager<any, any>;
 		state: WebSocketState;
 		class?: string;
 		showLabel?: boolean;

@@ -1,7 +1,7 @@
 import { searchParamKeys } from "@/config/search-params";
 import { getAuthenticatedUserInfo } from "@/features/authentication/utils/get-authenticated-user-info.js";
+import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 import { redirect } from "@sveltejs/kit";
-import { frontendUrls } from "$lib/types";
 import type { LayoutServerLoadEvent } from "./$types";
 
 export async function load({ cookies, fetch, url }: LayoutServerLoadEvent) {
@@ -18,5 +18,9 @@ export async function load({ cookies, fetch, url }: LayoutServerLoadEvent) {
 		);
 	}
 
-	return currentUser;
+	// Return user info - no need to pass token separately
+	// WebSocket connections will use HTTP-only cookies automatically
+	return {
+		...currentUser
+	};
 }

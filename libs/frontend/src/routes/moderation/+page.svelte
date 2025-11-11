@@ -4,12 +4,10 @@
 		showErrorNotification,
 		showSuccessNotification
 	} from "$lib/api/notifications";
-	import {
-		reviewItemTypeEnum,
-		banTypeEnum,
-		reviewStatusEnum,
-		BAN_CONFIG
-	} from "$lib/types";
+	import { reviewItemTypeEnum } from "$lib/types/core/moderation/enum/review-item-type-enum";
+	import { banTypeEnum } from "$lib/types/core/moderation/enum/ban-type-enum";
+	import { reviewStatusEnum } from "$lib/types/core/moderation/enum/review-status-enum";
+	import { BAN_CONFIG } from "$lib/types/core/moderation/config/ban-config";
 	import type { PageData } from "./$types";
 	import { toast } from "svelte-sonner";
 	import {
@@ -29,7 +27,7 @@
 	import { Button } from "#/ui/button";
 	import { page } from "$app/state";
 	import { formattedDateYearMonthDay } from "@/utils/date-functions";
-	import { testIds } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 	import Pagination from "#/nav/pagination.svelte";
 
 	let { data }: { data: PageData } = $props();
@@ -518,8 +516,8 @@
 						{banType}
 					</Select.Trigger>
 					<Select.Content>
-						{#each Object.values(banTypeEnum) as banType}
-							<Select.Item value={banType}>{banType}</Select.Item>
+						{#each Object.values(banTypeEnum) as banTypeValue}
+							<Select.Item value={banTypeValue}>{banTypeValue}</Select.Item>
 						{/each}
 					</Select.Content>
 				</Select.Root>

@@ -4,7 +4,7 @@
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
 	import LoginForm from "@/features/authentication/login/components/login-form.svelte";
-	import { frontendUrls } from "$lib/types";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 	import type { ActionData, PageData } from "./$types";
 
 	let {

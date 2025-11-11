@@ -8,13 +8,13 @@
  * - Type-safe message handling
  */
 
+import { websocketCloseCodes } from "$lib/types/core/common/enum/websocket-close-codes.js";
 import { logger } from "@/utils/debug-logger";
-import { websocketCloseCodes } from "$lib/types";
 import {
 	WEBSOCKET_RECONNECT,
 	WEBSOCKET_STATES,
 	type WebSocketState
-} from "./websocket-constants";
+} from "./websocket-constants.js";
 
 export interface WebSocketManagerOptions<TRequest, TResponse> {
 	url: string;

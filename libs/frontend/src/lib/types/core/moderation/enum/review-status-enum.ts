@@ -1,5 +1,5 @@
 export const reviewStatusEnum = {
 	PENDING: "pending",
 	RESOLVED: "resolved",
-	REJECTED: "rejected",
+	REJECTED: "rejected"
 } as const;

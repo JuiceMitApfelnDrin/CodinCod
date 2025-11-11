@@ -38,6 +38,19 @@ defmodule CodincodApi.Puzzles.PuzzleValidator do
   def changeset(validator, attrs) do
     validator
     |> cast(attrs, [:legacy_id, :input, :output, :is_public, :puzzle_id])
-    |> validate_required([:input, :output, :puzzle_id])
+    # Input can be empty string for puzzles with no input, so don't validate_required
+    # Output and puzzle_id must be present
+    |> validate_required([:output, :puzzle_id])
+    # Ensure input field is present in changeset (even if empty)
+    |> validate_input_present()
+  end
+
+  # Custom validation to ensure input field is present (but allows empty string)
+  defp validate_input_present(changeset) do
+    if Map.has_key?(changeset.params, "input") or Map.has_key?(changeset.changes, :input) do
+      changeset
+    else
+      add_error(changeset, :input, "must be present")
+    end
   end
 end

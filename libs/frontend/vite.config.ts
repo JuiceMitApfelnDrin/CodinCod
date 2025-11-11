@@ -7,6 +7,8 @@ process.env.VITE_APP_VERSION = version;
 
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd());
+	const backendUrl = env.VITE_ELIXIR_BACKEND_URL || "http://localhost:4000";
+
 	return {
 		defineConfig: {
 			"import.meta.env.VITE_APP_VERSION": JSON.stringify(version)
@@ -15,9 +17,16 @@ export default defineConfig(({ mode }) => {
 		server: {
 			allowedHosts: [".codincod.com"],
 			proxy: {
-				"/ws": {
-					target: env.VITE_BACKEND_WEBSOCKET_MULTIPLAYER,
-					ws: true
+				"/api": {
+					target: backendUrl,
+					changeOrigin: true,
+					secure: false
+				},
+				"/socket": {
+					target: backendUrl.replace(/^http/, "ws"),
+					ws: true,
+					changeOrigin: true,
+					secure: false
 				}
 			}
 		}

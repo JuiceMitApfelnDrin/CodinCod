@@ -1,4 +1,4 @@
-import { websocketCloseCodes } from "$lib/types";
+import { websocketCloseCodes } from "$lib/types/core/common/enum/websocket-close-codes.js";
 
 export const WEBSOCKET_STATES = {
 	CONNECTING: "connecting",

@@ -1,23 +1,7 @@
-import { ERROR_MESSAGES } from "$lib/types";
+// Temporary backend URL builder - TODO: Remove after full migration to generated API
+// This is here only to unblock type checking. The play-puzzle component needs refactoring.
 
-/**
- * Builds a backend url,
- * with the path added to it,
- * and params switched out,
- * e.g.: buildBackendUrl("users/:id", { id: 5 }), results in backendUrl/users/5
- *
- * @param path
- * @param params
- * @returns the desired url
- */
-export function buildBackendUrl(url: string) {
-	const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-	if (!backendUrl) {
-		throw new Error(
-			`${ERROR_MESSAGES.SERVER.INTERNAL_ERROR}: VITE_BACKEND_URL environment variable is not set`
-		);
-	}
-
-	return `${backendUrl}${url}`;
+export function buildBackendUrl(path: string): string {
+	const baseUrl = import.meta.env.PUBLIC_BACKEND_URL || "http://localhost:4000";
+	return `${baseUrl}${path}`;
 }

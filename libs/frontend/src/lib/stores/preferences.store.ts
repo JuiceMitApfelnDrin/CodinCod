@@ -4,32 +4,28 @@ import {
 	codincodApiWebAccountPreferenceControllerReplace,
 	codincodApiWebAccountPreferenceControllerShow
 } from "@/api/generated/account-preferences/account-preferences";
+import type { PreferencesPayload } from "@/api/generated/schemas";
 import { localStorageKeys } from "@/config/local-storage";
+import { isThemeOption } from "@/types/core/preferences/enum/theme-option";
+import { editorPreferencesSchema } from "@/types/core/preferences/schema/editor.schema";
 import { derived, writable } from "svelte/store";
-import {
-	editorPreferencesSchema,
-	isPreferencesDto,
-	isThemeOption,
-	type PreferencesDto,
-	type UpdatePreferencesRequest
-} from "$lib/types";
 import { isAuthenticated } from "./auth.store";
 import { theme } from "./theme.store";
 
 const createPreferencesStore = () => {
-	const { set, subscribe, update } = writable<PreferencesDto | null>(null);
+	const { set, subscribe, update } = writable<PreferencesPayload | null>(null);
 
 	// Helper to safely parse localStorage data
 	const parseStoredPreferences = (
 		stored: string | null
-	): PreferencesDto | null => {
+	): PreferencesPayload | null => {
 		if (!stored) return null;
 
 		try {
 			const parsed = JSON.parse(stored);
-			// Validate that it has the expected structure
-			if (isPreferencesDto(parsed)) {
-				return parsed as PreferencesDto;
+			// Basic validation - just check if it's an object
+			if (parsed && typeof parsed === "object") {
+				return parsed as PreferencesPayload;
 			}
 		} catch (error) {
 			console.error("Failed to parse stored preferences:", error);
@@ -40,7 +36,7 @@ const createPreferencesStore = () => {
 	};
 
 	// Helper to safely save to localStorage
-	const saveToLocalStorage = (preferences: PreferencesDto | null): void => {
+	const saveToLocalStorage = (preferences: PreferencesPayload | null): void => {
 		try {
 			if (preferences) {
 				localStorage.setItem(
@@ -81,15 +77,15 @@ const createPreferencesStore = () => {
 			try {
 				const data = await codincodApiWebAccountPreferenceControllerShow();
 
-				set(data as PreferencesDto);
-				saveToLocalStorage(data as PreferencesDto);
+				set(data);
+				saveToLocalStorage(data);
 			} catch (error: unknown) {
 				// Handle 404 - create default preferences
 				const is404 =
 					error instanceof Error && error.message?.includes?.("404");
 				if (is404) {
-					// Use Dto type which doesn't require owner (server will set it from auth)
-					const defaultPreferences: PreferencesDto = {
+					// Use default preferences
+					const defaultPreferences: PreferencesPayload = {
 						editor: editorPreferencesSchema.parse({})
 					};
 
@@ -124,7 +120,7 @@ const createPreferencesStore = () => {
 
 		subscribe,
 
-		async updatePreferences(updates: UpdatePreferencesRequest) {
+		async updatePreferences(updates: Partial<PreferencesPayload>) {
 			if (!browser) return;
 
 			try {
@@ -143,9 +139,9 @@ const createPreferencesStore = () => {
 						...updatedData,
 						editor: {
 							...(current?.editor ?? editorPreferencesSchema.parse({})),
-							...(updatedData.editor ?? {})
+							...(updatedData?.editor ?? {})
 						}
-					} as PreferencesDto;
+					} as PreferencesPayload;
 					saveToLocalStorage(merged);
 					return merged;
 				});

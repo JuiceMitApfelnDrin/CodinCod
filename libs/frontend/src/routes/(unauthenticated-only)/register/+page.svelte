@@ -3,7 +3,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import RegisterForm from "@/features/authentication/register/components/register-form.svelte";
-	import { frontendUrls } from "$lib/types";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 	import * as Card from "@/components/ui/card";
 	import type { ActionData, PageData } from "./$types";
 

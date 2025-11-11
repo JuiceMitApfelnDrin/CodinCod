@@ -1,21 +1,19 @@
 import { ApiError } from "$lib/api/errors";
+import { puzzleFormSchema } from "$lib/schemas/puzzle-form.schema.js";
+import { ERROR_MESSAGES } from "$lib/types/core/common/config/error-messages.js";
+import { httpResponseCodes } from "$lib/types/core/common/enum/http-response-codes.js";
 import { logger } from "$lib/utils/debug-logger";
 import { codincodApiWebPuzzleControllerCreate } from "@/api/generated/puzzle/puzzle";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
+import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
-import {
-	createPuzzleSchema,
-	ERROR_MESSAGES,
-	frontendUrls,
-	httpResponseCodes
-} from "$lib/types";
 import type { RequestEvent } from "./$types.js";
 
 export async function load() {
 	logger.page("Create puzzle page load");
-	const form = await superValidate(zod4(createPuzzleSchema));
+	const form = await superValidate(zod4(puzzleFormSchema));
 
 	return { form };
 }
@@ -24,7 +22,7 @@ export const actions = {
 	default: async ({ request, fetch }: RequestEvent) => {
 		logger.form("📝 Create puzzle form submitted");
 
-		const form = await superValidate(request, zod4(createPuzzleSchema));
+		const form = await superValidate(request, zod4(puzzleFormSchema));
 
 		if (!form.valid) {
 			logger.form("❌ Form validation failed", form.errors);

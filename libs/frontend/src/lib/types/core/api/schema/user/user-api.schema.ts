@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { userDtoSchema } from "../../../user/schema/user-dto.schema.js";
 import { errorResponseSchema } from "../../../common/schema/error-response.schema.js";
+import { userDtoSchema } from "../../../user/schema/user-dto.schema.js";
 import { usernameSchema } from "../../../user/schema/user-entity.schema.js";
 
 /**
@@ -17,13 +17,13 @@ export type GetCurrentUserResponse = z.infer<
  * GET /user/:username - Get user by username
  */
 export const getUserByUsernameRequestSchema = z.object({
-	username: usernameSchema,
+	username: usernameSchema
 });
 
 export const getUserByUsernameResponseSchema = z
 	.object({
 		message: z.string(),
-		user: userDtoSchema,
+		user: userDtoSchema
 	})
 	.or(errorResponseSchema);
 
@@ -38,11 +38,11 @@ export type GetUserByUsernameResponse = z.infer<
  * GET /user/:username/isAvailable - Check if username is available
  */
 export const checkUsernameAvailabilityRequestSchema = z.object({
-	username: usernameSchema,
+	username: usernameSchema
 });
 
 export const checkUsernameAvailabilityResponseSchema = z.object({
-	available: z.boolean(),
+	available: z.boolean()
 });
 
 export type CheckUsernameAvailabilityRequest = z.infer<

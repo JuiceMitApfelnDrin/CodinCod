@@ -6,7 +6,7 @@ import { messageSchema } from "../../../common/schema/message.schema.js";
  */
 export const loginRequestSchema = z.object({
 	identifier: z.string().min(1, "Identifier is required"),
-	password: z.string().min(1, "Password is required"),
+	password: z.string().min(1, "Password is required")
 });
 
 export const loginResponseSchema = messageSchema;

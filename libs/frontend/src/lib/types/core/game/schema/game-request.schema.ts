@@ -3,25 +3,25 @@ import { chatMessageSchema } from "../../chat/schema/chat-message.schema.js";
 import { gameEventEnum } from "../enum/game-event-enums.js";
 
 const joinGameRequestSchema = z.object({
-	event: z.literal(gameEventEnum.JOIN_GAME),
+	event: z.literal(gameEventEnum.JOIN_GAME)
 });
 const changeLanguageGameRequestSchema = z.object({
 	event: z.literal(gameEventEnum.CHANGE_LANGUAGE),
-	language: z.string(),
+	language: z.string()
 });
 const sendMessageGameRequestSchema = z.object({
 	event: z.literal(gameEventEnum.SEND_MESSAGE),
-	chatMessage: chatMessageSchema,
+	chatMessage: chatMessageSchema
 });
 const submittedPlayerGameRequestSchema = z.object({
-	event: z.literal(gameEventEnum.SUBMITTED_PLAYER),
+	event: z.literal(gameEventEnum.SUBMITTED_PLAYER)
 });
 
 export const gameRequestSchema = z.discriminatedUnion("event", [
 	joinGameRequestSchema,
 	changeLanguageGameRequestSchema,
 	sendMessageGameRequestSchema,
-	submittedPlayerGameRequestSchema,
+	submittedPlayerGameRequestSchema
 ]);
 
 export type GameRequest = z.infer<typeof gameRequestSchema>;

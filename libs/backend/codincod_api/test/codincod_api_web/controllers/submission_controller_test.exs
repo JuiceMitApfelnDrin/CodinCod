@@ -28,7 +28,7 @@ defmodule CodincodApiWeb.SubmissionControllerTest do
     {:ok, conn: authed_conn, user: user}
   end
 
-  describe "POST /api/v1/submission" do
+  describe "POST /api/submission" do
     test "creates a submission and returns result summary", %{conn: conn, user: user} do
       language = insert_language!(%{language: "python", version: "3.10.0", runtime: "python"})
       author = insert_user!(%{username: "puzzle-author"})
@@ -44,7 +44,7 @@ defmodule CodincodApiWeb.SubmissionControllerTest do
 
       response =
         conn
-        |> post(~p"/api/v1/submission", body)
+        |> post(~p"/api/submission", body)
         |> json_response(201)
 
       assert response["puzzleId"] == puzzle.id
@@ -73,7 +73,7 @@ defmodule CodincodApiWeb.SubmissionControllerTest do
 
       response =
         conn
-        |> post(~p"/api/v1/submission", body)
+        |> post(~p"/api/submission", body)
         |> json_response(404)
 
       assert response["error"] == "Puzzle not found"
@@ -93,14 +93,14 @@ defmodule CodincodApiWeb.SubmissionControllerTest do
 
       response =
         conn
-        |> post(~p"/api/v1/submission", body)
+        |> post(~p"/api/submission", body)
         |> json_response(400)
 
       assert response["error"] == "Failed to update the puzzle"
     end
   end
 
-  describe "GET /api/v1/submission/:id" do
+  describe "GET /api/submission/:id" do
     test "returns submission details", %{conn: conn, user: user} do
       language = insert_language!(%{language: "python", version: "3.10.0", runtime: "python"})
       author = insert_user!(%{username: "puzzle-owner"})
@@ -126,7 +126,7 @@ defmodule CodincodApiWeb.SubmissionControllerTest do
 
       response =
         conn
-        |> get(~p"/api/v1/submission/#{submission.id}")
+        |> get(~p"/api/submission/#{submission.id}")
         |> json_response(200)
 
       assert response["id"] == submission.id

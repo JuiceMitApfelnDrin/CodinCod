@@ -1,15 +1,15 @@
 import { z } from "zod";
-import { validatorEntitySchema } from "./validator.schema.js";
-import { difficultySchema } from "./difficulty.schema.js";
-import { puzzleVisibilitySchema } from "./puzzle-visibility.schema.js";
-import { solutionSchema } from "./solution.schema.js";
+import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
+import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
 import { PUZZLE_CONFIG } from "../config/puzzle-config.js";
 import { DifficultyEnum } from "../enum/difficulty-enum.js";
 import { puzzleVisibilityEnum } from "../enum/puzzle-visibility-enum.js";
-import { userDtoSchema } from "../../user/schema/user-dto.schema.js";
-import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
-import { objectIdSchema } from "../../common/schema/object-id.js";
+import { difficultySchema } from "./difficulty.schema.js";
+import { puzzleVisibilitySchema } from "./puzzle-visibility.schema.js";
+import { solutionSchema } from "./solution.schema.js";
 import { tagSchema } from "./tag.schema.js";
+import { validatorEntitySchema } from "./validator.schema.js";
 
 export const puzzleEntitySchema = z.object({
 	title: z
@@ -36,19 +36,19 @@ export const puzzleEntitySchema = z.object({
 	puzzleMetrics: objectIdSchema.optional(), // TODO: later not now !
 	tags: z.array(tagSchema).optional(), // TODO: later not now !
 	comments: z.array(objectIdSchema).default([]).optional(),
-	moderationFeedback: z.string().optional(),
+	moderationFeedback: z.string().optional()
 });
 
 export type PuzzleEntity = z.infer<typeof puzzleEntitySchema>;
 
 export const createPuzzleSchema = puzzleEntitySchema.pick({
-	title: true,
+	title: true
 });
 export type CreatePuzzle = z.infer<typeof createPuzzleSchema>;
 
 export const createPuzzleBackendSchema = puzzleEntitySchema.pick({
 	title: true,
-	author: true,
+	author: true
 });
 export type CreatePuzzleBackend = z.infer<typeof createPuzzleBackendSchema>;
 
@@ -62,13 +62,13 @@ export const editPuzzleSchema = puzzleEntitySchema
 		visibility: true,
 		createdAt: true,
 		updatedAt: true,
-		author: true,
+		author: true
 	})
 	.extend({
 		// Make solution optional with default for edit form
 		solution: solutionSchema
 			.optional()
-			.prefault({ code: "", programmingLanguage: undefined }),
+			.prefault({ code: "", programmingLanguage: undefined })
 	});
 export type EditPuzzle = z.infer<typeof editPuzzleSchema>;
 

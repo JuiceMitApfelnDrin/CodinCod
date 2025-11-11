@@ -1,82 +1,19 @@
-import { logger } from "$lib/utils/debug-logger";
+import { puzzleFormSchema } from "$lib/schemas/puzzle-form.schema.js";
+import { ERROR_MESSAGES } from "$lib/types/core/common/config/error-messages.js";
+import { httpResponseCodes } from "$lib/types/core/common/enum/http-response-codes.js";
+import { deletePuzzleSchema } from "$lib/types/core/puzzle/schema/delete-puzzle.schema.js";
 import {
 	codincodApiWebPuzzleControllerDelete,
 	codincodApiWebPuzzleControllerSolution,
 	codincodApiWebPuzzleControllerUpdate
 } from "@/api/generated/puzzle/puzzle";
-import type { PuzzleCreateRequest } from "@/api/generated/schemas/puzzleCreateRequest";
-import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse";
 import { isSvelteKitRedirect } from "@/features/authentication/utils/is-sveltekit-redirect";
+import { logger } from "@/utils/debug-logger.js";
+import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 import { error, fail, redirect } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
-import {
-	deletePuzzleSchema,
-	editPuzzleSchema,
-	ERROR_MESSAGES,
-	frontendUrls,
-	httpResponseCodes,
-	puzzleVisibilityEnum,
-	type EditPuzzle
-} from "$lib/types";
 import type { PageServerLoadEvent, RequestEvent } from "./$types.js";
-
-/**
- * Transform PuzzleResponse from API to a plain object for form validation
- */
-function transformPuzzleForEdit(puzzle: PuzzleResponse) {
-	// Map visibility string to enum value
-	const visibilityKey = (
-		puzzle.visibility ?? "draft"
-	).toUpperCase() as keyof typeof puzzleVisibilityEnum;
-	const visibility =
-		puzzleVisibilityEnum[visibilityKey] ?? puzzleVisibilityEnum.DRAFT;
-
-	const formData = {
-		title: puzzle.title ?? "",
-		statement: puzzle.statement ?? "",
-		visibility,
-		constraints: puzzle.constraints ?? undefined,
-		validators:
-			puzzle.validators?.map((v) => ({
-				input: v.input ?? "",
-				output: v.output ?? "",
-				createdAt: new Date(),
-				updatedAt: new Date()
-			})) ?? [],
-		solution: puzzle.solution
-			? {
-					code: puzzle.solution.code ?? "",
-					programmingLanguage: puzzle.solution.programmingLanguage ?? undefined
-				}
-			: { code: "", programmingLanguage: undefined },
-		createdAt: puzzle.createdAt ? new Date(puzzle.createdAt) : undefined,
-		updatedAt: puzzle.updatedAt ? new Date(puzzle.updatedAt) : undefined,
-		author:
-			typeof puzzle.author === "string"
-				? puzzle.author
-				: (puzzle.author?._id ?? "")
-	};
-	return formData;
-}
-
-/**
- * Transform edit form data to API CreateRequest format
- */
-function transformEditToCreateRequest(data: EditPuzzle): PuzzleCreateRequest {
-	return {
-		title: data.title,
-		description: data.statement || null,
-		constraints: data.constraints || null,
-		validators:
-			data.validators && data.validators.length > 0
-				? data.validators.map((v: { input: string; output: string }) => ({
-						input: v.input,
-						output: v.output
-					}))
-				: null
-	};
-}
 
 export async function load({ fetch, params }: PageServerLoadEvent) {
 	const id = params.id;
@@ -84,17 +21,34 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 	logger.page("Loading puzzle edit page", { id });
 
 	try {
-		const puzzle = await codincodApiWebPuzzleControllerSolution(id, {
+		const puzzleData = await codincodApiWebPuzzleControllerSolution(id, {
 			fetch
 		} as RequestInit);
 
-		console.log("[SERVER] Puzzle loaded successfully:", puzzle.title);
-		logger.page("Puzzle loaded", { title: puzzle.title, id });
+		console.log("[SERVER] Puzzle loaded successfully:", puzzleData.title);
+		logger.page("Puzzle loaded", { title: puzzleData.title, id });
 
-		// Transform API response to match edit schema
-		const puzzleData = transformPuzzleForEdit(puzzle);
+		const formData = {
+			title: puzzleData.title ?? "",
+			description: puzzleData.statement ?? null,
+			constraints: puzzleData.constraints ?? null,
+			difficulty:
+				(puzzleData.difficulty as
+					| "beginner"
+					| "easy"
+					| "medium"
+					| "hard"
+					| "expert"
+					| null) ?? null,
+			tags: puzzleData.tags ?? null,
+			validators:
+				puzzleData.validators?.map((v) => ({
+					input: v.input ?? "",
+					output: v.output ?? ""
+				})) ?? null
+		};
 
-		const validate = await superValidate(puzzleData, zod4(editPuzzleSchema));
+		const validate = await superValidate(formData, zod4(puzzleFormSchema));
 		const validateDeletePuzzle = await superValidate(
 			{ id },
 			zod4(deletePuzzleSchema)
@@ -102,7 +56,8 @@ export async function load({ fetch, params }: PageServerLoadEvent) {
 
 		return {
 			deletePuzzle: validateDeletePuzzle,
-			form: validate
+			form: validate,
+			puzzle: puzzleData
 		};
 	} catch (err) {
 		console.error("[SERVER] Failed to load puzzle:", err);
@@ -153,14 +108,14 @@ export const actions = {
 		}
 	},
 	editPuzzle: async ({ params, request, fetch }: RequestEvent) => {
-		const form = await superValidate(request, zod4(editPuzzleSchema));
+		const form = await superValidate(request, zod4(puzzleFormSchema));
 
 		if (!form.valid) {
 			return fail(httpResponseCodes.CLIENT_ERROR.BAD_REQUEST, { form });
 		}
 
 		const id = params.id;
-		const requestBody = transformEditToCreateRequest(form.data);
+		const requestBody = form.data;
 
 		try {
 			await codincodApiWebPuzzleControllerUpdate(id, requestBody, {

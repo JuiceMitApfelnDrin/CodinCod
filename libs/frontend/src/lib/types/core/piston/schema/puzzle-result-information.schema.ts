@@ -3,7 +3,7 @@ import { puzzleResultSchema } from "./puzzle-result.js";
 
 export const puzzleResultInformationSchema = z.object({
 	result: puzzleResultSchema,
-	successRate: z.number(),
+	successRate: z.number()
 });
 
 export type PuzzleResultInformation = z.infer<

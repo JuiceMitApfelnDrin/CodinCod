@@ -266,6 +266,95 @@ defmodule CodincodApiWeb.AccountController do
 
   defp valid_url?(value) do
     case URI.parse(value) do
+#       [info] Sent 200 in 36ms
+# [error] ** (FunctionClauseError) no function clause matching in URI.parse/1
+#     (elixir 1.18.2) lib/uri.ex:783: URI.parse(~r/^https?:\/\/(www\.)?codincod\.com$/)
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:598: Phoenix.Socket.Transport.parse_origin/1
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:577: anonymous fn/3 in Phoenix.Socket.Transport.check_origin_config/3
+#     (phoenix 1.8.1) lib/phoenix/config.ex:65: Phoenix.Config.cache/3
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:346: Phoenix.Socket.Transport.check_origin/5
+#     (phoenix 1.8.1) lib/phoenix/transports/websocket.ex:54: Phoenix.Transports.WebSocket.call/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.do_socket_dispatch/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.plug_builder_call/2
+#     (codincod_api 0.1.0) deps/plug/lib/plug/debugger.ex:155: CodincodApiWeb.Endpoint."call (overridable 3)"/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.call/2
+#     (phoenix 1.8.1) lib/phoenix/endpoint/sync_code_reload_plug.ex:22: Phoenix.Endpoint.SyncCodeReloadPlug.do_call/4
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:131: Bandit.Pipeline.call_plug!/2
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:42: Bandit.Pipeline.run/5
+#     (bandit 1.8.0) lib/bandit/http1/handler.ex:13: Bandit.HTTP1.Handler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:18: Bandit.DelegatingHandler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:8: Bandit.DelegatingHandler.handle_continue/2
+#     (stdlib 6.2.2) gen_server.erl:2335: :gen_server.try_handle_continue/3
+#     (stdlib 6.2.2) gen_server.erl:2244: :gen_server.loop/7
+
+# [error] ** (FunctionClauseError) no function clause matching in URI.parse/1
+#     (elixir 1.18.2) lib/uri.ex:783: URI.parse(~r/^https?:\/\/(www\.)?codincod\.com$/)
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:598: Phoenix.Socket.Transport.parse_origin/1
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:577: anonymous fn/3 in Phoenix.Socket.Transport.check_origin_config/3
+#     (phoenix 1.8.1) lib/phoenix/config.ex:65: Phoenix.Config.cache/3
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:346: Phoenix.Socket.Transport.check_origin/5
+#     (phoenix 1.8.1) lib/phoenix/transports/websocket.ex:54: Phoenix.Transports.WebSocket.call/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.do_socket_dispatch/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.plug_builder_call/2
+#     (codincod_api 0.1.0) deps/plug/lib/plug/debugger.ex:155: CodincodApiWeb.Endpoint."call (overridable 3)"/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.call/2
+#     (phoenix 1.8.1) lib/phoenix/endpoint/sync_code_reload_plug.ex:22: Phoenix.Endpoint.SyncCodeReloadPlug.do_call/4
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:131: Bandit.Pipeline.call_plug!/2
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:42: Bandit.Pipeline.run/5
+#     (bandit 1.8.0) lib/bandit/http1/handler.ex:13: Bandit.HTTP1.Handler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:18: Bandit.DelegatingHandler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:8: Bandit.DelegatingHandler.handle_continue/2
+#     (stdlib 6.2.2) gen_server.erl:2335: :gen_server.try_handle_continue/3
+#     (stdlib 6.2.2) gen_server.erl:2244: :gen_server.loop/7
+
+# [error] ** (FunctionClauseError) no function clause matching in URI.parse/1
+#     (elixir 1.18.2) lib/uri.ex:783: URI.parse(~r/^https?:\/\/(www\.)?codincod\.com$/)
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:598: Phoenix.Socket.Transport.parse_origin/1
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:577: anonymous fn/3 in Phoenix.Socket.Transport.check_origin_config/3
+#     (phoenix 1.8.1) lib/phoenix/config.ex:65: Phoenix.Config.cache/3
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:346: Phoenix.Socket.Transport.check_origin/5
+#     (phoenix 1.8.1) lib/phoenix/transports/websocket.ex:54: Phoenix.Transports.WebSocket.call/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.do_socket_dispatch/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.plug_builder_call/2
+#     (codincod_api 0.1.0) deps/plug/lib/plug/debugger.ex:155: CodincodApiWeb.Endpoint."call (overridable 3)"/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.call/2
+#     (phoenix 1.8.1) lib/phoenix/endpoint/sync_code_reload_plug.ex:22: Phoenix.Endpoint.SyncCodeReloadPlug.do_call/4
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:131: Bandit.Pipeline.call_plug!/2
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:42: Bandit.Pipeline.run/5
+#     (bandit 1.8.0) lib/bandit/http1/handler.ex:13: Bandit.HTTP1.Handler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:18: Bandit.DelegatingHandler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:8: Bandit.DelegatingHandler.handle_continue/2
+#     (stdlib 6.2.2) gen_server.erl:2335: :gen_server.try_handle_continue/3
+#     (stdlib 6.2.2) gen_server.erl:2244: :gen_server.loop/7
+
+# [error] ** (FunctionClauseError) no function clause matching in URI.parse/1
+#     (elixir 1.18.2) lib/uri.ex:783: URI.parse(~r/^https?:\/\/(www\.)?codincod\.com$/)
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:598: Phoenix.Socket.Transport.parse_origin/1
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (elixir 1.18.2) lib/enum.ex:1714: Enum."-map/2-lists^map/1-1-"/2
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:577: anonymous fn/3 in Phoenix.Socket.Transport.check_origin_config/3
+#     (phoenix 1.8.1) lib/phoenix/config.ex:65: Phoenix.Config.cache/3
+#     (phoenix 1.8.1) lib/phoenix/socket/transport.ex:346: Phoenix.Socket.Transport.check_origin/5
+#     (phoenix 1.8.1) lib/phoenix/transports/websocket.ex:54: Phoenix.Transports.WebSocket.call/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.do_socket_dispatch/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.plug_builder_call/2
+#     (codincod_api 0.1.0) deps/plug/lib/plug/debugger.ex:155: CodincodApiWeb.Endpoint."call (overridable 3)"/2
+#     (codincod_api 0.1.0) lib/codincod_api_web/endpoint.ex:1: CodincodApiWeb.Endpoint.call/2
+#     (phoenix 1.8.1) lib/phoenix/endpoint/sync_code_reload_plug.ex:22: Phoenix.Endpoint.SyncCodeReloadPlug.do_call/4
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:131: Bandit.Pipeline.call_plug!/2
+#     (bandit 1.8.0) lib/bandit/pipeline.ex:42: Bandit.Pipeline.run/5
+#     (bandit 1.8.0) lib/bandit/http1/handler.ex:13: Bandit.HTTP1.Handler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:18: Bandit.DelegatingHandler.handle_data/3
+#     (bandit 1.8.0) lib/bandit/delegating_handler.ex:8: Bandit.DelegatingHandler.handle_continue/2
+#     (stdlib 6.2.2) gen_server.erl:2335: :gen_server.try_handle_continue/3
+#     (stdlib 6.2.2) gen_server.erl:2244: :gen_server.loop/7
+
       %URI{scheme: scheme, host: host} when scheme in ["http", "https"] and is_binary(host) ->
         true
 

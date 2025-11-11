@@ -1,4 +1,4 @@
-import type { FrontendUrl } from "../config/frontend-urls.js";
+import type { FrontendUrl } from "@codincod/shared/constants/frontend-urls";
 
 export type Link = {
 	href: string;

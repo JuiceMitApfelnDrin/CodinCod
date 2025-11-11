@@ -1,7 +1,7 @@
 import { codincodApiWebAccountControllerShow } from "@/api/generated/account/account";
 import { codincodApiWebPuzzleControllerShow } from "@/api/generated/puzzle/puzzle";
+import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 import { error, redirect } from "@sveltejs/kit";
-import { frontendUrls } from "$lib/types";
 import type { PageServerLoadEvent } from "./$types";
 
 export async function load({ fetch, params }: PageServerLoadEvent) {

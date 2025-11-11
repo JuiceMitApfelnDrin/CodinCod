@@ -1,6 +1,4 @@
-import type { ValueOf } from "../../common/types/value-of.js";
-
 export const banTypeEnum = {
 	TEMPORARY: "temporary",
-	PERMANENT: "permanent",
+	PERMANENT: "permanent"
 } as const;

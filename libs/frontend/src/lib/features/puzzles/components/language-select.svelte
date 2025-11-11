@@ -3,15 +3,16 @@
 	import { ScrollArea } from "@/components/ui/scroll-area";
 	import SelectGroupHeading from "@/components/ui/select/select-group-heading.svelte";
 	import { preferences } from "@/stores/preferences.store";
-	import { DEFAULT_LANGUAGE, type ProgrammingLanguageDto } from "$lib/types";
+	import type { CodincodApiWebProgrammingLanguageControllerIndex200Item } from "@/api/generated/schemas";
+	import { DEFAULT_LANGUAGE } from "$lib/types/core/game/config/game-config.js";
 
 	let {
 		formAttributes = undefined,
-		language = $bindable(),
-		languages = []
+		selectedProgrammingLanguageId = $bindable(),
+		selectableProgrammingLanguages = []
 	}: {
-		language: string;
-		languages?: ProgrammingLanguageDto[];
+		selectedProgrammingLanguageId: string;
+		selectableProgrammingLanguages: CodincodApiWebProgrammingLanguageControllerIndex200Item[];
 		formAttributes?:
 			| {
 					name: string;
@@ -25,40 +26,42 @@
 			| undefined;
 	} = $props();
 
-	// Extract unique language names
-	const languageNames = $derived(
-		Array.from(new Set(languages.map((l) => l.language))).sort()
+	const validLanguages = $derived(
+		selectableProgrammingLanguages.filter(
+			(
+				lang
+			): lang is Required<CodincodApiWebProgrammingLanguageControllerIndex200Item> =>
+				Boolean(lang.id) && Boolean(lang.language) && Boolean(lang.version)
+		)
 	);
 
-	// Initialize language if not set
 	$effect(() => {
-		if (!language) {
+		if (!selectedProgrammingLanguageId) {
 			if (
 				$preferences?.preferredLanguage &&
-				languageNames.includes($preferences.preferredLanguage)
+				validLanguages.some(
+					(lang) => lang.id === $preferences.preferredLanguage
+				)
 			) {
-				language = $preferences.preferredLanguage;
-			} else if (languageNames.includes(DEFAULT_LANGUAGE)) {
-				language = DEFAULT_LANGUAGE;
-			} else if (languageNames.length > 0) {
-				language = languageNames[0];
+				selectedProgrammingLanguageId = $preferences.preferredLanguage;
+			} else if (validLanguages.some((lang) => lang.id === DEFAULT_LANGUAGE)) {
+				selectedProgrammingLanguageId = DEFAULT_LANGUAGE;
+			} else if (validLanguages.length > 0) {
+				selectedProgrammingLanguageId = validLanguages[0].id;
 			}
 		}
 	});
 
-	const triggerContent = $derived(language ?? "Select a language");
+	const triggerContent = $derived(
+		selectedProgrammingLanguageId ?? "Select a language"
+	);
 </script>
 
-<!-- TODO: check if it works without it, otherwise put it back
- 
-onValueChange={(v) => {
-		if (v) {
-			language = v.value;
-		}
-	}}
-		-->
-
-<Select.Root type="single" bind:value={language} {...formAttributes}>
+<Select.Root
+	type="single"
+	bind:value={selectedProgrammingLanguageId}
+	{...formAttributes}
+>
 	<Select.Trigger class="w-[180px]" {...formAttributes}>
 		{triggerContent}
 	</Select.Trigger>
@@ -69,8 +72,11 @@ onValueChange={(v) => {
 				<SelectGroupHeading class="text-lg">Language</SelectGroupHeading>
 				<Select.Separator />
 
-				{#each languageNames as languageName}
-					<Select.Item value={languageName} label={languageName} />
+				{#each validLanguages as language}
+					<Select.Item
+						value={language.id}
+						label={`${language.language} ${language.version}`}
+					/>
 				{/each}
 			</Select.Group>
 		</ScrollArea>

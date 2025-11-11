@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { REPORT_CONFIG } from "../config/report-config.js";
-import { objectIdSchema } from "../../common/schema/object-id.js";
-import { reviewStatusEnum } from "../enum/review-status-enum.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
+import { REPORT_CONFIG } from "../config/report-config.js";
+import { reviewStatusEnum } from "../enum/review-status-enum.js";
 import { problemTypeSchema } from "./problem-types.schema.js";
 
 /**
@@ -43,18 +43,18 @@ export const reportEntitySchema = z.object({
 		.max(REPORT_CONFIG.maxLengthExplanation)
 		.regex(
 			REPORT_CONFIG.allowedCharacters,
-			"Explanation can only contain letters, numbers, hyphens, underscores and at-signs",
+			"Explanation can only contain letters, numbers, hyphens, underscores and at-signs"
 		),
 	status: z
 		.enum([
 			reviewStatusEnum.PENDING,
 			reviewStatusEnum.RESOLVED,
-			reviewStatusEnum.REJECTED,
+			reviewStatusEnum.REJECTED
 		])
 		.prefault(reviewStatusEnum.PENDING),
 	resolvedBy: objectIdSchema.optional(),
 	createdAt: acceptedDateSchema.optional(),
-	updatedAt: acceptedDateSchema.optional(),
+	updatedAt: acceptedDateSchema.optional()
 });
 export type ReportEntity = z.infer<typeof reportEntitySchema>;
 
@@ -62,12 +62,12 @@ export type ReportEntity = z.infer<typeof reportEntitySchema>;
 export const createReportSchema = reportEntitySchema.pick({
 	problematicIdentifier: true,
 	problemType: true,
-	explanation: true,
+	explanation: true
 });
 export type CreateReport = z.infer<typeof createReportSchema>;
 
 // Schema for resolving a report
 export const resolveReportSchema = z.object({
-	status: z.enum([reviewStatusEnum.RESOLVED, reviewStatusEnum.REJECTED]),
+	status: z.enum([reviewStatusEnum.RESOLVED, reviewStatusEnum.REJECTED])
 });
 export type ResolveReport = z.infer<typeof resolveReportSchema>;

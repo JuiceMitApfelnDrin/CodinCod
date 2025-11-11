@@ -4,10 +4,11 @@
 	import P from "@/components/typography/p.svelte";
 	import Button from "@/components/ui/button/button.svelte";
 	import Container from "@/components/ui/container/container.svelte";
-	import { testIds, frontendUrls } from "$lib/types";
 	import AlertCircle from "@lucide/svelte/icons/alert-circle";
 	import Home from "@lucide/svelte/icons/home";
 	import RefreshCw from "@lucide/svelte/icons/refresh-cw";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 
 	// Log error for monitoring
 	$effect(() => {

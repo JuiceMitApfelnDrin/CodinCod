@@ -2,7 +2,9 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import EditPuzzleForm from "@/features/puzzles/components/edit-puzzle-form.svelte";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
-	import { getUserIdFromUser, isAuthor, isUserDto } from "$lib/types";
+	import { isAuthor } from "$lib/types/utils/functions/is-author.js";
+	import { isUserDto } from "$lib/types/core/user/schema/user-dto.schema.js";
+	import { getUserIdFromUser } from "$lib/types/utils/functions/get-user-id-from-user.js";
 	import DeletePuzzleConfirmationDialog from "@/features/puzzles/components/delete-puzzle-confirmation-dialog.svelte";
 	import PuzzleMetaInfo from "@/features/puzzles/components/puzzle-meta-info.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
@@ -10,10 +12,9 @@
 
 	let { data } = $props();
 
-	const { deletePuzzle: deletePuzzleFormData, form: formData } = data;
-	const puzzle = formData.data;
+	const { deletePuzzle: deletePuzzleFormData, form: formData, puzzle } = data;
 
-	const puzzleAuthorId = getUserIdFromUser(puzzle.author);
+	const puzzleAuthorId = getUserIdFromUser(puzzle.author ?? undefined);
 
 	let isPuzzleAuthor = $derived(
 		$authenticatedUserInfo

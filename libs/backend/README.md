@@ -37,13 +37,13 @@ Modern Elixir/Phoenix backend for the CodinCod coding puzzle platform. This is a
 ### 1. Install Dependencies
 
 ```bash
-cd libs/elixir-backend/codincod_api
+cd libs/backend/codincod_api
 mix deps.get
 ```
 ### 2. Start Infrastructure (Docker)
 
 ```bash
-cd libs/elixir-backend
+cd libs/backend
 docker compose up -d postgres piston redis
 ```
 
@@ -354,7 +354,7 @@ mix migrate_mongo --validate
 The Elixir backend publishes an OpenAPI document that feeds the shared `libs/types` package.
 
 ```bash
-# From libs/elixir-backend/codincod_api
+# From libs/backend/codincod_api
 mix codincod.gen_openapi_spec
 
 # From repo root (requires pnpm)

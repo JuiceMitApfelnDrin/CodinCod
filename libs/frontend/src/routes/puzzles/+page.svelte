@@ -3,17 +3,15 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import Pagination from "@/components/nav/pagination.svelte";
-	import {
-		frontendUrls,
-		type AuthenticatedInfo,
-		type PaginatedQueryResponse,
-		type PuzzleDto
-	} from "$lib/types";
 	import Button from "@/components/ui/button/button.svelte";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import PuzzleDifficultyBadge from "@/features/puzzles/components/puzzle-difficulty-badge.svelte";
 	import PuzzleVisibilityBadge from "@/features/puzzles/components/puzzle-visibility-badge.svelte";
-	import { testIds } from "$lib/types";
+	import type { PaginatedQueryResponse } from "$lib/types/core/common/schema/paginated-query-response.schema.js";
+	import type { PuzzleDto } from "$lib/types/core/puzzle/schema/puzzle-dto.schema.js";
+	import type { AuthenticatedInfo } from "$lib/types/core/authentication/schema/authenticated-info.schema.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 	import { isAuthenticated } from "@/stores/auth.store";
 	import { logger } from "@/utils/debug-logger";
 

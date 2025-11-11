@@ -1,17 +1,15 @@
 <script lang="ts">
 	import CodeMirror from "@/features/game/components/codemirror.svelte";
-	import {
-		backendUrls,
-		httpRequestMethod,
-		isSubmissionDto,
-		type CodeSubmissionParams,
-		type CodeExecutionResponse,
-		isCodeExecutionSuccessResponse,
-		PuzzleResultEnum,
-		httpResponseCodes,
-		DEFAULT_LANGUAGE,
-		testIds
-	} from "$lib/types";
+	import { backendUrls } from "$lib/types/core/common/config/backend-urls";
+	import { httpRequestMethod } from "$lib/types/utils/constants/http-methods";
+	import { isSubmissionDto } from "$lib/types/core/submission/schema/submission-dto.schema";
+	import type { CodeSubmissionParams } from "$lib/types/core/submission/config/code-submission-params";
+	import type { CodeExecutionResponse } from "$lib/types/core/piston/schema/code-execution-response";
+	import { isCodeExecutionSuccessResponse } from "$lib/types/core/piston/schema/code-execution-response";
+	import { PuzzleResultEnum } from "$lib/types/core/puzzle/enum/puzzle-result-enum";
+	import { httpResponseCodes } from "$lib/types/core/common/enum/http-response-codes";
+	import { DEFAULT_LANGUAGE } from "$lib/types/core/game/config/game-config";
+	import { testIds } from "@codincod/shared/constants/test-ids";
 	import Button from "@/components/ui/button/button.svelte";
 	import { cn } from "@/utils/cn.js";
 	import { calculatePuzzleResultColor } from "@/features/puzzles/utils/calculate-puzzle-result-color.js";
@@ -32,8 +30,7 @@
 	import { calculatePercentage } from "@/utils/calculate-percentage";
 	import { fetchWithAuthenticationCookie } from "@/features/authentication/utils/fetch-with-authentication-cookie";
 	import { authenticatedUserInfo, isAuthenticated } from "@/stores/auth.store";
-	import type { PuzzleResponse } from "@/api/generated/schemas";
-	import type { PuzzleDto } from "$lib/types";
+	import type { PuzzleResponse } from "@/api/generated/schemas/puzzleResponse";
 
 	let {
 		endDate,
@@ -41,7 +38,7 @@
 		onPlayerSubmitCode = () => {},
 		puzzle
 	}: {
-		puzzle: PuzzleResponse | PuzzleDto;
+		puzzle: PuzzleResponse;
 		onPlayerSubmitCode?: (submissionId: string) => void;
 		onPlayerChangeLanguage?: (language: string) => void;
 		endDate: Date | undefined;
@@ -55,8 +52,10 @@
 
 	const programmingLanguageId = $derived.by(() => {
 		if (!language || !$languages) return undefined;
+
 		const lang = $languages.find((l) => l.language === language);
-		return lang?._id;
+
+		return lang?.id;
 	});
 
 	async function executeCode(
@@ -151,7 +150,7 @@
 			isExecutingTests = true;
 
 			const convertToPromises = puzzle.validators.map(
-				(validator, index: number) => {
+				(validator: { input?: string; output?: string }, index: number) => {
 					return executeCode(
 						index,
 						validator.input ?? "",
@@ -266,7 +265,10 @@
 
 <LogicalUnit class="space-y-4">
 	<LogicalUnit class="flex flex-col justify-between gap-2 md:flex-row">
-		<LanguageSelect bind:language languages={$languages ?? []} />
+		<LanguageSelect
+			bind:selectedProgrammingLanguageId={language}
+			selectableProgrammingLanguages={$languages ?? []}
+		/>
 
 		<CountdownTimer {endDate} />
 	</LogicalUnit>
@@ -305,17 +307,19 @@
 	<LogicalUnit data-testid={testIds.PLAY_PUZZLE_COMPONENT_TEST_RESULTS}>
 		<TestProgressBar
 			{openTestsAccordion}
-			puzzleResults={puzzle.validators.map((_validator, index: number) => {
-				const testResult = testResults[index];
-				if (testResult === undefined) {
-					return undefined;
-				}
-				if (!isCodeExecutionSuccessResponse(testResult)) {
-					return PuzzleResultEnum.ERROR;
-				}
+			puzzleResults={puzzle.validators.map(
+				(_validator: unknown, index: number) => {
+					const testResult = testResults[index];
+					if (testResult === undefined) {
+						return undefined;
+					}
+					if (!isCodeExecutionSuccessResponse(testResult)) {
+						return PuzzleResultEnum.ERROR;
+					}
 
-				return testResult.puzzleResultInformation.result;
-			})}
+					return testResult.puzzleResultInformation.result;
+				}
+			)}
 			class="my-7"
 		/>
 

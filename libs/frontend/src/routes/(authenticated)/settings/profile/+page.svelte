@@ -6,7 +6,8 @@
 	} from "$lib/api/notifications";
 	import { Input } from "@/components/ui/input";
 	import { Textarea } from "@/components/ui/textarea";
-	import { testIds, updateProfileSchema } from "$lib/types";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { updateProfileSchema } from "$lib/types/core/profile/schema/update-profile.schema";
 	import { z } from "zod";
 	import { toast } from "svelte-sonner";
 	import { authenticatedUserInfo } from "@/stores/auth.store";
@@ -72,7 +73,7 @@
 
 			if (!validationResult.success) {
 				const errors: Record<string, string> = {};
-				validationResult.error.issues.forEach((err) => {
+				validationResult.error.issues.forEach((err: z.ZodIssue) => {
 					const path = err.path.join(".");
 					errors[path] = err.message;
 				});
@@ -291,7 +292,7 @@
 								placeholder="https://twitter.com/username"
 								class="flex-1"
 								data-testid={testIds.PROFILE_SETTINGS_INPUT_NEW_SOCIAL}
-								onkeydown={(e) => {
+								onkeydown={(e: KeyboardEvent) => {
 									if (e.key === "Enter") {
 										e.preventDefault();
 										addSocial();

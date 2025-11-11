@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM hexpm/elixir:1.16.2-erlang-26.2.2-debian-bullseye-20240222
+FROM hexpm/elixir:1.16.3-erlang-24.3.4.17-ubuntu-noble-20250529
 
 ENV LANG=C.UTF-8 \
     MIX_ENV=dev \

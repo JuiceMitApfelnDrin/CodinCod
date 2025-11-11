@@ -1,16 +1,6 @@
 <script lang="ts">
 	import * as Table from "$lib/components/ui/table";
 	import dayjs from "dayjs";
-	import {
-		gameModeEnum,
-		isObjectId,
-		isString,
-		isUserDto,
-		testIds,
-		type AcceptedDate,
-		type GameDto,
-		type GameSubmission
-	} from "$lib/types";
 	import duration from "dayjs/plugin/duration";
 	import minMax from "dayjs/plugin/minMax";
 	import { codincodApiWebSubmissionControllerShow } from "@/api/generated/submission/submission";
@@ -26,6 +16,15 @@
 	import { cn } from "@/utils/cn";
 	import { calculatePuzzleResultIconColor } from "@/features/puzzles/utils/calculate-puzzle-result-color";
 	import Codemirror from "../../components/codemirror.svelte";
+	import type { GameDto } from "$lib/types/core/game/schema/game-dto.schema.js";
+	import type { GameSubmission } from "$lib/types/core/game/schema/game-submission.schema.js";
+	import { gameModeEnum } from "$lib/types/core/game/enum/game-mode-enum.js";
+	import { isString } from "$lib/types/utils/functions/is-string.js";
+	import { isObjectId } from "$lib/types/core/common/schema/object-id.js";
+	import { isUserDto } from "$lib/types/core/user/schema/user-dto.schema.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import type { AcceptedDate } from "$lib/types/core/common/schema/accepted-date.js";
+
 	dayjs.extend(duration);
 	dayjs.extend(minMax);
 

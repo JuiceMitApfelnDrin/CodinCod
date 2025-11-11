@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { themeOptionSchema } from "../enum/theme-option.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
 import { objectIdSchema } from "../../common/schema/object-id.js";
+import { themeOptionSchema } from "../enum/theme-option.js";
 import { editorPreferencesSchema } from "./editor.schema.js";
 
 export const preferencesEntitySchema = z.object({
@@ -11,7 +11,7 @@ export const preferencesEntitySchema = z.object({
 	blockedUsers: z.array(objectIdSchema).prefault([]).optional(),
 	createdAt: acceptedDateSchema.optional(),
 	updatedAt: acceptedDateSchema.optional(),
-	editor: editorPreferencesSchema.optional(),
+	editor: editorPreferencesSchema.optional()
 });
 
 export type PreferencesEntity = z.infer<typeof preferencesEntitySchema>;

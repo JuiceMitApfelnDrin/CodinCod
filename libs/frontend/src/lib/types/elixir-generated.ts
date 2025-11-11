@@ -6,18 +6,18 @@ export const AUTH_VALIDATION = {
 	username: {
 		minLength: 3,
 		maxLength: 20,
-		allowedCharacters: /^[A-Za-z0-9_-]+$/,
+		allowedCharacters: /^[A-Za-z0-9_-]+$/
 	},
 	email: {
-		pattern: /^[^\s@]+@[^\s@]+$/,
+		pattern: /^[^\s@]+@[^\s@]+$/
 	},
 	password: {
-		minLength: 14,
-	},
+		minLength: 14
+	}
 } as const;
 
 export const ACCOUNT_PREFERENCES = {
-	themeOptions: ["dark", "light"],
+	themeOptions: ["dark", "light"]
 } as const;
 
 export type AccountPreferencesPayload = {

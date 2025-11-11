@@ -15,7 +15,7 @@ export const leaderboardEntrySchema = z.object({
 	gamesWon: z.number().int().nonnegative(),
 	winRate: z.number().min(0).max(1),
 	bestScore: z.number().nonnegative(),
-	averageScore: z.number().nonnegative(),
+	averageScore: z.number().nonnegative()
 });
 
 export type LeaderboardEntry = z.infer<typeof leaderboardEntrySchema>;

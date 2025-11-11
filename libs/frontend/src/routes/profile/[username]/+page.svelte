@@ -5,17 +5,15 @@
 	import H1 from "@/components/typography/h1.svelte";
 	import * as Card from "@/components/ui/card";
 	import Container from "@/components/ui/container/container.svelte";
-	import { testIds } from "$lib/types";
 	import ActivityGroup from "@/features/profile/components/activity-group.svelte";
 	import ActivityHeatmap from "@/features/profile/components/activity-heatmap.svelte";
 	import dayjs from "dayjs";
-	import {
-		frontendUrls,
-		isUserDto,
-		type Activity,
-		type GroupedActivitiesByDate
-	} from "$lib/types";
 	import { logger } from "@/utils/debug-logger.js";
+	import type { Activity } from "$lib/types/core/activity/schema/activity.schema.js";
+	import type { GroupedActivitiesByDate } from "$lib/types/core/activity/types/grouped-activities-by-date.js";
+	import { isUserDto } from "$lib/types/core/user/schema/user-dto.schema.js";
+	import { testIds } from "@codincod/shared/constants/test-ids";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 
 	function groupByCreatedAtDate(items: Activity[]) {
 		return items.reduce<GroupedActivitiesByDate>((acc, item) => {

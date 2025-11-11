@@ -17,7 +17,10 @@ defmodule CodincodApiWeb.Endpoint do
 
   # WebSocket endpoint for real-time features (games, notifications, etc.)
   socket "/socket", CodincodApiWeb.UserSocket,
-    websocket: true,
+    websocket: [
+      connect_info: [:peer_data, :x_headers, :uri]
+      # check_origin is handled at endpoint level in dev.exs (false) and can be configured in prod
+    ],
     longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.

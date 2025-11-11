@@ -1,6 +1,6 @@
 import type { z } from "zod";
-import { pistonExecutionResponseSuccessSchema } from "./execution-success.js";
 import { pistonExecutionResponseErrorSchema } from "./execution-error.js";
+import { pistonExecutionResponseSuccessSchema } from "./execution-success.js";
 
 export const pistonExecutionResponseSchema =
 	pistonExecutionResponseSuccessSchema.or(pistonExecutionResponseErrorSchema);
@@ -9,7 +9,7 @@ export type PistonExecutionResponse = z.infer<
 >;
 
 export function isPistonExecutionResponse(
-	data: unknown,
+	data: unknown
 ): data is PistonExecutionResponse {
 	return pistonExecutionResponseSchema.safeParse(data).success;
 }

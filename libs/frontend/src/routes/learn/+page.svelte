@@ -2,7 +2,7 @@
 	import Container from "@/components/ui/container/container.svelte";
 	import H1 from "@/components/typography/h1.svelte";
 	import P from "@/components/typography/p.svelte";
-	import { frontendUrls } from "$lib/types";
+	import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
 	import LogicalUnit from "@/components/ui/logical-unit/logical-unit.svelte";
 	import HighlightText from "@/components/ui/highlight-text/highlight-text.svelte";
 

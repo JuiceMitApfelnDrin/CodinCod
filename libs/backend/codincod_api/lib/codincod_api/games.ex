@@ -7,6 +7,7 @@ defmodule CodincodApi.Games do
   alias Ecto.{Changeset, Multi}
   alias CodincodApi.Repo
 
+  alias CodincodApi.Accounts.User
   alias CodincodApi.Games.{Game, GamePlayer}
 
   @type game_params :: map()
@@ -85,6 +86,121 @@ defmodule CodincodApi.Games do
     |> where([_g, gp], gp.user_id == ^user_id)
     |> preload([:owner, :puzzle, players: :user])
     |> Repo.all()
+  end
+
+  @doc """
+  Adds a player to a game if they're not already in it and the game isn't full.
+  """
+  @spec add_player_to_game(Game.t(), User.t()) :: {:ok, Game.t()} | {:error, atom() | Ecto.Changeset.t()}
+  def add_player_to_game(%Game{} = game, %{} = user) do
+    game = Repo.preload(game, [:players])
+
+    cond do
+      game.status != "waiting" ->
+        {:error, :not_waiting}
+
+
+
+      Enum.any?(game.players, fn p -> p.user_id == user.id end) ->
+        # Already in game
+        {:ok, preload_assocs(game)}
+
+      true ->
+        case join_game(game, %{user_id: user.id}) do
+          {:ok, _player} -> {:ok, preload_assocs(Repo.get!(Game, game.id))}
+          {:error, changeset} -> {:error, changeset}
+        end
+    end
+  end
+
+  @doc """
+  Removes a player from a game. If the owner leaves, deletes the game.
+  Returns {:ok, updated_game} or {:ok, nil} if game was deleted.
+  """
+  @spec remove_player_from_game(Game.t(), Ecto.UUID.t()) :: {:ok, Game.t() | nil}
+  def remove_player_from_game(%Game{} = game, user_id) do
+    if game.owner_id == user_id do
+      # Owner leaving, delete the game
+      Repo.delete(game)
+      {:ok, nil}
+    else
+      # Regular player leaving
+      leave_game(game, user_id)
+      {:ok, preload_assocs(Repo.get!(Game, game.id))}
+    end
+  end
+
+  @doc """
+  Starts a game by transitioning it to in_progress status.
+  """
+  @spec start_game(Game.t()) :: {:ok, Game.t()} | {:error, Ecto.Changeset.t()}
+  def start_game(%Game{} = game) do
+    transition_game(game, "in_progress", %{
+      started_at: DateTime.utc_now()
+    })
+  end
+
+  @doc """
+  Atomically checks game state and marks as completed if conditions are met.
+  Uses database-level locking to prevent race conditions.
+
+  Returns:
+  - `{:ok, :completed, game}` if game was marked as completed
+  - `{:ok, :in_progress, game}` if game is still ongoing
+  - `{:error, reason}` if operation failed
+  """
+  @spec check_and_complete_game(Game.t()) ::
+    {:ok, :completed, Game.t()} | {:ok, :in_progress, Game.t()} | {:error, any()}
+  def check_and_complete_game(%Game{id: game_id, mode: mode} = _game) do
+    result = Repo.transaction(fn ->
+      # Lock game row for update to prevent concurrent modifications
+      game = Repo.get!(Game, game_id, lock: "FOR UPDATE")
+
+      # Already completed? Return early
+      if game.status == "completed" do
+        {:completed, game}
+      else
+        # Load players with their submissions
+        game = Repo.preload(game, [players: [:user]], force: true)
+        _player_count = length(game.players)
+
+        # Get all submissions for this game
+        # Note: In a real implementation, you'd check submission results
+        # For now, we just check if the game should end based on mode
+
+        should_complete = case mode do
+          "FASTEST" ->
+            # First to complete wins - check if anyone has a successful submission
+            # others can continue competing for their respective ranking, ranking follows in the form of
+            # 1. successful solutions (minimal errors)
+            # 2. fastest wins, if the solution has the same amount of errors
+            # 3. shortest code, if the time is equal
+            # This would require querying submissions table
+            false  # Placeholder
+
+          _ ->
+            # Other modes might have different completion criteria
+            false
+        end
+
+        if should_complete do
+          # Mark game as completed
+          {:ok, completed_game} =
+            game
+            |> Game.changeset(%{status: "completed", ended_at: DateTime.utc_now()})
+            |> Repo.update()
+
+          {:completed, completed_game}
+        else
+          {:in_progress, game}
+        end
+      end
+    end)
+
+    case result do
+      {:ok, {status, game}} -> {:ok, status, game}
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   defp maybe_preload(query, opts) do

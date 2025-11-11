@@ -1,0 +1,28 @@
+{
+	"name": "@codincod/shared",
+	"version": "0.0.1",
+	"type": "module",
+	"description": "Shared constants and types between frontend and e2e tests",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./*": {
+			"types": "./dist/*.d.ts",
+			"import": "./dist/*.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch",
+		"clean": "rm -rf dist",
+		"format": "pnpm exec biome format --write && pnpm exec biome lint --fix"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.4",
+		"typescript": "^5.6.3"
+	}
+}

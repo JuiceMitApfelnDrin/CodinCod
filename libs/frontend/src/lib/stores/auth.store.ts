@@ -1,7 +1,7 @@
 import { browser } from "$app/environment";
+import type { AuthenticatedInfo } from "$lib/types/core/authentication/schema/authenticated-info.schema.js";
 import { logger } from "$lib/utils/debug-logger";
 import { derived, writable } from "svelte/store";
-import type { AuthenticatedInfo } from "$lib/types";
 
 /**
  * Store for authenticated user information

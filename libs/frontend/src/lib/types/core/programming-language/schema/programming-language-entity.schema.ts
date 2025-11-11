@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { objectIdSchema } from "../../common/schema/object-id.js";
 import { acceptedDateSchema } from "../../common/schema/accepted-date.js";
+import { objectIdSchema } from "../../common/schema/object-id.js";
 
 export const programmingLanguageEntitySchema = z.object({
 	_id: objectIdSchema.optional(),
@@ -9,7 +9,7 @@ export const programmingLanguageEntitySchema = z.object({
 	aliases: z.array(z.string()).prefault([]),
 	runtime: z.string().optional(),
 	createdAt: acceptedDateSchema.prefault(() => new Date()),
-	updatedAt: acceptedDateSchema.prefault(() => new Date()),
+	updatedAt: acceptedDateSchema.prefault(() => new Date())
 });
 
 export type ProgrammingLanguageEntity = z.infer<
