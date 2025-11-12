@@ -2,11 +2,17 @@ import type { Page, Locator } from "@playwright/test";
 import { BasePage } from "./base.page";
 import { testIds } from "@codincod/shared/constants/test-ids";
 import { frontendUrls } from "@codincod/shared/constants/frontend-urls";
+import { ChatComponent } from "./components.ts/chat.components";
+import { StandingsTableComponent } from "./components.ts/standings-table.components";
 
 /**
  * Page Object Model for the multiplayer waiting room page
  */
 export class MultiplayerPage extends BasePage {
+	// Component objects
+	readonly chatComponent: ChatComponent;
+	readonly standingsTableComponent: StandingsTableComponent;
+
 	// Locators
 	readonly quickHostButton: Locator;
 	readonly customGameButton: Locator;
@@ -18,14 +24,15 @@ export class MultiplayerPage extends BasePage {
 	readonly inviteCodeInput: Locator;
 	readonly roomsList: Locator;
 	readonly playersList: Locator;
-	readonly chatInput: Locator;
-	readonly chatSendButton: Locator;
-	readonly chatMessages: Locator;
 	readonly connectionStatus: Locator;
 	readonly countdownTimer: Locator;
 
 	constructor(page: Page) {
 		super(page);
+
+		// Initialize component objects
+		this.chatComponent = new ChatComponent(page);
+		this.standingsTableComponent = new StandingsTableComponent(page);
 
 		// Initialize locators using test IDs
 		this.quickHostButton = page.getByTestId(
@@ -56,13 +63,6 @@ export class MultiplayerPage extends BasePage {
 			has: page.getByTestId(testIds.MULTIPLAYER_PAGE_BUTTON_JOIN_ROOM),
 		});
 		this.playersList = page.getByTestId(testIds.MULTIPLAYER_PAGE_PLAYERS_LIST);
-		this.chatInput = page.getByTestId(testIds.CHAT_COMPONENT_INPUT_MESSAGE);
-		this.chatSendButton = page.getByTestId(
-			testIds.CHAT_COMPONENT_BUTTON_SEND_MESSAGE,
-		);
-		this.chatMessages = page.getByTestId(
-			testIds.CHAT_COMPONENT_MESSAGES_CONTAINER,
-		);
 		this.connectionStatus = page.getByTestId(
 			testIds.GAME_COMPONENT_CONNECTION_STATUS,
 		);
@@ -196,40 +196,21 @@ export class MultiplayerPage extends BasePage {
 	 * Get invite code from the room
 	 */
 	async getInviteCode(): Promise<string> {
-		// Click show code button
-		await this.clickElement(this.showCodeButton);
-
-		// Wait for input to be visible and filled
-		await this.inviteCodeInput.waitFor({ state: "visible" });
-
-		// Get the code
-		const code = await this.inviteCodeInput.inputValue();
-
-		// Hide code again
-		await this.clickElement(this.showCodeButton);
-
-		return code;
+		return await this.standingsTableComponent.getInviteCode();
 	}
 
 	/**
 	 * Send a chat message
 	 */
 	async sendChatMessage(message: string): Promise<void> {
-		await this.fillInput(this.chatInput, message);
-		await this.clickElement(this.chatSendButton);
-		// Wait for the message to appear in chat
-		await this.page
-			.locator(`text="${message}"`)
-			.first()
-			.waitFor({ state: "visible" });
+		await this.chatComponent.sendMessage(message);
 	}
 
 	/**
 	 * Get list of players in room
 	 */
 	async getPlayersInRoom(): Promise<string[]> {
-		const items = await this.playersList.locator("li").allTextContents();
-		return items.map((item) => item.trim());
+		return await this.standingsTableComponent.getPlayers();
 	}
 
 	/**

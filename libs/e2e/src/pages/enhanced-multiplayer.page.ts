@@ -6,11 +6,17 @@ import {
 	getWebSocketStatus,
 } from "../utils/websocket-helpers.js";
 import { waitForCondition } from "../utils/interaction-helpers.js";
+import { ChatComponent } from "./components.ts/chat.components";
+import { StandingsTableComponent } from "./components.ts/standings-table.components";
 
 /**
  * Enhanced Multiplayer waiting room page object with robust methods
  */
 export class EnhancedMultiplayerPage extends EnhancedBasePage {
+	// Component objects
+	readonly chatComponent: ChatComponent;
+	readonly standingsTableComponent: StandingsTableComponent;
+
 	// Test ID based locators (language-independent)
 	readonly hostRoomButton: Locator;
 	readonly joinRoomButton: Locator;
@@ -20,12 +26,13 @@ export class EnhancedMultiplayerPage extends EnhancedBasePage {
 	readonly joinByInviteButton: Locator;
 	readonly copyInviteButton: Locator;
 	readonly toggleInviteCodeButton: Locator;
-	readonly chatInput: Locator;
-	readonly chatSendButton: Locator;
-	readonly chatMessages: Locator;
 
 	constructor(page: Page) {
 		super(page);
+
+		// Initialize component objects
+		this.chatComponent = new ChatComponent(page);
+		this.standingsTableComponent = new StandingsTableComponent(page);
 
 		// Initialize locators using shared test IDs
 		this.hostRoomButton = page.getByTestId(
@@ -51,13 +58,6 @@ export class EnhancedMultiplayerPage extends EnhancedBasePage {
 		);
 		this.toggleInviteCodeButton = page.getByTestId(
 			testIds.MULTIPLAYER_PAGE_BUTTON_TOGGLE_INVITE_CODE,
-		);
-		this.chatInput = page.getByTestId(testIds.CHAT_COMPONENT_INPUT_MESSAGE);
-		this.chatSendButton = page.getByTestId(
-			testIds.CHAT_COMPONENT_BUTTON_SEND_MESSAGE,
-		);
-		this.chatMessages = page.getByTestId(
-			testIds.CHAT_COMPONENT_MESSAGES_CONTAINER,
 		);
 	}
 
@@ -171,36 +171,14 @@ export class EnhancedMultiplayerPage extends EnhancedBasePage {
 	 * Send a chat message in the waiting room
 	 */
 	async sendChatMessage(message: string): Promise<void> {
-		await this.fill(this.chatInput, message);
-		await this.click(this.chatSendButton);
-
-		// Wait for message to appear in chat
-		await this.page
-			.locator(`text="${message}"`)
-			.first()
-			.waitFor({ state: "visible" });
+		await this.chatComponent.sendMessage(message);
 	}
 
 	/**
 	 * Get invite code for the room
 	 */
 	async getInviteCode(): Promise<string> {
-		// Show the invite code
-		await this.click(this.toggleInviteCodeButton);
-
-		// Wait for the code input to be visible
-		const codeInput = this.page.getByTestId(
-			testIds.CUSTOM_GAME_DIALOG_INPUT_INVITE_CODE,
-		);
-		await codeInput.waitFor({ state: "visible" });
-
-		// Get the code from the input
-		const code = await codeInput.inputValue();
-
-		// Hide the code again
-		await this.click(this.toggleInviteCodeButton);
-
-		return code;
+		return await this.standingsTableComponent.getInviteCode();
 	}
 
 	/**
@@ -244,40 +222,21 @@ export class EnhancedMultiplayerPage extends EnhancedBasePage {
 	 * Get list of players in room
 	 */
 	async getPlayersInRoom(): Promise<string[]> {
-		const playersList = this.page.getByTestId(
-			testIds.MULTIPLAYER_PAGE_PLAYERS_LIST,
-		);
-
-		if (!(await this.isVisible(playersList))) {
-			return [];
-		}
-
-		const items = await playersList
-			.locator('li, [role="listitem"]')
-			.allTextContents();
-		return items.map((item) => item.trim()).filter((item) => item.length > 0);
+		return await this.standingsTableComponent.getPlayers();
 	}
 
 	/**
 	 * Get number of players in room
 	 */
 	async getPlayerCount(): Promise<number> {
-		const players = await this.getPlayersInRoom();
-		return players.length;
+		return await this.standingsTableComponent.getPlayerCount();
 	}
 
 	/**
 	 * Get chat messages
 	 */
 	async getChatMessages(): Promise<string[]> {
-		if (!(await this.isVisible(this.chatMessages))) {
-			return [];
-		}
-
-		const messages = await this.chatMessages
-			.locator('[role="listitem"], .message')
-			.allTextContents();
-		return messages.map((msg) => msg.trim()).filter((msg) => msg.length > 0);
+		return await this.chatComponent.getMessages();
 	}
 
 	/**

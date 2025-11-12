@@ -158,6 +158,7 @@ export const testIds = {
 
 	// chat message component
 	CHAT_MESSAGE_COMPONENT_BUTTON_REPORT: "chat-message-component-button-report",
+	CHAT_MESSAGE: "chat-message",
 
 	// report chat dialog
 	REPORT_CHAT_DIALOG_BUTTON_CANCEL: "report-chat-dialog-button-cancel",

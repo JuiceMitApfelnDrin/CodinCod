@@ -46,6 +46,7 @@
 		"chat-message group relative w-full rounded-lg px-2 py-1",
 		highlight && "highlight"
 	)}
+	data-testid={testIds.CHAT_MESSAGE}
 	use:scrollIntoView
 >
 	<dl>

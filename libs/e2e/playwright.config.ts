@@ -53,7 +53,7 @@ export default defineConfig({
 		/* Use test IDs */
 		testIdAttribute: "data-testid",
 
-		headless: process.env.CI ? true : false,
+		headless: true,
 	},
 
 	/* Configure projects for major browsers */
