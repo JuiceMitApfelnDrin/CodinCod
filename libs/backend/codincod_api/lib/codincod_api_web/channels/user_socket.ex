@@ -23,39 +23,56 @@ defmodule CodincodApiWeb.UserSocket do
 
       # Try authentication methods in order of security preference:
       # 1. HTTP-only cookies (most secure - not accessible to JavaScript)
-      # 2. Sec-WebSocket-Protocol header (standard WebSocket auth pattern)
-      # 3. Authorization header (standard but rarely works with WebSocket)
-      # 4. Connection params (DEPRECATED - only for backwards compatibility)
+      # 2. Connection params (Phoenix.Socket standard approach via token)
+      # 3. Sec-WebSocket-Protocol header (alternative WebSocket auth pattern)
+      # 4. Authorization header (standard but rarely works with WebSocket)
       token = get_token_from_cookies(connect_info) ||
+              get_token_from_params(params) ||
               get_token_from_websocket_protocol(connect_info) ||
-              get_token_from_auth_header(connect_info) ||
-              get_token_from_params(params)
+              get_token_from_auth_header(connect_info)
 
       case token do
         nil ->
           Logger.warning("WebSocket connection rejected: no valid authentication token found")
           Logger.debug("  Tried cookies: #{has_cookie_header?(connect_info)}")
           Logger.debug("  Tried params: #{Map.has_key?(params, "token")}")
-          :error
+          # Return error tuple instead of atom for better client feedback
+          {:error, %{reason: :unauthorized, message: "Authentication required"}}
 
         token_value ->
           # Verify JWT token and extract user_id
           case CodincodApiWeb.Auth.Guardian.decode_and_verify(token_value) do
             {:ok, claims} ->
               user_id = claims["sub"]
-              Logger.info("WebSocket connection accepted for user: #{user_id} (auth: #{get_auth_method(connect_info, params)})")
-              {:ok, assign(socket, :current_user_id, user_id)}
+              auth_method = get_auth_method(connect_info, params)
+              Logger.info("WebSocket connection accepted for user: #{user_id} (auth: #{auth_method})")
+              
+              # Store both user_id and authentication metadata for monitoring
+              socket = socket
+                |> assign(:current_user_id, user_id)
+                |> assign(:authenticated_at, System.system_time(:second))
+                |> assign(:auth_method, auth_method)
+              
+              {:ok, socket}
+
+            {:error, :token_expired} ->
+              Logger.warning("WebSocket connection rejected: token expired")
+              {:error, %{reason: :token_expired, message: "Authentication token expired"}}
+
+            {:error, :invalid_token} ->
+              Logger.warning("WebSocket connection rejected: invalid token format")
+              {:error, %{reason: :invalid_token, message: "Invalid authentication token"}}
 
             {:error, reason} ->
-              Logger.warning("WebSocket connection rejected: invalid token - #{inspect(reason)}")
-              :error
+              Logger.warning("WebSocket connection rejected: #{inspect(reason)}")
+              {:error, %{reason: :auth_failed, message: "Authentication failed"}}
           end
       end
     rescue
       e ->
         Logger.error("WebSocket connection crashed: #{inspect(e)}")
         Logger.error("  Stacktrace: #{inspect(__STACKTRACE__)}")
-        :error
+        {:error, %{reason: :internal_error, message: "Connection failed"}}
     end
   end
 
@@ -74,13 +91,14 @@ defmodule CodincodApiWeb.UserSocket do
   def id(socket), do: "user_socket:#{socket.assigns.current_user_id}"
 
   # Extract token from connection params
-  # This is used during the WebSocket upgrade handshake only
-  # It's secure because:
+  # Phoenix.Socket standard approach: pass token in params during handshake
+  # This is secure because:
   # 1. The token is sent in the WebSocket upgrade request body (not URL)
   # 2. Phoenix uses it immediately for authentication
   # 3. It's not logged or stored in server/proxy logs
+  # 4. This is the recommended approach in Phoenix docs
   defp get_token_from_params(%{"token" => token}) when is_binary(token) and token != "" do
-    Logger.debug("Token found in connection params")
+    Logger.debug("Token found in connection params (recommended Phoenix approach)")
     Logger.debug("  Token length: #{String.length(token)}")
     token
   end

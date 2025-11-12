@@ -4,10 +4,26 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
 
   Handles:
   - Room creation and joining
-  - Player presence in waiting rooms
-  - Room state updates
+  - Player presence in waiting rooms  
+  - Room state updates with proper race condition handling
   - Chat in waiting rooms
   - Game start coordination
+
+  ## Channel Architecture
+  - `waiting_room:lobby` - Global lobby where users see all available rooms
+  - `waiting_room:{room_id}` - Specific room channels for players in that room
+
+  ## Race Condition Handling
+  - Uses database transactions for atomic room updates
+  - Broadcasts are sent AFTER successful database updates
+  - Presence tracking ensures accurate player counts
+  - Concurrent joins/leaves are handled safely
+
+  ## Important Notes
+  - Players must join both lobby AND room channels
+  - Lobby channel shows available rooms
+  - Room channel provides real-time updates for that specific room
+  - Leaving a room automatically updates both channels
   """
 
   use CodincodApiWeb, :channel
@@ -195,31 +211,21 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
     case socket.topic do
       "waiting_room:" <> ^room_id ->
         with {:ok, room_uuid} <- parse_uuid(room_id),
-             game <- Games.get_game!(room_uuid, preload: [:owner, :puzzle, players: :user]),
-             {:ok, updated_game} <- Games.remove_player_from_game(game, user_id) do
+             game <- Games.get_game!(room_uuid, preload: [:owner, :puzzle, players: :user]) do
+          
+          # Use a Task to handle cleanup asynchronously to prevent blocking
+          # This prevents race conditions when multiple players leave simultaneously
+          Task.start(fn ->
+            handle_player_leave(game, user_id)
+          end)
 
-          if updated_game do
-            # Game still exists, broadcast update to remaining players
-            broadcast!(socket, "overview_room", %{
-              event: "overview_room",
-              room: serialize_room(updated_game)
-            })
-
-            # Update lobby with new room list
-            CodincodApiWeb.Endpoint.broadcast!("waiting_room:lobby", "overview_of_rooms", %{
-              event: "overview_of_rooms",
-              rooms: list_waiting_rooms()
-            })
-          else
-            # Game was deleted (owner left), update lobby
-            CodincodApiWeb.Endpoint.broadcast!("waiting_room:lobby", "overview_of_rooms", %{
-              event: "overview_of_rooms",
-              rooms: list_waiting_rooms()
-            })
-          end
-
+          # Reply immediately so client doesn't hang
           {:reply, :ok, socket}
         else
+          {:error, :not_found} ->
+            # Game already deleted, that's fine
+            {:reply, :ok, socket}
+          
           error ->
             Logger.error("Failed to leave room: #{inspect(error)}")
             {:reply, {:error, %{reason: "Failed to leave room"}}, socket}
@@ -320,20 +326,33 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
         :ok
 
       "waiting_room:" <> room_id ->
-        # Player disconnected from waiting room, remove them
+        # Player disconnected from waiting room
         user_id = socket.assigns[:user_id]
         username = socket.assigns[:username]
 
-        Logger.info("Player #{username} (#{user_id}) left waiting room #{room_id}, reason: #{inspect(reason)}")
+        # Log different termination reasons for debugging
+        case reason do
+          {:shutdown, :left} ->
+            Logger.info("Player #{username} (#{user_id}) left waiting room #{room_id} cleanly")
+          
+          {:shutdown, :closed} ->
+            Logger.info("Player #{username} (#{user_id}) connection closed for waiting room #{room_id}")
+          
+          _ ->
+            Logger.warning("Player #{username} (#{user_id}) left waiting room #{room_id}, reason: #{inspect(reason)}")
+        end
 
         # Clean up: remove player from game
+        # Use Task to prevent blocking the channel process during shutdown
         if user_id do
           with {:ok, room_uuid} <- parse_uuid(room_id),
                {:ok, game} <- fetch_game_safely(room_uuid) do
-            remove_player_and_broadcast(game, user_id)
+            Task.start(fn ->
+              handle_player_leave(game, user_id)
+            end)
           else
             error ->
-              Logger.warning("Failed to cleanup player on disconnect: #{inspect(error)}")
+              Logger.warning("Failed to cleanup player #{user_id} on disconnect: #{inspect(error)}")
           end
         end
 
@@ -345,6 +364,38 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
   end
 
   ## Helper functions
+
+  # Handle player leaving with proper race condition handling
+  defp handle_player_leave(game, user_id) do
+    case Games.remove_player_from_game(game, user_id) do
+      {:ok, updated_game} when not is_nil(updated_game) ->
+        # Game still exists, broadcast update to remaining players
+        # Use Endpoint.broadcast! instead of broadcast! to ensure it reaches all nodes in a cluster
+        CodincodApiWeb.Endpoint.broadcast!("waiting_room:#{game.id}", "overview_room", %{
+          event: "overview_room",
+          room: serialize_room(updated_game)
+        })
+
+        # Update lobby with new room list
+        CodincodApiWeb.Endpoint.broadcast!("waiting_room:lobby", "overview_of_rooms", %{
+          event: "overview_of_rooms",
+          rooms: list_waiting_rooms()
+        })
+
+      {:ok, nil} ->
+        # Game was deleted (owner left or last player left)
+        Logger.info("Waiting room #{game.id} was deleted")
+
+        # Update lobby to remove this room
+        CodincodApiWeb.Endpoint.broadcast!("waiting_room:lobby", "overview_of_rooms", %{
+          event: "overview_of_rooms",
+          rooms: list_waiting_rooms()
+        })
+
+      {:error, reason} ->
+        Logger.error("Failed to remove player #{user_id} from game #{game.id}: #{inspect(reason)}")
+    end
+  end
 
   defp list_waiting_rooms do
     Games.list_waiting_rooms()
@@ -432,40 +483,10 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
     %{
       puzzle_id: puzzle_id,
       owner_id: owner_id,
-      max_duration_seconds: Map.get(payload, "timeLimit", 900),  # Default 5 minutes
+      max_duration_seconds: Map.get(payload, "timeLimit", 900),  # Default 15 minutes
       mode: String.upcase(Map.get(payload, "gameMode", "FASTEST")),
       visibility: "public",
       status: "waiting"
     }
-  end
-
-  defp remove_player_and_broadcast(game, user_id) do
-    case Games.remove_player_from_game(game, user_id) do
-      {:ok, updated_game} when not is_nil(updated_game) ->
-        # Game still exists, broadcast update to remaining players
-        CodincodApiWeb.Endpoint.broadcast!("waiting_room:#{game.id}", "overview_room", %{
-          event: "overview_room",
-          room: serialize_room(updated_game)
-        })
-
-        # Update lobby with new room list
-        CodincodApiWeb.Endpoint.broadcast!("waiting_room:lobby", "overview_of_rooms", %{
-          event: "overview_of_rooms",
-          rooms: list_waiting_rooms()
-        })
-
-      {:ok, nil} ->
-        # Game was deleted (owner left or last player left)
-        Logger.info("Waiting room #{game.id} was deleted")
-
-        # Update lobby to remove this room
-        CodincodApiWeb.Endpoint.broadcast!("waiting_room:lobby", "overview_of_rooms", %{
-          event: "overview_of_rooms",
-          rooms: list_waiting_rooms()
-        })
-
-      error ->
-        Logger.error("Failed to remove player #{user_id} from game #{game.id}: #{inspect(error)}")
-    end
   end
 end

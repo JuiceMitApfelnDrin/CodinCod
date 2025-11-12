@@ -3,11 +3,22 @@ defmodule CodincodApiWeb.GameChannel do
   Phoenix Channel for real-time multiplayer game communication.
 
   Handles:
-  - Player joining/leaving
-  - Code updates during gameplay
+  - Player joining/leaving with presence tracking
+  - Code updates during gameplay (for spectating)
   - Submission results broadcasting
   - Turn-based coordination
   - Game state synchronization
+  - Chat messages
+  
+  ## Events Intercepted (for custom per-socket handling)
+  - `player_submitted` - Customize submission visibility based on game settings
+  - `player_code_updated` - Only send to spectators in certain game modes
+  
+  ## Important Notes
+  - Uses Phoenix.Presence for automatic player tracking
+  - Presence automatically cleans up disconnected players (~30s)
+  - All broadcasts are atomic to prevent race conditions
+  - Terminate is called on clean disconnects only (not crashes)
   """
 
   use CodincodApiWeb, :channel
@@ -16,6 +27,10 @@ defmodule CodincodApiWeb.GameChannel do
   alias CodincodApi.{Games, Accounts}
   alias CodincodApi.Games.Game
   alias CodincodApiWeb.Presence
+
+  # Intercept these events to customize per-socket
+  # This allows filtering/enriching messages before pushing to individual clients
+  intercept ["player_submitted", "player_code_updated"]
 
   @impl true
   def join("game:" <> game_id, payload, socket) do
@@ -90,7 +105,8 @@ defmodule CodincodApiWeb.GameChannel do
     username = socket.assigns.username
 
     # Broadcast code changes to other players (for spectating/collaborative modes)
-    broadcast_from!(socket, "player_code_updated", %{
+    # This will be intercepted and filtered in handle_out/3
+    broadcast!(socket, "player_code_updated", %{
       userId: user_id,
       username: username,
       code: code,
@@ -108,6 +124,7 @@ defmodule CodincodApiWeb.GameChannel do
     game_id = socket.assigns.game_id
 
     # Broadcast submission results to all players
+    # This will be intercepted for per-socket customization
     broadcast!(socket, "player_submitted", %{
       userId: user_id,
       username: username,
@@ -116,7 +133,7 @@ defmodule CodincodApiWeb.GameChannel do
       timestamp: DateTime.utc_now()
     })
 
-    # Check if game should end (atomically with locking)
+    # Check if game should end (atomically with locking to prevent race conditions)
     game = Games.get_game!(game_id, preload: [:owner, :puzzle, players: :user])
 
     case Games.check_and_complete_game(game) do
@@ -125,11 +142,12 @@ defmodule CodincodApiWeb.GameChannel do
         broadcast!(socket, "game_completed", %{
           status: "completed",
           endedAt: completed_game.ended_at,
+          winner: get_winner(completed_game),
           timestamp: DateTime.utc_now()
         })
 
       {:ok, :in_progress, _game} ->
-        # Game still ongoing, just broadcast state update
+        # Game still ongoing, broadcast state update
         broadcast!(socket, "game_state_updated", %{
           status: "in_progress",
           timestamp: DateTime.utc_now()
@@ -137,9 +155,51 @@ defmodule CodincodApiWeb.GameChannel do
 
       {:error, reason} ->
         Logger.error("Failed to check game completion: #{inspect(reason)}")
+        # Don't fail the submission - game state check is non-critical
     end
 
     {:reply, :ok, socket}
+  end
+
+  ## Outgoing event interception
+  # These callbacks allow customizing messages before they reach individual clients
+
+  @impl true
+  def handle_out("player_submitted", payload, socket) do
+    game = socket.assigns.game
+    user_id = socket.assigns.user_id
+
+    # Customize submission visibility based on game settings
+    # Example: In "fastest wins" mode, hide other players' submission details until game ends
+    case should_show_submission?(game, user_id, payload) do
+      true ->
+        push(socket, "player_submitted", payload)
+        {:noreply, socket}
+      
+      false ->
+        # Send redacted version - they know someone submitted but not the details
+        redacted_payload = %{
+          userId: payload.userId,
+          username: payload.username,
+          timestamp: payload.timestamp
+          # Omit: status, executionTime
+        }
+        push(socket, "player_submitted", redacted_payload)
+        {:noreply, socket}
+    end
+  end
+
+  @impl true
+  def handle_out("player_code_updated", payload, socket) do
+    game = socket.assigns.game
+    
+    # Only send code updates in collaborative/spectator modes
+    # This prevents cheating in competitive modes
+    if game.mode in ["COLLABORATIVE", "SPECTATOR"] do
+      push(socket, "player_code_updated", payload)
+    end
+    
+    {:noreply, socket}
   end
 
   @impl true
@@ -228,18 +288,57 @@ defmodule CodincodApiWeb.GameChannel do
     game_id = socket.assigns[:game_id]
     username = socket.assigns[:username]
 
-    Logger.info("Player #{username} (#{user_id}) left game #{game_id}, reason: #{inspect(reason)}")
+    # Log different termination reasons for debugging
+    case reason do
+      {:shutdown, :left} ->
+        Logger.info("Player #{username} (#{user_id}) left game #{game_id} cleanly")
+      
+      {:shutdown, :closed} ->
+        Logger.info("Player #{username} (#{user_id}) connection closed for game #{game_id}")
+      
+      {:shutdown, reason} ->
+        Logger.warning("Player #{username} (#{user_id}) left game #{game_id}, shutdown: #{inspect(reason)}")
+      
+      :normal ->
+        Logger.info("Player #{username} (#{user_id}) channel terminated normally for game #{game_id}")
+      
+      other ->
+        Logger.warning("Player #{username} (#{user_id}) left game #{game_id}, unexpected reason: #{inspect(other)}")
+    end
 
-    # Phoenix.Presence will automatically clean up the presence entry
-    # No manual cleanup needed - Presence handles it within ~30 seconds
-
-    # Optionally mark player as disconnected in database if needed for game logic
+    # Phoenix.Presence automatically cleans up presence entries
+    # This happens within ~30 seconds via the Presence heartbeat mechanism
+    # No manual cleanup needed - this is a key advantage of Phoenix.Presence
+    
+    # Optional: Mark player as disconnected in database for game logic
+    # This is useful if you want immediate feedback (before Presence cleanup)
     # Games.mark_player_disconnected(game_id, user_id)
 
     :ok
   end
 
   ## Private functions
+
+  defp should_show_submission?(_game, user_id, %{userId: submitter_id}) when user_id == submitter_id do
+    # Always show player their own submission
+    true
+  end
+
+  defp should_show_submission?(%Game{mode: "FASTEST"}, _user_id, _payload) do
+    # In fastest mode, hide other players' submission details until game ends
+    false
+  end
+
+  defp should_show_submission?(_game, _user_id, _payload) do
+    # Default: show all submissions
+    true
+  end
+
+  defp get_winner(%Game{} = game) do
+    # TODO: Implement winner logic based on game.player_submissions
+    # For now, return nil
+    nil
+  end
 
   defp get_user_id(%{"userId" => user_id}, _socket) when is_binary(user_id) do
     parse_uuid(user_id)

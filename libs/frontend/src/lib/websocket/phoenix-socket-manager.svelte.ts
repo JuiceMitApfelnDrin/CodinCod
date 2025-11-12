@@ -1,10 +1,18 @@
 /**
  * Phoenix Socket Manager using official phoenix library
+ * 
+ * Follows Phoenix Channel best practices:
+ * - Uses official phoenix.js Socket and Channel classes
+ * - Implements proper presence tracking with Presence module
+ * - Handles reconnection automatically via Phoenix
+ * - Properly manages channel lifecycle (join, leave, error, close)
+ * - Implements heartbeat to keep connection alive
+ * 
  * @see https://hexdocs.pm/phoenix/js/
  */
 
 import { logger } from "@/utils/debug-logger";
-import { Channel, Socket } from "phoenix";
+import { Channel, Presence, Socket } from "phoenix";
 import {
 	WEBSOCKET_STATES,
 	type WebSocketState
@@ -17,16 +25,20 @@ export interface PhoenixSocketManagerOptions<TPayload, TResponse> {
 	onMessage: (event: string, payload: TResponse) => void;
 	onStateChange?: (state: WebSocketState) => void;
 	onJoinError?: (reason: string) => void;
+	onPresenceSync?: (presences: any[]) => void;
+	onPresenceJoin?: (id: string, current: any, newPres: any) => void;
+	onPresenceLeave?: (id: string, current: any, leftPres: any) => void;
 	validateResponse?: (data: unknown) => data is TResponse;
-	maxReconnectDelay?: number;
-	initialReconnectDelay?: number;
-	maxReconnectAttempts?: number;
+	heartbeatIntervalMs?: number;
+	rejoinAfterMs?: (tries: number) => number;
 }
 
 export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 	private socket: Socket | null = null;
 	private channel: Channel | null = null;
+	private presence: Presence | null = null;
 	private joined = $state(false);
+	private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
 
 	state = $state<WebSocketState>(WEBSOCKET_STATES.DISCONNECTED);
 
@@ -36,12 +48,17 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 	private readonly onMessage: (event: string, payload: TResponse) => void;
 	private readonly onStateChange: ((state: WebSocketState) => void) | undefined;
 	private readonly onJoinError: ((reason: string) => void) | undefined;
+	private readonly onPresenceSync: ((presences: any[]) => void) | undefined;
+	private readonly onPresenceJoin: ((id: string, current: any, newPres: any) => void) | undefined;
+	private readonly onPresenceLeave: ((id: string, current: any, leftPres: any) => void) | undefined;
 	private readonly validateResponse:
 		| ((data: unknown) => data is TResponse)
 		| undefined;
+	private readonly heartbeatIntervalMs: number;
+	private readonly rejoinAfterMs: (tries: number) => number;
 
 	constructor(options: PhoenixSocketManagerOptions<TPayload, TResponse>) {
-		// Remove token from params - auth happens via cookies
+		// Remove token from params - auth happens via cookies or token param
 		const { token, ...safeParams } = options.params ?? {};
 		this.params = safeParams;
 
@@ -50,11 +67,24 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 		this.onMessage = options.onMessage;
 		this.onStateChange = options.onStateChange;
 		this.onJoinError = options.onJoinError;
+		this.onPresenceSync = options.onPresenceSync;
+		this.onPresenceJoin = options.onPresenceJoin;
+		this.onPresenceLeave = options.onPresenceLeave;
 		this.validateResponse = options.validateResponse;
+		
+		// Default heartbeat: 30 seconds (Phoenix default)
+		this.heartbeatIntervalMs = options.heartbeatIntervalMs ?? 30000;
+		
+		// Default rejoin strategy: exponential backoff
+		this.rejoinAfterMs = options.rejoinAfterMs ?? ((tries) => {
+			const delays = [1000, 2000, 5000, 10000];
+			return delays[tries - 1] || 10000;
+		});
 
 		logger.ws("PhoenixSocketManager constructed", {
 			url: this.url,
-			topic: this.topic
+			topic: this.topic,
+			heartbeatMs: this.heartbeatIntervalMs
 		});
 	}
 
@@ -77,10 +107,7 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 
 			// Create Phoenix socket with official library
 			// SECURITY NOTE: We pass the token via params for the initial connection only
-			// This works because:
-			// 1. The token is only sent during WebSocket upgrade (not in URL logs)
-			// 2. Phoenix uses it immediately and doesn't store it in params
-			// 3. Reconnections use the same authenticated socket
+			// This is the standard Phoenix approach as documented in hexdocs.pm/phoenix
 			const socketParams = {
 				...this.params,
 				...(wsToken && { token: wsToken })
@@ -88,11 +115,11 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 
 			this.socket = new Socket(this.url, {
 				params: socketParams,
-				// Reconnection handled by Phoenix
-				reconnectAfterMs: (tries) => {
-					const delays = [1000, 2000, 5000, 10000];
-					return delays[tries - 1] || 10000;
-				},
+				// Reconnection handled by Phoenix with exponential backoff
+				reconnectAfterMs: this.rejoinAfterMs,
+				// Heartbeat to detect stale connections
+				heartbeatIntervalMs: this.heartbeatIntervalMs,
+				// Optional: Custom logger for debugging
 				logger: (kind, msg, data) => {
 					logger.ws(`Phoenix ${kind}: ${msg}`, data);
 				}
@@ -110,13 +137,16 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 				this.setState(WEBSOCKET_STATES.ERROR);
 			});
 
-			this.socket.onClose(() => {
-				logger.ws("Socket closed");
+			this.socket.onClose((event) => {
+				logger.ws("Socket closed", {
+					code: event?.code,
+					reason: event?.reason,
+					wasClean: event?.wasClean
+				});
 				this.joined = false;
 				this.setState(WEBSOCKET_STATES.DISCONNECTED);
-			});
-
-			// Connect the socket
+				this.stopCustomHeartbeat();
+			});			// Connect the socket
 			this.socket.connect();
 		} catch (error) {
 			logger.error("Failed to connect", error);
@@ -186,14 +216,21 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 		// Create channel
 		this.channel = this.socket.channel(this.topic, this.params);
 
+		// Set up presence tracking if callbacks are provided
+		if (this.onPresenceSync || this.onPresenceJoin || this.onPresenceLeave) {
+			this.setupPresence();
+		}
+
 		// Channel lifecycle hooks
-		this.channel.onError(() => {
-			logger.error("Channel error");
+		this.channel.onError((error) => {
+			logger.error("Channel error", error);
+			// Phoenix will automatically attempt to rejoin
 		});
 
 		this.channel.onClose(() => {
 			logger.ws("Channel closed");
 			this.joined = false;
+			this.presence = null;
 		});
 
 		// Join the channel
@@ -202,22 +239,26 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 			.receive("ok", (response) => {
 				logger.ws("Channel joined successfully", response);
 				this.joined = true;
+				// Start custom heartbeat (in addition to Phoenix's built-in heartbeat)
+				this.startCustomHeartbeat();
 			})
 			.receive("error", (response) => {
 				logger.error("Failed to join channel", response);
 				this.onJoinError?.(response.reason || "Unknown error");
+				this.setState(WEBSOCKET_STATES.ERROR);
 			})
 			.receive("timeout", () => {
 				logger.error("Channel join timeout");
 				this.onJoinError?.("Join timeout");
+				this.setState(WEBSOCKET_STATES.ERROR);
 			});
 
 		// Listen for all messages on the channel
 		// Phoenix channels require you to explicitly bind to events
-		// For a generic handler, you can override channel.onMessage
+		// For a generic handler, we override channel.onMessage
 		const originalOnMessage = this.channel.onMessage.bind(this.channel);
 		this.channel.onMessage = (event, payload, ref) => {
-			// Let Phoenix handle system events
+			// Let Phoenix handle system events first
 			const result = originalOnMessage(event, payload, ref);
 
 			// Handle user events (not phx_* events)
@@ -228,7 +269,7 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 				event === "presence_diff"
 			) {
 				if (this.validateResponse && !this.validateResponse(payload)) {
-					logger.error("Invalid message payload", payload);
+					logger.error("Invalid message payload", { event, payload });
 					return result;
 				}
 				this.onMessage(event, payload);
@@ -236,6 +277,85 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 
 			return result;
 		};
+	}
+
+	/**
+	 * Set up Phoenix Presence tracking
+	 * @see https://hexdocs.pm/phoenix/presence.html
+	 */
+	private setupPresence(): void {
+		if (!this.channel) return;
+
+		this.presence = new Presence(this.channel);
+
+		// Sync callback - called when presence state changes
+		if (this.onPresenceSync) {
+			this.presence.onSync(() => {
+				const presences = this.presence!.list();
+				logger.ws("Presence synced", { count: presences.length });
+				this.onPresenceSync!(presences);
+			});
+		}
+
+		// Join callback - called when a user joins
+		if (this.onPresenceJoin) {
+			this.presence.onJoin((id, current, newPres) => {
+				if (id) {
+					logger.ws("Presence join", { id, current, newPres });
+					this.onPresenceJoin!(id, current, newPres);
+				}
+			});
+		}
+
+		// Leave callback - called when a user leaves
+		if (this.onPresenceLeave) {
+			this.presence.onLeave((id, current, leftPres) => {
+				if (id) {
+					logger.ws("Presence leave", { id, current, leftPres });
+					this.onPresenceLeave!(id, current, leftPres);
+				}
+			});
+		}
+	}
+
+	/**
+	 * Start custom heartbeat to keep channel alive
+	 * This is in addition to Phoenix's built-in socket heartbeat
+	 */
+	private startCustomHeartbeat(): void {
+		// Clear any existing heartbeat
+		this.stopCustomHeartbeat();
+
+		// Send periodic heartbeat messages to keep channel alive
+		this.heartbeatInterval = setInterval(() => {
+			if (this.joined && this.channel) {
+				this.channel
+					.push("heartbeat", {}, 5000)
+					.receive("ok", () => {
+						// Heartbeat acknowledged
+					})
+					.receive("error", (err) => {
+						logger.error("Heartbeat error", err);
+					})
+					.receive("timeout", () => {
+						logger.ws("Heartbeat timeout - Phoenix will handle reconnection");
+						// Phoenix will handle reconnection
+					});
+			}
+		}, this.heartbeatIntervalMs);
+
+		logger.ws(`Custom heartbeat started (${this.heartbeatIntervalMs}ms)`);
+	}
+
+	/**
+	 * Stop custom heartbeat
+	 */
+	private stopCustomHeartbeat(): void {
+		if (this.heartbeatInterval) {
+			clearInterval(this.heartbeatInterval);
+			this.heartbeatInterval = null;
+			logger.ws("Custom heartbeat stopped");
+		}
 	}
 
 	push(event: string, payload: TPayload, timeout = 10000): Promise<any> {
@@ -256,6 +376,8 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 	disconnect(): void {
 		logger.ws("Disconnecting");
 
+		this.stopCustomHeartbeat();
+
 		if (this.channel) {
 			this.channel.leave();
 			this.channel = null;
@@ -267,6 +389,7 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 		}
 
 		this.joined = false;
+		this.presence = null;
 		this.setState(WEBSOCKET_STATES.DISCONNECTED);
 	}
 
@@ -303,5 +426,21 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 	destroy(): void {
 		logger.ws("Destroying PhoenixSocketManager");
 		this.disconnect();
+		this.stopCustomHeartbeat();
+	}
+
+	/**
+	 * Get list of presences (if presence tracking is enabled)
+	 */
+	getPresences(): any[] {
+		if (!this.presence) return [];
+		return this.presence.list();
+	}
+
+	/**
+	 * Get presence count
+	 */
+	getPresenceCount(): number {
+		return this.getPresences().length;
 	}
 }
