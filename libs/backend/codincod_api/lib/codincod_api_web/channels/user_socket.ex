@@ -46,13 +46,13 @@ defmodule CodincodApiWeb.UserSocket do
               user_id = claims["sub"]
               auth_method = get_auth_method(connect_info, params)
               Logger.info("WebSocket connection accepted for user: #{user_id} (auth: #{auth_method})")
-              
+
               # Store both user_id and authentication metadata for monitoring
               socket = socket
                 |> assign(:current_user_id, user_id)
                 |> assign(:authenticated_at, System.system_time(:second))
                 |> assign(:auth_method, auth_method)
-              
+
               {:ok, socket}
 
             {:error, :token_expired} ->

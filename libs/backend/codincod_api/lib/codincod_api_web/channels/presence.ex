@@ -74,7 +74,7 @@ defmodule CodincodApiWeb.Presence do
 
   @doc """
   Initialize presence state.
-  
+
   This callback is optional but useful for tracking metadata or
   setting up monitoring.
   """
@@ -86,17 +86,17 @@ defmodule CodincodApiWeb.Presence do
 
   @doc """
   Fetch and customize presence data.
-  
+
   This callback allows enriching presence data before sending to clients.
   For example, you could fetch user details from the database.
-  
+
   ## Example
-  
+
       def fetch(_topic, presences) do
         # Fetch user details from database
         user_ids = Map.keys(presences)
         users = Accounts.get_users_by_ids(user_ids)
-        
+
         # Enrich presence data
         for {key, %{metas: metas}} <- presences, into: %{} do
           user = Map.get(users, key)
@@ -119,20 +119,20 @@ defmodule CodincodApiWeb.Presence do
 
   @doc """
   Handle presence metadata changes (joins/leaves).
-  
+
   This callback is triggered whenever presences join or leave a topic.
   Useful for broadcasting custom events or updating external state.
-  
+
   ## Parameters
-  
+
   - `topic` - The presence topic (e.g., "game:123")
   - `joins` - Map of user_id => presence_meta for users joining
-  - `leaves` - Map of user_id => presence_meta for users leaving  
+  - `leaves` - Map of user_id => presence_meta for users leaving
   - `presences` - Current full presence state
   - `state` - Custom state (from init/1)
-  
+
   ## Example
-  
+
       def handle_metas(topic, %{joins: joins, leaves: leaves}, presences, state) do
         # Broadcast join events
         for {user_id, presence} <- joins do
@@ -141,7 +141,7 @@ defmodule CodincodApiWeb.Presence do
             username: presence.username
           })
         end
-        
+
         # Broadcast leave events
         for {user_id, presence} <- leaves do
           CodincodApiWeb.Endpoint.broadcast!(topic, "user_left", %{
@@ -149,7 +149,7 @@ defmodule CodincodApiWeb.Presence do
             username: presence.username
           })
         end
-        
+
         {:ok, state}
       end
   """

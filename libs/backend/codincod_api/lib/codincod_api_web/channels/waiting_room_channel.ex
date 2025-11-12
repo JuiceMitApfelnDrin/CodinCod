@@ -4,7 +4,7 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
 
   Handles:
   - Room creation and joining
-  - Player presence in waiting rooms  
+  - Player presence in waiting rooms
   - Room state updates with proper race condition handling
   - Chat in waiting rooms
   - Game start coordination
@@ -212,7 +212,7 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
       "waiting_room:" <> ^room_id ->
         with {:ok, room_uuid} <- parse_uuid(room_id),
              game <- Games.get_game!(room_uuid, preload: [:owner, :puzzle, players: :user]) do
-          
+
           # Use a Task to handle cleanup asynchronously to prevent blocking
           # This prevents race conditions when multiple players leave simultaneously
           Task.start(fn ->
@@ -225,7 +225,7 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
           {:error, :not_found} ->
             # Game already deleted, that's fine
             {:reply, :ok, socket}
-          
+
           error ->
             Logger.error("Failed to leave room: #{inspect(error)}")
             {:reply, {:error, %{reason: "Failed to leave room"}}, socket}
@@ -334,10 +334,10 @@ defmodule CodincodApiWeb.WaitingRoomChannel do
         case reason do
           {:shutdown, :left} ->
             Logger.info("Player #{username} (#{user_id}) left waiting room #{room_id} cleanly")
-          
+
           {:shutdown, :closed} ->
             Logger.info("Player #{username} (#{user_id}) connection closed for waiting room #{room_id}")
-          
+
           _ ->
             Logger.warning("Player #{username} (#{user_id}) left waiting room #{room_id}, reason: #{inspect(reason)}")
         end

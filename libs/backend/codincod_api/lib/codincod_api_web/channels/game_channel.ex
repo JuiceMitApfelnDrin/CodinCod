@@ -9,11 +9,11 @@ defmodule CodincodApiWeb.GameChannel do
   - Turn-based coordination
   - Game state synchronization
   - Chat messages
-  
+
   ## Events Intercepted (for custom per-socket handling)
   - `player_submitted` - Customize submission visibility based on game settings
   - `player_code_updated` - Only send to spectators in certain game modes
-  
+
   ## Important Notes
   - Uses Phoenix.Presence for automatic player tracking
   - Presence automatically cleans up disconnected players (~30s)
@@ -175,7 +175,7 @@ defmodule CodincodApiWeb.GameChannel do
       true ->
         push(socket, "player_submitted", payload)
         {:noreply, socket}
-      
+
       false ->
         # Send redacted version - they know someone submitted but not the details
         redacted_payload = %{
@@ -192,13 +192,13 @@ defmodule CodincodApiWeb.GameChannel do
   @impl true
   def handle_out("player_code_updated", payload, socket) do
     game = socket.assigns.game
-    
+
     # Only send code updates in collaborative/spectator modes
     # This prevents cheating in competitive modes
     if game.mode in ["COLLABORATIVE", "SPECTATOR"] do
       push(socket, "player_code_updated", payload)
     end
-    
+
     {:noreply, socket}
   end
 
@@ -292,16 +292,16 @@ defmodule CodincodApiWeb.GameChannel do
     case reason do
       {:shutdown, :left} ->
         Logger.info("Player #{username} (#{user_id}) left game #{game_id} cleanly")
-      
+
       {:shutdown, :closed} ->
         Logger.info("Player #{username} (#{user_id}) connection closed for game #{game_id}")
-      
+
       {:shutdown, reason} ->
         Logger.warning("Player #{username} (#{user_id}) left game #{game_id}, shutdown: #{inspect(reason)}")
-      
+
       :normal ->
         Logger.info("Player #{username} (#{user_id}) channel terminated normally for game #{game_id}")
-      
+
       other ->
         Logger.warning("Player #{username} (#{user_id}) left game #{game_id}, unexpected reason: #{inspect(other)}")
     end
@@ -309,7 +309,7 @@ defmodule CodincodApiWeb.GameChannel do
     # Phoenix.Presence automatically cleans up presence entries
     # This happens within ~30 seconds via the Presence heartbeat mechanism
     # No manual cleanup needed - this is a key advantage of Phoenix.Presence
-    
+
     # Optional: Mark player as disconnected in database for game logic
     # This is useful if you want immediate feedback (before Presence cleanup)
     # Games.mark_player_disconnected(game_id, user_id)
