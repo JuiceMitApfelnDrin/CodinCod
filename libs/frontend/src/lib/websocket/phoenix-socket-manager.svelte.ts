@@ -1,13 +1,13 @@
 /**
  * Phoenix Socket Manager using official phoenix library
- * 
+ *
  * Follows Phoenix Channel best practices:
  * - Uses official phoenix.js Socket and Channel classes
  * - Implements proper presence tracking with Presence module
  * - Handles reconnection automatically via Phoenix
  * - Properly manages channel lifecycle (join, leave, error, close)
  * - Implements heartbeat to keep connection alive
- * 
+ *
  * @see https://hexdocs.pm/phoenix/js/
  */
 
@@ -49,8 +49,12 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 	private readonly onStateChange: ((state: WebSocketState) => void) | undefined;
 	private readonly onJoinError: ((reason: string) => void) | undefined;
 	private readonly onPresenceSync: ((presences: any[]) => void) | undefined;
-	private readonly onPresenceJoin: ((id: string, current: any, newPres: any) => void) | undefined;
-	private readonly onPresenceLeave: ((id: string, current: any, leftPres: any) => void) | undefined;
+	private readonly onPresenceJoin:
+		| ((id: string, current: any, newPres: any) => void)
+		| undefined;
+	private readonly onPresenceLeave:
+		| ((id: string, current: any, leftPres: any) => void)
+		| undefined;
 	private readonly validateResponse:
 		| ((data: unknown) => data is TResponse)
 		| undefined;
@@ -71,15 +75,17 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 		this.onPresenceJoin = options.onPresenceJoin;
 		this.onPresenceLeave = options.onPresenceLeave;
 		this.validateResponse = options.validateResponse;
-		
+
 		// Default heartbeat: 30 seconds (Phoenix default)
 		this.heartbeatIntervalMs = options.heartbeatIntervalMs ?? 30000;
-		
+
 		// Default rejoin strategy: exponential backoff
-		this.rejoinAfterMs = options.rejoinAfterMs ?? ((tries) => {
-			const delays = [1000, 2000, 5000, 10000];
-			return delays[tries - 1] || 10000;
-		});
+		this.rejoinAfterMs =
+			options.rejoinAfterMs ??
+			((tries) => {
+				const delays = [1000, 2000, 5000, 10000];
+				return delays[tries - 1] || 10000;
+			});
 
 		logger.ws("PhoenixSocketManager constructed", {
 			url: this.url,
@@ -146,7 +152,7 @@ export class PhoenixSocketManager<TPayload = any, TResponse = any> {
 				this.joined = false;
 				this.setState(WEBSOCKET_STATES.DISCONNECTED);
 				this.stopCustomHeartbeat();
-			});			// Connect the socket
+			}); // Connect the socket
 			this.socket.connect();
 		} catch (error) {
 			logger.error("Failed to connect", error);
