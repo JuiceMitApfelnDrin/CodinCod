@@ -1,10 +1,6 @@
-# CodinCod# CodinCod
+# CodinCod
 
 A fun, open-source platform that makes coding fun through gamified challenges and multiplayer.
-
-## Table of contents
-
-
 
 ## Table of Contents
 
