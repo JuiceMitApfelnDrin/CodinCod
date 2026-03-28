@@ -80,7 +80,7 @@
 		"codemirror-lang-elixir": "^4.0.0",
 		"codemirror-lang-prolog": "^0.1.0",
 		"dayjs": "^1.11.13",
-		"dompurify": "^3.2.3",
+		"dompurify": "^3.3.2",
 		"jsonwebtoken": "^9.0.2",
 		"marked": "^16.2.1",
 		"tailwind-merge": "^3.3.1",
